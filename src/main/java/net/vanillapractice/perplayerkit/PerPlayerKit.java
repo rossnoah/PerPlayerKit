@@ -1,0 +1,190 @@
+package net.vanillapractice.perplayerkit;
+
+import net.vanillapractice.perplayerkit.commands.*;
+import net.vanillapractice.perplayerkit.gui.ItemUtil;
+import net.vanillapractice.perplayerkit.listeners.*;
+import net.vanillapractice.perplayerkit.sql.MySQL;
+import net.vanillapractice.perplayerkit.sql.SQLGetter;
+import net.vanillapractice.perplayerkit.tabcompleter.EnderChestTab;
+import net.vanillapractice.perplayerkit.tabcompleter.KitRoomTab;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.canvas.MenuFunctionListener;
+
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
+
+public final class PerPlayerKit extends JavaPlugin {
+
+    public MySQL SQL;
+    public static SQLGetter sqldata;
+    public static HashMap<String, ItemStack[]> data = new HashMap<>();
+    public static HashMap<String, ItemStack[]> kitShareData = new HashMap<>();
+    public static int bcDistance = 500;
+    public static String prefix = ChatColor.translateAlternateColorCodes('&',"&7[&5Kits&7] ");
+    public static HashMap<UUID, Timestamp> repairBroadcastCooldown = new HashMap<>();
+    public static int repairDelay = 5;
+    public static HashMap<UUID, Timestamp> kitRoomBroadcastCooldown = new HashMap<>();
+    public static int kitRoomDelay = 15;
+    public static ArrayList<ItemStack[]> kitroomData = new ArrayList<>();
+    public static int shareDelay = 30;
+    public static HashMap<UUID, Timestamp> shareCooldown = new HashMap<>();
+    public static ArrayList<String> whitelist = new ArrayList<>();
+    public static Plugin plugin;
+
+    public static HashMap<UUID,Integer> lastKit = new HashMap<>();
+
+    public static Plugin getPlugin() {
+        return plugin;
+    }
+
+
+    @Override
+    public void onEnable() {
+        plugin=this;
+
+        this.saveDefaultConfig();
+
+
+
+
+
+
+        // Plugin startup logic
+        ItemStack[] defaultPage = new ItemStack[45];
+        defaultPage[0] = ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,"&5Default Kit Room Item");
+        kitroomData.add(defaultPage);
+        kitroomData.add(defaultPage);
+        kitroomData.add(defaultPage);
+        kitroomData.add(defaultPage);
+        kitroomData.add(defaultPage);
+
+
+
+        this.SQL = new MySQL();
+        sqldata = new SQLGetter(this);
+
+
+        try {
+            SQL.connect();
+        } catch (ClassNotFoundException | SQLException e) {
+            //e.printStackTrace();
+            Bukkit.getLogger().warning("Database connection failed!");
+        }
+
+        for(Player player: Bukkit.getOnlinePlayers()){
+            KitManager.loadFromSQL(player.getUniqueId());
+        }
+
+
+        if(SQL.isConnected()){
+            Bukkit.getLogger().info("Database is connected!");
+            sqldata.createTable();
+            KitRoomDataManager.loadFromSQL();
+
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    if(SQL.isConnected()) {
+                        sqldata.keepAlive();
+                    }else{
+                        Bukkit.getLogger().warning("Keep Alive Failed, attempting to reconnect database");
+                        try{SQL.connect();}catch (SQLException|ClassNotFoundException e){
+                            e.printStackTrace();
+                        }
+                        if(SQL.isConnected()) {
+                            Bukkit.getLogger().info("Database is connected!");
+                            sqldata.createTable();
+                        }else{
+                            Bukkit.getLogger().warning("Database connection failed!");
+                        }
+                    }
+
+
+                }
+
+
+
+            }.runTaskTimerAsynchronously(this,25*20,25*20);
+
+
+
+        }
+
+        //this.getCommand("kit").setExecutor(new KitCommand());
+        //this.getCommand("savekit").setExecutor(new SaveKit());
+        //this.getCommand("viewkit").setExecutor(new ViewKit());
+        this.getCommand("kit").setExecutor(new MainMenu());
+        //this.getCommand("repair").setExecutor(new Repair());
+        this.getCommand("sharekit").setExecutor(new ShareKitCommand());
+        this.getCommand("copykit").setExecutor(new CopyKitCommand());
+        this.getCommand("kitroom").setExecutor(new KitRoomCommands());
+        this.getCommand("swapkit").setExecutor(new SwapKit());
+        this.getCommand("deletekit").setExecutor(new DeleteKit());
+        this.getCommand("inspectkit").setExecutor(new InspectKitCommand());
+        this.getCommand("enderchest").setExecutor(new EnderchestCommand());
+
+
+
+        this.getCommand("enderchest").setTabCompleter(new EnderChestTab());
+        this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
+
+
+
+
+
+        for(int i=1;i<10;i++){
+            this.getCommand("k"+i).setExecutor(new ShortKitCommand());
+        }
+
+
+
+
+
+        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
+        Bukkit.getPluginManager().registerEvents(new KitMenuCloseListener(), this);
+        Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
+        Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
+
+
+
+
+
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+
+
+
+
+
+        for(Player player: Bukkit.getOnlinePlayers()){
+            KitManager.saveToSQL(player.getUniqueId());
+        }
+
+        KitRoomDataManager.saveToSQL();
+        SQL.disconnect();
+
+
+    }
+
+
+
+
+}

@@ -1,0 +1,8 @@
+#Database credentials
+
+database:
+  host: "localhost"
+  port: "3306"
+  dbname: "kitdatabase"
+  username: "username"
+  password: "pa55w0rd"

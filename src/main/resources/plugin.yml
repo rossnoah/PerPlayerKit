@@ -1,0 +1,100 @@
+name: PerPlayerKit
+version: "${project.version}"
+main: net.vanillapractice.perplayerkit.PerPlayerKit
+author: Noah Ross
+api-version: 1.17
+commands:
+  #kit:
+  # usage: /<command>
+  #permission: kit.use
+
+  #savekit:
+  #usage: /<command>
+  # permission: kit.use
+
+  #viewkit:
+  #  usage: /<command>
+  #  permission: kit.use
+
+  kitroom:
+    usage: /<command>
+    permission: kit.admin
+
+  kit:
+    usage: /<command>
+    permission: kit.use
+    aliases: [k]
+
+  #  repair:
+  #   usage: /<command>
+  #   permission: kit.use
+
+  copykit:
+    usage: /<command>
+    permission: kit.use
+
+  sharekit:
+    usage: /<command>
+    permission: kit.use
+
+  swapkit:
+    usage: /<command>
+    permission: kit.use
+
+  deletekit:
+    usage: /<command>
+    permission: kit.use
+
+  inspectkit:
+    usage: /<command>
+    permission: kit.staff
+
+  k1:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit1
+
+  k2:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit2
+
+  k3:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit3
+
+  k4:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit4
+
+  k5:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit5
+
+  k6:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit6
+
+  k7:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit7
+
+  k8:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit8
+
+  k9:
+    usage: /<command>
+    permission: kit.use
+    aliases: kit9
+
+  enderchest:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: ec
