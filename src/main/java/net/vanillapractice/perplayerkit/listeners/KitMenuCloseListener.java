@@ -44,4 +44,31 @@ public class KitMenuCloseListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onECMenuClose(InventoryCloseEvent e) {
+        Inventory inv = e.getInventory();
+        if (inv.getSize() == 54) {
+            if (inv.getLocation() == null) {
+                InventoryView view = e.getView();
+                if (view.getTitle().contains(ChatColor.DARK_PURPLE + "Enderchest: ")) {
+                    Player p = (Player) e.getPlayer();
+                    UUID uuid = p.getUniqueId();
+                    int slot = Integer.parseInt(view.getTitle().replace(ChatColor.DARK_PURPLE + "Enderchest: ", ""));
+                    ItemStack[] kit = new ItemStack[27];
+                    ItemStack[] chestitems = e.getInventory().getContents().clone();
+
+                    for (int i = 0; i < 27; i++) {
+                        if (chestitems[i+9] != null) {
+                            kit[i] = chestitems[i+9].clone();
+                        } else {
+                            kit[i] = null;
+                        }
+
+                    }
+                    KitManager.saveEC(uuid, slot, kit);
+                }
+            }
+        }
+    }
+
 }

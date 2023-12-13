@@ -13,7 +13,7 @@ public class ViewKit implements CommandExecutor {
         Player p = (Player) commandSender;
         String uuid = p.getUniqueId().toString();
 
-        GUI main = new GUI(p);
+        GUI main = new GUI();
         main.OpenKitKenu(p,Integer.parseInt(strings[0]));
 
         return true;

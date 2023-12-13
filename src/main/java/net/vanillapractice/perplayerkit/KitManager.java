@@ -77,6 +77,7 @@ public class KitManager {
                     PerPlayerKit.data.put(uuid.toString() + slot, kit);
                     player.sendMessage(ChatColor.GREEN+"Kit "+slot+" saved!");
 
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> saveSingleKitToSQL(uuid,slot));
                     return true;
                 }else{
                         player.sendMessage(ChatColor.RED+ "You cant save an empty kit!");
@@ -90,7 +91,43 @@ public class KitManager {
 
     }
 
-    public static boolean savekit(UUID uuid, int slot,ItemStack[] kit,boolean silent) {
+    public static boolean saveEC(UUID uuid, int slot,ItemStack[] kit) {
+
+        if (Bukkit.getPlayer(uuid) != null) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                boolean notEmpty=false;
+                for(ItemStack i: kit){
+                    if(i!=null) {
+                        if(!notEmpty) {
+                            notEmpty = true;
+                        }
+
+                    }
+                }
+
+                if(notEmpty) {
+
+                    PerPlayerKit.data.put(uuid.toString() +"ec"+ slot, kit);
+                    player.sendMessage(ChatColor.GREEN+"Enderchest "+slot+" saved!");
+
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> saveSingleECToSQL(uuid,slot));
+                    return true;
+                }else{
+                    player.sendMessage(ChatColor.RED+ "You cant save an empty enderchest!");
+                }
+
+
+            }
+
+        }
+        return false;
+
+    }
+
+
+
+        public static boolean savekit(UUID uuid, int slot,ItemStack[] kit,boolean silent) {
 if(silent) {
     if (Bukkit.getPlayer(uuid) != null) {
         Player player = Bukkit.getPlayer(uuid);
@@ -137,6 +174,7 @@ if(silent) {
 
 
                 PerPlayerKit.data.put(uuid.toString() + slot, Filter.filterItemStack(kit));
+
                 return true;
             } else {
                 player.sendMessage(ChatColor.RED + "You cant save an empty kit!");
@@ -175,6 +213,33 @@ if(silent) {
                 }
                 else{
                     player.sendMessage(ChatColor.RED+"Kit "+slot+" does not exist!");
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean loadEC(UUID uuid, int slot){
+
+        if(Bukkit.getPlayer(uuid)!=null) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+
+                if(PerPlayerKit.data.get(uuid.toString()+"ec"+slot)!=null){
+
+                    ItemStack[] ec = new ItemStack[27];
+//                    copy into ec
+                    for(int i = 0;i<27;i++){
+                        if(PerPlayerKit.data.get(uuid.toString()+"ec"+slot)[i]!=null){
+                            ec[i] = PerPlayerKit.data.get(uuid.toString()+"ec"+slot)[i].clone();
+                        }
+                    }
+                    player.getEnderChest().setContents(ec);
+                    player.sendMessage(ChatColor.GREEN+"Enderchest "+slot+ " loaded!");
+                    return true;
+                }
+                else{
+                    player.sendMessage(ChatColor.RED+"Enderchest "+slot+" does not exist!");
                 }
             }
         }
@@ -223,23 +288,40 @@ if(silent) {
             String data = PerPlayerKit.sqldata.getMySQLKit(uuid.toString()+i);
             if(!data.equalsIgnoreCase("error")){
                 try {
+                    ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
                     PerPlayerKit.data.put(uuid.toString()+i,Filter.filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+
                 } catch (IOException ignored) {
                 }
             }
         }
-        String data = PerPlayerKit.sqldata.getMySQLKit(uuid.toString()+"enderchest");
-        if(!data.equalsIgnoreCase("error")){
-            try {
-                PerPlayerKit.data.put(uuid.toString()+"enderchest",Filter.filterItemStack(Serializer.itemStackArrayFromBase64(data)));
-            } catch (IOException ignored) {
+        for(int i = 1;i<10;i++){
+            String data = PerPlayerKit.sqldata.getMySQLKit(uuid.toString()+"ec"+i);
+            if(!data.equalsIgnoreCase("error")){
+                try {
+                    ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
+                    PerPlayerKit.data.put(uuid.toString()+"ec"+i,Filter.filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+
+                } catch (IOException ignored) {
+                }
             }
         }
+//
+//
+//        String data = PerPlayerKit.sqldata.getMySQLKit(uuid.toString()+"enderchest");
+//        if(!data.equalsIgnoreCase("error")){
+//            try {
+//                PerPlayerKit.data.put(uuid.toString()+"enderchest",Filter.filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+//            } catch (IOException ignored) {
+//            }
+//        }
     }
 
     public static void saveToSQL(UUID uuid){
         for(int i = 1;i<10  ;i++){
             if(PerPlayerKit.data.get(uuid.toString()+i)!=null){
+                PerPlayerKit.getPlugin().getLogger().info(Serializer
+                        .itemStackArrayToBase64(PerPlayerKit.data.get(uuid.toString()+i)));
                 PerPlayerKit.sqldata.saveMySQLKit(uuid.toString()+i,Serializer
                         .itemStackArrayToBase64(PerPlayerKit.data.get(uuid.toString()+i)));
                 PerPlayerKit.data.remove(uuid.toString()+i);
@@ -249,6 +331,19 @@ if(silent) {
             PerPlayerKit.sqldata.saveMySQLKit(uuid.toString()+"enderchest",Serializer
                     .itemStackArrayToBase64(PerPlayerKit.data.get(uuid.toString()+"enderchest")));
             PerPlayerKit.data.remove(uuid.toString()+"enderchest");
+        }
+    }
+
+    public static void saveSingleKitToSQL(UUID uuid,int slot){
+        if(PerPlayerKit.data.get(uuid.toString()+slot)!=null){
+            PerPlayerKit.sqldata.saveMySQLKit(uuid.toString()+slot,Serializer
+                    .itemStackArrayToBase64(Filter.filterItemStack(PerPlayerKit.data.get(uuid.toString()+slot))));
+        }
+    }
+    public static void saveSingleECToSQL(UUID uuid,int slot){
+        if(PerPlayerKit.data.get(uuid.toString()+"ec"+slot)!=null){
+            PerPlayerKit.sqldata.saveMySQLKit(uuid.toString()+"ec"+slot,Serializer
+                    .itemStackArrayToBase64(Filter.filterItemStack(PerPlayerKit.data.get(uuid.toString()+"ec"+slot))));
         }
     }
 

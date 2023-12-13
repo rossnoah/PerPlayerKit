@@ -4,8 +4,9 @@ import net.vanillapractice.perplayerkit.commands.*;
 import net.vanillapractice.perplayerkit.gui.ItemUtil;
 import net.vanillapractice.perplayerkit.listeners.*;
 import net.vanillapractice.perplayerkit.sql.MySQL;
+import net.vanillapractice.perplayerkit.sql.PerPlayerKitDatabase;
 import net.vanillapractice.perplayerkit.sql.SQLGetter;
-import net.vanillapractice.perplayerkit.tabcompleter.EnderChestTab;
+import net.vanillapractice.perplayerkit.sql.SQLite;
 import net.vanillapractice.perplayerkit.tabcompleter.KitRoomTab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 public final class PerPlayerKit extends JavaPlugin {
 
-    public MySQL SQL;
+    public PerPlayerKitDatabase database;
     public static SQLGetter sqldata;
     public static HashMap<String, ItemStack[]> data = new HashMap<>();
     public static HashMap<String, ItemStack[]> kitShareData = new HashMap<>();
@@ -70,13 +71,20 @@ public final class PerPlayerKit extends JavaPlugin {
         kitroomData.add(defaultPage);
 
 
+        String dbType = this.getConfig().getString("database.type");
+        if(dbType.equalsIgnoreCase("mysql")) {
+            this.database = new MySQL();
+        }else if(dbType.equalsIgnoreCase("sqlite")) {
+            this.database = new SQLite();
+        }else {
+            this.database = new SQLite();
 
-        this.SQL = new MySQL();
+        }
         sqldata = new SQLGetter(this);
 
 
         try {
-            SQL.connect();
+            database.connect();
         } catch (ClassNotFoundException | SQLException e) {
             //e.printStackTrace();
             Bukkit.getLogger().warning("Database connection failed!");
@@ -87,7 +95,7 @@ public final class PerPlayerKit extends JavaPlugin {
         }
 
 
-        if(SQL.isConnected()){
+        if(database.isConnected()){
             Bukkit.getLogger().info("Database is connected!");
             sqldata.createTable();
             KitRoomDataManager.loadFromSQL();
@@ -96,14 +104,15 @@ public final class PerPlayerKit extends JavaPlugin {
 
                 @Override
                 public void run() {
-                    if(SQL.isConnected()) {
+                    if(database.isConnected()) {
                         sqldata.keepAlive();
                     }else{
                         Bukkit.getLogger().warning("Keep Alive Failed, attempting to reconnect database");
-                        try{SQL.connect();}catch (SQLException|ClassNotFoundException e){
+                        try{
+                            database.connect();}catch (SQLException | ClassNotFoundException e){
                             e.printStackTrace();
                         }
-                        if(SQL.isConnected()) {
+                        if(database.isConnected()) {
                             Bukkit.getLogger().info("Database is connected!");
                             sqldata.createTable();
                         }else{
@@ -137,7 +146,6 @@ public final class PerPlayerKit extends JavaPlugin {
 
 
 
-        this.getCommand("enderchest").setTabCompleter(new EnderChestTab());
         this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
 
 
@@ -178,8 +186,9 @@ public final class PerPlayerKit extends JavaPlugin {
             KitManager.saveToSQL(player.getUniqueId());
         }
 
-        KitRoomDataManager.saveToSQL();
-        SQL.disconnect();
+//        KitRoomDataManager.saveToSQL();
+//        disabled as it should save when changes are made
+        database.disconnect();
 
 
     }

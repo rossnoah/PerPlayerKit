@@ -13,7 +13,7 @@ public class MainMenu implements CommandExecutor {
         Player p = (Player) commandSender;
         String uuid = p.getUniqueId().toString();
 
-        GUI main = new GUI(p);
+        GUI main = new GUI();
         main.OpenMainMenu(p);
         return true;
     }

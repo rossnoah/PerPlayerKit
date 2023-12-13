@@ -1,19 +1,21 @@
 # PerPlayerKits
 
-PerPlayerKits is a [Spigot](https://www.spigotmc.org/) plugin that allows players to make their own unique kits to PvP with. Adminstrators create a set of items in the "Virtual Kit Room", from which players pick their items. They can then make upto 9 kits each with can be shared, modified, and inspected by moderators. It features a GUI for simple kit useage of the plugin. Additionally commands can be used to quickly load kits and for moderator features. It also features protections against abusive items, limiting NBT data and enchantments to what is available in vanilla Minecraft and only allowing items that can be found in the "virtual kit room".
+PerPlayerKits is a [Spigot](https://www.spigotmc.org/) plugin that allows players to make their own unique kits to PvP with. Administrators create a set of items in the "Virtual Kit Room", from which players pick their items. They can then make up to 9 kits each with can be shared, modified, and inspected by moderators. It features a GUI for simple kit usage of the plugin. Additionally, commands can be used to quickly load kits and for moderator features. It also features protections against abusive items, limiting NBT data and enchantments to what is available in vanilla Minecraft and only allowing items that can be found in the "virtual kit room".
+Players can also use the plugin to create enderchest kits that will be loaded into their enderchest when they select the enderchest kit.
 
 ## Dependencies
 
-PerPlayerKits uses the canvas library which can be found [here](https://github.com/rossnoah/canvas)
+PerPlayerKits uses a minecraft GUI library called canvas, it can be found [here](https://github.com/IPVP-MC/canvas)
 
 PerPlayerKits was built on Java 17 for Minecraft version 1.17 but should work with any version of 1.17 or above.
 
 ## Installation
 
-PerPlayerKits has a minimal configuration just requiring MySQL or MySQL compatible (MariaDB) database credentials. To use the plugin run the server with the plugin in the "plugins" folder, then stop the server and edit the config.yml file in the "plugins/PerPlayerKits" folder. Fill in the database credentials and restart the server. The plugin will automatically create the database and tables as needed.
+PerPlayerKits has a minimal configuration just requiring selecting the database type. You can use SQLite or a MySQL/MySQL compatible (MariaDB) database. To use the plugin run the server with the plugin in the "plugins" folder, then stop the server and edit the config.yml file in the "plugins/PerPlayerKits" folder. Fill in the database credentials and restart the server. The plugin will automatically create the database and tables as needed.
 
 ```yml
 database:
+  type: "mysql" # "mysql" or "sqlite"
   host: "localhost"
   port: "3306"
   dbname: "kitdatabase"

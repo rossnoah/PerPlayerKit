@@ -17,7 +17,7 @@ public class SQLGetter {
         PreparedStatement ps;
 
         try{
-            ps = plugin.SQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kits "
+            ps = plugin.database.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kits "
                             + "(KITID VARCHAR(100),KITDATA TEXT(15000), PRIMARY KEY (KITID) )" );
             ps.executeUpdate();
         }catch (SQLException e){
@@ -30,7 +30,7 @@ public class SQLGetter {
         PreparedStatement ps;
 
         try{
-            ps = plugin.SQL.getConnection().prepareStatement("SELECT 1" );
+            ps = plugin.database.getConnection().prepareStatement("SELECT 1" );
             ps.executeQuery();
         }catch (SQLException e){
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class SQLGetter {
                 delete.executeUpdate();
 
              */
-                PreparedStatement ps = plugin.SQL.getConnection().prepareStatement("REPLACE INTO kits" +
+                PreparedStatement ps = plugin.database.getConnection().prepareStatement("REPLACE INTO kits" +
                         " (KITID,KITDATA) VALUES (?,?)");
                 ps.setString(1,kitID);
                 ps.setString(2,data);
@@ -72,12 +72,26 @@ public class SQLGetter {
         if (exists(kitID)) {
             try {
 
-                PreparedStatement ps = plugin.SQL.getConnection().prepareStatement("SELECT KITDATA FROM kits WHERE KITID=?");
+                PreparedStatement ps = plugin.database.getConnection().prepareStatement("SELECT KITDATA FROM kits WHERE KITID=?");
                 ps.setString(1,kitID);
                 ResultSet rs = ps.executeQuery();
                 String kitdata;
+
+
+
+//                while (rs.next()) {
+//                    for (int i = 1; i <= 1; i++) {
+//                        System.out.print(rs.getString(i) + "\t");
+//                    }
+//                    System.out.println();
+//                }
+
                 if(rs.next()){
-                    kitdata = rs.getNString("KITDATA");
+//                    PerPlayerKit.getPlugin().getLogger().info(rs.toString());
+
+
+
+                    kitdata = rs.getString(1);
                     return kitdata;
                 }
 
@@ -93,7 +107,7 @@ public class SQLGetter {
     public boolean exists(String kitID){
 
         try{
-            PreparedStatement ps = plugin.SQL.getConnection().prepareStatement("SELECT * FROM kits WHERE KITID=?");
+            PreparedStatement ps = plugin.database.getConnection().prepareStatement("SELECT * FROM kits WHERE KITID=?");
             ps.setString(1,kitID);
             ResultSet results = ps.executeQuery();
             if(results.next()){
@@ -109,7 +123,7 @@ public class SQLGetter {
     public boolean deleteKitSQL(String kitID){
 
         try{
-            PreparedStatement ps = plugin.SQL.getConnection().prepareStatement("DELETE FROM kits WHERE KITID=?");
+            PreparedStatement ps = plugin.database.getConnection().prepareStatement("DELETE FROM kits WHERE KITID=?");
             ps.setString(1,kitID);
             ps.executeUpdate();
             return true;

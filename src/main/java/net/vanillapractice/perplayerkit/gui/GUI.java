@@ -16,7 +16,7 @@ import java.util.UUID;
 import static net.vanillapractice.perplayerkit.gui.ItemUtil.createItem;
 
 public class GUI {
-        public GUI(Player p){
+        public GUI(){
 
         }
 
@@ -62,6 +62,49 @@ public class GUI {
 
                         menu.open(p);
 
+        }
+
+        public void OpenECKitKenu(Player p, int slot) {
+                Menu menu = createECMenu(slot,p);
+
+
+                for(int i = 0; i<54;i++){
+                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,1," "));
+
+                }
+                if (PerPlayerKit.data.get(p.getUniqueId().toString()+"ec" + slot) != null) {
+
+                        ItemStack[] kit = PerPlayerKit.data.get(p.getUniqueId().toString()+"ec" + slot);
+                        for (int i = 9; i < 36; i++) {
+                                menu.getSlot(i).setItem(kit[i]);
+                        }
+                }
+                for (int i = 9; i < 36; i++) {
+                        allowModification(menu.getSlot(i));
+                }
+
+//                menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS,1,"&7&lBOOTS"));
+//                menu.getSlot(46).setItem(createItem(Material.CHAINMAIL_LEGGINGS,1,"&7&lLEGGINGS"));
+//                menu.getSlot(47).setItem(createItem(Material.CHAINMAIL_CHESTPLATE,1,"&7&lCHESTPLATE"));
+//                menu.getSlot(48).setItem(createItem(Material.CHAINMAIL_HELMET,1,"&7&lHELMET"));
+//                menu.getSlot(49).setItem(createItem(Material.SHIELD,1,"&7&lOFFHAND"));
+
+             /*   menu.getSlot(41).setItem(createItem(Material.END_CRYSTAL,1,"&8&lCRYSTAL KIT","&7COMING SOON"));
+                menu.getSlot(42).setItem(createItem(Material.NETHERITE_SWORD,1,"&8&lDIAMOND KIT","&7COMING SOON"));
+                menu.getSlot(43).setItem(createItem(Material.DIAMOND_AXE,1,"&8&lAXE KIT","&7COMING SOON"));
+                menu.getSlot(43).setItem(createItem(Material.SPLASH_POTION,1,"&8&lNETHERITE POT KIT","&7COMING SOON"));
+                menu.getSlot(50).setItem(createItem(Material.ANVIL,1,"&8&lRENAME","&7COMING SOON"));
+
+              */
+
+                menu.getSlot(51).setItem(createItem(Material.CHEST,1,"&a&lIMPORT","&7● Import from inventory"));
+                menu.getSlot(52).setItem(createItem(Material.BARRIER,1,"&c&lCLEAR KIT","&7● Shift click to clear"));
+                menu.getSlot(53).setItem(createItem(Material.OAK_DOOR,1,"&c&lBACK"));
+                addMainButton(menu.getSlot(53));
+                addClear(menu.getSlot(52),0,27);
+                addImportEC(menu.getSlot(51));
+                menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
+                menu.open(p);
         }
 
         public void InspectKit(Player p, UUID target ,int slot) {
@@ -111,7 +154,8 @@ public class GUI {
                 for(int i = 18;i<27;i++) {
 
                         menu.getSlot(i).setItem(createItem(
-                                Material.ENDER_CHEST,1,"&8&lENDERCHEST","&7Use /enderchest &asave&7/&6load"));
+                                Material.ENDER_CHEST,1,"&3&lEnderchest "+(i-17),"&7● Left click to load kit","&7● Right click to edit kit"));
+                        addEditLoadEC(menu.getSlot(i),i-17);
                 }
                 for(int i = 27;i<36;i++) {
                         if(PerPlayerKit.data.get(p.getUniqueId().toString()+(i-26))!=null){
@@ -216,6 +260,16 @@ public class GUI {
                         }
                 });
         }
+        public void addClear(Slot slot,int start,int end) {
+                slot.setClickHandler((player, info) -> {
+                        if(info.getClickType().isShiftClick()) {
+                                Menu m = info.getClickedMenu();
+                                for (int i = start; i < end; i++) {
+                                        m.getSlot(i).setItem(null);
+                                }
+                        }
+                });
+        }
 
         public void addMainButton(Slot slot) {
                 slot.setClickHandler((player, info) -> {
@@ -285,6 +339,18 @@ public class GUI {
 
         }
 
+        public void addImportEC(Slot slot) {
+                slot.setClickHandler((player, info) -> {
+                        Menu m = info.getClickedMenu();
+                        ItemStack[] inv = player.getEnderChest().getContents();
+                                for(int i=0;i<27;i++){
+                                m.getSlot(i+9).setItem(inv[i]);
+                        }
+                });
+
+
+        }
+
         public void addEdit (Slot slot,int i) {
                 slot.setClickHandler((player, info) -> {
                         if(info.getClickType().isLeftClick()||info.getClickType().isRightClick()){
@@ -293,6 +359,15 @@ public class GUI {
                         }
                 });
         }
+        public void addEditEC (Slot slot,int i) {
+                slot.setClickHandler((player, info) -> {
+                        if(info.getClickType().isLeftClick()||info.getClickType().isRightClick()){
+                                Menu m = info.getClickedMenu();
+                                OpenECKitKenu(player, i);
+                        }
+                });
+        }
+
 
         public void addLoad (Slot slot,int i) {
                 slot.setClickHandler((player, info) -> {
@@ -322,11 +397,33 @@ public class GUI {
                 });
         }
 
+        public void addEditLoadEC (Slot slot,int i) {
+                slot.setClickHandler((player, info) -> {
+                        if(info.getClickType()== ClickType.LEFT||
+                                info.getClickType()==ClickType.SHIFT_LEFT) {
+                                Menu m = info.getClickedMenu();
+                                KitManager.loadEC(player.getUniqueId(),i);
+                                info.getClickedMenu().close();
+                        }
+                        if(info.getClickType()== ClickType.RIGHT||
+                                info.getClickType()==ClickType.SHIFT_RIGHT) {
+                                Menu m = info.getClickedMenu();
+                                OpenECKitKenu(player, i);
+                        }
+                });
+        }
+
 
 
         public Menu createKitMenu(int slot,Player player) {
                 return ChestMenu.builder(6)
                         .title(ChatColor.DARK_PURPLE+"Kit: "+slot)
+                        .build();
+        }
+
+        public Menu createECMenu(int slot,Player player) {
+                return ChestMenu.builder(6)
+                        .title(ChatColor.DARK_PURPLE+"Enderchest: "+slot)
                         .build();
         }
 
