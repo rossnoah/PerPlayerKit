@@ -32,7 +32,7 @@ public final class PerPlayerKit extends JavaPlugin {
     public static HashMap<String, ItemStack[]> data = new HashMap<>();
     public static HashMap<String, ItemStack[]> kitShareData = new HashMap<>();
     public static int bcDistance = 500;
-    public static String prefix = ChatColor.translateAlternateColorCodes('&',"&7[&5Kits&7] ");
+    public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&5Kits&7] ");
     public static HashMap<UUID, Timestamp> repairBroadcastCooldown = new HashMap<>();
     public static int repairDelay = 5;
     public static HashMap<UUID, Timestamp> kitRoomBroadcastCooldown = new HashMap<>();
@@ -43,7 +43,7 @@ public final class PerPlayerKit extends JavaPlugin {
     public static ArrayList<String> whitelist = new ArrayList<>();
     public static Plugin plugin;
 
-    public static HashMap<UUID,Integer> lastKit = new HashMap<>();
+    public static HashMap<UUID, Integer> lastKit = new HashMap<>();
 
     public static Plugin getPlugin() {
         return plugin;
@@ -52,18 +52,14 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        plugin=this;
+        plugin = this;
 
         this.saveDefaultConfig();
 
 
-
-
-
-
         // Plugin startup logic
         ItemStack[] defaultPage = new ItemStack[45];
-        defaultPage[0] = ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,"&5Default Kit Room Item");
+        defaultPage[0] = ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE, "&5Default Kit Room Item");
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
@@ -72,11 +68,13 @@ public final class PerPlayerKit extends JavaPlugin {
 
 
         String dbType = this.getConfig().getString("database.type");
-        if(dbType.equalsIgnoreCase("mysql")) {
-            this.database = new MySQL();
-        }else if(dbType.equalsIgnoreCase("sqlite")) {
+        if (dbType == null) {
             this.database = new SQLite();
-        }else {
+        } else if (dbType.equalsIgnoreCase("mysql")) {
+            this.database = new MySQL();
+        } else if (dbType.equalsIgnoreCase("sqlite")) {
+            this.database = new SQLite();
+        } else {
             this.database = new SQLite();
 
         }
@@ -90,12 +88,12 @@ public final class PerPlayerKit extends JavaPlugin {
             Bukkit.getLogger().warning("Database connection failed!");
         }
 
-        for(Player player: Bukkit.getOnlinePlayers()){
+        for (Player player : Bukkit.getOnlinePlayers()) {
             KitManager.loadFromSQL(player.getUniqueId());
         }
 
 
-        if(database.isConnected()){
+        if (database.isConnected()) {
             Bukkit.getLogger().info("Database is connected!");
             sqldata.createTable();
             KitRoomDataManager.loadFromSQL();
@@ -104,18 +102,19 @@ public final class PerPlayerKit extends JavaPlugin {
 
                 @Override
                 public void run() {
-                    if(database.isConnected()) {
+                    if (database.isConnected()) {
                         sqldata.keepAlive();
-                    }else{
+                    } else {
                         Bukkit.getLogger().warning("Keep Alive Failed, attempting to reconnect database");
-                        try{
-                            database.connect();}catch (SQLException | ClassNotFoundException e){
+                        try {
+                            database.connect();
+                        } catch (SQLException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
-                        if(database.isConnected()) {
+                        if (database.isConnected()) {
                             Bukkit.getLogger().info("Database is connected!");
                             sqldata.createTable();
-                        }else{
+                        } else {
                             Bukkit.getLogger().warning("Database connection failed!");
                         }
                     }
@@ -124,18 +123,12 @@ public final class PerPlayerKit extends JavaPlugin {
                 }
 
 
-
-            }.runTaskTimerAsynchronously(this,25*20,25*20);
-
+            }.runTaskTimerAsynchronously(this, 25 * 20, 25 * 20);
 
 
         }
 
-        //this.getCommand("kit").setExecutor(new KitCommand());
-        //this.getCommand("savekit").setExecutor(new SaveKit());
-        //this.getCommand("viewkit").setExecutor(new ViewKit());
         this.getCommand("kit").setExecutor(new MainMenu());
-        //this.getCommand("repair").setExecutor(new Repair());
         this.getCommand("sharekit").setExecutor(new ShareKitCommand());
         this.getCommand("copykit").setExecutor(new CopyKitCommand());
         this.getCommand("kitroom").setExecutor(new KitRoomCommands());
@@ -143,21 +136,12 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("deletekit").setExecutor(new DeleteKit());
         this.getCommand("inspectkit").setExecutor(new InspectKitCommand());
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
-
-
-
         this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
 
 
-
-
-
-        for(int i=1;i<10;i++){
-            this.getCommand("k"+i).setExecutor(new ShortKitCommand());
+        for (int i = 1; i < 10; i++) {
+            this.getCommand("k" + i).setExecutor(new ShortKitCommand());
         }
-
-
-
 
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
@@ -169,31 +153,12 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
 
 
-
-
-
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
-
-
-
-
-
-        for(Player player: Bukkit.getOnlinePlayers()){
-            KitManager.saveToSQL(player.getUniqueId());
-        }
-
-//        KitRoomDataManager.saveToSQL();
-//        disabled as it should save when changes are made
         database.disconnect();
-
-
     }
-
-
 
 
 }

@@ -32,6 +32,8 @@ public class SwapKit implements CommandExecutor {
                             ItemStack[] tempkit = KitManager.getKit(uuid, slot1).clone();
                             KitManager.savekit(uuid, slot1, KitManager.getKit(uuid, slot2), true);
                             KitManager.savekit(uuid, slot2, tempkit.clone(), true);
+                            KitManager.saveSingleECToSQL(uuid, slot1);
+                            KitManager.saveSingleECToSQL(uuid, slot2);
 
                             player.sendMessage(ChatColor.GREEN + "Kits " + slot1 + " and " + slot2 + " have been swapped!");
 
