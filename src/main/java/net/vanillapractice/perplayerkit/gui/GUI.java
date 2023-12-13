@@ -68,7 +68,11 @@ public class GUI {
                 Menu menu = createECMenu(slot,p);
 
 
-                for(int i = 0; i<54;i++){
+                for(int i = 0; i<9;i++){
+                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,1," "));
+
+                }
+                for(int i = 36; i<54;i++){
                         menu.getSlot(i).setItem(ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,1," "));
 
                 }
@@ -152,10 +156,17 @@ public class GUI {
 
                     }
                 for(int i = 18;i<27;i++) {
+                        if(PerPlayerKit.data.get(p.getUniqueId().toString()+"ec"+(i-17))!=null) {
 
-                        menu.getSlot(i).setItem(createItem(
-                                Material.ENDER_CHEST,1,"&3&lEnderchest "+(i-17),"&7● Left click to load kit","&7● Right click to edit kit"));
-                        addEditLoadEC(menu.getSlot(i),i-17);
+                                menu.getSlot(i).setItem(createItem(
+                                        Material.ENDER_CHEST, 1, "&3&lEnderchest " + (i - 17), "&7● Left click to load kit", "&7● Right click to edit kit"));
+                                addEditLoadEC(menu.getSlot(i),i-17);
+
+                        }else{
+                                menu.getSlot(i).setItem(createItem(
+                                        Material.ENDER_EYE, 1, "&3&lEnderchest " + (i - 17), "&7● Click to create"));
+                                addEditEC(menu.getSlot(i),i-17);
+                        }
                 }
                 for(int i = 27;i<36;i++) {
                         if(PerPlayerKit.data.get(p.getUniqueId().toString()+(i-26))!=null){
