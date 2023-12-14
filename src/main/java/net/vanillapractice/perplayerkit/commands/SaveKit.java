@@ -18,7 +18,6 @@ public class SaveKit implements CommandExecutor {
         PerPlayerKit.sqldata.saveMySQLKit(uuid+i, Serializer.itemStackArrayToBase64(PerPlayerKit.data.get(uuid+i)));
         p.sendMessage("saved to sql");
         p.sendMessage(Serializer.itemStackArrayToBase64(PerPlayerKit.data.get(uuid+i)));
-        Bukkit.getLogger().info(Serializer.itemStackArrayToBase64(PerPlayerKit.data.get(uuid+i)));
         return true;
     }
 }

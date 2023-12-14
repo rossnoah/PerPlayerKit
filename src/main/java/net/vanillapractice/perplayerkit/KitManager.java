@@ -320,8 +320,6 @@ if(silent) {
     public static void saveToSQL(UUID uuid){
         for(int i = 1;i<10  ;i++){
             if(PerPlayerKit.data.get(uuid.toString()+i)!=null){
-                PerPlayerKit.getPlugin().getLogger().info(Serializer
-                        .itemStackArrayToBase64(PerPlayerKit.data.get(uuid.toString()+i)));
                 PerPlayerKit.sqldata.saveMySQLKit(uuid.toString()+i,Serializer
                         .itemStackArrayToBase64(PerPlayerKit.data.get(uuid.toString()+i)));
                 PerPlayerKit.data.remove(uuid.toString()+i);
