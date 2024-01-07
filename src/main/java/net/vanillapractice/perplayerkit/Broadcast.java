@@ -11,7 +11,7 @@ public class Broadcast {
         for (Player p : w.getPlayers()) {
             if (p.getLocation().distance(player.getLocation()) < PerPlayerKit.bcDistance) {
                 p.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes
-                        ('&', "&d" + player.getName() + "&7 repaired!"));
+                        ('&', "&3" + player.getName() + "&7 repaired!"));
             }
         }
 
@@ -23,7 +23,7 @@ public class Broadcast {
         for (Player p : w.getPlayers()) {
             if (p.getLocation().distance(player.getLocation()) < PerPlayerKit.bcDistance) {
                 p.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes
-                        ('&', "&d" + player.getName() + "&7 loaded a Kit!"));
+                        ('&', "&3" + player.getName() + "&7 loaded a Kit!"));
             }
         }
 
@@ -36,7 +36,7 @@ public class Broadcast {
         for (Player p : w.getPlayers()) {
             if (p.getLocation().distance(player.getLocation()) < PerPlayerKit.bcDistance) {
                 p.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes
-                        ('&', "&d" + player.getName() + "&7 loaded their enderchest!"));
+                        ('&', "&3" + player.getName() + "&7 loaded their enderchest!"));
             }
         }
 
@@ -49,7 +49,7 @@ public class Broadcast {
         for (Player p : w.getPlayers()) {
             if (p.getLocation().distance(player.getLocation()) < PerPlayerKit.bcDistance) {
                 p.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes
-                        ('&', "&d" + player.getName() + "&7 copied a kit!"));
+                        ('&', "&3" + player.getName() + "&7 copied a kit!"));
             }
         }
 
@@ -64,7 +64,7 @@ public class Broadcast {
             for (Player p : w.getPlayers()) {
                 if (p.getLocation().distance(player.getLocation()) < PerPlayerKit.bcDistance) {
                     p.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes
-                            ('&', "&d" + player.getName() + "&7 opened the Kit Room!"));
+                            ('&', "&3" + player.getName() + "&7 opened the Kit Room!"));
                 }
             }
 

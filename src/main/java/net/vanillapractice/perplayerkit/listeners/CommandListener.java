@@ -15,7 +15,7 @@ public class CommandListener implements Listener {
         if(e.getMessage().length()>1){
             if(e.getMessage().contains("/ ")){
                 e.setCancelled(true);
-                e.getPlayer().sendMessage("Unknown Command.");
+                e.getPlayer().sendMessage("Unknown Command. Type \"/help\" for help.");
 
             }
         }

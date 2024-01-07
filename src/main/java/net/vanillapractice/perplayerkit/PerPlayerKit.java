@@ -32,7 +32,7 @@ public final class PerPlayerKit extends JavaPlugin {
     public static HashMap<String, ItemStack[]> data = new HashMap<>();
     public static HashMap<String, ItemStack[]> kitShareData = new HashMap<>();
     public static int bcDistance = 500;
-    public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&5Kits&7] ");
+    public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] ");
     public static HashMap<UUID, Timestamp> repairBroadcastCooldown = new HashMap<>();
     public static int repairDelay = 5;
     public static HashMap<UUID, Timestamp> kitRoomBroadcastCooldown = new HashMap<>();
@@ -59,7 +59,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
         // Plugin startup logic
         ItemStack[] defaultPage = new ItemStack[45];
-        defaultPage[0] = ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE, "&5Default Kit Room Item");
+        defaultPage[0] = ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, "&bDefault Kit Room Item");
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
@@ -151,7 +151,6 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
-
 
     }
 

@@ -35,7 +35,7 @@ public class GUI {
                         allowModification(menu.getSlot(i));
                 }
                 for(int i = 41; i<54;i++){
-                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,1," "));
+                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE,1," "));
 
                 }
                 menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS,1,"&7&lBOOTS"));
@@ -69,18 +69,18 @@ public class GUI {
 
 
                 for(int i = 0; i<9;i++){
-                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,1," "));
+                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE,1," "));
 
                 }
                 for(int i = 36; i<54;i++){
-                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,1," "));
+                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE,1," "));
 
                 }
                 if (PerPlayerKit.data.get(p.getUniqueId().toString()+"ec" + slot) != null) {
 
                         ItemStack[] kit = PerPlayerKit.data.get(p.getUniqueId().toString()+"ec" + slot);
                         for (int i = 9; i < 36; i++) {
-                                menu.getSlot(i).setItem(kit[i]);
+                                menu.getSlot(i).setItem(kit[i-9]);
                         }
                 }
                 for (int i = 9; i < 36; i++) {
@@ -124,7 +124,7 @@ public class GUI {
                 }
 
                 for(int i = 41; i<54;i++){
-                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.PURPLE_STAINED_GLASS_PANE,1," "));
+                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE,1," "));
 
                 }
                 menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS,1,"&7&lBOOTS"));
@@ -146,12 +146,12 @@ public class GUI {
                         for(int i = 0;i<54;i++) {
 
                         menu.getSlot(i).setItem(createItem(
-                                Material.PURPLE_STAINED_GLASS_PANE,1," "));
+                                Material.BLUE_STAINED_GLASS_PANE,1," "));
                         }
                     for(int i = 9;i<18;i++) {
 
                         menu.getSlot(i).setItem(createItem(
-                                Material.CHEST,1,"&d&lKit "+(i-8),"&7● Left click to load kit","&7● Right click to edit kit"));
+                                Material.CHEST,1,"&3&lKit "+(i-8),"&7● Left click to load kit","&7● Right click to edit kit"));
                         addEditLoad(menu.getSlot(i),i-8);
 
                     }
@@ -219,7 +219,7 @@ public class GUI {
                 for (int i = 45; i < 54; i++) {
 
                         menu.getSlot(i).setItem(ItemUtil.createItem
-                                (Material.PURPLE_STAINED_GLASS_PANE,1," "));
+                                (Material.BLUE_STAINED_GLASS_PANE,1," "));
                 }
                 if(PerPlayerKit.kitroomData.get(page)!=null){
                         for(int i =0;i<45;i++){
@@ -228,7 +228,7 @@ public class GUI {
                 }
 
 
-                menu.getSlot(45).setItem(createItem(Material.BEACON,1,"&d&lREFILL"));
+                menu.getSlot(45).setItem(createItem(Material.BEACON,1,"&3&lREFILL"));
               addKitRoom(menu.getSlot(45),page  );
 
               if(!p.hasPermission("perplayerkit.editkitroom")) {
@@ -243,9 +243,9 @@ public class GUI {
                 addKitRoom(menu.getSlot(50),3);
                 addKitRoom(menu.getSlot(51),4);
                 menu.getSlot(47).setItem(
-                        createItem(Material.NETHERITE_CHESTPLATE,"&5Vanilla PvP"));
+                        createItem(Material.DIAMOND_SWORD,"&bOG Vanilla"));
                 menu.getSlot(48).setItem(
-                        createItem(Material.DIAMOND_CHESTPLATE,"&bDiamond Crystal"));
+                        createItem(Material.WOODEN_SWORD,"&3Training"));
                 menu.getSlot(49).setItem(
                         createItem(Material.SPLASH_POTION,"&9Potions"));
                 menu.getSlot(50).setItem(
@@ -415,7 +415,7 @@ public class GUI {
                                 Menu m = info.getClickedMenu();
                                 KitManager.loadEC(player.getUniqueId(),i);
                                 info.getClickedMenu().close();
-                        }
+                        }else
                         if(info.getClickType()== ClickType.RIGHT||
                                 info.getClickType()==ClickType.SHIFT_RIGHT) {
                                 Menu m = info.getClickedMenu();
@@ -428,29 +428,29 @@ public class GUI {
 
         public Menu createKitMenu(int slot,Player player) {
                 return ChestMenu.builder(6)
-                        .title(ChatColor.DARK_PURPLE+"Kit: "+slot)
+                        .title(ChatColor.BLUE+"Kit: "+slot)
                         .build();
         }
 
         public Menu createECMenu(int slot,Player player) {
                 return ChestMenu.builder(6)
-                        .title(ChatColor.DARK_PURPLE+"Enderchest: "+slot)
+                        .title(ChatColor.BLUE+"Enderchest: "+slot)
                         .build();
         }
 
         public Menu createInspectMenu(int slot,Player player,String s) {
                 return ChestMenu.builder(6)
-                        .title(ChatColor.DARK_PURPLE+"Inspecting: "+s+" Slot: "+slot)
+                        .title(ChatColor.BLUE+"Inspecting: "+s+" Slot: "+slot)
                         .build();
         }
         public Menu createMainMenu(Player p) {
                 return ChestMenu.builder(6)
-                        .title(ChatColor.DARK_PURPLE+ p.getName()+"'s Kits")
+                        .title(ChatColor.BLUE+ p.getName()+"'s Kits")
                         .build();
         }
         public Menu createKitRoom() {
                 return ChestMenu.builder(6)
-                        .title(ChatColor.DARK_PURPLE+"Kit Room")
+                        .title(ChatColor.BLUE+"Kit Room")
                         .redraw(true)
                         .build();
         }

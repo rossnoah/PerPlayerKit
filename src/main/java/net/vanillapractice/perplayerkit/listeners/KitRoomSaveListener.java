@@ -26,7 +26,7 @@ public class KitRoomSaveListener implements Listener {
                 InventoryView view = e.getView();
                 Player p = (Player) e.getWhoClicked();
 
-                if (view.getTitle().contains(ChatColor.DARK_PURPLE + p.getName() + "'s Kits")) {
+                if (view.getTitle().contains(ChatColor.BLUE + p.getName() + "'s Kits")) {
                     if (e.getInventory().getItem(53) != null) {
                         if (e.getInventory().getItem(53).getType() == Material.BARRIER) {
                             if (e.getSlot() == 53) {

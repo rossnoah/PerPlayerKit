@@ -57,13 +57,13 @@ public class EnderchestCommand implements CommandExecutor {
         return true;
     }
     public void viewOnlyEC(Player p){
-        Inventory inv = Bukkit.createInventory(null,45, ChatColor.DARK_PURPLE+"View Only Enderchest");
+        Inventory inv = Bukkit.createInventory(null,45, ChatColor.BLUE+"View Only Enderchest");
 //        fill first 9 and last 9 with purple glass
-        ItemStack fill = new ItemStack(Material.PURPLE_STAINED_GLASS_PANE);
+        ItemStack fill = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
 //        set name to nothing
         fill.getItemMeta().setDisplayName("");
 
-        Menu menu = ChestMenu.builder(5).title(ChatColor.DARK_PURPLE+"View Only Enderchest").build();
+        Menu menu = ChestMenu.builder(5).title(ChatColor.BLUE+"View Only Enderchest").build();
 
 
         for(int i = 0;i<9;i++){

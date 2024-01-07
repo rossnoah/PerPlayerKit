@@ -20,10 +20,10 @@ public class KitMenuCloseListener implements Listener {
         if(inv.getSize()==54){
             if(inv.getLocation()==null){
                 InventoryView view = e.getView();
-                if(view.getTitle().contains(ChatColor.DARK_PURPLE+"Kit: ")){
+                if(view.getTitle().contains(ChatColor.BLUE+"Kit: ")){
                    Player p = (Player) e.getPlayer();
                     UUID uuid = p.getUniqueId();
-                    int slot = Integer.parseInt(view.getTitle().replace(ChatColor.DARK_PURPLE+"Kit: ",""));
+                    int slot = Integer.parseInt(view.getTitle().replace(ChatColor.BLUE+"Kit: ",""));
                     ItemStack[] kit = new ItemStack[41];
                     ItemStack[] chestitems = e.getInventory().getContents().clone();
 
@@ -50,10 +50,10 @@ public class KitMenuCloseListener implements Listener {
         if (inv.getSize() == 54) {
             if (inv.getLocation() == null) {
                 InventoryView view = e.getView();
-                if (view.getTitle().contains(ChatColor.DARK_PURPLE + "Enderchest: ")) {
+                if (view.getTitle().contains(ChatColor.BLUE + "Enderchest: ")) {
                     Player p = (Player) e.getPlayer();
                     UUID uuid = p.getUniqueId();
-                    int slot = Integer.parseInt(view.getTitle().replace(ChatColor.DARK_PURPLE + "Enderchest: ", ""));
+                    int slot = Integer.parseInt(view.getTitle().replace(ChatColor.BLUE + "Enderchest: ", ""));
                     ItemStack[] kit = new ItemStack[27];
                     ItemStack[] chestitems = e.getInventory().getContents().clone();
 
