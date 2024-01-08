@@ -40,10 +40,6 @@ public class KitRoomDataManager {
     }
 
     public static void loadFromSQL(){
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
 
 
                 for(int i=0;i<5;i++) {
@@ -61,10 +57,6 @@ public class KitRoomDataManager {
                         }
                     }
                 }
-            }
-
-        }.runTaskAsynchronously(plugin);
-
 
     }
 

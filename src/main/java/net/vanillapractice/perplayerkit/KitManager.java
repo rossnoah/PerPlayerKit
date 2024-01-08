@@ -423,7 +423,7 @@ if(silent) {
             if(!data.equalsIgnoreCase("error")){
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                    PerPlayerKit.data.put("public"+id,kit);
+                    PerPlayerKit.data.put("public"+id,Filter.filterItemStack(kit));
 
                 } catch (IOException ignored) {
                     PerPlayerKit.getPlugin().getLogger().info("Error loading public kit "+id);

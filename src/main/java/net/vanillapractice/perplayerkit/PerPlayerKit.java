@@ -90,15 +90,18 @@ public final class PerPlayerKit extends JavaPlugin {
             Bukkit.getLogger().warning("Database connection failed!");
         }
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            KitManager.loadFromSQL(player.getUniqueId());
-        }
+
 
 
         if (database.isConnected()) {
             Bukkit.getLogger().info("Database is connected!");
             sqldata.createTable();
             KitRoomDataManager.loadFromSQL();
+            loadPublicKits();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                KitManager.loadFromSQL(player.getUniqueId());
+            }
+
 
             new BukkitRunnable() {
 
@@ -156,7 +159,6 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
 
-        loadPublicKits();
 
     }
 
