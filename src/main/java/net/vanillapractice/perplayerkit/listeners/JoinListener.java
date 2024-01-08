@@ -1,6 +1,5 @@
 package net.vanillapractice.perplayerkit.listeners;
 
-import jdk.tools.jmod.Main;
 import net.vanillapractice.perplayerkit.KitManager;
 import net.vanillapractice.perplayerkit.PerPlayerKit;
 import net.vanillapractice.perplayerkit.Serializer;

@@ -1,7 +1,5 @@
 package net.vanillapractice.perplayerkit.commands;
 
-import com.sun.tools.javac.jvm.Items;
-import net.vanillapractice.perplayerkit.EnderChestUtil;
 import net.vanillapractice.perplayerkit.KitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.type.ChestMenu;
 import org.jetbrains.annotations.NotNull;

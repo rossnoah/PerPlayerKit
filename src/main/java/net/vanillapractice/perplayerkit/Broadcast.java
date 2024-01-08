@@ -23,7 +23,19 @@ public class Broadcast {
         for (Player p : w.getPlayers()) {
             if (p.getLocation().distance(player.getLocation()) < PerPlayerKit.bcDistance) {
                 p.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes
-                        ('&', "&3" + player.getName() + "&7 loaded a Kit!"));
+                        ('&', "&3" + player.getName() + "&7 loaded a kit!"));
+            }
+        }
+
+
+    }
+
+    public static void bcPublicKit(Player player) {
+        World w = player.getWorld();
+        for (Player p : w.getPlayers()) {
+            if (p.getLocation().distance(player.getLocation()) < PerPlayerKit.bcDistance) {
+                p.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes
+                        ('&', "&3" + player.getName() + "&7 loaded a public kit!"));
             }
         }
 

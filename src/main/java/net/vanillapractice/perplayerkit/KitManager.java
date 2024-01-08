@@ -1,9 +1,7 @@
 package net.vanillapractice.perplayerkit;
 
-import net.vanillapractice.perplayerkit.sql.SQLGetter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -89,6 +87,48 @@ public class KitManager {
             }
             return false;
 
+    }
+
+    public static boolean savePublicKit(String id,ItemStack[] kit) {
+        boolean notEmpty = false;
+        for (ItemStack i : kit) {
+            if (i != null) {
+                if (!notEmpty) {
+                    notEmpty = true;
+                }
+
+            }
+        }
+
+        if (notEmpty) {
+
+            if (kit[36] != null) {
+                if (!kit[36].getType().toString().contains("BOOTS")) {
+                    kit[36] = null;
+                }
+            }
+            if (kit[37] != null) {
+                if (!kit[37].getType().toString().contains("LEGGINGS")) {
+                    kit[37] = null;
+                }
+            }
+            if (kit[38] != null) {
+                if (!(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
+                    kit[38] = null;
+                }
+            }
+            if (kit[39] != null) {
+                if (!kit[39].getType().toString().contains("HELMET")) {
+                    kit[39] = null;
+                }
+            }
+
+            PerPlayerKit.data.put("public" + id, kit);
+
+            return true;
+
+        }
+        return false;
     }
 
     public static boolean saveEC(UUID uuid, int slot,ItemStack[] kit) {
@@ -219,6 +259,23 @@ if(silent) {
         return false;
     }
 
+    public static boolean loadPublicKit(Player player, String id){
+        if(PerPlayerKit.data.get("public"+id)!=null) {
+            player.getInventory().setContents(PerPlayerKit.data.get("public" + id));
+            Broadcast.bcPublicKit(player);
+            player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
+            player.sendMessage(ChatColor.GRAY + "You can save this kit by importing into the kit editor");
+
+
+            return true;
+
+        }else{
+            player.sendMessage(ChatColor.RED+"Kit does not exist!");
+            return false;
+        }
+
+    }
+
     public static boolean loadEC(UUID uuid, int slot){
 
         if(Bukkit.getPlayer(uuid)!=null) {
@@ -272,9 +329,24 @@ if(silent) {
 
     }
 
+    public static boolean hasPublicKit(String id){
+        return PerPlayerKit.data.get("public" + id) != null;
+
+    }
+
     public static ItemStack[] getKit (UUID uuid, int slot){
         if(hasKit(uuid,slot)) {
             return PerPlayerKit.data.get(uuid.toString()+slot);
+        }
+        else{
+            return null;
+        }
+
+    }
+
+    public static ItemStack[] getPublicKit (String id){
+        if(hasPublicKit(id)) {
+            return PerPlayerKit.data.get("public"+id);
         }
         else{
             return null;
@@ -338,6 +410,27 @@ if(silent) {
                     .itemStackArrayToBase64(Filter.filterItemStack(PerPlayerKit.data.get(uuid.toString()+slot))));
         }
     }
+
+    public static void saveSinglePublicKitToSQL(String id){
+        if(PerPlayerKit.data.get("public"+id)!=null){
+            PerPlayerKit.sqldata.saveMySQLKit("public"+id,Serializer
+                    .itemStackArrayToBase64(Filter.filterItemStack(PerPlayerKit.data.get("public"+id))));
+        }
+    }
+
+    public static void loadSinglePublicKitFromSQL(String id){
+            String data = PerPlayerKit.sqldata.getMySQLKit("public"+id);
+            if(!data.equalsIgnoreCase("error")){
+                try {
+                    ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
+                    PerPlayerKit.data.put("public"+id,kit);
+
+                } catch (IOException ignored) {
+                    PerPlayerKit.getPlugin().getLogger().info("Error loading public kit "+id);
+                }
+            }
+    }
+
     public static void saveSingleECToSQL(UUID uuid,int slot){
         if(PerPlayerKit.data.get(uuid.toString()+"ec"+slot)!=null){
             PerPlayerKit.sqldata.saveMySQLKit(uuid.toString()+"ec"+slot,Serializer

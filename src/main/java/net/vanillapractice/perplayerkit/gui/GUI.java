@@ -11,6 +11,8 @@ import org.ipvp.canvas.slot.ClickOptions;
 import org.ipvp.canvas.slot.Slot;
 import org.ipvp.canvas.type.ChestMenu;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static net.vanillapractice.perplayerkit.gui.ItemUtil.createItem;
@@ -183,13 +185,13 @@ public class GUI {
                 for(int i = 37;i<44;i++) {
 
                         menu.getSlot(i).setItem(createItem(
-                                Material.BLACK_STAINED_GLASS_PANE,1," "));
+                                Material.BLUE_STAINED_GLASS_PANE,1," "));
                 }
 
                 menu.getSlot(37).setItem(createItem(
                         Material.NETHER_STAR,1,"&a&lKIT ROOM"));
                 menu.getSlot(38).setItem(createItem(
-                        Material.BOOKSHELF,1,"&8&lPREMADE KITS","&7COMING SOON"));
+                        Material.BOOKSHELF,1,"&e&lPREMADE KITS"));
                 menu.getSlot(39).setItem(createItem(
                         Material.OAK_SIGN,1,"&a&lINFO","&7● Click a kit slot to load your kit","&7● Right click or click the book to edit","&7● Share kits with /sharekit <slot>"));
                 menu.getSlot(41).setItem(createItem(
@@ -200,6 +202,7 @@ public class GUI {
                         Material.EXPERIENCE_BOTTLE,1,"&a&lREPAIR ITEMS"));
                 addRepairButton(menu.getSlot(43));
                 addKitRoom(menu.getSlot(37));
+                addPublicKitMenu(menu.getSlot(38));
                 addClearButton(menu.getSlot(41));
 
                 menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
@@ -260,6 +263,75 @@ public class GUI {
 
         }
 
+        public Menu ViewPublicKitMenu(Player p, String id) {
+                Menu menu = ChestMenu.builder(6)
+                        .title(ChatColor.BLUE+"Viewing Public Kit: "+id)
+                        .redraw(true)
+                        .build();
+
+                for(int i = 0;i<54;i++){
+                        menu.getSlot(i).setItem(ItemUtil.createItem
+                                (Material.BLUE_STAINED_GLASS_PANE,1," "));
+                }
+
+                ItemStack[] kit = KitManager.getPublicKit(id);
+
+                for(int i = 9;i<50;i++){
+                        menu.getSlot(i).setItem(kit[i-9]);
+                }
+
+                menu.getSlot(52).setItem(createItem(Material.APPLE,1,"&a&lLOAD KIT"));
+                menu.getSlot(53).setItem(createItem(Material.OAK_DOOR,1,"&c&lBACK"));
+                addPublicKitMenu(menu.getSlot(53));
+                addLoadPublicKit(menu.getSlot(52),id);
+
+
+//                load kit button
+
+
+
+                menu.open(p);
+
+                return menu;
+        }
+
+        public void OpenPublicKitMenu(Player p) {
+                Menu menu = createPublicKitMenu();
+                for (int i = 0; i < 54; i++) {
+                        menu.getSlot(i).setItem(ItemUtil.createItem
+                                (Material.BLUE_STAINED_GLASS_PANE, 1, " "));
+                }
+
+                List<PublicKit> publicKitList = new ArrayList<>();
+
+                //generate list of public kits from the config
+                PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
+                        String name = PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".name");
+                        Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".icon"));
+                        PublicKit kit = new PublicKit(key,name,icon);
+                        publicKitList.add(kit);
+
+                });
+
+
+
+                for(int i = 18;i<36;i++){
+                        menu.getSlot(i).setItem(ItemUtil.createItem(Material.BOOK,1,"&7&lMORE KITS COMING SOON"));
+                }
+
+                for(int i = 0;i<publicKitList.size();i++){
+                        menu.getSlot(i+18).setItem(createItem(publicKitList.get(i).icon,1,publicKitList.get(i).name));
+                        addPublicKitButton(menu.getSlot(i+18),publicKitList.get(i).id);
+
+                }
+
+
+
+                menu.open(p);
+
+        }
+
+
 
         public void addClear(Slot slot) {
                 slot.setClickHandler((player, info) -> {
@@ -282,6 +354,20 @@ public class GUI {
                 });
         }
 
+
+        public void addPublicKitButton(Slot slot,String id) {
+                slot.setClickHandler((player, info) -> {
+                        if(info.getClickType()==ClickType.LEFT) {
+                                KitManager.loadPublicKit(player,id);
+                        }
+                        else if(info.getClickType()==ClickType.RIGHT) {
+                               Menu m = ViewPublicKitMenu(player,id);
+                               m.open(player);
+                        }
+
+
+                });
+        }
         public void addMainButton(Slot slot) {
                 slot.setClickHandler((player, info) -> {
                         OpenMainMenu(player);
@@ -296,9 +382,25 @@ public class GUI {
 
                 });
         }
+
+
         public void addKitRoom(Slot slot,int page) {
                 slot.setClickHandler((player, info) -> {
                         OpenKitRoom(player,page);
+
+                });
+        }
+
+        public void addPublicKitMenu(Slot slot) {
+                slot.setClickHandler((player, info) -> {
+                        OpenPublicKitMenu(player);
+
+                });
+        }
+
+        public void addLoadPublicKit(Slot slot,String id) {
+                slot.setClickHandler((player, info) -> {
+                       KitManager.loadPublicKit(player,id);
 
                 });
         }
@@ -451,6 +553,13 @@ public class GUI {
         public Menu createKitRoom() {
                 return ChestMenu.builder(6)
                         .title(ChatColor.BLUE+"Kit Room")
+                        .redraw(true)
+                        .build();
+        }
+
+        public Menu createPublicKitMenu() {
+                return ChestMenu.builder(6)
+                        .title(ChatColor.BLUE+"Public Kit Room")
                         .redraw(true)
                         .build();
         }

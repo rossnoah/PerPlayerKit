@@ -1,6 +1,7 @@
 package net.vanillapractice.perplayerkit;
 
 import net.vanillapractice.perplayerkit.commands.*;
+import net.vanillapractice.perplayerkit.gui.GUI;
 import net.vanillapractice.perplayerkit.gui.ItemUtil;
 import net.vanillapractice.perplayerkit.listeners.*;
 import net.vanillapractice.perplayerkit.sql.MySQL;
@@ -22,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -114,6 +116,7 @@ public final class PerPlayerKit extends JavaPlugin {
                         if (database.isConnected()) {
                             Bukkit.getLogger().info("Database is connected!");
                             sqldata.createTable();
+
                         } else {
                             Bukkit.getLogger().warning("Database connection failed!");
                         }
@@ -137,6 +140,7 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("inspectkit").setExecutor(new InspectKitCommand());
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
         this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
+        this.getCommand("savepublickit").setExecutor(new SavePublicKitCommand());
 
 
         for (int i = 1; i < 10; i++) {
@@ -152,12 +156,35 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
 
+        loadPublicKits();
+
     }
 
     @Override
     public void onDisable() {
         database.disconnect();
+
     }
+
+
+    private void loadPublicKits(){
+
+        List<PublicKit> publicKitList = new ArrayList<>();
+
+        //generate list of public kits from the config
+        PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
+            String name = PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".name");
+            Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".icon"));
+            PublicKit kit = new PublicKit(key,name,icon);
+            publicKitList.add(kit);
+        });
+
+        for(PublicKit kit : publicKitList){
+            KitManager.loadSinglePublicKitFromSQL(kit.id);
+        }
+
+    }
+
 
 
 }

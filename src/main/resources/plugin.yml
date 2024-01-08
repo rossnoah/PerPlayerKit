@@ -1,7 +1,7 @@
 name: PerPlayerKit
 version: "${project.version}"
 main: net.vanillapractice.perplayerkit.PerPlayerKit
-author: Noah Ross
+author: VanillaPractice
 api-version: 1.17
 commands:
   #kit:
@@ -98,3 +98,7 @@ commands:
     usage: /<command>
     permission: kit.enderchest
     aliases: ec
+
+  savepublickit:
+    usage: /<command> <id>
+    permission: kit.admin
