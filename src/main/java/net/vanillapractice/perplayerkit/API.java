@@ -39,8 +39,9 @@ public class API {
     }
 
     public void loadPublicKit(Player player, PublicKit kit){
-        KitManager.loadPublicKit(player,kit.id);
+        KitManager.loadPublicKitSilent(player,kit.id);
     }
+
 
 
 }
