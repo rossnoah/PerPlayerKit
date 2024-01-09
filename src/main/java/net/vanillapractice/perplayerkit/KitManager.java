@@ -306,6 +306,7 @@ if(silent) {
                         }
                     }
                     player.getEnderChest().setContents(ec);
+                    Broadcast.bcEC(player);
                     player.sendMessage(ChatColor.GREEN+"Enderchest "+slot+ " loaded!");
                     return true;
                 }

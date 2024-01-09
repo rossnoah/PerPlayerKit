@@ -146,8 +146,12 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("savepublickit").setExecutor(new SavePublicKitCommand());
 
 
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i <= 9; i++) {
             this.getCommand("k" + i).setExecutor(new ShortKitCommand());
+        }
+
+        for (int i = 1; i <= 9; i++) {
+            this.getCommand("ec" + i).setExecutor(new ShortECCommand());
         }
 
 

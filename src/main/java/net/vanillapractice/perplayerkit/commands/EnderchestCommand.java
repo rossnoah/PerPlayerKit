@@ -35,19 +35,19 @@ public class EnderchestCommand implements CommandExecutor {
 //            p.sendMessage("/"+label+" <save> to save | "+label+" <load> to load");
 //
 //            ensure there is a number 1-9 as the argument
-            if(args.length==1){
-                try{
-                    int slot = Integer.parseInt(args[0]);
-                    if(slot>0&&slot<10){
-                        KitManager.loadEC(p.getUniqueId(),slot);
-                        return true;
-                    }
-                }catch (NumberFormatException e){
-                    p.sendMessage(ChatColor.RED+"Error. Incorrect Usage");
-                    p.sendMessage("/"+label+" <1-9>");
-                    return true;
-                }
-            }
+//            if(args.length==1){
+//                try{
+//                    int slot = Integer.parseInt(args[0]);
+//                    if(slot>0&&slot<10){
+//                        KitManager.loadEC(p.getUniqueId(),slot);
+//                        return true;
+//                    }
+//                }catch (NumberFormatException e){
+//                    p.sendMessage(ChatColor.RED+"Error. Incorrect Usage");
+//                    p.sendMessage("/"+label+" <1-9>");
+//                    return true;
+//                }
+//            }
            viewOnlyEC(p);
             return true;
         }

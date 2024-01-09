@@ -94,6 +94,45 @@ commands:
     permission: kit.use
     aliases: kit9
 
+  ec1:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest1
+  ec2:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest2
+  ec3:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest3
+  ec4:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest4
+  ec5:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest5
+  ec6:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest6
+  ec7:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest7
+  ec8:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest8
+  ec9:
+    usage: /<command>
+    permission: kit.enderchest
+    aliases: enderchest9
+
+
+
   enderchest:
     usage: /<command>
     permission: kit.enderchest
