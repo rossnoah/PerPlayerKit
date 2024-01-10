@@ -8,6 +8,26 @@ database:
   username: "username"
   password: "pa55w0rd"
 
+kitroom:
+  items:
+    1:
+      name: "OG Vanilla"
+      material: "DIAMOND_SWORD"
+    2:
+      name: "Training"
+      material: "WOODEN_SWORD"
+    3:
+        name: "Potions"
+        material: "SPLASH_POTION"
+    4:
+        name: "Armory"
+        material: "NETHERITE_SWORD"
+    5:
+        name: "Axe & UHC"
+        material: "SHIELD"
+
+
+
 publickits:
  # 1:
  #   name: "Kit 1"

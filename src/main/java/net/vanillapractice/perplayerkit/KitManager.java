@@ -429,7 +429,7 @@ if(silent) {
     public static void saveSinglePublicKitToSQL(String id){
         if(PerPlayerKit.data.get("public"+id)!=null){
             PerPlayerKit.sqldata.saveMySQLKit("public"+id,Serializer
-                    .itemStackArrayToBase64(Filter.filterItemStack(PerPlayerKit.data.get("public"+id))));
+                    .itemStackArrayToBase64(PerPlayerKit.data.get("public"+id)));
         }
     }
 
