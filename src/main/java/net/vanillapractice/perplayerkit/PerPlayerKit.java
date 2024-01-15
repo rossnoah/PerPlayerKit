@@ -51,6 +51,8 @@ public final class PerPlayerKit extends JavaPlugin {
         return plugin;
     }
 
+    public static List<PublicKit> publicKitList = new ArrayList<>();
+
 
     @Override
     public void onEnable() {
@@ -67,6 +69,15 @@ public final class PerPlayerKit extends JavaPlugin {
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
+
+
+        //generate list of public kits from the config
+        PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
+            String name = PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".name");
+            Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".icon"));
+            PublicKit kit = new PublicKit(key,name,icon);
+            publicKitList.add(kit);
+        });
 
 
         String dbType = this.getConfig().getString("database.type");
@@ -144,6 +155,7 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
         this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
         this.getCommand("savepublickit").setExecutor(new SavePublicKitCommand());
+        this.getCommand("publickit").setExecutor(new PublicKitCommand());
 
 
         for (int i = 1; i <= 9; i++) {
@@ -174,17 +186,6 @@ public final class PerPlayerKit extends JavaPlugin {
 
 
     private void loadPublicKits(){
-
-        List<PublicKit> publicKitList = new ArrayList<>();
-
-        //generate list of public kits from the config
-        PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
-            String name = PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".name");
-            Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".icon"));
-            PublicKit kit = new PublicKit(key,name,icon);
-            publicKitList.add(kit);
-        });
-
         for(PublicKit kit : publicKitList){
             KitManager.loadSinglePublicKitFromSQL(kit.id);
         }

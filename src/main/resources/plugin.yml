@@ -49,6 +49,13 @@ commands:
     usage: /<command>
     permission: kit.staff
 
+  publickit:
+    aliases:
+      - pk
+      - premadekit
+    usage: /<command>
+    permission: kit.use
+
   k1:
     usage: /<command>
     permission: kit.use

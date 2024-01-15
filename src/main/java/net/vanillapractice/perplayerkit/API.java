@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.vanillapractice.perplayerkit.PerPlayerKit.publicKitList;
+
 public class API {
 
     private static API instance;
@@ -24,15 +26,7 @@ public class API {
 
     public List<PublicKit> getPublicKits(){
 
-        List<PublicKit> publicKitList = new ArrayList<>();
 
-        //generate list of public kits from the config
-        PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
-            String name = PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".name");
-            Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".icon"));
-            PublicKit kit = new PublicKit(key,name,icon);
-            publicKitList.add(kit);
-        });
 
         return publicKitList;
 

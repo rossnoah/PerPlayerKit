@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static net.vanillapractice.perplayerkit.PerPlayerKit.publicKitList;
 import static net.vanillapractice.perplayerkit.gui.ItemUtil.createItem;
 
 public class GUI {
@@ -246,7 +247,7 @@ public class GUI {
 
         }
 
-        public Menu ViewPublicKitMenu(Player p, String id) {
+        public static Menu ViewPublicKitMenu(Player p, String id) {
                 Menu menu = ChestMenu.builder(6)
                         .title(ChatColor.BLUE+"Viewing Public Kit: "+id)
                         .redraw(true)
@@ -284,23 +285,13 @@ public class GUI {
                 return menu;
         }
 
-        public void OpenPublicKitMenu(Player p) {
+        public static void OpenPublicKitMenu(Player p) {
                 Menu menu = createPublicKitMenu();
                 for (int i = 0; i < 54; i++) {
                         menu.getSlot(i).setItem(ItemUtil.createItem
                                 (Material.BLUE_STAINED_GLASS_PANE, 1, " "));
                 }
 
-                List<PublicKit> publicKitList = new ArrayList<>();
-
-                //generate list of public kits from the config
-                PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
-                        String name = PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".name");
-                        Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".icon"));
-                        PublicKit kit = new PublicKit(key,name,icon);
-                        publicKitList.add(kit);
-
-                });
 
 
 
@@ -344,7 +335,7 @@ public class GUI {
         }
 
 
-        public void addPublicKitButton(Slot slot,String id) {
+        public static void addPublicKitButton(Slot slot, String id) {
                 slot.setClickHandler((player, info) -> {
                         if(info.getClickType()==ClickType.LEFT) {
                                 KitManager.loadPublicKit(player,id);
@@ -380,14 +371,14 @@ public class GUI {
                 });
         }
 
-        public void addPublicKitMenu(Slot slot) {
+        public static void addPublicKitMenu(Slot slot) {
                 slot.setClickHandler((player, info) -> {
                         OpenPublicKitMenu(player);
 
                 });
         }
 
-        public void addLoadPublicKit(Slot slot,String id) {
+        public static void addLoadPublicKit(Slot slot, String id) {
                 slot.setClickHandler((player, info) -> {
                        KitManager.loadPublicKit(player,id);
 
@@ -546,7 +537,7 @@ public class GUI {
                         .build();
         }
 
-        public Menu createPublicKitMenu() {
+        public static Menu createPublicKitMenu() {
                 return ChestMenu.builder(6)
                         .title(ChatColor.BLUE+"Public Kit Room")
                         .redraw(true)
