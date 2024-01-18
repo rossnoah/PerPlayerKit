@@ -1,5 +1,6 @@
 package net.vanillapractice.perplayerkit.commands;
 
+import net.vanillapractice.perplayerkit.DisabledCommand;
 import net.vanillapractice.perplayerkit.KitManager;
 import net.vanillapractice.perplayerkit.PerPlayerKit;
 import net.vanillapractice.perplayerkit.gui.GUI;
@@ -24,6 +25,10 @@ public class PublicKitCommand implements CommandExecutor, TabCompleter {
         }
 
         Player p = (Player) sender;
+
+        if(DisabledCommand.isBlockedInWorld(p)){
+            return true;
+        }
 
         //if args.length<1 open the kit menu
         if(args.length<1){

@@ -1,5 +1,6 @@
 package net.vanillapractice.perplayerkit.commands;
 
+import net.vanillapractice.perplayerkit.DisabledCommand;
 import net.vanillapractice.perplayerkit.Filter;
 import net.vanillapractice.perplayerkit.KitManager;
 import org.bukkit.command.Command;
@@ -20,6 +21,10 @@ public class SavePublicKitCommand implements CommandExecutor {
         }
 
         Player p = (Player) sender;
+
+        if(DisabledCommand.isBlockedInWorld(p)){
+            return true;
+        }
 
         //if not enough arguments
 

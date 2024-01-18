@@ -26,6 +26,10 @@ kitroom:
         name: "Axe & UHC"
         material: "SHIELD"
 
+disabled-command-worlds:
+  - "example_world"
+
+disabled-command-message: "&cKits are disabled here!"
 
 
 publickits:

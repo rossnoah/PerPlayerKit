@@ -1,5 +1,7 @@
 package net.vanillapractice.perplayerkit.commands;
 
+import net.vanillapractice.perplayerkit.DisabledCommand;
+import net.vanillapractice.perplayerkit.PerPlayerKit;
 import net.vanillapractice.perplayerkit.kitsharing.KitShareManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,6 +16,11 @@ public class CopyKitCommand implements CommandExecutor {
 
         if(sender instanceof Player){
             Player p = (Player)sender;
+
+            if(DisabledCommand.isBlockedInWorld(p)){
+                return true;
+            }
+
 
             if(args.length>0) {
                 KitShareManager.copyKit(p,args[0]);

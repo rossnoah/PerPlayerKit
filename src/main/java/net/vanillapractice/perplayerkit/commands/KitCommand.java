@@ -1,5 +1,6 @@
 package net.vanillapractice.perplayerkit.commands;
 
+import net.vanillapractice.perplayerkit.DisabledCommand;
 import net.vanillapractice.perplayerkit.KitManager;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.ChatColor;
@@ -16,6 +17,11 @@ public class KitCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player){
             Player player = (Player) commandSender;
+
+            if(DisabledCommand.isBlockedInWorld(player)){
+                return true;
+            }
+
             UUID playeruuid = player.getUniqueId();
 
             if (strings.length>=2){

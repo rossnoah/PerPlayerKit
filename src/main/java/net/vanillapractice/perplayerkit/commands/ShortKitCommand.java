@@ -1,5 +1,6 @@
 package net.vanillapractice.perplayerkit.commands;
 
+import net.vanillapractice.perplayerkit.DisabledCommand;
 import net.vanillapractice.perplayerkit.KitManager;
 import net.vanillapractice.perplayerkit.PerPlayerKit;
 import org.bukkit.Bukkit;
@@ -17,6 +18,11 @@ public class ShortKitCommand implements CommandExecutor {
 
         if(sender instanceof Player){
             Player p = (Player)sender;
+
+            if(DisabledCommand.isBlockedInWorld(p)){
+                return true;
+            }
+
             UUID uuid = p.getUniqueId();
 
 

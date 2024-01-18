@@ -1,5 +1,6 @@
 package net.vanillapractice.perplayerkit.commands;
 
+import net.vanillapractice.perplayerkit.DisabledCommand;
 import net.vanillapractice.perplayerkit.KitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +21,10 @@ public class EnderchestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player){
             Player p = (Player) sender;
+
+            if(DisabledCommand.isBlockedInWorld(p)){
+                return true;
+            }
 
 //            if(args.length==1){
 //                if(args[0].equalsIgnoreCase("save")){
