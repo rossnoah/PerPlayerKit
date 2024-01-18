@@ -279,7 +279,7 @@ if(silent) {
     public static boolean loadPublicKitSilent(Player player, String id){
         if(PerPlayerKit.data.get("public"+id)!=null) {
             player.getInventory().setContents(PerPlayerKit.data.get("public" + id));
-            player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
+//            player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
 
             return true;
 

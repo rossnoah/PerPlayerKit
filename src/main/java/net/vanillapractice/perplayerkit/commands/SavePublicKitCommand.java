@@ -39,7 +39,7 @@ public class SavePublicKitCommand implements CommandExecutor {
         ItemStack[] data = new ItemStack[41];
 //        copy inventory into data
         for(int i=0;i<41;i++){
-            data[i] = inv.getItem(i);
+            data[i] = inv.getItem(i).clone();
         }
 
 
