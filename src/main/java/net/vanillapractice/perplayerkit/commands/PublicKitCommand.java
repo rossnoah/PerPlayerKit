@@ -32,7 +32,8 @@ public class PublicKitCommand implements CommandExecutor, TabCompleter {
 
         //if args.length<1 open the kit menu
         if(args.length<1){
-            GUI.OpenPublicKitMenu(p);
+            GUI kitMenu = new GUI();
+            kitMenu.OpenPublicKitMenu(p);
             return true;
         }
 

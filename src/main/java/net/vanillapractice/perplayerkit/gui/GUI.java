@@ -247,7 +247,7 @@ public class GUI {
 
         }
 
-        public static Menu ViewPublicKitMenu(Player p, String id) {
+        public Menu ViewPublicKitMenu(Player p, String id) {
                 Menu menu = ChestMenu.builder(6)
                         .title(ChatColor.BLUE+"Viewing Public Kit: "+id)
                         .redraw(true)
@@ -285,7 +285,7 @@ public class GUI {
                 return menu;
         }
 
-        public static void OpenPublicKitMenu(Player p) {
+        public void OpenPublicKitMenu(Player p) {
                 Menu menu = createPublicKitMenu();
                 for (int i = 0; i < 54; i++) {
                         menu.getSlot(i).setItem(ItemUtil.createItem
@@ -305,8 +305,13 @@ public class GUI {
 
                 }
 
+                addMainButton(menu.getSlot(53));
 
 
+
+
+
+                menu.getSlot(53).setItem(createItem(Material.OAK_DOOR,1,"&c&lBACK"));
                 menu.open(p);
 
         }
@@ -335,7 +340,7 @@ public class GUI {
         }
 
 
-        public static void addPublicKitButton(Slot slot, String id) {
+        public void addPublicKitButton(Slot slot, String id) {
                 slot.setClickHandler((player, info) -> {
                         if(info.getClickType()==ClickType.LEFT) {
                                 KitManager.loadPublicKit(player,id);
@@ -371,7 +376,7 @@ public class GUI {
                 });
         }
 
-        public static void addPublicKitMenu(Slot slot) {
+        public void addPublicKitMenu(Slot slot) {
                 slot.setClickHandler((player, info) -> {
                         OpenPublicKitMenu(player);
 
