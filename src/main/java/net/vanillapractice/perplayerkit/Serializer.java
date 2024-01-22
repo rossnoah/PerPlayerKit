@@ -12,11 +12,9 @@ import java.io.IOException;
 public class Serializer {
 
     /**
-     *
      * A method to serialize an {@link ItemStack} array to Base64 String.
-     *
-     * <p />
-     *
+     * <p>
+     * <p/>
      *
      * @param items to turn into a Base64 String.
      * @return Base64 string of the items.
@@ -46,9 +44,8 @@ public class Serializer {
 
     /**
      * Gets an array of ItemStacks from Base64 string.
-     *
-     * <p />
-     *
+     * <p>
+     * <p/>
      *
      * @param data Base64 string to convert to ItemStack array.
      * @return ItemStack array created from the Base64 string.

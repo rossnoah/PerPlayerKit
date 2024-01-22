@@ -15,28 +15,27 @@ import java.util.UUID;
 public class KitMenuCloseListener implements Listener {
 
     @EventHandler
-    public void onMenuClose(InventoryCloseEvent e){
+    public void onMenuClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
-        if(inv.getSize()==54){
-            if(inv.getLocation()==null){
+        if (inv.getSize() == 54) {
+            if (inv.getLocation() == null) {
                 InventoryView view = e.getView();
-                if(view.getTitle().contains(ChatColor.BLUE+"Kit: ")){
-                   Player p = (Player) e.getPlayer();
+                if (view.getTitle().contains(ChatColor.BLUE + "Kit: ")) {
+                    Player p = (Player) e.getPlayer();
                     UUID uuid = p.getUniqueId();
-                    int slot = Integer.parseInt(view.getTitle().replace(ChatColor.BLUE+"Kit: ",""));
+                    int slot = Integer.parseInt(view.getTitle().replace(ChatColor.BLUE + "Kit: ", ""));
                     ItemStack[] kit = new ItemStack[41];
                     ItemStack[] chestitems = e.getInventory().getContents().clone();
 
-                    for(int i = 0;i<41;i++){
-                        if(chestitems[i]!=null) {
+                    for (int i = 0; i < 41; i++) {
+                        if (chestitems[i] != null) {
                             kit[i] = chestitems[i].clone();
-                        }else{
+                        } else {
                             kit[i] = null;
                         }
 
                     }
-                    KitManager.savekit(uuid,slot,kit);
-
+                    KitManager.savekit(uuid, slot, kit);
 
 
                 }
@@ -58,8 +57,8 @@ public class KitMenuCloseListener implements Listener {
                     ItemStack[] chestitems = e.getInventory().getContents().clone();
 
                     for (int i = 0; i < 27; i++) {
-                        if (chestitems[i+9] != null) {
-                            kit[i] = chestitems[i+9].clone();
+                        if (chestitems[i + 9] != null) {
+                            kit[i] = chestitems[i + 9].clone();
                         } else {
                             kit[i] = null;
                         }

@@ -8,13 +8,13 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class RespawnListener implements Listener {
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e){
-        if(!e.getPlayer().hasPermission("kit.use")){
+    public void onRespawn(PlayerRespawnEvent e) {
+        if (!e.getPlayer().hasPermission("kit.use")) {
             return;
         }
 
-        if(PerPlayerKit.lastKit.containsKey(e.getPlayer().getUniqueId())){
-            KitManager.respawnKitLoad(e.getPlayer().getUniqueId(),PerPlayerKit.lastKit.get(e.getPlayer().getUniqueId()));
+        if (PerPlayerKit.lastKit.containsKey(e.getPlayer().getUniqueId())) {
+            KitManager.respawnKitLoad(e.getPlayer().getUniqueId(), PerPlayerKit.lastKit.get(e.getPlayer().getUniqueId()));
         }
 
     }

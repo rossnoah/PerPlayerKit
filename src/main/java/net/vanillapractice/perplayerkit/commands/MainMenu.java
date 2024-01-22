@@ -13,7 +13,7 @@ public class MainMenu implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player p = (Player) commandSender;
 
-        if(DisabledCommand.isBlockedInWorld(p)){
+        if (DisabledCommand.isBlockedInWorld(p)) {
             return true;
         }
         String uuid = p.getUniqueId().toString();

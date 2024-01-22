@@ -30,7 +30,6 @@ import java.util.UUID;
 
 public final class PerPlayerKit extends JavaPlugin {
 
-    public PerPlayerKitDatabase database;
     public static SQLGetter sqldata;
     public static HashMap<String, ItemStack[]> data = new HashMap<>();
     public static HashMap<String, ItemStack[]> kitShareData = new HashMap<>();
@@ -45,15 +44,13 @@ public final class PerPlayerKit extends JavaPlugin {
     public static HashMap<UUID, Timestamp> shareCooldown = new HashMap<>();
     public static ArrayList<String> whitelist = new ArrayList<>();
     public static Plugin plugin;
-
     public static HashMap<UUID, Integer> lastKit = new HashMap<>();
+    public static List<PublicKit> publicKitList = new ArrayList<>();
+    public PerPlayerKitDatabase database;
 
     public static Plugin getPlugin() {
         return plugin;
     }
-
-    public static List<PublicKit> publicKitList = new ArrayList<>();
-
 
     @Override
     public void onEnable() {
@@ -74,9 +71,9 @@ public final class PerPlayerKit extends JavaPlugin {
 
         //generate list of public kits from the config
         PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
-            String name = PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".name");
-            Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits."+key+".icon"));
-            PublicKit kit = new PublicKit(key,name,icon);
+            String name = PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".name");
+            Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".icon"));
+            PublicKit kit = new PublicKit(key, name, icon);
             publicKitList.add(kit);
         });
 
@@ -101,8 +98,6 @@ public final class PerPlayerKit extends JavaPlugin {
             //e.printStackTrace();
             Bukkit.getLogger().warning("Database connection failed!");
         }
-
-
 
 
         if (database.isConnected()) {
@@ -188,25 +183,25 @@ public final class PerPlayerKit extends JavaPlugin {
     }
 
 
-    private void loadPublicKits(){
-        for(PublicKit kit : publicKitList){
+    private void loadPublicKits() {
+        for (PublicKit kit : publicKitList) {
             KitManager.loadSinglePublicKitFromSQL(kit.id);
         }
 
     }
 
 
-    private void startBroadcast(){
+    private void startBroadcast() {
 
         List<Component> messages = new ArrayList<>();
         this.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> {
             messages.add(MiniMessage.miniMessage().deserialize(message));
         });
 
-        if(this.getConfig().getBoolean("scheduled-broadcast.enabled")) {
+        if (this.getConfig().getBoolean("scheduled-broadcast.enabled")) {
             Bukkit.getScheduler().runTaskTimer(this, () -> {
-                for(Component message:messages){
-                    for (Player player:Bukkit.getOnlinePlayers()){
+                for (Component message : messages) {
+                    for (Player player : Bukkit.getOnlinePlayers()) {
                         player.sendMessage(message);
                     }
                 }
@@ -214,7 +209,6 @@ public final class PerPlayerKit extends JavaPlugin {
         }
 
     }
-
 
 
 }

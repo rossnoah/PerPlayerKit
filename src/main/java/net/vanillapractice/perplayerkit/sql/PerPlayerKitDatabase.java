@@ -6,7 +6,8 @@ import java.sql.SQLException;
 public interface PerPlayerKitDatabase {
 
     boolean isConnected();
-    void connect()  throws ClassNotFoundException, SQLException;
+
+    void connect() throws ClassNotFoundException, SQLException;
 
     void disconnect();
 

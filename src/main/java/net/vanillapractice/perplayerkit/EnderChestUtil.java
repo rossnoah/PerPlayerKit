@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class EnderChestUtil {
 
-    public static void saveEnderChest(Player p){
+    public static void saveEnderChest(Player p) {
         ItemStack[] kit = p.getEnderChest().getContents();
         boolean notEmpty = false;
         for (ItemStack i : kit) {
@@ -23,28 +23,27 @@ public class EnderChestUtil {
 
         if (notEmpty) {
             UUID uuid = p.getUniqueId();
-            PerPlayerKit.data.put(uuid.toString() + "enderchest", Filter.filterItemStack(kit));
+            PerPlayerKit.data.put(uuid + "enderchest", Filter.filterItemStack(kit));
             p.sendMessage("§aEnder Chest Saved!");
         }
 
 
     }
 
-    public static boolean loadEnderChest(UUID uuid){
+    public static boolean loadEnderChest(UUID uuid) {
 
-        if(Bukkit.getPlayer(uuid)!=null) {
+        if (Bukkit.getPlayer(uuid) != null) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
 
-                if(PerPlayerKit.data.get(uuid.toString()+"enderchest")!=null){
-                    player.getEnderChest().setContents(PerPlayerKit.data.get(uuid.toString()+"enderchest"));
+                if (PerPlayerKit.data.get(uuid + "enderchest") != null) {
+                    player.getEnderChest().setContents(PerPlayerKit.data.get(uuid + "enderchest"));
                     Broadcast.bcEC(player);
-                    player.sendMessage(ChatColor.GREEN+"Ender Chest loaded!");
+                    player.sendMessage(ChatColor.GREEN + "Ender Chest loaded!");
 
                     return true;
-                }
-                else{
-                    player.sendMessage(ChatColor.RED+"Ender Chest save does not exist!");
+                } else {
+                    player.sendMessage(ChatColor.RED + "Ender Chest save does not exist!");
                 }
             }
         }

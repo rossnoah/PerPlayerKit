@@ -14,7 +14,7 @@ public class ViewKit implements CommandExecutor {
         String uuid = p.getUniqueId().toString();
 
         GUI main = new GUI();
-        main.OpenKitKenu(p,Integer.parseInt(strings[0]));
+        main.OpenKitKenu(p, Integer.parseInt(strings[0]));
 
         return true;
     }

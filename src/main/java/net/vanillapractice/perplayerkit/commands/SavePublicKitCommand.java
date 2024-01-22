@@ -15,22 +15,22 @@ public class SavePublicKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //if not player
-        if(!(sender instanceof Player)){
+        if (!(sender instanceof Player)) {
             sender.sendMessage("Only players can use this command");
             return true;
         }
 
         Player p = (Player) sender;
 
-        if(DisabledCommand.isBlockedInWorld(p)){
+        if (DisabledCommand.isBlockedInWorld(p)) {
             return true;
         }
 
         //if not enough arguments
 
-        if(args.length<1){
+        if (args.length < 1) {
             p.sendMessage("Not enough arguments");
-            p.sendMessage("/"+label+" <id>");
+            p.sendMessage("/" + label + " <id>");
             return true;
         }
 
@@ -38,25 +38,24 @@ public class SavePublicKitCommand implements CommandExecutor {
 
         ItemStack[] data = new ItemStack[41];
 //        copy inventory into data
-        for(int i=0;i<41;i++){
+        for (int i = 0; i < 41; i++) {
             data[i] = inv.getItem(i).clone();
         }
 
 
-        data= Filter.filterItemStack(data);
+        data = Filter.filterItemStack(data);
 
         //save kit
-       boolean success = KitManager.savePublicKit(args[0],data);
-         if(success){
-             KitManager.saveSinglePublicKitToSQL(args[0]);
-              p.sendMessage("Saved kit "+args[0]);
-            }else{
-                p.sendMessage("Error saving kit "+args[0]);
+        boolean success = KitManager.savePublicKit(args[0], data);
+        if (success) {
+            KitManager.saveSinglePublicKitToSQL(args[0]);
+            p.sendMessage("Saved kit " + args[0]);
+        } else {
+            p.sendMessage("Error saving kit " + args[0]);
 
-         }
+        }
 
-         return true;
-
+        return true;
 
 
     }

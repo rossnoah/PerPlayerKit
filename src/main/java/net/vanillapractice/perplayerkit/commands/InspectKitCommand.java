@@ -18,14 +18,14 @@ public class InspectKitCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(sender instanceof Player){
+        if (sender instanceof Player) {
             Player p = (Player) sender;
-            if(args.length>1){
-                if(Integer.parseInt(args[1])>0&&Integer.parseInt(args[1])<10) {
-            int slot = Integer.parseInt(args[1]);
+            if (args.length > 1) {
+                if (Integer.parseInt(args[1]) > 0 && Integer.parseInt(args[1]) < 10) {
+                    int slot = Integer.parseInt(args[1]);
 
-                UUID target = UUID.fromString(args[0]);
-                    if(Bukkit.getPlayer(target)==null){
+                    UUID target = UUID.fromString(args[0]);
+                    if (Bukkit.getPlayer(target) == null) {
 
                         new BukkitRunnable() {
 
@@ -41,25 +41,23 @@ public class InspectKitCommand implements CommandExecutor {
 
                         @Override
                         public void run() {
-                            if(KitManager.hasKit(target,slot)){
+                            if (KitManager.hasKit(target, slot)) {
 
                                 GUI main = new GUI();
 
 
+                                main.InspectKit(p, target, slot);
 
-                                main.InspectKit(p,target,slot);
 
-
-                            }else{
-                                p.sendMessage("§cPlayer does not have a kit in slot "+slot);
+                            } else {
+                                p.sendMessage("§cPlayer does not have a kit in slot " + slot);
                             }
                         }
 
-                    }.runTaskLater(plugin,40);
+                    }.runTaskLater(plugin, 40);
 
 
                     return true;
-
 
 
                 }

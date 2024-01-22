@@ -1,7 +1,6 @@
 package net.vanillapractice.perplayerkit.commands;
 
 import net.vanillapractice.perplayerkit.DisabledCommand;
-import net.vanillapractice.perplayerkit.PerPlayerKit;
 import net.vanillapractice.perplayerkit.kitsharing.KitShareManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,20 +13,20 @@ public class CopyKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if(sender instanceof Player){
-            Player p = (Player)sender;
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
 
-            if(DisabledCommand.isBlockedInWorld(p)){
+            if (DisabledCommand.isBlockedInWorld(p)) {
                 return true;
             }
 
 
-            if(args.length>0) {
-                KitShareManager.copyKit(p,args[0]);
-            }else{
-                p.sendMessage(ChatColor.RED+"Error, you must select a kit to copy");
+            if (args.length > 0) {
+                KitShareManager.copyKit(p, args[0]);
+            } else {
+                p.sendMessage(ChatColor.RED + "Error, you must select a kit to copy");
             }
-        }else{
+        } else {
             sender.sendMessage("Only players can use this command");
         }
 

@@ -12,11 +12,12 @@ import java.util.List;
 public class KitRoomTab implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if(args.length==1) {
+        if (args.length == 1) {
             List<String> list = new ArrayList<>();
             list.add("save");
             list.add("load");
             return list;
         }
-        return null;    }
+        return null;
+    }
 }

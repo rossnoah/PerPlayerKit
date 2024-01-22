@@ -15,15 +15,15 @@ import java.util.UUID;
 public class SwapKit implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(sender instanceof Player){
+        if (sender instanceof Player) {
             Player player = (Player) sender;
             UUID uuid = player.getUniqueId();
 
-            if (args.length==2){
+            if (args.length == 2) {
                 Integer slot1 = Ints.tryParse(args[0]);
                 Integer slot2 = Ints.tryParse(args[1]);
 
-                if(slot1!=null&&slot2!=null) {
+                if (slot1 != null && slot2 != null) {
 
 
                     if (KitManager.hasKit(uuid, slot1)) {
@@ -43,17 +43,17 @@ public class SwapKit implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.RED + "Kit " + slot1 + " doesnt exist!");
                     }
-                }else {
+                } else {
                     player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");
                     player.sendMessage(ChatColor.RED + "Select real numbers");
                 }
 
 
-            }else {
+            } else {
                 player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");
             }
-        }else{
-            sender.sendMessage(ChatColor.RED+"Only Players can use this!");
+        } else {
+            sender.sendMessage(ChatColor.RED + "Only Players can use this!");
 
         }
 
