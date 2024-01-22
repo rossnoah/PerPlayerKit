@@ -1,7 +1,8 @@
 package net.vanillapractice.perplayerkit;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.vanillapractice.perplayerkit.commands.*;
-import net.vanillapractice.perplayerkit.gui.GUI;
 import net.vanillapractice.perplayerkit.gui.ItemUtil;
 import net.vanillapractice.perplayerkit.listeners.*;
 import net.vanillapractice.perplayerkit.sql.MySQL;
@@ -176,6 +177,8 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
 
 
+        startBroadcast();
+
     }
 
     @Override
@@ -188,6 +191,26 @@ public final class PerPlayerKit extends JavaPlugin {
     private void loadPublicKits(){
         for(PublicKit kit : publicKitList){
             KitManager.loadSinglePublicKitFromSQL(kit.id);
+        }
+
+    }
+
+
+    private void startBroadcast(){
+
+        List<Component> messages = new ArrayList<>();
+        this.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> {
+            messages.add(MiniMessage.miniMessage().deserialize(message));
+        });
+
+        if(this.getConfig().getBoolean("scheduled-broadcast.enabled")) {
+            Bukkit.getScheduler().runTaskTimer(this, () -> {
+                for(Component message:messages){
+                    for (Player player:Bukkit.getOnlinePlayers()){
+                        player.sendMessage(message);
+                    }
+                }
+            }, 0, this.getConfig().getInt("scheduled-broadcast.period") * 20L);
         }
 
     }

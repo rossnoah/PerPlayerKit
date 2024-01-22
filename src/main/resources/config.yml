@@ -8,6 +8,21 @@ database:
   username: "username"
   password: "pa55w0rd"
 
+motd:
+  enabled: false
+  delay: 5
+  message: #join messages using mini message format
+    - "<green>--------------------- <white>Per Player Kits <green>---------------------"
+    - "<blue>Type <white>/kit <blue> or <white>/k <blue>to get started!"
+    - "<green>------------------------------------------------------------------"
+
+scheduled-broadcast: #uses mini message format
+  enabled: false
+  period: 900 #in seconds
+  messages:
+    - "<green>Kit <white>{kit} <green>was just redeemed by <white>{player}!"
+
+
 kitroom:
   items:
     1:
