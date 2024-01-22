@@ -3,7 +3,7 @@ package net.vanillapractice.perplayerkit.kitsharing;
 import net.vanillapractice.perplayerkit.Broadcast;
 import net.vanillapractice.perplayerkit.KitManager;
 import net.vanillapractice.perplayerkit.PerPlayerKit;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

@@ -2,7 +2,7 @@ package net.vanillapractice.perplayerkit.commands;
 
 import net.vanillapractice.perplayerkit.DisabledCommand;
 import net.vanillapractice.perplayerkit.KitManager;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
