@@ -1,5 +1,7 @@
 # PerPlayerKit
 
+![Main Menu](./images/MainMenu.png)
+
 ## License: AGPLv3
 
 PerPlayerKit is open source and licensed under the terms of the [GNU Affero General Public License v3. 0](./LICENSE). Read and understand the license before using this software. [Frequently Asked Questions about the GNU Licenses](https://www.gnu.org/licenses/gpl-faq.html#AGPLv3InteractingRemotely).
