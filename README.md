@@ -1,41 +1,33 @@
-## License Disclaimer - ALL RIGHTS RESERVED
+# PerPlayerKit
 
-### Unlicensed Software - All Rights Reserved
+## License: AGPLv3
 
-Although the source code is posted here, neither the source code nor any binaries are licensed for use, copying, modification, or distribution. All rights are reserved.
+PerPlayerKit is open source and licensed under the terms of the [GNU Affero General Public License v3. 0](./LICENSE). Read and understand the license before using this software. [Frequently Asked Questions about the GNU Licenses](https://www.gnu.org/licenses/gpl-faq.html#AGPLv3InteractingRemotely).
 
-### What Does This Mean?
+## Contributing to PerPlayerKit
 
-- **Unauthorized Use:** You are not allowed to use this software for any purpose without explicit permission.
-- **Copying:** You are not allowed to copy or download the software or any part of it.
-- **Modification:** You are not allowed to alter the software in any way.
-- **Distribution:** You are not allowed to share or distribute the software.
+If you would like to contribute to the project you can do so by forking the repository and submitting a pull request. We prefer that improvements and contributions be merged into the main branch, rather than spread across numerous forks.
 
-# PerPlayerKits
+## About the plugin
 
-PerPlayerKits is a [Spigot](https://www.spigotmc.org/) plugin that allows players to make their own unique kits to PvP with. Administrators create a set of items in the "Virtual Kit Room", from which players pick their items. They can then make up to 9 kits each with can be shared, modified, and inspected by moderators. It features a GUI for simple kit usage of the plugin. Additionally, commands can be used to quickly load kits and for moderator features. It also features protections against abusive items, limiting NBT data and enchantments to what is available in vanilla Minecraft and only allowing items that can be found in the "virtual kit room".
-Players can also use the plugin to create enderchest kits that will be loaded into their enderchest when they select the enderchest kit.
+PerPlayerKit is a [PaperMC](https://papermc.io/) plugin that allows players to make their own unique kits to PvP with. Administrators create a set of items in the "Virtual Kit Room", from which players pick their items. They can then make up to 9 kits each with can be shared, modified, and inspected by moderators. It features a GUI for simple kit usage of the plugin. Additionally, commands can be used to quickly load kits and for moderator features. It also features protections against abusive items, limiting NBT data and enchantments to what is available in vanilla Minecraft and only allowing items that can be found in the "virtual kit room". Players can also use the plugin to create enderchest kits that will be loaded into their enderchest when they select the enderchest kit.
 
 ## Dependencies
 
-PerPlayerKits uses a minecraft GUI library called canvas, it can be found [here](https://github.com/IPVP-MC/canvas)
-
-PerPlayerKits was built on Java 17 for Minecraft version 1.17 but should work with any version of 1.17 or above.
+PerPlayerKits uses a minecraft GUI library called canvas, it can be found [here](https://github.com/IPVP-MC/canvas). PerPlayerKits was supports version 1.19 and above.
 
 ## Installation
 
-PerPlayerKits has a minimal configuration just requiring selecting the database type. You can use SQLite or a MySQL/MySQL compatible (MariaDB) database. To use the plugin run the server with the plugin in the "plugins" folder, then stop the server and edit the config.yml file in the "plugins/PerPlayerKits" folder. Fill in the database credentials and restart the server. The plugin will automatically create the database and tables as needed.
+PerPlayerKits has a minimal configuration just requiring selecting the database type. PerPlayerKit supports both MySQL/MySQL compatible (MariaDB) databases and SQLite databases. If you don't know what you are doing or don't have access to a database, use `sqlite` as the database type.
 
-```yml
-database:
-  type: "mysql" # "mysql" or "sqlite"
-  host: "localhost"
-  port: "3306"
-  dbname: "kitdatabase"
-  username: "username"
-  password: "pa55w0rd"
-```
+To use the plugin run the server with the plugin in the "plugins" folder, then stop the server and edit the config.yml file in the "plugins/PerPlayerKits" folder.
+
+More configuration options are available, please refer to the [configuration documentation](./CONFIG.md).
 
 ## Commands and Permissions
 
-For detailed information on commands and permissions, please refer to the [commands documentation](commands.md).
+For detailed information on commands and permissions, please refer to the [command documentation](./COMMANDS.md).
+
+## External API
+
+PerPlayerKit has a simple API that allows developers to interact with the plugin. The API is **NOT** stable and will possibly change in the future. Please refer to the [API documentation](./API.md) for more information.

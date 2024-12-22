@@ -1,40 +1,40 @@
-# Plugin Documentation for PerPlayerKit
+# PerPlayerKit Command Docs
 
-- **Version:** Unknown Version
-- **Author(s):** VanillaPractice
-- **API Version:** 1.17
+- **Version:** 1.2
+- **Author(s):** Noah Ross
+- **API Version:** 1.19
 
 ## Commands
 
-The following table outlines each command, its usage, permissions required, and any aliases.
+The following table outlines each command, its usage, aliases, and permissions required.
 
-| Command | Permission | Aliases |
-|---------|------------|---------|
-| `kitroom` | `kit.admin` |  |
-| `kit` | `kit.use` | `k` |
-| `copykit` | `kit.use` |  |
-| `sharekit` | `kit.use` |  |
-| `swapkit` | `kit.use` |  |
-| `deletekit` | `kit.use` |  |
-| `inspectkit` | `kit.staff` |  |
-| `publickit` | `kit.use` | `pk`, `premadekit` |
-| `k1` | `kit.use` | `kit1` |
-| `k2` | `kit.use` | `kit2` |
-| `k3` | `kit.use` | `kit3` |
-| `k4` | `kit.use` | `kit4` |
-| `k5` | `kit.use` | `kit5` |
-| `k6` | `kit.use` | `kit6` |
-| `k7` | `kit.use` | `kit7` |
-| `k8` | `kit.use` | `kit8` |
-| `k9` | `kit.use` | `kit9` |
-| `ec1` | `kit.enderchest` | `enderchest1` |
-| `ec2` | `kit.enderchest` | `enderchest2` |
-| `ec3` | `kit.enderchest` | `enderchest3` |
-| `ec4` | `kit.enderchest` | `enderchest4` |
-| `ec5` | `kit.enderchest` | `enderchest5` |
-| `ec6` | `kit.enderchest` | `enderchest6` |
-| `ec7` | `kit.enderchest` | `enderchest7` |
-| `ec8` | `kit.enderchest` | `enderchest8` |
-| `ec9` | `kit.enderchest` | `enderchest9` |
-| `enderchest` | `kit.enderchest` | `ec` |
-| `savepublickit` | `kit.admin` |  |
+| Command | Aliases | Permission |
+|---------|---------|------------|
+| `kitroom` |  | `kit.admin` |
+| `kit` | `k` | `kit.use` |
+| `copykit` |  | `kit.use` |
+| `sharekit` |  | `kit.use` |
+| `swapkit` |  | `kit.use` |
+| `deletekit` |  | `kit.use` |
+| `inspectkit` |  | `kit.staff` |
+| `publickit` | `pk`, `premadekit` | `kit.use` |
+| `k1` | `kit1` | `kit.use` |
+| `k2` | `kit2` | `kit.use` |
+| `k3` | `kit3` | `kit.use` |
+| `k4` | `kit4` | `kit.use` |
+| `k5` | `kit5` | `kit.use` |
+| `k6` | `kit6` | `kit.use` |
+| `k7` | `kit7` | `kit.use` |
+| `k8` | `kit8` | `kit.use` |
+| `k9` | `kit9` | `kit.use` |
+| `ec1` | `enderchest1` | `kit.enderchest` |
+| `ec2` | `enderchest2` | `kit.enderchest` |
+| `ec3` | `enderchest3` | `kit.enderchest` |
+| `ec4` | `enderchest4` | `kit.enderchest` |
+| `ec5` | `enderchest5` | `kit.enderchest` |
+| `ec6` | `enderchest6` | `kit.enderchest` |
+| `ec7` | `enderchest7` | `kit.enderchest` |
+| `ec8` | `enderchest8` | `kit.enderchest` |
+| `ec9` | `enderchest9` | `kit.enderchest` |
+| `enderchest` | `ec` | `kit.enderchest` |
+| `savepublickit` |  | `kit.admin` |

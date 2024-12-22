@@ -1,8 +1,8 @@
 name: PerPlayerKit
 version: "${project.version}"
-main: net.vanillapractice.perplayerkit.PerPlayerKit
-author: VanillaPractice
-api-version: 1.17
+main: dev.noah.perplayerkit.PerPlayerKit
+author: Noah Ross
+api-version: 1.19
 commands:
   #kit:
   # usage: /<command>
