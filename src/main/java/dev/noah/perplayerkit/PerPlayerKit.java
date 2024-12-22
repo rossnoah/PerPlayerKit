@@ -1,5 +1,7 @@
 package dev.noah.perplayerkit;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import dev.noah.perplayerkit.commands.*;
@@ -19,6 +21,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.ipvp.canvas.MenuFunctionListener;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -184,11 +187,13 @@ public final class PerPlayerKit extends JavaPlugin {
             messages.add(MiniMessage.miniMessage().deserialize(message));
         });
 
+        BukkitAudiences audience = BukkitAudiences.create(plugin);
+
         if (this.getConfig().getBoolean("scheduled-broadcast.enabled")) {
             Bukkit.getScheduler().runTaskTimer(this, () -> {
                 for (Component message : messages) {
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.sendMessage(message);
+                        audience.player(player).sendMessage(message);
                     }
                 }
             }, 0, this.getConfig().getInt("scheduled-broadcast.period") * 20L);
