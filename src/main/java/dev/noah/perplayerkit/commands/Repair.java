@@ -1,6 +1,6 @@
 package dev.noah.perplayerkit.commands;
 
-import dev.noah.perplayerkit.PlayerUtils;
+import dev.noah.perplayerkit.util.RepairUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,7 @@ public class Repair implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player p = (Player) commandSender;
         String uuid = p.getUniqueId().toString();
-        PlayerUtils.repairAll(p);
+        RepairUtil.repairAll(p);
         p.sendMessage("repair");
         return true;
     }

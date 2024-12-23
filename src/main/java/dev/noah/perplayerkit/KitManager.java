@@ -1,5 +1,7 @@
 package dev.noah.perplayerkit;
 
+import dev.noah.perplayerkit.util.Broadcast;
+import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -238,7 +240,7 @@ public class KitManager {
 
                 if (PerPlayerKit.data.get(uuid.toString() + slot) != null) {
                     player.getInventory().setContents(PerPlayerKit.data.get(uuid.toString() + slot));
-                    Broadcast.bcKit(player);
+                    Broadcast.get().broadcastPlayerLoadedPrivateKit(player);
                     player.sendMessage(ChatColor.GREEN + "Kit " + slot + " loaded!");
                     PerPlayerKit.lastKit.put(uuid, slot);
                     return true;
@@ -253,7 +255,7 @@ public class KitManager {
     public static boolean loadPublicKit(Player player, String id) {
         if (PerPlayerKit.data.get("public" + id) != null) {
             player.getInventory().setContents(PerPlayerKit.data.get("public" + id));
-            Broadcast.bcPublicKit(player);
+            Broadcast.get().broadcastPlayerLoadedPublicKit(player);
             player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
             player.sendMessage(ChatColor.GRAY + "You can save this kit by importing into the kit editor");
 
@@ -297,7 +299,7 @@ public class KitManager {
                         }
                     }
                     player.getEnderChest().setContents(ec);
-                    Broadcast.bcEC(player);
+                    Broadcast.get().broadcastPlayerLoadedEnderChest(player);
                     player.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " loaded!");
                     return true;
                 } else {
@@ -359,7 +361,7 @@ public class KitManager {
 
     public static void loadFromSQL(UUID uuid) {
         for (int i = 1; i < 10; i++) {
-            String data = PerPlayerKit.sqldata.getMySQLKit(uuid.toString() + i);
+            String data = PerPlayerKit.dbManager.getMySQLKit(uuid.toString() + i);
             if (!data.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
@@ -370,7 +372,7 @@ public class KitManager {
             }
         }
         for (int i = 1; i < 10; i++) {
-            String data = PerPlayerKit.sqldata.getMySQLKit(uuid + "ec" + i);
+            String data = PerPlayerKit.dbManager.getMySQLKit(uuid + "ec" + i);
             if (!data.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
@@ -380,27 +382,18 @@ public class KitManager {
                 }
             }
         }
-//
-//
-//        String data = PerPlayerKit.sqldata.getMySQLKit(uuid.toString()+"enderchest");
-//        if(!data.equalsIgnoreCase("error")){
-//            try {
-//                PerPlayerKit.data.put(uuid.toString()+"enderchest",Filter.filterItemStack(Serializer.itemStackArrayFromBase64(data)));
-//            } catch (IOException ignored) {
-//            }
-//        }
     }
 
     public static void saveToSQL(UUID uuid) {
         for (int i = 1; i < 10; i++) {
             if (PerPlayerKit.data.get(uuid.toString() + i) != null) {
-                PerPlayerKit.sqldata.saveMySQLKit(uuid.toString() + i, Serializer
+                PerPlayerKit.dbManager.saveMySQLKit(uuid.toString() + i, Serializer
                         .itemStackArrayToBase64(PerPlayerKit.data.get(uuid.toString() + i)));
                 PerPlayerKit.data.remove(uuid.toString() + i);
             }
         }
         if (PerPlayerKit.data.get(uuid + "enderchest") != null) {
-            PerPlayerKit.sqldata.saveMySQLKit(uuid + "enderchest", Serializer
+            PerPlayerKit.dbManager.saveMySQLKit(uuid + "enderchest", Serializer
                     .itemStackArrayToBase64(PerPlayerKit.data.get(uuid + "enderchest")));
             PerPlayerKit.data.remove(uuid + "enderchest");
         }
@@ -408,20 +401,20 @@ public class KitManager {
 
     public static void saveSingleKitToSQL(UUID uuid, int slot) {
         if (PerPlayerKit.data.get(uuid.toString() + slot) != null) {
-            PerPlayerKit.sqldata.saveMySQLKit(uuid.toString() + slot, Serializer
+            PerPlayerKit.dbManager.saveMySQLKit(uuid.toString() + slot, Serializer
                     .itemStackArrayToBase64(Filter.filterItemStack(PerPlayerKit.data.get(uuid.toString() + slot))));
         }
     }
 
     public static void saveSinglePublicKitToSQL(String id) {
         if (PerPlayerKit.data.get("public" + id) != null) {
-            PerPlayerKit.sqldata.saveMySQLKit("public" + id, Serializer
+            PerPlayerKit.dbManager.saveMySQLKit("public" + id, Serializer
                     .itemStackArrayToBase64(PerPlayerKit.data.get("public" + id)));
         }
     }
 
     public static void loadSinglePublicKitFromSQL(String id) {
-        String data = PerPlayerKit.sqldata.getMySQLKit("public" + id);
+        String data = PerPlayerKit.dbManager.getMySQLKit("public" + id);
         if (!data.equalsIgnoreCase("error")) {
             try {
                 ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
@@ -435,7 +428,7 @@ public class KitManager {
 
     public static void saveSingleECToSQL(UUID uuid, int slot) {
         if (PerPlayerKit.data.get(uuid.toString() + "ec" + slot) != null) {
-            PerPlayerKit.sqldata.saveMySQLKit(uuid + "ec" + slot, Serializer
+            PerPlayerKit.dbManager.saveMySQLKit(uuid + "ec" + slot, Serializer
                     .itemStackArrayToBase64(Filter.filterItemStack(PerPlayerKit.data.get(uuid + "ec" + slot))));
         }
     }
@@ -449,7 +442,7 @@ public class KitManager {
 
                 @Override
                 public void run() {
-                    PerPlayerKit.sqldata.deleteKitSQL(kitid);
+                    PerPlayerKit.dbManager.deleteKitSQL(kitid);
                 }
             }.runTaskAsynchronously(plugin);
             return true;

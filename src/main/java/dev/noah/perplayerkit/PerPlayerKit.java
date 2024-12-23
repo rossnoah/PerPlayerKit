@@ -1,16 +1,15 @@
 package dev.noah.perplayerkit;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import dev.noah.perplayerkit.commands.*;
 import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.listeners.*;
-import dev.noah.perplayerkit.sql.MySQL;
-import dev.noah.perplayerkit.sql.PerPlayerKitDatabase;
-import dev.noah.perplayerkit.sql.SQLGetter;
-import dev.noah.perplayerkit.sql.SQLite;
+import dev.noah.perplayerkit.db.MySQL;
+import dev.noah.perplayerkit.db.PerPlayerKitDatabase;
+import dev.noah.perplayerkit.db.DBManager;
+import dev.noah.perplayerkit.db.SQLite;
 import dev.noah.perplayerkit.tabcompleter.KitRoomTab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,10 +20,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.ipvp.canvas.MenuFunctionListener;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,23 +29,25 @@ import java.util.UUID;
 
 public final class PerPlayerKit extends JavaPlugin {
 
-    public static SQLGetter sqldata;
+    public static Plugin plugin;
+
+
+    public static DBManager dbManager;
+    public PerPlayerKitDatabase database;
+
     public static HashMap<String, ItemStack[]> data = new HashMap<>();
     public static HashMap<String, ItemStack[]> kitShareData = new HashMap<>();
-    public static int bcDistance = 500;
-    public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] ");
-    public static HashMap<UUID, Timestamp> repairBroadcastCooldown = new HashMap<>();
-    public static int repairDelay = 5;
-    public static HashMap<UUID, Timestamp> kitRoomBroadcastCooldown = new HashMap<>();
-    public static int kitRoomDelay = 15;
+
+
     public static ArrayList<ItemStack[]> kitroomData = new ArrayList<>();
-    public static int shareDelay = 30;
-    public static HashMap<UUID, Timestamp> shareCooldown = new HashMap<>();
+
     public static ArrayList<String> whitelist = new ArrayList<>();
-    public static Plugin plugin;
     public static HashMap<UUID, Integer> lastKit = new HashMap<>();
+
     public static List<PublicKit> publicKitList = new ArrayList<>();
-    public PerPlayerKitDatabase database;
+
+    public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] ");
+
 
     public static Plugin getPlugin() {
         return plugin;
@@ -89,20 +88,22 @@ public final class PerPlayerKit extends JavaPlugin {
             this.database = new SQLite();
 
         }
-        sqldata = new SQLGetter(this);
+        dbManager = new DBManager(database);
 
         try {
             database.connect();
         } catch (ClassNotFoundException | SQLException e) {
-            // e.printStackTrace();
             Bukkit.getLogger().warning("Database connection failed!");
+            e.printStackTrace();
         }
 
         if (database.isConnected()) {
             Bukkit.getLogger().info("Database is connected!");
-            sqldata.createTable();
+            dbManager.createTable();
             KitRoomDataManager.loadFromSQL();
             loadPublicKits();
+
+
             for (Player player : Bukkit.getOnlinePlayers()) {
                 KitManager.loadFromSQL(player.getUniqueId());
             }
@@ -112,7 +113,7 @@ public final class PerPlayerKit extends JavaPlugin {
                 @Override
                 public void run() {
                     if (database.isConnected()) {
-                        sqldata.keepAlive();
+                        dbManager.keepAlive();
                     } else {
                         Bukkit.getLogger().warning("Keep Alive Failed, attempting to reconnect database");
                         try {
@@ -122,7 +123,7 @@ public final class PerPlayerKit extends JavaPlugin {
                         }
                         if (database.isConnected()) {
                             Bukkit.getLogger().info("Database is connected!");
-                            sqldata.createTable();
+                            dbManager.createTable();
 
                         } else {
                             Bukkit.getLogger().warning("Database connection failed!");

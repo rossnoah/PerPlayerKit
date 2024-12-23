@@ -1,4 +1,4 @@
-package dev.noah.perplayerkit.sql;
+package dev.noah.perplayerkit.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;

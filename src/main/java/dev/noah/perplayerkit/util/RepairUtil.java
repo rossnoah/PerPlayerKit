@@ -1,4 +1,4 @@
-package dev.noah.perplayerkit;
+package dev.noah.perplayerkit.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class PlayerUtils {
+public class RepairUtil {
 
     public static void repairItem(ItemStack i) {
         if (i != null) {

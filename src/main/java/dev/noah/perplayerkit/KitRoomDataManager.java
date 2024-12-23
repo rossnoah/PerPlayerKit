@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit;
 
+import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -27,7 +28,7 @@ public class KitRoomDataManager {
                 for (int i = 0; i < 5; i++) {
                     ItemStack[] pagedata = PerPlayerKit.kitroomData.get(i);
                     String output = Serializer.itemStackArrayToBase64(pagedata);
-                    PerPlayerKit.sqldata.saveMySQLKit("kitroom" + i, output);
+                    PerPlayerKit.dbManager.saveMySQLKit("kitroom" + i, output);
                 }
             }
 
@@ -42,7 +43,7 @@ public class KitRoomDataManager {
         for (int i = 0; i < 5; i++) {
 
 
-            String input = PerPlayerKit.sqldata.getMySQLKit("kitroom" + i);
+            String input = PerPlayerKit.dbManager.getMySQLKit("kitroom" + i);
             if (!input.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] pagedata = Serializer.itemStackArrayFromBase64(input);
@@ -63,7 +64,7 @@ public class KitRoomDataManager {
         for (int i = 0; i < 5; i++) {
 
 
-            String input = PerPlayerKit.sqldata.getMySQLKit("kitroom" + i);
+            String input = PerPlayerKit.dbManager.getMySQLKit("kitroom" + i);
             if (!input.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] pagedata = Serializer.itemStackArrayFromBase64(input);

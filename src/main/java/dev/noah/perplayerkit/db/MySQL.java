@@ -1,18 +1,26 @@
-package dev.noah.perplayerkit.sql;
+package dev.noah.perplayerkit.db;
 
 import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.plugin.Plugin;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLite implements PerPlayerKitDatabase {
+public class MySQL implements PerPlayerKitDatabase {
+    /*
 
+     */
     Plugin pl = PerPlayerKit.getPlugin();
 
-    private final String databasePath = pl.getDataFolder() + File.separator + "database.db"; // Change to your SQLite database file path
+    private final String host = pl.getConfig().getString("database.host");
+    private final String port = pl.getConfig().getString("database.port");
+    private final String database = pl.getConfig().getString("database.dbname");
+    private final String username = pl.getConfig().getString("database.username");
+    private final String password = pl.getConfig().getString("database.password");
+
+    //*/
+
 
     private Connection connection;
 
@@ -20,10 +28,12 @@ public class SQLite implements PerPlayerKitDatabase {
         return (connection != null);
     }
 
+
     public void connect() throws ClassNotFoundException, SQLException {
         if (!isConnected()) {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            connection = DriverManager.getConnection("jdbc:mysql://" +
+                            host + ":" + port + "/" + database + "?useSSL=false",
+                    username, password);
         }
     }
 
@@ -40,4 +50,5 @@ public class SQLite implements PerPlayerKitDatabase {
     public Connection getConnection() {
         return connection;
     }
+
 }

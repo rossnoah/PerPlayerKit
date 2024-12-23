@@ -1,4 +1,4 @@
-package dev.noah.perplayerkit;
+package dev.noah.perplayerkit.util;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
