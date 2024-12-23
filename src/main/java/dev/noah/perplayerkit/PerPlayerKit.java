@@ -1,15 +1,16 @@
 package dev.noah.perplayerkit;
 
+import dev.noah.perplayerkit.commands.*;
 import dev.noah.perplayerkit.db.*;
+import dev.noah.perplayerkit.listeners.*;
+import dev.noah.perplayerkit.tabcompleter.KitRoomTab;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import dev.noah.perplayerkit.commands.*;
-import dev.noah.perplayerkit.listeners.*;
-import dev.noah.perplayerkit.tabcompleter.KitRoomTab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,9 +26,8 @@ public final class PerPlayerKit extends JavaPlugin {
     public static Plugin plugin;
 
     public static DBManager dbManager;
-    private SQLDatabase sqlDatabase;
-
     public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] ");
+    private SQLDatabase sqlDatabase;
 
     public static Plugin getPlugin() {
         return plugin;
@@ -46,13 +46,19 @@ public final class PerPlayerKit extends JavaPlugin {
         KitRoomDataManager.get().init();
 
         // generate list of public kits from the config
-        PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
-            String name = PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".name");
-            Material icon = Material
-                    .valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".icon"));
-            PublicKit kit = new PublicKit(key, name, icon);
-            KitManager.get().getPublicKitList().add(kit);
-        });
+        ConfigurationSection publicKitsSection = this.getConfig().getConfigurationSection("publickits");
+
+        if (publicKitsSection == null) {
+            this.getLogger().warning("No public kits found in config!");
+        } else {
+
+            publicKitsSection.getKeys(false).forEach(key -> {
+                String name = PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".name");
+                Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".icon"));
+                PublicKit kit = new PublicKit(key, name, icon);
+                KitManager.get().getPublicKitList().add(kit);
+            });
+        }
 
         String dbType = this.getConfig().getString("database.type");
         if (dbType == null) {
@@ -123,6 +129,7 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
         this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
         this.getCommand("savepublickit").setExecutor(new SavePublicKitCommand());
+        this.getCommand("savepublickit").setTabCompleter(new SavePublicKitCommand());
         this.getCommand("publickit").setExecutor(new PublicKitCommand());
 
         for (int i = 1; i <= 9; i++) {
@@ -161,9 +168,8 @@ public final class PerPlayerKit extends JavaPlugin {
     private void startBroadcast() {
 
         List<Component> messages = new ArrayList<>();
-        this.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> {
-            messages.add(MiniMessage.miniMessage().deserialize(message));
-        });
+        this.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> messages.add(MiniMessage.miniMessage().deserialize(message)));
+
 
         BukkitAudiences audience = BukkitAudiences.create(plugin);
 

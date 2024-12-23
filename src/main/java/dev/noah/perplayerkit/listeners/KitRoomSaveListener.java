@@ -11,8 +11,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
-
 public class KitRoomSaveListener implements Listener {
 
     @EventHandler
@@ -25,34 +23,31 @@ public class KitRoomSaveListener implements Listener {
                     Player p = (Player) e.getWhoClicked();
 
                     if (view.getTitle().contains(ChatColor.BLUE + p.getName() + "'s Kits")) {
-                        if (e.getInventory().getItem(53) != null) {
-                            if (e.getInventory().getItem(53).getType() == Material.BARRIER) {
-                                if (e.getSlot() == 53) {
-                                    if (p.hasPermission("perplayerkit.editkitroom") || p.isOp()) {
+                        ItemStack saveButton = e.getInventory().getItem(53);
+                        if (saveButton != null && saveButton.getType() == Material.BARRIER) {
+                            if (e.getSlot() == 53) {
+                                if (p.hasPermission("perplayerkit.editkitroom") || p.isOp()) {
 
-                                        int page = e.getInventory().getItem(53).getAmount() - 1;
-                                        UUID uuid = p.getUniqueId();
-                                        ItemStack[] kitroom = new ItemStack[45];
+                                    // Safely get the page number
+                                    int page = (saveButton.getAmount() > 0) ? saveButton.getAmount() - 1 : 0;
 
-                                        for (int i = 0; i < 45; i++) {
-                                            if (e.getInventory().getItem(i) != null) {
-                                                kitroom[i] = e.getInventory().getItem(i).clone();
-                                            } else {
-                                                kitroom[i] = null;
-                                            }
+                                    // Initialize kitroom array
+                                    ItemStack[] kitroom = new ItemStack[45];
 
-                                        }
-                                        KitRoomDataManager.get().setKitRoom(page, kitroom);
-                                        KitRoomDataManager.get().saveToDBAsync();
-                                        p.sendMessage(ChatColor.GREEN + "Saved kitroom page: " + (page + 1));
-
+                                    for (int i = 0; i < 45; i++) {
+                                        ItemStack item = e.getInventory().getItem(i);
+                                        kitroom[i] = (item != null) ? item.clone() : null;
                                     }
+
+                                    // Save kitroom data
+                                    KitRoomDataManager.get().setKitRoom(page, kitroom);
+                                    KitRoomDataManager.get().saveToDBAsync();
+                                    p.sendMessage(ChatColor.GREEN + "Saved kitroom page: " + (page + 1));
                                 }
                             }
                         }
                     }
                 }
-
             }
         }
     }

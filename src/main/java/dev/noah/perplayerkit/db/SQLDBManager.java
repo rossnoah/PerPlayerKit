@@ -91,16 +91,14 @@ public class SQLDBManager implements DBManager{
         return false;
     }
 
-    public boolean deleteKitByID(String kitID) {
+    public void deleteKitByID(String kitID) {
 
         try {
             PreparedStatement ps = db.getConnection().prepareStatement("DELETE FROM kits WHERE KITID=?");
             ps.setString(1, kitID);
             ps.executeUpdate();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 

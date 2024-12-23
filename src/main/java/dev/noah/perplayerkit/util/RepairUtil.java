@@ -12,7 +12,7 @@ public class RepairUtil {
         if (i != null) {
             ItemMeta meta = i.getItemMeta();
             Damageable damageable = (Damageable) meta;
-            if (damageable.hasDamage()) {
+            if (damageable != null && damageable.hasDamage()) {
                 damageable.setDamage(0);
             }
             i.setItemMeta(damageable);

@@ -13,6 +13,6 @@ public interface DBManager {
 
     boolean doesKitExistByID(String kitID);
 
-    boolean deleteKitByID(String kitID);
+    void deleteKitByID(String kitID);
 }
 

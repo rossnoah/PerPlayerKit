@@ -46,12 +46,7 @@ public class JoinListener implements Listener {
             plugin.getConfig().getStringList("motd.message").forEach(message -> motdMessages.add(MiniMessage.miniMessage().deserialize(message)));
 
             // Delay for sending the MOTD
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                motdMessages.forEach(message -> {
-                    audiences.player(player).sendMessage(message);
-
-                });
-            }, plugin.getConfig().getLong("motd.delay") * 20L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> motdMessages.forEach(message -> audiences.player(player).sendMessage(message)), plugin.getConfig().getLong("motd.delay") * 20L);
         }
     }
 

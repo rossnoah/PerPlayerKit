@@ -16,7 +16,6 @@ public class MainMenu implements CommandExecutor {
         if (DisabledCommand.isBlockedInWorld(p)) {
             return true;
         }
-        String uuid = p.getUniqueId().toString();
 
         GUI main = new GUI();
         main.OpenMainMenu(p);

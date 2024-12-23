@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public class CooldownManager {
 
-    private long cooldownInSeconds;
-    private HashMap<String,Long> cooldownMap;
+    private final long cooldownInSeconds;
+    private final HashMap<String,Long> cooldownMap;
 
     public CooldownManager(long cooldownInSeconds) {
         this.cooldownInSeconds = cooldownInSeconds;

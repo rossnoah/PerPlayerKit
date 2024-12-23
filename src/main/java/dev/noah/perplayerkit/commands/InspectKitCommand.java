@@ -18,8 +18,7 @@ public class InspectKitCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length > 1) {
                 if (Integer.parseInt(args[1]) > 0 && Integer.parseInt(args[1]) < 10) {
                     int slot = Integer.parseInt(args[1]);
@@ -46,11 +45,11 @@ public class InspectKitCommand implements CommandExecutor {
                                 GUI main = new GUI();
 
 
-                                main.InspectKit(p, target, slot);
+                                main.InspectKit(player, target, slot);
 
 
                             } else {
-                                p.sendMessage("§cPlayer does not have a kit in slot " + slot);
+                                player.sendMessage("§cPlayer does not have a kit in slot " + slot);
                             }
                         }
 

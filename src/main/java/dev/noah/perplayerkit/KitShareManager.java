@@ -17,7 +17,7 @@ public class KitShareManager {
 
     public static HashMap<String, ItemStack[]> kitShareMap;
 
-    private Plugin plugin;
+    private final Plugin plugin;
     private static KitShareManager instance;
 
     public KitShareManager(Plugin plugin) {

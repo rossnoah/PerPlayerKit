@@ -17,10 +17,10 @@ import java.util.UUID;
 public class KitManager {
 
 
-    private PerPlayerKit plugin;
-    private HashMap<String, ItemStack[]> kitByKitIDMap;
-    private HashMap<UUID, Integer> lastKitUsedByPlayer;
-    private List<PublicKit> publicKitList;
+    private final PerPlayerKit plugin;
+    private final HashMap<String, ItemStack[]> kitByKitIDMap;
+    private final HashMap<UUID, Integer> lastKitUsedByPlayer;
+    private final List<PublicKit> publicKitList;
 
     private static KitManager instance;
     public KitManager(PerPlayerKit plugin){
@@ -54,17 +54,6 @@ public class KitManager {
             return lastKitUsedByPlayer.get(uuid);
         }
         return -1;
-    }
-
-    public boolean savekit(UUID uuid, int slot) {
-        if (Bukkit.getPlayer(uuid) != null) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player != null) {
-                return savekit(uuid, slot, player.getInventory().getContents());
-
-            }
-        }
-        return false;
     }
 
 
@@ -207,12 +196,6 @@ public class KitManager {
             if (Bukkit.getPlayer(uuid) != null) {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player != null) {
-                /*if (kitByKitIDMap.containsKey(uuid.toString() + slot)) {
-                    kitByKitIDMap.remove(uuid.toString() + slot);
-                    player.sendMessage("Kit Cleared (manager)");
-                }
-
-                 */
 
                     boolean notEmpty = false;
                     for (ItemStack i : kit) {

@@ -28,10 +28,10 @@ public class KitMenuCloseListener implements Listener {
                     ItemStack[] chestitems = e.getInventory().getContents().clone();
 
                     for (int i = 0; i < 41; i++) {
-                        if (chestitems[i] != null) {
-                            kit[i] = chestitems[i].clone();
-                        } else {
+                        if (chestitems[i] == null) {
                             kit[i] = null;
+                        } else {
+                            kit[i] = chestitems[i].clone();
                         }
 
                     }
@@ -57,10 +57,10 @@ public class KitMenuCloseListener implements Listener {
                     ItemStack[] chestitems = e.getInventory().getContents().clone();
 
                     for (int i = 0; i < 27; i++) {
-                        if (chestitems[i + 9] != null) {
-                            kit[i] = chestitems[i + 9].clone();
-                        } else {
+                        if (chestitems[i + 9] == null) {
                             kit[i] = null;
+                        } else {
+                            kit[i] = chestitems[i + 9].clone();
                         }
 
                     }

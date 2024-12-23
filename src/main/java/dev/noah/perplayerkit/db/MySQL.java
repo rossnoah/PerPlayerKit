@@ -25,7 +25,7 @@ public class MySQL implements SQLDatabase {
     }
 
 
-    public void connect() throws ClassNotFoundException, SQLException {
+    public void connect() throws SQLException {
         if (!isConnected()) {
             connection = DriverManager.getConnection("jdbc:mysql://" +
                             host + ":" + port + "/" + database + "?useSSL=false",

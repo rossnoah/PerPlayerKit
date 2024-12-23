@@ -23,11 +23,7 @@ public class API {
 
     public List<PublicKit> getPublicKits() {
         List<PublicKit> originalList = KitManager.get().getPublicKitList();
-        List<PublicKit> clonedList = new ArrayList<>();
-        for (PublicKit kit : originalList) {
-            clonedList.add(kit);
-        }
-        return clonedList;
+        return new ArrayList<>(originalList);
     }
 
     public void loadPublicKit(Player player, PublicKit kit) {

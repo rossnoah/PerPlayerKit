@@ -13,18 +13,17 @@ public class CopyKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player player) {
 
-            if (DisabledCommand.isBlockedInWorld(p)) {
+            if (DisabledCommand.isBlockedInWorld(player)) {
                 return true;
             }
 
 
             if (args.length > 0) {
-                KitShareManager.get().copyKit(p, args[0]);
+                KitShareManager.get().copyKit(player, args[0]);
             } else {
-                p.sendMessage(ChatColor.RED + "Error, you must select a kit to copy");
+                player.sendMessage(ChatColor.RED + "Error, you must select a kit to copy");
             }
         } else {
             sender.sendMessage("Only players can use this command");

@@ -42,10 +42,8 @@ public class Filter {
             if (item != null) {
 
                 if (item.getType().toString().contains("SHULKER_BOX")) {
-                    if (item.getItemMeta() instanceof BlockStateMeta) {
-                        BlockStateMeta im = (BlockStateMeta) item.getItemMeta();
-                        if (im.getBlockState() instanceof ShulkerBox) {
-                            ShulkerBox shulker = (ShulkerBox) im.getBlockState();
+                    if (item.getItemMeta() instanceof BlockStateMeta blockStateMeta) {
+                        if (blockStateMeta.getBlockState() instanceof ShulkerBox shulker) {
                             shulker.getInventory().setContents(filterItemStack(shulker.getInventory().getContents()));
                         }
                     }
@@ -79,10 +77,10 @@ public class Filter {
 
             if (i.hasItemMeta()) {
                 ItemMeta meta = i.getItemMeta();
-                if (meta.hasAttributeModifiers()) {
+                if (meta != null && meta.hasAttributeModifiers()) {
                     return false;
                 }
-                return meta.getItemFlags().isEmpty();
+                return meta != null && meta.getItemFlags().isEmpty();
 
             }
 
