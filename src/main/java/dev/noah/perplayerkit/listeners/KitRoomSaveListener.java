@@ -42,8 +42,8 @@ public class KitRoomSaveListener implements Listener {
                                             }
 
                                         }
-                                        KitRoomDataManager.setKitRoom(page, kitroom);
-                                        KitRoomDataManager.saveToSQL();
+                                        KitRoomDataManager.get().setKitRoom(page, kitroom);
+                                        KitRoomDataManager.get().saveToDBAsync();
                                         p.sendMessage(ChatColor.GREEN + "Saved kitroom page: " + (page + 1));
 
                                     }

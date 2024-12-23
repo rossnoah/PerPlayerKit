@@ -13,8 +13,9 @@ public class RespawnListener implements Listener {
             return;
         }
 
-        if (PerPlayerKit.lastKit.containsKey(e.getPlayer().getUniqueId())) {
-            KitManager.respawnKitLoad(e.getPlayer().getUniqueId(), PerPlayerKit.lastKit.get(e.getPlayer().getUniqueId()));
+        int lastKitLoaded = KitManager.get().getLastKitLoaded(e.getPlayer().getUniqueId());
+        if(lastKitLoaded != -1){
+            KitManager.get().respawnKitLoad(e.getPlayer().getUniqueId(), lastKitLoaded);
         }
 
     }

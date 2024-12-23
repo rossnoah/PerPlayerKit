@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLite implements PerPlayerKitDatabase {
+public class SQLite implements SQLDatabase {
 
     Plugin pl = PerPlayerKit.getPlugin();
 

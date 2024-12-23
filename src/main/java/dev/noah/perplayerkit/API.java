@@ -2,6 +2,7 @@ package dev.noah.perplayerkit;
 
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class API {
@@ -21,12 +22,16 @@ public class API {
 
 
     public List<PublicKit> getPublicKits() {
-        return PerPlayerKit.publicKitList;
-
+        List<PublicKit> originalList = KitManager.get().getPublicKitList();
+        List<PublicKit> clonedList = new ArrayList<>();
+        for (PublicKit kit : originalList) {
+            clonedList.add(kit);
+        }
+        return clonedList;
     }
 
     public void loadPublicKit(Player player, PublicKit kit) {
-        KitManager.loadPublicKitSilent(player, kit.id);
+        KitManager.get().loadPublicKitSilent(player, kit.id);
     }
 
 

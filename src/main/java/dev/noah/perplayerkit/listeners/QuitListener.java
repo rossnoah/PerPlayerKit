@@ -28,7 +28,7 @@ public class QuitListener implements Listener {
 
             @Override
             public void run() {
-                KitManager.saveToSQL(uuid);
+                KitManager.get().savePlayerKitsToDB(uuid);
             }
 
         }.runTaskAsynchronously(plugin);

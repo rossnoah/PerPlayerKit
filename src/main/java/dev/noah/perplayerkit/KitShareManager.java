@@ -1,26 +1,45 @@
-package dev.noah.perplayerkit.kitsharing;
+package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.util.Broadcast;
-import dev.noah.perplayerkit.KitManager;
-import dev.noah.perplayerkit.PerPlayerKit;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class KitShareManager {
 
-    private static final PerPlayerKit plugin = PerPlayerKit.getPlugin(PerPlayerKit.class);
 
 
-    public static void Sharekit(Player p, int slot) {
+    public static HashMap<String, ItemStack[]> kitShareMap;
+
+    private Plugin plugin;
+    private static KitShareManager instance;
+
+    public KitShareManager(Plugin plugin) {
+        this.plugin = plugin;
+        kitShareMap = new HashMap<>();
+        instance = this;
+    }
+
+    public static KitShareManager get() {
+        if (instance == null) {
+            throw new IllegalStateException("KitShareManager has not been initialized");
+        }
+        return instance;
+    }
+
+    public void sharekit(Player p, int slot) {
         UUID uuid = p.getUniqueId();
-        if (KitManager.hasKit(uuid, slot)) {
+        KitManager kitManager = KitManager.get();
+        if (kitManager.hasKit(uuid, slot)) {
             String id = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
 
-            if (PerPlayerKit.kitShareData.putIfAbsent(id, KitManager.getKit(uuid, slot).clone()) == null) {
+            if (kitShareMap.putIfAbsent(id, kitManager.getPlayerKit(uuid, slot).clone()) == null) {
                 p.sendMessage(ChatColor.GREEN + "Use /copykit " + id + " to share your kit");
                 p.sendMessage(ChatColor.GREEN + "Code expires in 5 minutes");
 
@@ -29,7 +48,7 @@ public class KitShareManager {
 
                     @Override
                     public void run() {
-                        PerPlayerKit.kitShareData.remove(id);
+                        kitShareMap.remove(id);
                     }
 
                 }.runTaskLater(plugin, 5 * 60 * 20);
@@ -45,11 +64,11 @@ public class KitShareManager {
 
     }
 
-    public static void copyKit(Player p, String str) {
+    public void copyKit(Player p, String str) {
 
         String id = str.toUpperCase();
-        if (PerPlayerKit.kitShareData.containsKey(id)) {
-            p.getInventory().setContents(PerPlayerKit.kitShareData.get(id).clone());
+        if (kitShareMap.containsKey(id)) {
+            p.getInventory().setContents(kitShareMap.get(id).clone());
             Broadcast.get().broadcastPlayerCopiedKit(p);
         } else {
             p.sendMessage(ChatColor.RED + "Error, kit does not exist or has expired");

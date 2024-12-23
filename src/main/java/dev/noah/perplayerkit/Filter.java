@@ -8,7 +8,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Filter {
+
+
+    public static Set<String> whitelist;
+    private static Filter instance;
+
+    public Filter() {
+        whitelist = new HashSet<>();
+    }
+
+    public static Filter get(){
+        if(instance == null){
+            instance = new Filter();
+        }
+        return instance;
+    }
 
 
     public static ItemStack[] filterItemStack(ItemStack[] input) {
@@ -43,7 +62,7 @@ public class Filter {
     public static boolean isSafe(ItemStack i) {
 
         if (i != null) {
-            if (!(PerPlayerKit.whitelist.contains(i.getType().toString()))) {
+            if (!(whitelist.contains(i.getType().toString()))) {
                 return false;
             }
             if (i.getAmount() != -1) {
@@ -71,20 +90,14 @@ public class Filter {
         return true;
     }
 
-    public static void createWhitelist() {
-        for (ItemStack[] itemStacks : PerPlayerKit.kitroomData) {
-
+    public void createWhitelist(Collection<ItemStack[]> items) {
+        for (ItemStack[] itemStacks : items) {
             for (ItemStack item : itemStacks) {
                 if (item != null) {
-                    if (!PerPlayerKit.whitelist.contains(item.getType().toString())) {
-                        PerPlayerKit.whitelist.add(item.getType().toString());
-                    }
-
+                        whitelist.add(item.getType().toString());
                 }
             }
-
         }
-
         Bukkit.getLogger().info("Whitelist created");
     }
 

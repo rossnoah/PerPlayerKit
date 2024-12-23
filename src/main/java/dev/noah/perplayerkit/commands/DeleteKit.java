@@ -20,11 +20,11 @@ public class DeleteKit implements CommandExecutor {
 
             if (args.length == 1) {
                 Integer slot = Ints.tryParse(args[0]);
-
+                KitManager kitManager = KitManager.get();
                 if (slot != null) {
-                    if (KitManager.hasKit(uuid, slot)) {
+                    if (kitManager.hasKit(uuid, slot)) {
 
-                        if (KitManager.deleteKitAll(uuid, slot)) {
+                        if (kitManager.deleteKit(uuid, slot)) {
                             player.sendMessage(ChatColor.GREEN + "Kit " + slot + " deleted!");
                         } else {
                             player.sendMessage(ChatColor.RED + "Kit deletion failed!");

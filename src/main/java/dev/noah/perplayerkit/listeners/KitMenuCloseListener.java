@@ -35,7 +35,7 @@ public class KitMenuCloseListener implements Listener {
                         }
 
                     }
-                    KitManager.savekit(uuid, slot, kit);
+                    KitManager.get().savekit(uuid, slot, kit);
 
 
                 }
@@ -64,7 +64,7 @@ public class KitMenuCloseListener implements Listener {
                         }
 
                     }
-                    KitManager.saveEC(uuid, slot, kit);
+                    KitManager.get().saveEC(uuid, slot, kit);
                 }
             }
         }

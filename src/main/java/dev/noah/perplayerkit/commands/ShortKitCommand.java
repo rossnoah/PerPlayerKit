@@ -11,39 +11,32 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class ShortKitCommand implements CommandExecutor {
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Only players can use this command.");
+            return true;
+        }
 
-            if (DisabledCommand.isBlockedInWorld(p)) {
-                return true;
-            }
+        Player player = (Player) sender;
 
-            UUID uuid = p.getUniqueId();
+        if (DisabledCommand.isBlockedInWorld(player)) {
+            return true;
+        }
 
+        UUID uuid = player.getUniqueId();
 
-            if (label.equalsIgnoreCase("k1") || label.equalsIgnoreCase("kit1"))
-                KitManager.loadkit(uuid, 1);
-            if (label.equalsIgnoreCase("k2") || label.equalsIgnoreCase("kit2"))
-                KitManager.loadkit(uuid, 2);
-            if (label.equalsIgnoreCase("k3") || label.equalsIgnoreCase("kit3"))
-                KitManager.loadkit(uuid, 3);
-            if (label.equalsIgnoreCase("k4") || label.equalsIgnoreCase("kit4"))
-                KitManager.loadkit(uuid, 4);
-            if (label.equalsIgnoreCase("k5") || label.equalsIgnoreCase("kit5"))
-                KitManager.loadkit(uuid, 5);
-            if (label.equalsIgnoreCase("k6") || label.equalsIgnoreCase("kit6"))
-                KitManager.loadkit(uuid, 6);
-            if (label.equalsIgnoreCase("k7") || label.equalsIgnoreCase("kit7"))
-                KitManager.loadkit(uuid, 7);
-            if (label.equalsIgnoreCase("k8") || label.equalsIgnoreCase("kit8"))
-                KitManager.loadkit(uuid, 8);
-            if (label.equalsIgnoreCase("k9") || label.equalsIgnoreCase("kit9"))
-                KitManager.loadkit(uuid, 9);
+        // Check if the label matches "kX" or "kitX" where X is a number between 1 and 9
+        if (label.matches("k[1-9]")) {
+            int kitNumber = Integer.parseInt(label.substring(1)); // Extract the number for "kX"
+            KitManager.get().loadkit(uuid, kitNumber);
+        } else if (label.matches("kit[1-9]")) {
+            int kitNumber = Integer.parseInt(label.substring(3)); // Extract the number for "kitX"
+            KitManager.get().loadkit(uuid, kitNumber);
         } else {
-            sender.sendMessage("Only players can use this command");
+            player.sendMessage("Invalid command label.");
         }
 
         return true;

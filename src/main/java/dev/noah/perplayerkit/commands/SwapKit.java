@@ -25,14 +25,15 @@ public class SwapKit implements CommandExecutor {
 
                 if (slot1 != null && slot2 != null) {
 
+                    KitManager kitManager = KitManager.get();
 
-                    if (KitManager.hasKit(uuid, slot1)) {
-                        if (KitManager.hasKit(uuid, slot2)) {
-                            ItemStack[] tempkit = KitManager.getKit(uuid, slot1).clone();
-                            KitManager.savekit(uuid, slot1, KitManager.getKit(uuid, slot2), true);
-                            KitManager.savekit(uuid, slot2, tempkit.clone(), true);
-                            KitManager.saveSingleECToSQL(uuid, slot1);
-                            KitManager.saveSingleECToSQL(uuid, slot2);
+                    if (kitManager.hasKit(uuid, slot1)) {
+                        if (kitManager.hasKit(uuid, slot2)) {
+                            ItemStack[] tempkit = kitManager.getPlayerKit(uuid, slot1).clone();
+                            kitManager.savekit(uuid, slot1, kitManager.getPlayerKit(uuid, slot2), true);
+                            kitManager.savekit(uuid, slot2, tempkit.clone(), true);
+                            kitManager.saveEnderchestToDB(uuid, slot1);
+                            kitManager.saveEnderchestToDB(uuid, slot2);
 
                             player.sendMessage(ChatColor.GREEN + "Kits " + slot1 + " and " + slot2 + " have been swapped!");
 

@@ -13,6 +13,7 @@ import org.ipvp.canvas.slot.ClickOptions;
 import org.ipvp.canvas.slot.Slot;
 import org.ipvp.canvas.type.ChestMenu;
 
+import java.util.List;
 import java.util.UUID;
 
 import static dev.noah.perplayerkit.gui.ItemUtil.createItem;
@@ -24,7 +25,7 @@ public class GUI {
 
     public static void addLoadPublicKit(Slot slot, String id) {
         slot.setClickHandler((player, info) -> {
-            KitManager.loadPublicKit(player, id);
+            KitManager.get().loadPublicKit(player, id);
 
         });
     }
@@ -39,9 +40,9 @@ public class GUI {
     public void OpenKitKenu(Player p, int slot) {
         Menu menu = createKitMenu(slot, p);
 
-        if (PerPlayerKit.data.get(p.getUniqueId().toString() + slot) != null) {
+        if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot) != null) {
 
-            ItemStack[] kit = PerPlayerKit.data.get(p.getUniqueId().toString() + slot);
+            ItemStack[] kit = KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot);
             for (int i = 0; i < 41; i++) {
                 menu.getSlot(i).setItem(kit[i]);
             }
@@ -96,9 +97,9 @@ public class GUI {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
 
         }
-        if (PerPlayerKit.data.get(p.getUniqueId() + "ec" + slot) != null) {
+            if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot) != null) {
 
-            ItemStack[] kit = PerPlayerKit.data.get(p.getUniqueId() + "ec" + slot);
+            ItemStack[] kit = KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot);
             for (int i = 9; i < 36; i++) {
                 menu.getSlot(i).setItem(kit[i - 9]);
             }
@@ -119,9 +120,9 @@ public class GUI {
     public void InspectKit(Player p, UUID target, int slot) {
         Menu menu = createInspectMenu(slot, p, target.toString());
 
-        if (PerPlayerKit.data.get(target.toString() + slot) != null) {
+        if (KitManager.get().getItemStackArrayById(target.toString() + slot) != null) {
 
-            ItemStack[] kit = PerPlayerKit.data.get(target.toString() + slot);
+            ItemStack[] kit = KitManager.get().getItemStackArrayById(target.toString() + slot);
             for (int i = 0; i < 41; i++) {
                 menu.getSlot(i).setItem(kit[i]);
             }
@@ -157,7 +158,7 @@ public class GUI {
 
         }
         for (int i = 18; i < 27; i++) {
-            if (PerPlayerKit.data.get(p.getUniqueId() + "ec" + (i - 17)) != null) {
+            if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + (i - 17)) != null) {
 
                 menu.getSlot(i).setItem(createItem(
                         Material.ENDER_CHEST, 1, "&3&lEnderchest " + (i - 17), "&7● Left click to load kit",
@@ -171,7 +172,7 @@ public class GUI {
             }
         }
         for (int i = 27; i < 36; i++) {
-            if (PerPlayerKit.data.get(p.getUniqueId().toString() + (i - 26)) != null) {
+            if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + (i - 26)) != null) {
                 menu.getSlot(i).setItem(createItem(
                         Material.KNOWLEDGE_BOOK, 1, "&a&lKIT EXISTS", "&7● Click to edit"));
             } else {
@@ -224,9 +225,9 @@ public class GUI {
 
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
         }
-        if (PerPlayerKit.kitroomData.get(page) != null) {
+        if (KitRoomDataManager.get().getKitRoomPage(page) != null) {
             for (int i = 0; i < 45; i++) {
-                menu.getSlot(i).setItem(PerPlayerKit.kitroomData.get(page)[i]);
+                menu.getSlot(i).setItem(KitRoomDataManager.get().getKitRoomPage(page)[i]);
             }
         }
 
@@ -272,7 +273,7 @@ public class GUI {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
         }
 
-        ItemStack[] kit = KitManager.getPublicKit(id);
+        ItemStack[] kit = KitManager.get().getPublicKit(id);
 
         for (int i = 9; i < 36; i++) {
             menu.getSlot(i).setItem(kit[i]);
@@ -306,10 +307,12 @@ public class GUI {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BOOK, 1, "&7&lMORE KITS COMING SOON"));
         }
 
-        for (int i = 0; i < PerPlayerKit.publicKitList.size(); i++) {
+        List<PublicKit> publicKitList = KitManager.get().getPublicKitList();
+
+        for (int i = 0; i < publicKitList.size(); i++) {
             menu.getSlot(i + 18).setItem(
-                    createItem(PerPlayerKit.publicKitList.get(i).icon, 1, PerPlayerKit.publicKitList.get(i).name));
-            addPublicKitButton(menu.getSlot(i + 18), PerPlayerKit.publicKitList.get(i).id);
+                    createItem(publicKitList.get(i).icon, 1, publicKitList.get(i).name));
+            addPublicKitButton(menu.getSlot(i + 18), publicKitList.get(i).id);
 
         }
 
@@ -345,7 +348,7 @@ public class GUI {
     public void addPublicKitButton(Slot slot, String id) {
         slot.setClickHandler((player, info) -> {
             if (info.getClickType() == ClickType.LEFT) {
-                KitManager.loadPublicKit(player, id);
+                KitManager.get().loadPublicKit(player, id);
             } else if (info.getClickType() == ClickType.RIGHT) {
                 Menu m = ViewPublicKitMenu(player, id);
                 m.open(player);
@@ -391,7 +394,7 @@ public class GUI {
                     data[i] = player.getInventory().getContents()[i];
 
                 }
-                KitRoomDataManager.setKitRoom(page, data);
+                KitRoomDataManager.get().setKitRoom(page, data);
                 player.sendMessage("saved menu");
 
             }
@@ -460,7 +463,7 @@ public class GUI {
             if (info.getClickType() == ClickType.LEFT ||
                     info.getClickType() == ClickType.SHIFT_LEFT) {
                 Menu m = info.getClickedMenu();
-                KitManager.loadkit(player.getUniqueId(), i);
+                KitManager.get().loadkit(player.getUniqueId(), i);
                 info.getClickedMenu().close();
 
             }
@@ -472,7 +475,7 @@ public class GUI {
             if (info.getClickType() == ClickType.LEFT ||
                     info.getClickType() == ClickType.SHIFT_LEFT) {
                 Menu m = info.getClickedMenu();
-                KitManager.loadkit(player.getUniqueId(), i);
+                KitManager.get().loadkit(player.getUniqueId(), i);
                 info.getClickedMenu().close();
             }
             if (info.getClickType() == ClickType.RIGHT ||
@@ -488,7 +491,7 @@ public class GUI {
             if (info.getClickType() == ClickType.LEFT ||
                     info.getClickType() == ClickType.SHIFT_LEFT) {
                 Menu m = info.getClickedMenu();
-                KitManager.loadEC(player.getUniqueId(), i);
+                KitManager.get().loadEC(player.getUniqueId(), i);
                 info.getClickedMenu().close();
             } else if (info.getClickType() == ClickType.RIGHT ||
                     info.getClickType() == ClickType.SHIFT_RIGHT) {

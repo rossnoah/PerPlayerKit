@@ -1,6 +1,6 @@
 package dev.noah.perplayerkit.commands;
 
-import dev.noah.perplayerkit.kitsharing.KitShareManager;
+import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.util.CooldownManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -37,7 +37,7 @@ public class ShareKitCommand implements CommandExecutor {
             return true;
         }
 
-        KitShareManager.Sharekit(p, Integer.parseInt(args[0]));
+        KitShareManager.get().sharekit(p, Integer.parseInt(args[0]));
         shareKitCommandCooldown.setCooldown(p);
 
         return true;

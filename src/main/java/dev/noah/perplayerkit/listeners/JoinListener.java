@@ -34,7 +34,7 @@ public class JoinListener implements Listener {
 
             @Override
             public void run() {
-                KitManager.loadFromSQL(uuid);
+                KitManager.get().loadPlayerKitsFromDB(uuid);
             }
 
         }.runTaskAsynchronously(plugin);

@@ -7,10 +7,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MySQL implements PerPlayerKitDatabase {
-    /*
+public class MySQL implements SQLDatabase {
 
-     */
     Plugin pl = PerPlayerKit.getPlugin();
 
     private final String host = pl.getConfig().getString("database.host");
@@ -18,8 +16,6 @@ public class MySQL implements PerPlayerKitDatabase {
     private final String database = pl.getConfig().getString("database.dbname");
     private final String username = pl.getConfig().getString("database.username");
     private final String password = pl.getConfig().getString("database.password");
-
-    //*/
 
 
     private Connection connection;

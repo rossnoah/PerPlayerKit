@@ -33,7 +33,7 @@ public class KitCommand implements CommandExecutor {
                         if (slot > 0 && slot <= 9) {
 
 
-                            if (KitManager.loadkit(playeruuid, slot)) {
+                            if (KitManager.get().loadkit(playeruuid, slot)) {
 
                             } else {
                                 player.sendMessage(ChatColor.RED + "Kit loading failed!");
@@ -57,7 +57,7 @@ public class KitCommand implements CommandExecutor {
                         if (slot > 0 && slot <= 9) {
 
 
-                            if (KitManager.savekit(playeruuid, slot)) {
+                            if (KitManager.get().savekit(playeruuid, slot)) {
                                 player.sendMessage(ChatColor.GREEN + "Kit saved in slot " + slot + "!");
 
                             } else {

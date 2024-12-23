@@ -45,10 +45,11 @@ public class SavePublicKitCommand implements CommandExecutor {
 
         data = Filter.filterItemStack(data);
 
+        KitManager kitManager = KitManager.get();
         //save kit
-        boolean success = KitManager.savePublicKit(args[0], data);
+        boolean success = kitManager.savePublicKit(args[0], data);
         if (success) {
-            KitManager.saveSinglePublicKitToSQL(args[0]);
+            kitManager.savePublicKitToDB(args[0]);
             p.sendMessage("Saved kit " + args[0]);
         } else {
             p.sendMessage("Error saving kit " + args[0]);

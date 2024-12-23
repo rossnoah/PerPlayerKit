@@ -1,21 +1,16 @@
 package dev.noah.perplayerkit;
 
+import dev.noah.perplayerkit.db.*;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import dev.noah.perplayerkit.commands.*;
-import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.listeners.*;
-import dev.noah.perplayerkit.db.MySQL;
-import dev.noah.perplayerkit.db.PerPlayerKitDatabase;
-import dev.noah.perplayerkit.db.DBManager;
-import dev.noah.perplayerkit.db.SQLite;
 import dev.noah.perplayerkit.tabcompleter.KitRoomTab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,31 +18,16 @@ import org.ipvp.canvas.MenuFunctionListener;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public final class PerPlayerKit extends JavaPlugin {
 
     public static Plugin plugin;
 
-
     public static DBManager dbManager;
-    public PerPlayerKitDatabase database;
-
-    public static HashMap<String, ItemStack[]> data = new HashMap<>();
-    public static HashMap<String, ItemStack[]> kitShareData = new HashMap<>();
-
-
-    public static ArrayList<ItemStack[]> kitroomData = new ArrayList<>();
-
-    public static ArrayList<String> whitelist = new ArrayList<>();
-    public static HashMap<UUID, Integer> lastKit = new HashMap<>();
-
-    public static List<PublicKit> publicKitList = new ArrayList<>();
+    private SQLDatabase sqlDatabase;
 
     public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] ");
-
 
     public static Plugin getPlugin() {
         return plugin;
@@ -59,14 +39,11 @@ public final class PerPlayerKit extends JavaPlugin {
 
         this.saveDefaultConfig();
 
+        new KitManager(this);
+        new KitShareManager(this);
+
         // Plugin startup logic
-        ItemStack[] defaultPage = new ItemStack[45];
-        defaultPage[0] = ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, "&bDefault Kit Room Item");
-        kitroomData.add(defaultPage);
-        kitroomData.add(defaultPage);
-        kitroomData.add(defaultPage);
-        kitroomData.add(defaultPage);
-        kitroomData.add(defaultPage);
+        KitRoomDataManager.get().init();
 
         // generate list of public kits from the config
         PerPlayerKit.getPlugin().getConfig().getConfigurationSection("publickits").getKeys(false).forEach(key -> {
@@ -74,56 +51,56 @@ public final class PerPlayerKit extends JavaPlugin {
             Material icon = Material
                     .valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".icon"));
             PublicKit kit = new PublicKit(key, name, icon);
-            publicKitList.add(kit);
+            KitManager.get().getPublicKitList().add(kit);
         });
 
         String dbType = this.getConfig().getString("database.type");
         if (dbType == null) {
-            this.database = new SQLite();
+            this.sqlDatabase = new SQLite();
         } else if (dbType.equalsIgnoreCase("mysql")) {
-            this.database = new MySQL();
+            this.sqlDatabase = new MySQL();
         } else if (dbType.equalsIgnoreCase("sqlite")) {
-            this.database = new SQLite();
+            this.sqlDatabase = new SQLite();
         } else {
-            this.database = new SQLite();
+            this.sqlDatabase = new SQLite();
 
         }
-        dbManager = new DBManager(database);
+        dbManager = new SQLDBManager(sqlDatabase);
 
         try {
-            database.connect();
+            sqlDatabase.connect();
         } catch (ClassNotFoundException | SQLException e) {
             Bukkit.getLogger().warning("Database connection failed!");
             e.printStackTrace();
         }
 
-        if (database.isConnected()) {
+        if (sqlDatabase.isConnected()) {
             Bukkit.getLogger().info("Database is connected!");
-            dbManager.createTable();
-            KitRoomDataManager.loadFromSQL();
+            dbManager.init();
+            KitRoomDataManager.get().loadFromDB();
             loadPublicKits();
 
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                KitManager.loadFromSQL(player.getUniqueId());
+                KitManager.get().loadPlayerKitsFromDB(player.getUniqueId());
             }
 
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
-                    if (database.isConnected()) {
+                    if (sqlDatabase.isConnected()) {
                         dbManager.keepAlive();
                     } else {
                         Bukkit.getLogger().warning("Keep Alive Failed, attempting to reconnect database");
                         try {
-                            database.connect();
+                            sqlDatabase.connect();
                         } catch (SQLException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
-                        if (database.isConnected()) {
+                        if (sqlDatabase.isConnected()) {
                             Bukkit.getLogger().info("Database is connected!");
-                            dbManager.createTable();
+                            dbManager.init();
 
                         } else {
                             Bukkit.getLogger().warning("Database connection failed!");
@@ -170,13 +147,13 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        database.disconnect();
+        sqlDatabase.disconnect();
 
     }
 
     private void loadPublicKits() {
-        for (PublicKit kit : publicKitList) {
-            KitManager.loadSinglePublicKitFromSQL(kit.id);
+        for (PublicKit kit : KitManager.get().getPublicKitList()) {
+            KitManager.get().loadPublicKitFromDB(kit.id);
         }
 
     }

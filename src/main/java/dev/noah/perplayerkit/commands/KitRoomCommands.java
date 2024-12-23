@@ -12,10 +12,10 @@ public class KitRoomCommands implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("load")) {
-                KitRoomDataManager.loadFromSQL();
+                KitRoomDataManager.get().loadFromDB();
                 sender.sendMessage(ChatColor.GREEN + "Kit Room loaded from SQL");
             } else if (args[0].equalsIgnoreCase("save")) {
-                KitRoomDataManager.saveToSQL();
+                KitRoomDataManager.get().saveToDBAsync();
                 sender.sendMessage(ChatColor.GREEN + "Kit Room saved to SQL");
             } else {
                 sender.sendMessage(ChatColor.GREEN + "Incorrect Usage!");

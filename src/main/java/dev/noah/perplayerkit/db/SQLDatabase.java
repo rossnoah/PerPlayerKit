@@ -3,7 +3,7 @@ package dev.noah.perplayerkit.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface PerPlayerKitDatabase {
+public interface SQLDatabase {
 
     boolean isConnected();
 

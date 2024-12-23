@@ -38,7 +38,7 @@ public class PublicKitCommand implements CommandExecutor, TabCompleter {
 
         //if args.length==1 open the kit menu with the kit
         String kitName = args[0];
-        KitManager.loadPublicKit(p, kitName);
+        KitManager.get().loadPublicKit(p, kitName);
 
         return true;
 
@@ -51,7 +51,7 @@ public class PublicKitCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
 
             List<String> list = new ArrayList<>();
-            PerPlayerKit.publicKitList.forEach((kit) -> list.add(kit.id));
+            KitManager.get().getPublicKitList().forEach((kit) -> list.add(kit.id));
 
             return list;
 

@@ -30,20 +30,6 @@ public class CooldownManager {
     }
 
 
-    //remove cooldown
-    public void removeCooldown(String key) {
-        cooldownMap.remove(key);
-    }
-
-    public void removeCooldown(UUID uuid) {
-        removeCooldown(uuid.toString());
-    }
-
-    public void removeCooldown(Player player) {
-        removeCooldown(player.getUniqueId());
-    }
-
-
     //set cooldown
     public void setCooldown(String key) {
         cooldownMap.put(key, System.currentTimeMillis());
@@ -57,19 +43,6 @@ public class CooldownManager {
         setCooldown(player.getUniqueId());
     }
 
-
-    //get cooldown
-    public long getCooldownInSeconds(String key) {
-        return (cooldownMap.get(key) + cooldownInSeconds * 1000 - System.currentTimeMillis()) / 1000;
-    }
-
-    public long getCooldownInSeconds(UUID uuid) {
-        return getCooldownInSeconds(uuid.toString());
-    }
-
-    public long getCooldownInSeconds(Player player) {
-        return getCooldownInSeconds(player.getUniqueId());
-    }
 
 
 

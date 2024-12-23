@@ -1,7 +1,7 @@
 package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.DisabledCommand;
-import dev.noah.perplayerkit.kitsharing.KitShareManager;
+import dev.noah.perplayerkit.KitShareManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +22,7 @@ public class CopyKitCommand implements CommandExecutor {
 
 
             if (args.length > 0) {
-                KitShareManager.copyKit(p, args[0]);
+                KitShareManager.get().copyKit(p, args[0]);
             } else {
                 p.sendMessage(ChatColor.RED + "Error, you must select a kit to copy");
             }

@@ -31,7 +31,7 @@ public class InspectKitCommand implements CommandExecutor {
 
                             @Override
                             public void run() {
-                                KitManager.loadFromSQL(target);
+                                KitManager.get().loadPlayerKitsFromDB(target);
                             }
 
                         }.runTaskAsynchronously(plugin);
@@ -41,7 +41,7 @@ public class InspectKitCommand implements CommandExecutor {
 
                         @Override
                         public void run() {
-                            if (KitManager.hasKit(target, slot)) {
+                            if (KitManager.get().hasKit(target, slot)) {
 
                                 GUI main = new GUI();
 
