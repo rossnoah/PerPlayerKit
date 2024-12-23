@@ -13,6 +13,7 @@ public class SQLDBManager implements DBManager{
         this.db = db;
     }
 
+
     private void createTable() {
         PreparedStatement ps;
         try {
@@ -24,10 +25,17 @@ public class SQLDBManager implements DBManager{
         }
     }
 
+    @Override
     public void init(){
         createTable();
     }
 
+    @Override
+    public void close(){
+        db.disconnect();
+    }
+
+    @Override
     public void keepAlive() {
         PreparedStatement ps;
 
@@ -40,6 +48,7 @@ public class SQLDBManager implements DBManager{
 
     }
 
+    @Override
     public void saveKitDataByID(String kitID, String data) {
 
         try {
@@ -55,6 +64,7 @@ public class SQLDBManager implements DBManager{
         }
     }
 
+    @Override
     public String getKitDataByID(String kitID) {
         if (doesKitExistByID(kitID)) {
             try {
@@ -77,7 +87,7 @@ public class SQLDBManager implements DBManager{
         return "Error";
     }
 
-
+    @Override
     public boolean doesKitExistByID(String kitID) {
 
         try {
@@ -91,6 +101,7 @@ public class SQLDBManager implements DBManager{
         return false;
     }
 
+    @Override
     public void deleteKitByID(String kitID) {
 
         try {

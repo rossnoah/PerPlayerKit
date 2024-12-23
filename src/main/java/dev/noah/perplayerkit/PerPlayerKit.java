@@ -154,8 +154,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        sqlDatabase.disconnect();
-
+        dbManager.close();
     }
 
     private void loadPublicKits() {
