@@ -35,11 +35,11 @@ motd:
 
 scheduled-broadcast: #uses mini message format
   enabled: true
-  period: 9 #in seconds
+  period: 90 #in seconds
   messages:
-    - "         <white>Check out public kits with <aqua>/pk<white>!"
-    - "         <white>Want to share a kit? Use <aqua>/sharekit [slot] <white>!"
-    - "         <white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
+    - "white>Check out public kits with <aqua>/pk<white>!"
+    - "<white>Want to share a kit? Use <aqua>/sharekit <slot><white>!"
+    - "<white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
 
 
 kitroom:
