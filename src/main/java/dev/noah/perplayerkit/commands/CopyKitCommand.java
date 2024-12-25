@@ -1,6 +1,6 @@
 package dev.noah.perplayerkit.commands;
 
-import dev.noah.perplayerkit.DisabledCommand;
+import dev.noah.perplayerkit.util.DisabledCommand;
 import dev.noah.perplayerkit.KitShareManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

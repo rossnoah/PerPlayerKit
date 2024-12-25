@@ -41,7 +41,7 @@ public class KitShareManager {
 
             if (kitShareMap.putIfAbsent(id, kitManager.getPlayerKit(uuid, slot).clone()) == null) {
                 p.sendMessage(ChatColor.GREEN + "Use /copykit " + id + " to share your kit");
-                p.sendMessage(ChatColor.GREEN + "Code expires in 5 minutes");
+                p.sendMessage(ChatColor.GREEN + "Code expires in 15 minutes");
 
 
                 new BukkitRunnable() {
@@ -51,7 +51,7 @@ public class KitShareManager {
                         kitShareMap.remove(id);
                     }
 
-                }.runTaskLater(plugin, 5 * 60 * 20);
+                }.runTaskLater(plugin, 15 * 60 * 20);
 
 
             } else {

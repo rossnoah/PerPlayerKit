@@ -1,5 +1,6 @@
-package dev.noah.perplayerkit;
+package dev.noah.perplayerkit.util;
 
+import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
