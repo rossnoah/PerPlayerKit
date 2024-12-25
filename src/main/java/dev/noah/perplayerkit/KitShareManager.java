@@ -8,7 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class KitShareManager {
@@ -31,6 +33,16 @@ public class KitShareManager {
             throw new IllegalStateException("KitShareManager has not been initialized");
         }
         return instance;
+    }
+
+    public List<String> getKitSlots(Player p) {
+        ArrayList<String> slots = new ArrayList<>();
+        for(int i = 1; i <= 10; i++) {
+            if (KitManager.get().hasKit(p.getUniqueId(), i)) {
+                 slots.add(String.valueOf(i));
+                }
+            }
+        return slots;
     }
 
     public void sharekit(Player p, int slot) {

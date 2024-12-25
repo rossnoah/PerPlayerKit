@@ -135,6 +135,7 @@ public final class PerPlayerKit extends JavaPlugin {
     private void registerCommands() {
         this.getCommand("kit").setExecutor(new MainMenuCommand());
         this.getCommand("sharekit").setExecutor(new ShareKitCommand());
+        this.getCommand("sharekit").setTabCompleter(new ShareKitCommand());
         this.getCommand("copykit").setExecutor(new CopyKitCommand());
         this.getCommand("kitroom").setExecutor(new KitRoomCommands());
         this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
