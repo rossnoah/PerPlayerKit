@@ -11,19 +11,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 
 public class BroadcastManager {
 
 
-    private final int broadcastDistance = 500;
-    private CooldownManager repairBroadcastCooldown = new CooldownManager(5);
-    private CooldownManager kitroomBroadcastCooldown = new CooldownManager(15);
-    private BukkitAudiences audience;
-
+    private static final int LINE_LENGTH = 60; // Length of the strikethrough line
+    private static final String FIGURE_SPACE = "\u2007"; // A whitespace character of consistent width
     private static BroadcastManager instance;
+    private final int broadcastDistance = 500;
     private final Plugin plugin;
+    private final CooldownManager repairBroadcastCooldown = new CooldownManager(5);
+    private final CooldownManager kitroomBroadcastCooldown = new CooldownManager(15);
+    private final BukkitAudiences audience;
 
     public BroadcastManager(Plugin plugin) {
         this.plugin = plugin;
@@ -38,18 +39,30 @@ public class BroadcastManager {
         return instance;
     }
 
+    public static Component generateBroadcastComponent(String message) {
+        String strikeThroughLine = "<gray>" + " ".repeat(3) + "<st>" + FIGURE_SPACE.repeat(LINE_LENGTH) + "</st>";
+
+        int messageLength = MiniMessage.miniMessage().stripTags(message).length();
+
+        int padding = (LINE_LENGTH - messageLength) / 2;
+
+        String formattedMessage = strikeThroughLine + "\n\n" + " ".repeat(3)+FIGURE_SPACE.repeat(Math.max(padding, 0) ) + message + "\n\n" + strikeThroughLine;
+
+        return MiniMessage.miniMessage().deserialize(formattedMessage);
+    }
+
     private void broadcastMessage(Player player, String message) {
         World world = player.getWorld();
 
-        for(Player broadcastPlayer : world.getPlayers()){
-            if(broadcastPlayer.getLocation().distance(player.getLocation()) < broadcastDistance){
+        for (Player broadcastPlayer : world.getPlayers()) {
+            if (broadcastPlayer.getLocation().distance(player.getLocation()) < broadcastDistance) {
                 broadcastPlayer.sendMessage(PerPlayerKit.prefix + ChatColor.translateAlternateColorCodes('&', message));
             }
         }
     }
 
     private void broadcastMessage(Player player, String message, CooldownManager cooldownManager) {
-        if(cooldownManager.isOnCooldown(player)){
+        if (cooldownManager.isOnCooldown(player)) {
             return;
         }
         broadcastMessage(player, message);
@@ -83,19 +96,20 @@ public class BroadcastManager {
     public void startScheduledBroadcast() {
 
         List<Component> messages = new ArrayList<>();
-        plugin.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> messages.add(MiniMessage.miniMessage().deserialize(message)));
+        plugin.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> messages.add(generateBroadcastComponent(message)));
 
         int[] index = {0};
 
         if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled")) {
 
             Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        audience.player(player).sendMessage(messages.get(index[0]));
-                    }
-                    index[0] = (index[0] + 1) % messages.size();
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    audience.player(player).sendMessage(messages.get(index[0]));
+                }
+                index[0] = (index[0] + 1) % messages.size();
             }, 0, plugin.getConfig().getInt("scheduled-broadcast.period") * 20L);
         }
+
 
     }
 
