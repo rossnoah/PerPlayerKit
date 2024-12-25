@@ -12,19 +12,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Filter {
+public class ItemFilter {
 
 
     public static Set<String> whitelist;
-    private static Filter instance;
+    private static ItemFilter instance;
 
-    public Filter() {
+    public ItemFilter() {
         whitelist = new HashSet<>();
+
+        instance = this;
     }
 
-    public static Filter get(){
+    public static ItemFilter get(){
         if(instance == null){
-            instance = new Filter();
+            throw new IllegalStateException("ItemFilter has not been initialized yet!");
         }
         return instance;
     }
@@ -88,7 +90,7 @@ public class Filter {
         return true;
     }
 
-    public void createWhitelist(Collection<ItemStack[]> items) {
+    public void addToWhitelist(Collection<ItemStack[]> items) {
         for (ItemStack[] itemStacks : items) {
             for (ItemStack item : itemStacks) {
                 if (item != null) {
@@ -96,7 +98,10 @@ public class Filter {
                 }
             }
         }
-        Bukkit.getLogger().info("Whitelist created");
+    }
+
+    public void clearWhitelist() {
+        whitelist.clear();
     }
 
 

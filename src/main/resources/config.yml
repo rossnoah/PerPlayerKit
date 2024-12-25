@@ -1,12 +1,25 @@
 #Database credentials
 
-database:
-  type: "sqlite" #sqlite or mysql
+
+
+# It is strongly recommended to use MySQL or SQLite
+# YAML should not be used in any environment
+
+
+storage: #sqlite, mysql, redis, yml (yaml)
+  type: "sqlite"
+
+mysql:
   host: "localhost"
   port: "3306"
   dbname: "kitdatabase"
   username: "username"
   password: "pa55w0rd"
+
+redis:
+    host: "localhost"
+    port: 6379
+    password: "pa55w0rd"
 
 motd:
   enabled: true
@@ -22,15 +35,11 @@ motd:
 
 scheduled-broadcast: #uses mini message format
   enabled: true
-  period: 900 #in seconds
+  period: 9 #in seconds
   messages:
-    - ""
-    - "<gray>   <st>                                                         "
-    - ""
+    - "         <white>Check out public kits with <aqua>/pk<white>!"
+    - "         <white>Want to share a kit? Use <aqua>/sharekit [slot] <white>!"
     - "         <white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
-    - ""
-    - "<gray>   <st>                                                         "
-    - ""
 
 
 kitroom:

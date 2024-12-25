@@ -1,7 +1,7 @@
 package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.DisabledCommand;
-import dev.noah.perplayerkit.Filter;
+import dev.noah.perplayerkit.ItemFilter;
 import dev.noah.perplayerkit.KitManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -57,7 +57,7 @@ public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
         }
 
 
-        data = Filter.filterItemStack(data);
+        data = ItemFilter.filterItemStack(data);
 
         KitManager kitManager = KitManager.get();
         //save kit

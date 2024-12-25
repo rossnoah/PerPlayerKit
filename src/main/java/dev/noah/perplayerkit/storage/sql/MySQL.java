@@ -1,4 +1,4 @@
-package dev.noah.perplayerkit.db;
+package dev.noah.perplayerkit.storage.sql;
 
 import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.plugin.Plugin;
@@ -11,11 +11,11 @@ public class MySQL implements SQLDatabase {
 
     Plugin pl = PerPlayerKit.getPlugin();
 
-    private final String host = pl.getConfig().getString("database.host");
-    private final String port = pl.getConfig().getString("database.port");
-    private final String database = pl.getConfig().getString("database.dbname");
-    private final String username = pl.getConfig().getString("database.username");
-    private final String password = pl.getConfig().getString("database.password");
+    private final String host = pl.getConfig().getString("mysql.host");
+    private final String port = pl.getConfig().getString("mysql.port");
+    private final String database = pl.getConfig().getString("mysql.dbname");
+    private final String username = pl.getConfig().getString("mysql.username");
+    private final String password = pl.getConfig().getString("mysql.password");
 
 
     private Connection connection;
@@ -33,13 +33,9 @@ public class MySQL implements SQLDatabase {
         }
     }
 
-    public void disconnect() {
+    public void disconnect() throws SQLException {
         if (isConnected()) {
-            try {
                 connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 

@@ -1,20 +1,18 @@
-package dev.noah.perplayerkit.db;
+package dev.noah.perplayerkit.storage.sql;
 
-import dev.noah.perplayerkit.PerPlayerKit;
-import org.bukkit.plugin.Plugin;
-
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class SQLite implements SQLDatabase {
 
-    Plugin pl = PerPlayerKit.getPlugin();
 
-    private final String databasePath = pl.getDataFolder() + File.separator + "database.db"; // Change to your SQLite database file path
-
+    private final String databasePath;
     private Connection connection;
+
+    public SQLite(String databasePath) {
+        this.databasePath = databasePath;
+    }
 
     public boolean isConnected() {
         return (connection != null);

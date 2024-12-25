@@ -1,49 +1,72 @@
-package dev.noah.perplayerkit.db;
+package dev.noah.perplayerkit.storage;
+
+import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
+import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
+import dev.noah.perplayerkit.storage.sql.SQLDatabase;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SQLDBManager implements DBManager{
+public class SQLStorage implements StorageManager {
 
 
     private final SQLDatabase db;
 
-    public SQLDBManager(SQLDatabase db) {
+    public SQLStorage(SQLDatabase db) {
         this.db = db;
     }
 
 
-    private void createTable() {
+    private void createTable() throws SQLException{
         PreparedStatement ps;
-        try {
             ps = db.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kits "
                     + "(KITID VARCHAR(100),KITDATA TEXT(15000), PRIMARY KEY (KITID) )");
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+    }
+
+    @Override
+    public void init() throws StorageOperationException {
+        try {
+            createTable();
+        }catch (SQLException e) {
+           throw new StorageOperationException("Failed to initialize the database", e);
         }
     }
 
     @Override
-    public void init(){
-        createTable();
+    public void connect() throws StorageConnectionException {
+        try{
+            db.connect();
+        }catch (ClassNotFoundException | SQLException e) {
+            throw new StorageConnectionException("Failed to connect to the database", e);
+        }
     }
 
     @Override
-    public void close(){
-        db.disconnect();
+    public boolean isConnected() {
+        return db.isConnected();
     }
 
     @Override
-    public void keepAlive() {
+    public void close() throws StorageConnectionException {
+        try {
+            db.disconnect();
+        } catch (SQLException e) {
+            throw new StorageConnectionException("Failed to close the database connection", e);
+        }
+    }
+
+    @Override
+    public void keepAlive() throws StorageConnectionException {
         PreparedStatement ps;
 
         try {
             ps = db.getConnection().prepareStatement("SELECT 1");
             ps.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new StorageConnectionException("Failed to keep the connection alive", e);
         }
 
     }

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class SwapKit implements CommandExecutor {
+public class SwapKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player player) {

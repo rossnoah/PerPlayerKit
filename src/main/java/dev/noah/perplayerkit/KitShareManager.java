@@ -1,6 +1,6 @@
 package dev.noah.perplayerkit;
 
-import dev.noah.perplayerkit.util.Broadcast;
+import dev.noah.perplayerkit.util.BroadcastManager;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -69,7 +69,7 @@ public class KitShareManager {
         String id = str.toUpperCase();
         if (kitShareMap.containsKey(id)) {
             p.getInventory().setContents(kitShareMap.get(id).clone());
-            Broadcast.get().broadcastPlayerCopiedKit(p);
+            BroadcastManager.get().broadcastPlayerCopiedKit(p);
         } else {
             p.sendMessage(ChatColor.RED + "Error, kit does not exist or has expired");
 

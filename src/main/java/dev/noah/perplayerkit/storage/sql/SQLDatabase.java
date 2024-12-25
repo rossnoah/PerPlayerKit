@@ -1,4 +1,4 @@
-package dev.noah.perplayerkit.db;
+package dev.noah.perplayerkit.storage.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ public interface SQLDatabase {
 
     void connect() throws ClassNotFoundException, SQLException;
 
-    void disconnect();
+    void disconnect() throws SQLException;
 
     Connection getConnection();
 

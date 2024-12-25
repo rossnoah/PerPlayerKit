@@ -20,18 +20,8 @@ public class KitRoomDataManager {
     public KitRoomDataManager(Plugin plugin) {
         this.plugin = plugin;
         kitroomData = new ArrayList<>();
-    }
-
-    public static KitRoomDataManager get(){
-        if(instance == null){
-            instance = new KitRoomDataManager(PerPlayerKit.getPlugin());
-        }
-        return instance;
-    }
 
 
-
-    public void init() {
         ItemStack[] defaultPage = new ItemStack[45];
         defaultPage[0] = ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, "&bDefault Kit Room Item");
         kitroomData.add(defaultPage);
@@ -39,10 +29,26 @@ public class KitRoomDataManager {
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
+
+        ItemFilter.get().addToWhitelist(kitroomData);
+
+        instance = this;
+    }
+
+    public static KitRoomDataManager get(){
+        if(instance == null){
+            throw new IllegalStateException("KitRoomDataManager has not been initialized yet!");
+        }
+        return instance;
     }
 
     public void setKitRoom(int page, ItemStack[] data) {
         kitroomData.set(page, data);
+
+        ItemFilter.get().clearWhitelist();
+
+        ItemFilter.get().addToWhitelist(kitroomData);
+
     }
 
     public ItemStack[] getKitRoomPage(int page) {
@@ -58,7 +64,7 @@ public class KitRoomDataManager {
                 for (int i = 0; i < 5; i++) {
                     ItemStack[] pagedata = kitroomData.get(i);
                     String output = Serializer.itemStackArrayToBase64(pagedata);
-                    PerPlayerKit.dbManager.saveKitDataByID("kitroom" + i, output);
+                    PerPlayerKit.storageManager.saveKitDataByID("kitroom" + i, output);
                 }
             }
 
@@ -68,37 +74,22 @@ public class KitRoomDataManager {
     }
 
     public void loadFromDB() {
+        ItemFilter.get().clearWhitelist();
         for (int i = 0; i < 5; i++) {
-            String input = PerPlayerKit.dbManager.getKitDataByID("kitroom" + i);
+            String input = PerPlayerKit.storageManager.getKitDataByID("kitroom" + i);
             if (!input.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] pagedata = Serializer.itemStackArrayFromBase64(input);
                     kitroomData.set(i, pagedata);
-                    Filter.get().createWhitelist(kitroomData);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-
+        ItemFilter.get().addToWhitelist(kitroomData);
     }
 
-    public void syncLoadFromSQL() {
-        for (int i = 0; i < 5; i++) {
-            String input = PerPlayerKit.dbManager.getKitDataByID("kitroom" + i);
-            if (!input.equalsIgnoreCase("error")) {
-                try {
-                    ItemStack[] pagedata = Serializer.itemStackArrayFromBase64(input);
-                    kitroomData.set(i, pagedata);
-                    Filter.get().createWhitelist(kitroomData);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }
 
 

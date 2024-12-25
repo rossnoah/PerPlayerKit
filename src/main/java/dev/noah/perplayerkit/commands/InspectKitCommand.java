@@ -30,7 +30,7 @@ public class InspectKitCommand implements CommandExecutor {
 
                             @Override
                             public void run() {
-                                KitManager.get().loadPlayerKitsFromDB(target);
+                                KitManager.get().loadPlayerDataFromDB(target);
                             }
 
                         }.runTaskAsynchronously(plugin);

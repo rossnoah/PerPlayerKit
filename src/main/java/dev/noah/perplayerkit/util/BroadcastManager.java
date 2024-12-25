@@ -1,22 +1,38 @@
 package dev.noah.perplayerkit.util;
 
 import dev.noah.perplayerkit.PerPlayerKit;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
-public class Broadcast {
+import java.util.ArrayList;
+import java.util.List;
+
+public class BroadcastManager {
 
 
     private final int broadcastDistance = 500;
-    CooldownManager repairBroadcastCooldown = new CooldownManager(5);
-    CooldownManager kitroomBroadcastCooldown = new CooldownManager(15);
+    private CooldownManager repairBroadcastCooldown = new CooldownManager(5);
+    private CooldownManager kitroomBroadcastCooldown = new CooldownManager(15);
+    private BukkitAudiences audience;
 
-    private static Broadcast instance;
+    private static BroadcastManager instance;
+    private final Plugin plugin;
 
-    public static Broadcast get() {
+    public BroadcastManager(Plugin plugin) {
+        this.plugin = plugin;
+        audience = BukkitAudiences.create(plugin);
+        instance = this;
+    }
+
+    public static BroadcastManager get() {
         if (instance == null) {
-            instance = new Broadcast();
+            throw new IllegalStateException("Broadcast has not been initialized yet!");
         }
         return instance;
     }
@@ -63,5 +79,25 @@ public class Broadcast {
         broadcastMessage(player, "&3" + player.getName() + "&7 copied a kit!");
     }
 
+    public void startScheduledBroadcast() {
+
+        List<Component> messages = new ArrayList<>();
+        plugin.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> messages.add(MiniMessage.miniMessage().deserialize(message)));
+
+        if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled")) {
+            Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+                for (Component message : messages) {
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        audience.player(player).sendMessage(message);
+                    }
+                }
+            }, 0, plugin.getConfig().getInt("scheduled-broadcast.period") * 20L);
+        }
+
+    }
+
+    public void sendComponentMessage(Player player, Component message) {
+        audience.player(player).sendMessage(message);
+    }
 
 }

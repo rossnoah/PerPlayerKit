@@ -1,6 +1,6 @@
 package dev.noah.perplayerkit.gui;
 
-import dev.noah.perplayerkit.util.Broadcast;
+import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.RepairUtil;
 import net.md_5.bungee.api.ChatColor;
 import dev.noah.perplayerkit.*;
@@ -367,7 +367,7 @@ public class GUI {
     public void addKitRoom(Slot slot) {
         slot.setClickHandler((player, info) -> {
             OpenKitRoom(player);
-            Broadcast.get().broadcastPlayerOpenedKitRoom(player);
+            BroadcastManager.get().broadcastPlayerOpenedKitRoom(player);
 
         });
     }
@@ -403,7 +403,7 @@ public class GUI {
 
     public void addRepairButton(Slot slot) {
         slot.setClickHandler((player, info) -> {
-            Broadcast.get().broadcastPlayerRepaired(player);
+            BroadcastManager.get().broadcastPlayerRepaired(player);
             RepairUtil.repairAll(player);
 
         });

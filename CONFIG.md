@@ -2,16 +2,27 @@
 
 ### **Database Credentials**
 
-Select either SQLite or MySQL as the database type. If using SQLite, the database file will be created in the plugin's data folder.
+Select either storage type. SQLite is recommended for small servers, while MySQL is recommended for larger servers or multi-server setups.
 
 ```yaml
-database:
-  type: "sqlite" # Specify the database type: "sqlite" for a file-based database or "mysql" for a MySQL database.
-  host: "localhost" # The hostname or IP address of the MySQL server (ignored for SQLite).
-  port: "3306" # The port number for the MySQL database (ignored for SQLite).
-  dbname: "kitdatabase" # The name of the database.
-  username: "username" # The username for database authentication.
-  password: "pa55w0rd" # The password for database authentication.
+# It is strongly recommended to use MySQL or SQLite
+# YAML should not be used in any environment
+
+
+storage: #sqlite, mysql, redis, yml (yaml)
+  type: "sqlite"
+
+mysql:
+  host: "localhost"
+  port: "3306"
+  dbname: "kitdatabase"
+  username: "username"
+  password: "pa55w0rd"
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: "pa55w0rd"
 ```
 
 ---
@@ -43,15 +54,9 @@ Broadcasts messages periodically to all players, using a defined time interval. 
 ```yaml
 scheduled-broadcast:
   enabled: true # Enable or disable periodic broadcasts.
-  period: 900 # Interval between broadcasts in seconds.
+  period: 90 # Interval between broadcasts in seconds.
   messages: # List of messages to broadcast, in mini message format.
-    - ""
-    - "<gray>   <st>                                                         "
-    - ""
-    - "         <white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
-    - ""
-    - "<gray>   <st>                                                         "
-    - ""
+    - "Example message"
 ```
 
 ---
