@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BroadcastManager {
@@ -84,13 +85,15 @@ public class BroadcastManager {
         List<Component> messages = new ArrayList<>();
         plugin.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> messages.add(MiniMessage.miniMessage().deserialize(message)));
 
+        int[] index = {0};
+
         if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled")) {
+
             Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-                for (Component message : messages) {
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        audience.player(player).sendMessage(message);
+                        audience.player(player).sendMessage(messages.get(index[0]));
                     }
-                }
+                    index[0] = (index[0] + 1) % messages.size();
             }, 0, plugin.getConfig().getInt("scheduled-broadcast.period") * 20L);
         }
 
