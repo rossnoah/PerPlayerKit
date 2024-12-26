@@ -22,7 +22,7 @@ public final class PerPlayerKit extends JavaPlugin {
     public static Plugin plugin;
 
     public static StorageManager storageManager;
-    public static String prefix = ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] ");
+    public static String prefix;
 
     public static Plugin getPlugin() {
         return plugin;
@@ -40,6 +40,8 @@ public final class PerPlayerKit extends JavaPlugin {
         new KitManager(this);
         new KitShareManager(this);
         new KitRoomDataManager(this);
+
+        prefix = getConfig().getString("prefix",ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] "));
 
 
         loadPublicKitsIdsFromConfig();

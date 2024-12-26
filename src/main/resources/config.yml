@@ -22,6 +22,8 @@ redis:
     port: 6379
     password: "pa55w0rd"
 
+prefix: "&7[&bKits&7] "
+
 motd:
   enabled: true
   delay: 5
