@@ -18,11 +18,10 @@ mysql:
   useSSL: false
 
 redis:
-    host: "localhost"
-    port: 6379
-    password: "pa55w0rd"
+  host: "localhost"
+  port: 6379
+  password: "pa55w0rd"
 
-prefix: "&7[&bKits&7] "
 
 motd:
   enabled: true
@@ -54,14 +53,14 @@ kitroom:
       name: "Training"
       material: "WOODEN_SWORD"
     3:
-        name: "Potions"
-        material: "SPLASH_POTION"
+      name: "Potions"
+      material: "SPLASH_POTION"
     4:
-        name: "Armory"
-        material: "NETHERITE_SWORD"
+      name: "Armory"
+      material: "NETHERITE_SWORD"
     5:
-        name: "Axe & UHC"
-        material: "SHIELD"
+      name: "Axe & UHC"
+      material: "SHIELD"
 
 disabled-command-worlds:
   - "example_world"
@@ -73,3 +72,13 @@ publickits:
   1:
     name: "Kit 1"
     icon: "DIAMOND_SWORD"
+
+prefix: "<gray>[<aqua>Kits</aqua>]</gray> "
+
+messages:
+  player-repaired: "<gray>%player% repaired their gear</gray>"
+  player-opened-kit-room: "<gray>%player% opened the Kit Room</gray>"
+  player-loaded-private-kit: "<gray>%player% loaded a kit</gray>"
+  player-loaded-public-kit: "<gray>%player% loaded a public kit</gray>"
+  player-loaded-enderchest: "<gray>%player% loaded an ender chest.</gray>"
+  player-copied-kit: "<gray>%player% copied a kit</gray>"
