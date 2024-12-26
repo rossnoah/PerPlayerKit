@@ -11,6 +11,6 @@ public interface SQLDatabase {
 
     void disconnect() throws SQLException;
 
-    Connection getConnection();
+    Connection getConnection() throws SQLException;
 
 }

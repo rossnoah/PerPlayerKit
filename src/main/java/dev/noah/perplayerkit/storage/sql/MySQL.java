@@ -1,5 +1,7 @@
 package dev.noah.perplayerkit.storage.sql;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.plugin.Plugin;
 
@@ -9,38 +11,54 @@ import java.sql.SQLException;
 
 public class MySQL implements SQLDatabase {
 
-    Plugin pl = PerPlayerKit.getPlugin();
 
-    private final String host = pl.getConfig().getString("mysql.host");
-    private final String port = pl.getConfig().getString("mysql.port");
-    private final String database = pl.getConfig().getString("mysql.dbname");
-    private final String username = pl.getConfig().getString("mysql.username");
-    private final String password = pl.getConfig().getString("mysql.password");
+    private Plugin plugin;
+    private final String host;
+    private final String port;
+    private final String database;
+    private final String username;
+    private final String password;
+    private boolean useSSL = false;
 
+    public MySQL(Plugin plugin) {
+        this.plugin = plugin;
+        host = plugin.getConfig().getString("mysql.host");
+        port = plugin.getConfig().getString("mysql.port");
+        database = plugin.getConfig().getString("mysql.dbname");
+        username = plugin.getConfig().getString("mysql.username");
+        password = plugin.getConfig().getString("mysql.password");
+        useSSL = plugin.getConfig().getBoolean("mysql.useSSL", false);
+    }
 
-    private Connection connection;
+    private HikariDataSource dataSource;
 
     public boolean isConnected() {
-        return (connection != null);
+        return (dataSource != null && !dataSource.isClosed());
     }
 
 
-    public void connect() throws SQLException {
+    public void connect() {
         if (!isConnected()) {
-            connection = DriverManager.getConnection("jdbc:mysql://" +
-                            host + ":" + port + "/" + database + "?useSSL=false",
-                    username, password);
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=" + useSSL);
+            config.setUsername(username);
+            config.setPassword(password);
+
+            dataSource = new HikariDataSource(config);
         }
     }
 
-    public void disconnect() throws SQLException {
+    public void disconnect() {
         if (isConnected()) {
-                connection.close();
+            dataSource.close();
         }
     }
 
-    public Connection getConnection() {
-        return connection;
+    public Connection getConnection() throws SQLException {
+        if (!isConnected()) {
+            connect();
+        }
+        return dataSource.getConnection();
     }
 
 }

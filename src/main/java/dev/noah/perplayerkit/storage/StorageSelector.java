@@ -27,7 +27,7 @@ public class StorageSelector {
                 storageManager = new RedisStorage();
                 break;
             case "mysql":
-                SQLDatabase db = new MySQL();
+                SQLDatabase db = new MySQL(plugin);
                 storageManager = new SQLStorage(db);
                 break;
             case "sqlite":

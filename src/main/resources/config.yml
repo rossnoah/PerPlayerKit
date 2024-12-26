@@ -15,6 +15,7 @@ mysql:
   dbname: "kitdatabase"
   username: "username"
   password: "pa55w0rd"
+  useSSL: false
 
 redis:
     host: "localhost"
