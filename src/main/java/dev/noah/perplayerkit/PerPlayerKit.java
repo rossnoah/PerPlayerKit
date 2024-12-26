@@ -41,7 +41,7 @@ public final class PerPlayerKit extends JavaPlugin {
         new KitShareManager(this);
         new KitRoomDataManager(this);
 
-        prefix = getConfig().getString("prefix",ChatColor.translateAlternateColorCodes('&', "&7[&bKits&7] "));
+        prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix","&7[&bKits&7] "));
 
 
         loadPublicKitsIdsFromConfig();
