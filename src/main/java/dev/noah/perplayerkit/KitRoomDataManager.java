@@ -1,6 +1,7 @@
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.gui.ItemUtil;
+import dev.noah.perplayerkit.util.IDUtil;
 import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -64,7 +65,7 @@ public class KitRoomDataManager {
                 for (int i = 0; i < 5; i++) {
                     ItemStack[] pagedata = kitroomData.get(i);
                     String output = Serializer.itemStackArrayToBase64(pagedata);
-                    PerPlayerKit.storageManager.saveKitDataByID("kitroom" + i, output);
+                    PerPlayerKit.storageManager.saveKitDataByID(IDUtil.getKitRoomId(i), output);
                 }
             }
 
@@ -76,7 +77,7 @@ public class KitRoomDataManager {
     public void loadFromDB() {
         ItemFilter.get().clearWhitelist();
         for (int i = 0; i < 5; i++) {
-            String input = PerPlayerKit.storageManager.getKitDataByID("kitroom" + i);
+            String input = PerPlayerKit.storageManager.getKitDataByID(IDUtil.getKitRoomId(i));
             if (!input.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] pagedata = Serializer.itemStackArrayFromBase64(input);
