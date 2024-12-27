@@ -330,7 +330,7 @@ public class GUI {
             if (info.getClickType().isShiftClick()) {
                 Menu m = info.getClickedMenu();
                 for (int i = 0; i < 41; i++) {
-                    m.getSlot(i).setItem(null);
+                    m.getSlot(i).setItem((org.bukkit.inventory.ItemStack)null);
                 }
             }
         });
@@ -341,7 +341,7 @@ public class GUI {
             if (info.getClickType().isShiftClick()) {
                 Menu m = info.getClickedMenu();
                 for (int i = start; i < end; i++) {
-                    m.getSlot(i).setItem(null);
+                    m.getSlot(i).setItem((org.bukkit.inventory.ItemStack)null);
                 }
             }
         });

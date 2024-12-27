@@ -2,7 +2,6 @@ package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.util.CooldownManager;
-import javafx.scene.control.Tab;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
