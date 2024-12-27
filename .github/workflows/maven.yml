@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Build .jar with Maven
 
 on:
   push:
@@ -24,7 +24,9 @@ jobs:
       run: mvn -B install --file pom.xml
 
     - name: Publish JAR as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: built-jar
-        path: target/*.jar
+        path: |
+          target/*.jar
+          !target/*-original.jar
