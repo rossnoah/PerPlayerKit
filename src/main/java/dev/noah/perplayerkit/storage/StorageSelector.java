@@ -21,10 +21,10 @@ public class StorageSelector {
 
             case "yml":
             case "yaml":
-                storageManager = new YAMLStorage(plugin.getDataFolder() + File.separator + "please-use-a-real-database.yml");
+                storageManager = new YAMLStorage(plugin,plugin.getDataFolder() + File.separator + "please-use-a-real-database.yml");
                 break;
             case "redis":
-                storageManager = new RedisStorage();
+                storageManager = new RedisStorage(plugin);
                 break;
             case "mysql":
                 SQLDatabase db = new MySQL(plugin);

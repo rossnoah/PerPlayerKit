@@ -21,6 +21,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
     public static Plugin plugin;
     public static StorageManager storageManager;
+
     public static Plugin getPlugin() {
         return plugin;
     }
@@ -105,15 +106,15 @@ public final class PerPlayerKit extends JavaPlugin {
 
     private void loadPublicKitsIdsFromConfig() {
         // generate list of public kits from the config
-        ConfigurationSection publicKitsSection = this.getConfig().getConfigurationSection("publickits");
+        ConfigurationSection publicKitsSection = getConfig().getConfigurationSection("publickits");
 
         if (publicKitsSection == null) {
             this.getLogger().warning("No public kits found in config!");
         } else {
 
             publicKitsSection.getKeys(false).forEach(key -> {
-                String name = PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".name");
-                Material icon = Material.valueOf(PerPlayerKit.getPlugin().getConfig().getString("publickits." + key + ".icon"));
+                String name = getConfig().getString("publickits." + key + ".name");
+                Material icon = Material.valueOf(getConfig().getString("publickits." + key + ".icon"));
                 PublicKit kit = new PublicKit(key, name, icon);
                 KitManager.get().getPublicKitList().add(kit);
             });
@@ -129,7 +130,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
 
     private void registerCommands() {
-        this.getCommand("kit").setExecutor(new MainMenuCommand());
+        this.getCommand("kit").setExecutor(new MainMenuCommand(plugin));
         this.getCommand("sharekit").setExecutor(new ShareKitCommand());
         this.getCommand("sharekit").setTabCompleter(new ShareKitCommand());
         this.getCommand("copykit").setExecutor(new CopyKitCommand());
@@ -137,11 +138,11 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
         this.getCommand("swapkit").setExecutor(new SwapKitCommand());
         this.getCommand("deletekit").setExecutor(new DeleteKitCommand());
-        this.getCommand("inspectkit").setExecutor(new InspectKitCommand());
+        this.getCommand("inspectkit").setExecutor(new InspectKitCommand(plugin));
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
         this.getCommand("savepublickit").setExecutor(new SavePublicKitCommand());
         this.getCommand("savepublickit").setTabCompleter(new SavePublicKitCommand());
-        this.getCommand("publickit").setExecutor(new PublicKitCommand());
+        this.getCommand("publickit").setExecutor(new PublicKitCommand(plugin));
 
         for (int i = 1; i <= 9; i++) {
             this.getCommand("k" + i).setExecutor(new ShortKitCommand());

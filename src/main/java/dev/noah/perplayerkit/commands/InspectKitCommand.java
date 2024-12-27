@@ -8,13 +8,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class InspectKitCommand implements CommandExecutor {
-    private final PerPlayerKit plugin = PerPlayerKit.getPlugin(PerPlayerKit.class);
+    private Plugin plugin;
+    public InspectKitCommand(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -42,7 +46,7 @@ public class InspectKitCommand implements CommandExecutor {
                         public void run() {
                             if (KitManager.get().hasKit(target, slot)) {
 
-                                GUI main = new GUI();
+                                GUI main = new GUI(plugin);
 
 
                                 main.InspectKit(player, target, slot);

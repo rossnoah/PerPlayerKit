@@ -1,6 +1,7 @@
 package dev.noah.perplayerkit.storage;
 
 import dev.noah.perplayerkit.PerPlayerKit;
+import org.bukkit.plugin.Plugin;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -15,8 +16,10 @@ public class YAMLStorage implements StorageManager {
 
     private final File storageFile;
     private Map<String, String> data;
+    private Plugin plugin;
 
-    public YAMLStorage(String filePath) {
+    public YAMLStorage(Plugin plugin,String filePath) {
+        this.plugin = plugin;
         this.storageFile = new File(filePath);
         this.data = new HashMap<>();
     }
@@ -46,7 +49,7 @@ public class YAMLStorage implements StorageManager {
                 storageFile.getParentFile().mkdirs();
                 storageFile.createNewFile();
             }
-            PerPlayerKit.getPlugin().getLogger().info("YAML storage initialized.");
+            plugin.getLogger().info("YAML storage initialized.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +59,7 @@ public class YAMLStorage implements StorageManager {
     public void close() {
         try {
             saveToFile();
-            PerPlayerKit.getPlugin().getLogger().info("YAML storage closed and saved.");
+            plugin.getLogger().info("YAML storage closed and saved.");
         } catch (IOException e) {
             e.printStackTrace();
         }

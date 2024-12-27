@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.slot.ClickOptions;
 import org.ipvp.canvas.slot.Slot;
@@ -19,8 +20,9 @@ import java.util.UUID;
 import static dev.noah.perplayerkit.gui.ItemUtil.createItem;
 
 public class GUI {
-    public GUI() {
-
+    private Plugin plugin;
+    public GUI(Plugin plugin) {
+    this.plugin = plugin;
     }
 
     public static void addLoadPublicKit(Slot slot, String id) {
@@ -252,8 +254,8 @@ public class GUI {
             menu.getSlot(46 + i).setItem(
                     createItem(
                             Material.valueOf(
-                                    PerPlayerKit.getPlugin().getConfig().getString("kitroom.items." + i + ".material")),
-                            "&r" + PerPlayerKit.getPlugin().getConfig().getString("kitroom.items." + i + ".name")));
+                                    plugin.getConfig().getString("kitroom.items." + i + ".material")),
+                            "&r" + plugin.getConfig().getString("kitroom.items." + i + ".name")));
         }
 
         menu.getSlot(page + 47).setItem(ItemUtil.addEnchantLook(menu.getSlot(page + 47).getItem(p)));

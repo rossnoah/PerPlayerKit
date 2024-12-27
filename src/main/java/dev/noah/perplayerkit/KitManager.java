@@ -448,7 +448,7 @@ public class KitManager {
                 kitByKitIDMap.put(IDUtil.getPublicKitId(id), ItemFilter.filterItemStack(kit));
 
             } catch (IOException ignored) {
-                PerPlayerKit.getPlugin().getLogger().info("Error loading public kit " + id);
+                plugin.getLogger().info("Error loading public kit " + id);
             }
         }
     }
