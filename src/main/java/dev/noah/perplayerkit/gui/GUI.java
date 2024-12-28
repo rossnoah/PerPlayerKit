@@ -62,20 +62,6 @@ public class GUI {
         menu.getSlot(48).setItem(createItem(Material.CHAINMAIL_HELMET, 1, "&7&lHELMET"));
         menu.getSlot(49).setItem(createItem(Material.SHIELD, 1, "&7&lOFFHAND"));
 
-        /*
-         * menu.getSlot(41).setItem(createItem(Material.END_CRYSTAL,1,"&8&lCRYSTAL KIT"
-         * ,"&7COMING SOON"));
-         * menu.getSlot(42).setItem(createItem(Material.NETHERITE_SWORD,
-         * 1,"&8&lDIAMOND KIT","&7COMING SOON"));
-         * menu.getSlot(43).setItem(createItem(Material.DIAMOND_AXE,1,"&8&lAXE KIT"
-         * ,"&7COMING SOON"));
-         * menu.getSlot(43).setItem(createItem(Material.SPLASH_POTION,
-         * 1,"&8&lNETHERITE POT KIT","&7COMING SOON"));
-         * menu.getSlot(50).setItem(createItem(Material.ANVIL,1,
-         * "&8&lRENAME","&7COMING SOON"));
-         * 
-         */
-
         menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Import from inventory"));
         menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
