@@ -1,6 +1,7 @@
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.commands.*;
+import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
 import dev.noah.perplayerkit.storage.StorageManager;
 import dev.noah.perplayerkit.storage.StorageSelector;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
@@ -9,7 +10,6 @@ import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.tabcompleter.KitRoomTab;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
@@ -130,19 +130,37 @@ public final class PerPlayerKit extends JavaPlugin {
 
 
     private void registerCommands() {
+        KitSlotTabCompleter kitSlotTabCompleter = new KitSlotTabCompleter();
+
         this.getCommand("kit").setExecutor(new MainMenuCommand(plugin));
+
         this.getCommand("sharekit").setExecutor(new ShareKitCommand());
-        this.getCommand("sharekit").setTabCompleter(new ShareKitCommand());
+        this.getCommand("sharekit").setTabCompleter(kitSlotTabCompleter);
+
         this.getCommand("copykit").setExecutor(new CopyKitCommand());
-        this.getCommand("kitroom").setExecutor(new KitRoomCommands());
-        this.getCommand("kitroom").setTabCompleter(new KitRoomTab());
+
+        KitRoomCommand kitRoomCommand = new KitRoomCommand();
+        this.getCommand("kitroom").setExecutor(kitRoomCommand);
+        this.getCommand("kitroom").setTabCompleter(kitRoomCommand);
+
         this.getCommand("swapkit").setExecutor(new SwapKitCommand());
+        this.getCommand("swapkit").setTabCompleter(kitSlotTabCompleter);
+
         this.getCommand("deletekit").setExecutor(new DeleteKitCommand());
+        this.getCommand("deletekit").setTabCompleter(kitSlotTabCompleter);
+
         this.getCommand("inspectkit").setExecutor(new InspectKitCommand(plugin));
+
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
-        this.getCommand("savepublickit").setExecutor(new SavePublicKitCommand());
-        this.getCommand("savepublickit").setTabCompleter(new SavePublicKitCommand());
-        this.getCommand("publickit").setExecutor(new PublicKitCommand(plugin));
+
+
+        SavePublicKitCommand savePublicKitCommand = new SavePublicKitCommand();
+        this.getCommand("savepublickit").setExecutor(savePublicKitCommand);
+        this.getCommand("savepublickit").setTabCompleter(savePublicKitCommand);
+
+        PublicKitCommand publicKitCommand = new PublicKitCommand(plugin);
+        this.getCommand("publickit").setExecutor(publicKitCommand);
+        this.getCommand("publickit").setTabCompleter(publicKitCommand);
 
         for (int i = 1; i <= 9; i++) {
             this.getCommand("k" + i).setExecutor(new ShortKitCommand());

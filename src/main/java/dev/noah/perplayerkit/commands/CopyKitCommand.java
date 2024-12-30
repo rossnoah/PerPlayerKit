@@ -23,7 +23,7 @@ public class CopyKitCommand implements CommandExecutor {
             if (args.length > 0) {
                 KitShareManager.get().copyKit(player, args[0]);
             } else {
-                player.sendMessage(ChatColor.RED + "Error, you must select a kit to copy");
+                player.sendMessage(ChatColor.RED + "Error, you must enter a kit code to copy");
             }
         } else {
             sender.sendMessage("Only players can use this command");

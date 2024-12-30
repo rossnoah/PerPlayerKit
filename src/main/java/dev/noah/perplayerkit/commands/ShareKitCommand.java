@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit.commands;
 
+import com.google.common.primitives.Ints;
 import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.util.CooldownManager;
 import org.bukkit.ChatColor;
@@ -13,9 +14,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ShareKitCommand implements CommandExecutor, TabCompleter {
+public class ShareKitCommand implements CommandExecutor {
 
-    CooldownManager shareKitCommandCooldown;
+    private final CooldownManager shareKitCommandCooldown;
 
     public ShareKitCommand() {
         this.shareKitCommandCooldown = new CooldownManager(5);
@@ -39,35 +40,16 @@ public class ShareKitCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        try{
-            int slot = Integer.parseInt(args[0]);
+        Integer slot = Ints.tryParse(args[0]);
 
-            if (slot < 1 || slot > 9) {
-                player.sendMessage(ChatColor.RED + "Select a valid kit slot");
-                return true;
-            }
-
-
-        } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Select a valid kit slot tht");
+        if (slot == null || slot < 1 || slot > 9) {
+            player.sendMessage(ChatColor.RED + "Select a valid kit slot");
             return true;
-
         }
 
-        KitShareManager.get().sharekit(player, Integer.parseInt(args[0]));
+        KitShareManager.get().sharekit(player, slot);
         shareKitCommandCooldown.setCooldown(player);
 
         return true;
-    }
-
-
-    @Nullable
-    @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-
-        if (!(sender instanceof Player player)) {
-            return List.of();
-        }
-        return KitShareManager.get().getKitSlots(player);
     }
 }
