@@ -7,7 +7,6 @@ import dev.noah.perplayerkit.storage.StorageSelector;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import dev.noah.perplayerkit.listeners.*;
-import dev.noah.perplayerkit.tabcompleter.KitRoomTab;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -59,9 +58,7 @@ public final class PerPlayerKit extends JavaPlugin {
             return;
         }
 
-        if(!attemptDatabaseConnection(true)){
-            return;
-        }
+       attemptDatabaseConnection(true);
 
         try {
             storageManager.init();
@@ -181,9 +178,10 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AboutCommandListener(), this);
     }
 
-    private boolean attemptDatabaseConnection(boolean disableOnFail) {
+    private void attemptDatabaseConnection(boolean disableOnFail) {
         try {
             storageManager.connect();
             if (!storageManager.isConnected()) {
@@ -197,7 +195,7 @@ public final class PerPlayerKit extends JavaPlugin {
             } else {
                 this.getLogger().warning("Database connection failed: " + e.getMessage());
             }
-        }return true;
+        }
     }
 
     private void closeDatabaseConnection() {

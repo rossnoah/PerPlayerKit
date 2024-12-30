@@ -26,9 +26,8 @@ api_version = data.get("api-version", "Unknown API Version")
 # Begin writing to Markdown file
 with open(output_file, "w") as f:
     f.write(f"# {plugin_name} Command Docs\n\n")
-    f.write(f"- **Version:** {version}\n")
     f.write(f"- **Author(s):** {author}\n")
-    f.write(f"- **API Version:** {api_version}\n\n")
+    f.write(f"- **Minimum Spigot/Paper Version:** {api_version}\n\n")
     f.write("## Commands\n\n")
     f.write(
         "The following table outlines each command, its usage, aliases, and permissions required.\n\n"

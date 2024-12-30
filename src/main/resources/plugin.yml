@@ -4,6 +4,11 @@ main: dev.noah.perplayerkit.PerPlayerKit
 author: Noah Ross
 api-version: 1.19
 commands:
+
+  aboutperplayerkit:
+    usage: /<command>
+    default: true
+
   kitroom:
     usage: /<command>
     permission: kit.admin

@@ -1,8 +1,7 @@
 # PerPlayerKit Command Docs
 
-- **Version:** 1.2
 - **Author(s):** Noah Ross
-- **API Version:** 1.19
+- **Minimum Spigot/Paper Version:** 1.19
 
 ## Commands
 
@@ -10,6 +9,7 @@ The following table outlines each command, its usage, aliases, and permissions r
 
 | Command | Aliases | Permission |
 |---------|---------|------------|
+| `aboutperplayerkit` |  | `N/A` |
 | `kitroom` |  | `kit.admin` |
 | `kit` | `k` | `kit.use` |
 | `copykit` |  | `kit.use` |
