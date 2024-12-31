@@ -82,3 +82,7 @@ messages:
   player-loaded-public-kit: "<gray>%player% loaded a public kit</gray>"
   player-loaded-enderchest: "<gray>%player% loaded an ender chest.</gray>"
   player-copied-kit: "<gray>%player% copied a kit</gray>"
+
+
+anti-exploit:
+  block-spaces-in-commands: true

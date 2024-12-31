@@ -2,11 +2,11 @@ package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.commands.*;
 import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
+import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.storage.StorageManager;
 import dev.noah.perplayerkit.storage.StorageSelector;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
-import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -58,7 +58,7 @@ public final class PerPlayerKit extends JavaPlugin {
             return;
         }
 
-       attemptDatabaseConnection(true);
+        attemptDatabaseConnection(true);
 
         try {
             storageManager.init();
@@ -171,14 +171,18 @@ public final class PerPlayerKit extends JavaPlugin {
 
 
     private void registerListeners() {
+
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitMenuCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
-        Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new AboutCommandListener(), this);
+
+        if (getConfig().getBoolean("anti-exploit.block-spaces-in-commands", true)) {
+            Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
+        }
     }
 
     private void attemptDatabaseConnection(boolean disableOnFail) {
