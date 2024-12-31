@@ -86,3 +86,4 @@ messages:
 
 anti-exploit:
   block-spaces-in-commands: true
+  import-filter: true
