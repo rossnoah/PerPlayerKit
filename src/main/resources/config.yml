@@ -39,7 +39,7 @@ scheduled-broadcast: #uses mini message format
   enabled: true
   period: 90 #in seconds
   messages:
-    - "white>Check out public kits with the<aqua>/pk<white> command!"
+    - "<white>Check out public kits with the<aqua>/pk<white> command!"
     - "<white>Want to share a kit? Use the <aqua>/sharekit<slot><white> command!"
     - "<white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
 
