@@ -120,4 +120,5 @@ This section allows you to enable or disable anti-exploit features, commonly app
 anti-exploit:
   block-spaces-in-commands: true
   import-filter: true
+  prevent-shulkers-dropping-items: true
 ```

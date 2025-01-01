@@ -87,3 +87,4 @@ messages:
 anti-exploit:
   block-spaces-in-commands: true
   import-filter: true
+  prevent-shulkers-dropping-items: true

@@ -3,6 +3,8 @@ package dev.noah.perplayerkit;
 import dev.noah.perplayerkit.commands.*;
 import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
 import dev.noah.perplayerkit.listeners.*;
+import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
+import dev.noah.perplayerkit.listeners.antiexploit.ShulkerDropItemsListener;
 import dev.noah.perplayerkit.storage.StorageManager;
 import dev.noah.perplayerkit.storage.StorageSelector;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
@@ -182,6 +184,10 @@ public final class PerPlayerKit extends JavaPlugin {
 
         if (getConfig().getBoolean("anti-exploit.block-spaces-in-commands", true)) {
             Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
+        }
+
+        if(getConfig().getBoolean("anti-exploit.prevent-shulkers-dropping-items", true)) {
+            Bukkit.getPluginManager().registerEvents(new ShulkerDropItemsListener(), this);
         }
     }
 
