@@ -21,8 +21,10 @@ import static dev.noah.perplayerkit.gui.ItemUtil.createItem;
 
 public class GUI {
     private Plugin plugin;
+    private boolean filterItemsOnImport;
     public GUI(Plugin plugin) {
     this.plugin = plugin;
+    this.filterItemsOnImport = plugin.getConfig().getBoolean("anti-exploit.import-filter",true);
     }
 
     public static void addLoadPublicKit(Slot slot, String id) {
@@ -407,11 +409,10 @@ public class GUI {
     }
 
     public void addImport(Slot slot) {
-        boolean importfilter = PerPlayerKit.getPlugin().getConfig().getBoolean("anti-exploit.import-filter");
         slot.setClickHandler((player, info) -> {
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
-            if (importfilter) {
+            if (filterItemsOnImport) {
                 inv = ItemFilter.filterItemStack(player.getInventory().getContents());
             } else {
                 inv = player.getInventory().getContents();
@@ -424,11 +425,10 @@ public class GUI {
     }
 
     public void addImportEC(Slot slot) {
-        boolean importfilter = PerPlayerKit.getPlugin().getConfig().getBoolean("anti-exploit.import-filter");
         slot.setClickHandler((player, info) -> {
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
-            if (importfilter) {
+            if (filterItemsOnImport) {
                 inv = ItemFilter.filterItemStack(player.getEnderChest().getContents());
             } else {
                 inv = player.getEnderChest().getContents();
