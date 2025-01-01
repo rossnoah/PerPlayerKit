@@ -110,3 +110,14 @@ publickits:
   #   name: "Kit 1" # Kit name.
   #   icon: "DIAMOND_SWORD" # Icon for the kit.
 ```
+
+
+### **Anti-Exploit**
+
+This section allows you to enable or disable anti-exploit features, commonly applicable to this plugin.
+
+```yaml
+anti-exploit:
+  block-spaces-in-commands: true
+  import-filter: true
+```
