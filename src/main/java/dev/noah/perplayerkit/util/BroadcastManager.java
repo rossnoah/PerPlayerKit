@@ -64,7 +64,8 @@ public class BroadcastManager {
             return;
         }
 
-        String message = plugin.getConfig().getString(key.getKey(), "<gray><aqua>%player%</aqua> performed an action.</gray>");
+        String message = plugin.getConfig().getString(key.getKey(), "<gray><aqua>%player%</aqua> " +
+                "performed an action.</gray>");
         message = message.replace("%player%", player.getName());
 
         broadcastMessage(player, message);
@@ -98,6 +99,9 @@ public class BroadcastManager {
         broadcastMessage(player, MessageKey.PLAYER_COPIED_KIT, null);
     }
 
+    public void broadcastPlayerRegeared(Player player) {
+        broadcastMessage(player, MessageKey.PLAYER_REGEARED, null);
+    }
     public void startScheduledBroadcast() {
         List<Component> messages = new ArrayList<>();
         plugin.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> messages.add(generateBroadcastComponent(message)));
@@ -119,7 +123,7 @@ public class BroadcastManager {
     }
 
     public enum MessageKey {
-        PLAYER_REPAIRED("messages.player-repaired"), PLAYER_OPENED_KIT_ROOM("messages.player-opened-kit-room"), PLAYER_LOADED_PRIVATE_KIT("messages.player-loaded-private-kit"), PLAYER_LOADED_PUBLIC_KIT("messages.player-loaded-public-kit"), PLAYER_LOADED_ENDER_CHEST("messages.player-loaded-enderchest"), PLAYER_COPIED_KIT("messages.player-copied-kit");
+        PLAYER_REPAIRED("messages.player-repaired"), PLAYER_OPENED_KIT_ROOM("messages.player-opened-kit-room"), PLAYER_LOADED_PRIVATE_KIT("messages.player-loaded-private-kit"), PLAYER_LOADED_PUBLIC_KIT("messages.player-loaded-public-kit"), PLAYER_LOADED_ENDER_CHEST("messages.player-loaded-enderchest"), PLAYER_COPIED_KIT("messages.player-copied-kit"), PLAYER_REGEARED("messages.player-regeared");
 
         private final String key;
 

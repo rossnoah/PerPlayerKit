@@ -38,3 +38,4 @@ The following table outlines each command, its usage, aliases, and permissions r
 | `ec9` | `enderchest9` | `kit.enderchest` |
 | `enderchest` | `ec` | `kit.enderchest` |
 | `savepublickit` |  | `kit.admin` |
+| `regear` |  | `kit.use` |

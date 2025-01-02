@@ -161,6 +161,8 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("publickit").setExecutor(publicKitCommand);
         this.getCommand("publickit").setTabCompleter(publicKitCommand);
 
+        this.getCommand("regear").setExecutor(new RegearCommand());
+
         for (int i = 1; i <= 9; i++) {
             this.getCommand("k" + i).setExecutor(new ShortKitCommand());
         }

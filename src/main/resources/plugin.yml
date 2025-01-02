@@ -127,3 +127,7 @@ commands:
   savepublickit:
     usage: /<command> <id>
     permission: kit.admin
+
+  regear:
+    usage: /<command>
+    permission: kit.use
