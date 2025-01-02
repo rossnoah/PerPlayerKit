@@ -131,3 +131,5 @@ commands:
   regear:
     usage: /<command>
     permission: kit.use
+    aliases:
+      - rg

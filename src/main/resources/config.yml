@@ -40,7 +40,7 @@ scheduled-broadcast: #uses mini message format
   period: 90 #in seconds
   messages:
     - "<white>Check out public kits with the<aqua>/pk<white> command!"
-    - "<white>Want to share a kit? Use the <aqua>/sharekit<slot><white> command!"
+    - "<white>Want to share a kit? Use the <aqua>/sharekit <slot><white> command!"
     - "<white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
 
 
@@ -89,3 +89,15 @@ anti-exploit:
   block-spaces-in-commands: true
   import-filter: true
   prevent-shulkers-dropping-items: true
+
+
+regear:
+  command-cooldown: 5 #command cooldown in seconds
+  damage-timer: 5 #time in seconds to wait after taking damage before players can regear
+  invert-whitelist: false #setting this to true makes the whitelist a blacklist
+  whitelist:
+    - ENDER_PEARL
+    - END_CRYSTAL
+    - OBSIDIAN
+    - GLOWSTONE
+    - RESPAWN_ANCHOR

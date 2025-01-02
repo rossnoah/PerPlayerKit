@@ -9,10 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class KitManager {
 
@@ -257,6 +254,9 @@ public class KitManager {
             return false;
         }
 
+        boolean invertWhitelist = plugin.getConfig().getBoolean("regear.invert-whitelist",false);
+        Set<String> whitelist = new HashSet<>(plugin.getConfig().getStringList("regear.whitelist"));
+
         ItemStack[] kit = kitByKitIDMap.get(IDUtil.getPlayerKitId(uuid, slot));
 
         ItemStack[] playerInventory = player.getInventory().getContents();
@@ -265,6 +265,17 @@ public class KitManager {
             if (kit[i] == null) {
                 continue;
             }
+
+            if(invertWhitelist) {
+                if (whitelist.contains(kit[i].getType().toString())) {
+                    continue;
+                }
+            }else {
+                if (!whitelist.contains(kit[i].getType().toString())) {
+                    continue;
+                }
+            }
+
 
             if (playerInventory[i] == null) {
                 playerInventory[i] = kit[i].clone();

@@ -43,6 +43,18 @@ public class CooldownManager {
         setCooldown(player.getUniqueId());
     }
 
+    //get time left in seconds
+    public int getTimeLeft(String key) {
+        return (int) (cooldownInSeconds - (System.currentTimeMillis() - cooldownMap.get(key)) / 1000);
+    }
+
+    public int getTimeLeft(UUID uuid) {
+        return getTimeLeft(uuid.toString());
+    }
+
+    public int getTimeLeft(Player player) {
+        return getTimeLeft(player.getUniqueId());
+    }
 
 
 

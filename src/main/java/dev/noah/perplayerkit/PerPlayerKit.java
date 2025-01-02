@@ -88,10 +88,7 @@ public final class PerPlayerKit extends JavaPlugin {
         loadDatabaseData();
         getLogger().info("Database data loaded");
 
-        registerCommands();
-        getLogger().info("Commands registered");
-        registerListeners();
-        getLogger().info("Listeners registered");
+        registerThings();
 
         BroadcastManager.get().startScheduledBroadcast();
 
@@ -128,7 +125,7 @@ public final class PerPlayerKit extends JavaPlugin {
     }
 
 
-    private void registerCommands() {
+    private void registerThings() {
         KitSlotTabCompleter kitSlotTabCompleter = new KitSlotTabCompleter();
 
         this.getCommand("kit").setExecutor(new MainMenuCommand(plugin));
@@ -161,7 +158,6 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("publickit").setExecutor(publicKitCommand);
         this.getCommand("publickit").setTabCompleter(publicKitCommand);
 
-        this.getCommand("regear").setExecutor(new RegearCommand());
 
         for (int i = 1; i <= 9; i++) {
             this.getCommand("k" + i).setExecutor(new ShortKitCommand());
@@ -171,10 +167,11 @@ public final class PerPlayerKit extends JavaPlugin {
             this.getCommand("ec" + i).setExecutor(new ShortECCommand());
         }
 
-    }
+        RegearCommand regearCommand = new RegearCommand(this);
+        this.getCommand("regear").setExecutor(regearCommand);
+        Bukkit.getPluginManager().registerEvents(regearCommand, this);
 
 
-    private void registerListeners() {
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
@@ -191,7 +188,11 @@ public final class PerPlayerKit extends JavaPlugin {
         if(getConfig().getBoolean("anti-exploit.prevent-shulkers-dropping-items", true)) {
             Bukkit.getPluginManager().registerEvents(new ShulkerDropItemsListener(), this);
         }
+
     }
+
+
+
 
     private void attemptDatabaseConnection(boolean disableOnFail) {
         try {
