@@ -12,10 +12,7 @@ public class RespawnListener implements Listener {
             return;
         }
 
-        int lastKitLoaded = KitManager.get().getLastKitLoaded(e.getPlayer().getUniqueId());
-        if(lastKitLoaded != -1){
-            KitManager.get().respawnKitLoad(e.getPlayer().getUniqueId(), lastKitLoaded);
-        }
+        KitManager.get().loadLastKit(e.getPlayer());
 
     }
 

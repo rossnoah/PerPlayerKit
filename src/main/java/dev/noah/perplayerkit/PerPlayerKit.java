@@ -174,7 +174,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
+        Bukkit.getPluginManager().registerEvents(new QuitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitMenuCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);

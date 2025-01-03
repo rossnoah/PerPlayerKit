@@ -462,7 +462,7 @@ public class GUI {
             if (info.getClickType() == ClickType.LEFT ||
                     info.getClickType() == ClickType.SHIFT_LEFT) {
                 Menu m = info.getClickedMenu();
-                KitManager.get().loadkit(player.getUniqueId(), i);
+                KitManager.get().loadKit(player, i);
                 info.getClickedMenu().close();
 
             }
@@ -474,7 +474,7 @@ public class GUI {
             if (info.getClickType() == ClickType.LEFT ||
                     info.getClickType() == ClickType.SHIFT_LEFT) {
                 Menu m = info.getClickedMenu();
-                KitManager.get().loadkit(player.getUniqueId(), i);
+                KitManager.get().loadKit(player, i);
                 info.getClickedMenu().close();
             }
             if (info.getClickType() == ClickType.RIGHT ||
@@ -490,7 +490,7 @@ public class GUI {
             if (info.getClickType() == ClickType.LEFT ||
                     info.getClickType() == ClickType.SHIFT_LEFT) {
                 Menu m = info.getClickedMenu();
-                KitManager.get().loadEC(player.getUniqueId(), i);
+                KitManager.get().loadEnderchest(player, i);
                 info.getClickedMenu().close();
             } else if (info.getClickType() == ClickType.RIGHT ||
                     info.getClickType() == ClickType.SHIFT_RIGHT) {
