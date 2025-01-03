@@ -90,6 +90,8 @@ anti-exploit:
   import-filter: true
   prevent-shulkers-dropping-items: true
 
+feature:
+  kitload-heal: true
 
 regear:
   command-cooldown: 5 #command cooldown in seconds

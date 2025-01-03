@@ -19,9 +19,11 @@ public class KitManager {
     private final HashMap<String, ItemStack[]> kitByKitIDMap;
     private final HashMap<UUID, Integer> lastKitUsedByPlayer;
     private final List<PublicKit> publicKitList;
+    private final boolean kitLoadHeal;
 
     public KitManager(PerPlayerKit plugin) {
         this.plugin = plugin;
+        this.kitLoadHeal = plugin.getConfig().getBoolean("feature.kitload-heal", true);
         lastKitUsedByPlayer = new HashMap<>();
         publicKitList = new ArrayList<>();
         kitByKitIDMap = new HashMap<>();
@@ -320,8 +322,14 @@ public class KitManager {
         BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player);
         player.sendMessage(ChatColor.GREEN + "Kit " + slot + " loaded!");
         lastKitUsedByPlayer.put(uuid, slot);
-        return true;
 
+        if (kitLoadHeal) {
+            player.setHealth(20.0);
+            player.setFoodLevel(20);
+            player.setSaturation(20.0f);
+        }
+
+        return true;
     }
 
     public boolean loadPublicKit(Player player, String id) {
@@ -335,6 +343,13 @@ public class KitManager {
         BroadcastManager.get().broadcastPlayerLoadedPublicKit(player);
         player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
         player.sendMessage(ChatColor.GRAY + "You can save this kit by importing into the kit editor");
+
+        if (kitLoadHeal) {
+            player.setHealth(20.0);
+            player.setFoodLevel(20);
+            player.setSaturation(20.0f);
+        }
+
         return true;
     }
 
