@@ -101,7 +101,7 @@ public class GUI {
         menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         addMainButton(menu.getSlot(53));
-        addClear(menu.getSlot(52), 0, 27);
+        addClear(menu.getSlot(52), 9, 36);
         addImportEC(menu.getSlot(51));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
