@@ -1,4 +1,5 @@
 # PerPlayerKit
+Join the discord for more information and support: [Discord](https://discord.gg/5djuBSKWuV)
 
 ![Main Menu](./images/MainMenu.png)
 
