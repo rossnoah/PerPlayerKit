@@ -4,6 +4,7 @@ import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.CooldownManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +23,7 @@ public class RegearCommand implements CommandExecutor, Listener {
     private final int damageCooldownInSeconds;
     private final CooldownManager commandCooldownManager;
     private final CooldownManager damageCooldownManager;
+    private boolean allowRegearWhileUsingElytra;
 
     public RegearCommand(Plugin plugin) {
         this.plugin = plugin;
@@ -29,6 +31,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         this.damageCooldownInSeconds = plugin.getConfig().getInt("regear.damage-timer", 5);
         this.commandCooldownManager = new CooldownManager(commandCooldownInSeconds);
         this.damageCooldownManager = new CooldownManager(damageCooldownInSeconds);
+        this.allowRegearWhileUsingElytra = plugin.getConfig().getBoolean("regear.allow-while-using-elytra", true);
     }
 
     @EventHandler
@@ -44,6 +47,11 @@ public class RegearCommand implements CommandExecutor, Listener {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("Only players can use this command!");
+            return true;
+        }
+
+        if (!allowRegearWhileUsingElytra && player.isGliding() && player.getInventory().getChestplate().getType()== Material.ELYTRA) {
+            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You cannot regear while using an elytra!"));
             return true;
         }
 

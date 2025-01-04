@@ -132,6 +132,7 @@ Allows customization of the regear command which is used on some servers in vari
 regear:
   command-cooldown: 5 #command cooldown in seconds
   damage-timer: 5 #time in seconds to wait after taking damage before players can regear
+  allow-while-using-elytra: true #set false to block regearing while using elytra
   #
   # Allow regearing all items by setting:
   # invert-whitelist: true
