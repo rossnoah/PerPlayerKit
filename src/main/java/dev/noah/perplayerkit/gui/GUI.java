@@ -41,7 +41,7 @@ public class GUI {
                 .build();
     }
 
-    public void OpenKitKenu(Player p, int slot) {
+    public void OpenKitMenu(Player p, int slot) {
         Menu menu = createKitMenu(slot, p);
 
         if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot) != null) {
@@ -443,7 +443,7 @@ public class GUI {
         slot.setClickHandler((player, info) -> {
             if (info.getClickType().isLeftClick() || info.getClickType().isRightClick()) {
                 Menu m = info.getClickedMenu();
-                OpenKitKenu(player, i);
+                OpenKitMenu(player, i);
             }
         });
     }
@@ -476,11 +476,10 @@ public class GUI {
                 Menu m = info.getClickedMenu();
                 KitManager.get().loadKit(player, i);
                 info.getClickedMenu().close();
-            }
-            if (info.getClickType() == ClickType.RIGHT ||
+            } else if (info.getClickType() == ClickType.RIGHT ||
                     info.getClickType() == ClickType.SHIFT_RIGHT) {
                 Menu m = info.getClickedMenu();
-                OpenKitKenu(player, i);
+                OpenKitMenu(player, i);
             }
         });
     }
