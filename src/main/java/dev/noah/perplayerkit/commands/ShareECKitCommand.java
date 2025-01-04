@@ -10,12 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class ShareKitCommand implements CommandExecutor {
+public class ShareECKitCommand implements CommandExecutor {
 
-    private final CooldownManager shareKitCommandCooldown;
+    private final CooldownManager shareECCommandCooldown;
 
-    public ShareKitCommand() {
-        this.shareKitCommandCooldown = new CooldownManager(5);
+    public ShareECKitCommand() {
+        this.shareECCommandCooldown = new CooldownManager(5);
     }
 
     @Override
@@ -27,11 +27,11 @@ public class ShareKitCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            player.sendMessage(ChatColor.RED + "Error, you must select a kit slot to share");
+            player.sendMessage(ChatColor.RED + "Error, you must select a EC slot to share");
             return true;
         }
 
-        if (shareKitCommandCooldown.isOnCooldown(player)) {
+        if (shareECCommandCooldown.isOnCooldown(player)) {
             player.sendMessage(ChatColor.RED + "Please don't spam the command (5 second cooldown)");
             return true;
         }
@@ -43,8 +43,8 @@ public class ShareKitCommand implements CommandExecutor {
             return true;
         }
 
-        KitShareManager.get().shareKit(player, slot);
-        shareKitCommandCooldown.setCooldown(player);
+        KitShareManager.get().shareEC(player, slot);
+        shareECCommandCooldown.setCooldown(player);
 
         return true;
     }

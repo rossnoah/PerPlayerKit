@@ -21,10 +21,19 @@ commands:
   copykit:
     usage: /<command>
     permission: kit.use
+    aliases:
+      - copyec
+      - copyenderchest
 
   sharekit:
     usage: /<command>
     permission: kit.use
+
+  shareec:
+    usage: /<command>
+    permission: kit.use
+    aliases:
+      - shareenderchest
 
   swapkit:
     usage: /<command>

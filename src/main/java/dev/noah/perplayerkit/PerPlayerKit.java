@@ -1,6 +1,7 @@
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.commands.*;
+import dev.noah.perplayerkit.commands.tabcompleters.ECSlotTabCompleter;
 import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
 import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
@@ -127,11 +128,15 @@ public final class PerPlayerKit extends JavaPlugin {
 
     private void registerThings() {
         KitSlotTabCompleter kitSlotTabCompleter = new KitSlotTabCompleter();
+        ECSlotTabCompleter ecSlotTabCompleter = new ECSlotTabCompleter();
 
         this.getCommand("kit").setExecutor(new MainMenuCommand(plugin));
 
         this.getCommand("sharekit").setExecutor(new ShareKitCommand());
         this.getCommand("sharekit").setTabCompleter(kitSlotTabCompleter);
+
+        this.getCommand("shareec").setExecutor(new ShareECKitCommand());
+        this.getCommand("shareec").setTabCompleter(ecSlotTabCompleter);
 
         this.getCommand("copykit").setExecutor(new CopyKitCommand());
 

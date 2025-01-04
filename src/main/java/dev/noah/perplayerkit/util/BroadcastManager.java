@@ -99,6 +99,10 @@ public class BroadcastManager {
         broadcastMessage(player, MessageKey.PLAYER_COPIED_KIT, null);
     }
 
+    public void broadcastPlayerCopiedEC(Player player) {
+        broadcastMessage(player, MessageKey.PLAYER_COPIED_EC, null);
+    }
+
     public void broadcastPlayerRegeared(Player player) {
         broadcastMessage(player, MessageKey.PLAYER_REGEARED, null);
     }
@@ -123,7 +127,7 @@ public class BroadcastManager {
     }
 
     public enum MessageKey {
-        PLAYER_REPAIRED("messages.player-repaired"), PLAYER_OPENED_KIT_ROOM("messages.player-opened-kit-room"), PLAYER_LOADED_PRIVATE_KIT("messages.player-loaded-private-kit"), PLAYER_LOADED_PUBLIC_KIT("messages.player-loaded-public-kit"), PLAYER_LOADED_ENDER_CHEST("messages.player-loaded-enderchest"), PLAYER_COPIED_KIT("messages.player-copied-kit"), PLAYER_REGEARED("messages.player-regeared");
+        PLAYER_REPAIRED("messages.player-repaired"), PLAYER_OPENED_KIT_ROOM("messages.player-opened-kit-room"), PLAYER_LOADED_PRIVATE_KIT("messages.player-loaded-private-kit"), PLAYER_LOADED_PUBLIC_KIT("messages.player-loaded-public-kit"), PLAYER_LOADED_ENDER_CHEST("messages.player-loaded-enderchest"), PLAYER_COPIED_KIT("messages.player-copied-kit"),PLAYER_COPIED_EC("messages.player-copied-ec"), PLAYER_REGEARED("messages.player-regeared");
 
         private final String key;
 
