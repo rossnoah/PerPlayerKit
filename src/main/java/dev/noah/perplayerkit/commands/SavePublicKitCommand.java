@@ -57,7 +57,7 @@ public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
         }
 
 
-        data = ItemFilter.filterItemStack(data);
+        data = ItemFilter.get().filterItemStack(data);
 
         KitManager kitManager = KitManager.get();
         //save kit

@@ -7,6 +7,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,10 +19,14 @@ public class ItemFilter {
     public static Set<String> whitelist;
     private static ItemFilter instance;
 
-    public ItemFilter() {
-        whitelist = new HashSet<>();
+    private Plugin plugin;
+    private boolean isEnabled;
 
+    public ItemFilter(Plugin plugin) {
+        whitelist = new HashSet<>();
+        this.plugin = plugin;
         instance = this;
+        isEnabled = plugin.getConfig().getBoolean("anti-exploit.only-allow-kitroom-items",true);
     }
 
     public static ItemFilter get(){
@@ -32,7 +37,12 @@ public class ItemFilter {
     }
 
 
-    public static ItemStack[] filterItemStack(ItemStack[] input) {
+    public ItemStack[] filterItemStack(ItemStack[] input) {
+
+        if(!isEnabled){
+            return input;
+        }
+
         ItemStack[] output = input.clone();
         for (ItemStack item : output) {
             if (!isSafe(item)) {

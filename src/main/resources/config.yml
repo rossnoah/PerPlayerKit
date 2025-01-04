@@ -87,14 +87,21 @@ messages:
 
 
 anti-exploit:
-  block-spaces-in-commands: true
-  import-filter: true
-  prevent-shulkers-dropping-items: true
+  only-allow-kitroom-items: true #requires that items be in the kitroom before they can be used in a kit.
+  import-filter: true #requires only-allow-kitroom-items to be true. prevents the duplications of items not in the kitroom by using the kit import button.
+  block-spaces-in-commands: true #prevents bypassing command filters.
+  prevent-shulkers-dropping-items: true #prevents shulkers from dropping items when broken. Anti-lag feature.
 
 
 regear:
   command-cooldown: 5 #command cooldown in seconds
   damage-timer: 5 #time in seconds to wait after taking damage before players can regear
+  #
+  # Allow regearing all items by setting:
+  # invert-whitelist: true
+  # whitelist: []
+  #
+  #
   invert-whitelist: false #setting this to true makes the whitelist a blacklist
   whitelist:
     - ENDER_PEARL

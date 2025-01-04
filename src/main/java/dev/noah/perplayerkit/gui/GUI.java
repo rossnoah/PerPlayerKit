@@ -413,7 +413,7 @@ public class GUI {
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
             if (filterItemsOnImport) {
-                inv = ItemFilter.filterItemStack(player.getInventory().getContents());
+                inv = ItemFilter.get().filterItemStack(player.getInventory().getContents());
             } else {
                 inv = player.getInventory().getContents();
             }
@@ -429,7 +429,7 @@ public class GUI {
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
             if (filterItemsOnImport) {
-                inv = ItemFilter.filterItemStack(player.getEnderChest().getContents());
+                inv = ItemFilter.get().filterItemStack(player.getEnderChest().getContents());
             } else {
                 inv = player.getEnderChest().getContents();
             }

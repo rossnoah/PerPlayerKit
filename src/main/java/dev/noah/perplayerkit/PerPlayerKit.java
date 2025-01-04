@@ -34,7 +34,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-        new ItemFilter();
+        new ItemFilter(this);
         new BroadcastManager(this);
 
         new KitManager(this);
