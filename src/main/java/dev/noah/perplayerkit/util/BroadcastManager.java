@@ -60,6 +60,12 @@ public class BroadcastManager {
     }
 
     private void broadcastMessage(Player player, BroadcastManager.MessageKey key, CooldownManager cooldownManager) {
+
+        if(!plugin.getConfig().getBoolean("feature.broadcast-on-player-action",true)){
+            return;
+        }
+
+
         if (cooldownManager != null && cooldownManager.isOnCooldown(player)) {
             return;
         }

@@ -312,6 +312,8 @@ public class KitManager {
             afterLoad.run();
         }
 
+        applyKitLoadEffects(player, isEnderChest);
+
         return true;
     }
 
@@ -468,5 +470,36 @@ public class KitManager {
         return false;
     }
 
+    
+    private void applyKitLoadEffects(Player player, boolean isEnderChest) {
+
+        if(isEnderChest) {
+            if(plugin.getConfig().getBoolean("heal-on-enderchest-load", false)) {
+                player.setHealth(20);
+            }
+            if(plugin.getConfig().getBoolean("feed-on-enderchest-load", false)) {
+                player.setFoodLevel(20);
+            }
+            if(plugin.getConfig().getBoolean("set-saturation-on-enderchest-load", false)) {
+                player.setSaturation(20);
+            }
+            if(plugin.getConfig().getBoolean("remove-potion-effects-on-enderchest-load", false)) {
+                player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+            }
+        } else {
+            if(plugin.getConfig().getBoolean("set-health-on-kit-load", false)) {
+                player.setHealth(20);
+            }
+            if(plugin.getConfig().getBoolean("set-hunger-on-kit-load", false)) {
+                player.setFoodLevel(20);
+            }
+            if(plugin.getConfig().getBoolean("set-saturation-on-kit-load", false)) {
+                player.setSaturation(20);
+            }
+            if(plugin.getConfig().getBoolean("remove-potion-effects-on-kit-load", false)) {
+                player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+            }
+        }
+    }
 
 }

@@ -183,7 +183,7 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitMenuCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
-        Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AutoRekitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new AboutCommandListener(), this);
 
         if (getConfig().getBoolean("anti-exploit.block-spaces-in-commands", true)) {
