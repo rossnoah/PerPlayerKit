@@ -17,6 +17,7 @@ import org.ipvp.canvas.type.ChestMenu;
 import java.util.List;
 import java.util.UUID;
 
+import static dev.noah.perplayerkit.gui.ItemUtil.addHideFlags;
 import static dev.noah.perplayerkit.gui.ItemUtil.createItem;
 
 public class GUI {
@@ -239,11 +240,11 @@ public class GUI {
 
         // add kit room buttons for the sections from config
         for (int i = 1; i < 6; i++) {
-            menu.getSlot(46 + i).setItem(
+            menu.getSlot(46 + i).setItem(addHideFlags(
                     createItem(
                             Material.valueOf(
                                     plugin.getConfig().getString("kitroom.items." + i + ".material")),
-                            "&r" + plugin.getConfig().getString("kitroom.items." + i + ".name")));
+                            "&r" + plugin.getConfig().getString("kitroom.items." + i + ".name"))));
         }
 
         menu.getSlot(page + 47).setItem(ItemUtil.addEnchantLook(menu.getSlot(page + 47).getItem(p)));

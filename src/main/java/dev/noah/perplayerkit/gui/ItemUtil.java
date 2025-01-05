@@ -44,15 +44,27 @@ public class ItemUtil {
         return createItem(material, quantity, name, new String[0]);
     }
 
-    public static ItemStack addEnchantLook(ItemStack item) {
+    public static ItemStack addHideFlags(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
-            meta.addEnchant(Enchantment.MENDING, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DYE);
             item.setItemMeta(meta);
         }
 
         return item;
     }
+
+    public static ItemStack addEnchantLook(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            meta.addEnchant(Enchantment.MENDING, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DYE);
+            item.setItemMeta(meta);
+        }
+
+        return item;
+    }
+
 }
