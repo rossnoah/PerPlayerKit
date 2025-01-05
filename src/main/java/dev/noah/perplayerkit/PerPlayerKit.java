@@ -1,6 +1,8 @@
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.commands.*;
+import dev.noah.perplayerkit.commands.extracommands.HealCommand;
+import dev.noah.perplayerkit.commands.extracommands.RepairCommand;
 import dev.noah.perplayerkit.commands.tabcompleters.ECSlotTabCompleter;
 import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
 import dev.noah.perplayerkit.listeners.*;
@@ -174,10 +176,13 @@ public final class PerPlayerKit extends JavaPlugin {
 
         RegearCommand regearCommand = new RegearCommand(this);
         this.getCommand("regear").setExecutor(regearCommand);
+
+        this.getCommand("heal").setExecutor(new HealCommand());
+        this.getCommand("repair").setExecutor(new RepairCommand());
+
+
+
         Bukkit.getPluginManager().registerEvents(regearCommand, this);
-
-
-
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);

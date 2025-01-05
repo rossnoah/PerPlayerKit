@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class RepairUtil {
+public class PlayerUtil {
 
     public static void repairItem(ItemStack i) {
         if (i != null) {
@@ -26,8 +26,19 @@ public class RepairUtil {
             repairItem(i);
         }
         p.sendMessage(ChatColor.GREEN + "All items repaired!");
+    }
 
+    public static void healPlayer(Player p) {
+        p.setHealth(20);
+        p.setFoodLevel(20);
+        p.setSaturation(20);
+        p.sendMessage(ChatColor.GREEN + "You have been healed!");
+    }
 
+    public static void healPlayerSilent(Player p) {
+        p.setHealth(20);
+        p.setFoodLevel(20);
+        p.setSaturation(20);
     }
 
 }

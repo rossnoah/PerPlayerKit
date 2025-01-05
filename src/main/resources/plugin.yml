@@ -3,142 +3,177 @@ version: "${project.version}"
 main: dev.noah.perplayerkit.PerPlayerKit
 author: Noah Ross
 api-version: 1.19
-commands:
 
+permissions:
+  kit.admin:
+    children:
+        perplayerkit.admin: true
+  kit.staff:
+    children:
+        perplayerkit.staff: true
+  kit.use:
+    children:
+      perplayerkit.use: true
+  perplayerkit.use:
+    children:
+      perplayerkit.menu: true
+      perplayerkit.copykit: true
+      perplayerkit.sharekit: true
+      perplayerkit.shareenderchest: true
+      perplayerkit.swapkit: true
+      perplayerkit.deletekit: true
+      perplayerkit.publickit: true
+      perplayerkit.kit: true
+      perplayerkit.enderchest: true
+      perplayerkit.viewenderchest: true
+      perplayerkit.regear: true
+      perplayerkit.heal: true
+      perplayerkit.repair: true
+
+
+commands:
   aboutperplayerkit:
     usage: /<command>
     default: true
 
   kitroom:
     usage: /<command>
-    permission: kit.admin
+    permission: perplayerkit.admin
 
   kit:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.menu
     aliases: k
 
   copykit:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.copykit
     aliases:
       - copyec
       - copyenderchest
 
   sharekit:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.sharekit
 
   shareec:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.shareenderchest
     aliases:
       - shareenderchest
 
   swapkit:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.swapkit
 
   deletekit:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.deletekit
 
   inspectkit:
     usage: /<command>
-    permission: kit.staff
+    permission: perplayerkit.staff
 
   publickit:
+    usage: /<command>
+    permission: perplayerkit.publickit
     aliases:
       - pk
       - premadekit
-    usage: /<command>
-    permission: kit.use
 
   k1:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit1
   k2:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit2
   k3:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit3
   k4:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit4
   k5:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit5
   k6:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit6
   k7:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit7
   k8:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit8
   k9:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.kit
     aliases: kit9
 
   ec1:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest1
   ec2:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest2
   ec3:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest3
   ec4:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest4
   ec5:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest5
   ec6:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest6
   ec7:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest7
   ec8:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest8
   ec9:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.enderchest
     aliases: enderchest9
 
   enderchest:
     usage: /<command>
-    permission: kit.enderchest
+    permission: perplayerkit.viewenderchest
     aliases: ec
 
   savepublickit:
     usage: /<command> <id>
-    permission: kit.admin
+    permission: perplayerkit.admin
 
   regear:
     usage: /<command>
-    permission: kit.use
+    permission: perplayerkit.regear
     aliases:
       - rg
+  heal:
+    usage: /<command>
+    permission: perplayerkit.heal
+
+  repair:
+    usage: /<command>
+    permission: perplayerkit.repair
+

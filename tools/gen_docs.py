@@ -1,5 +1,3 @@
-#run this from the root of the project to generate the command documentation
-
 import yaml
 
 # Input and output files
@@ -25,9 +23,12 @@ api_version = data.get("api-version", "Unknown API Version")
 
 # Begin writing to Markdown file
 with open(output_file, "w") as f:
+    # Plugin metadata
     f.write(f"# {plugin_name} Command Docs\n\n")
     f.write(f"- **Author(s):** {author}\n")
     f.write(f"- **Minimum Spigot/Paper Version:** {api_version}\n\n")
+
+    # Commands section
     f.write("## Commands\n\n")
     f.write(
         "The following table outlines each command, its usage, aliases, and permissions required.\n\n"
@@ -42,11 +43,11 @@ with open(output_file, "w") as f:
         # Handling aliases field
         aliases = details.get("aliases", "")
         if isinstance(
-            aliases, list
+                aliases, list
         ):  # if aliases is a list, wrap each alias in backticks and join with commas
             aliases = ", ".join([f"`{alias}`" for alias in aliases if alias])
         elif (
-            isinstance(aliases, str) and aliases
+                isinstance(aliases, str) and aliases
         ):  # if aliases is a single non-empty string, wrap in backticks
             aliases = f"`{aliases}`"
         else:
@@ -55,5 +56,26 @@ with open(output_file, "w") as f:
             )
 
         f.write(f"| `{command}` | {aliases} | `{permission}` |\n")
+
+    # Permissions section
+    f.write("\n## Permissions\n\n")
+    f.write(
+        "The following table outlines each top-level permission and the sub-permissions it grants.\n\n"
+    )
+    f.write("| Permission | Grants |\n")
+    f.write("|------------|--------|\n")
+
+    def write_permission(permission, children, level=0):
+        """Write permission hierarchy to the table."""
+        indent = "&nbsp;" * (level * 4)  # Use HTML spaces for indentation
+        grants = ", ".join(f"`{child}`" for child in children.keys())
+        f.write(f"| `{permission}` | {indent}{grants} |\n")
+        for child, details in children.items():
+            if isinstance(details, dict) and "children" in details:
+                write_permission(child, details["children"], level + 1)
+
+    for permission, details in data.get("permissions", {}).items():
+        if isinstance(details, dict) and "children" in details:
+            write_permission(permission, details["children"])
 
 print(f"Documentation generated: {output_file}")

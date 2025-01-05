@@ -1,10 +1,6 @@
-#Database credentials
-
-
-
+#Database credentials are only required if you are using MySQL or Redis
 # It is strongly recommended to use MySQL or SQLite
 # YAML should not be used in any environment
-
 
 storage: #sqlite, mysql, redis, yml (yaml)
   type: "sqlite"
@@ -77,6 +73,7 @@ prefix: "<gray>[<aqua>Kits</aqua>]</gray> "
 
 messages:
   player-repaired: "<gray>%player% repaired their gear</gray>"
+  player-healed: "<gray>%player% healed themselves</gray>"
   player-opened-kit-room: "<gray>%player% opened the Kit Room</gray>"
   player-loaded-private-kit: "<gray>%player% loaded a kit</gray>"
   player-loaded-public-kit: "<gray>%player% loaded a public kit</gray>"
