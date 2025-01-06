@@ -13,6 +13,7 @@ import dev.noah.perplayerkit.storage.StorageSelector;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import dev.noah.perplayerkit.util.BroadcastManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -32,6 +33,10 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        int bstatsId = 24380;
+        Metrics metrics = new Metrics(this, bstatsId);
+
         plugin = this;
         ConfigManager configManager = new ConfigManager(this);
         configManager.loadConfig();
