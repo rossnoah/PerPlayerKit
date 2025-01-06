@@ -69,7 +69,7 @@ disabled-command-message: "&cKits are disabled here!"
 
 
 publickits:
-  1:
+  kit1:
     name: "Kit 1"
     icon: "DIAMOND_SWORD"
 

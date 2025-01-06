@@ -111,6 +111,57 @@ public class KitManager {
 
     }
 
+    public boolean savePublicKit(Player player, String publickit, ItemStack[] kit) {
+
+
+        boolean notEmpty = false;
+        for (ItemStack i : kit) {
+            if (i != null) {
+                if (!notEmpty) {
+                    notEmpty = true;
+                }
+
+            }
+        }
+
+        if (notEmpty) {
+
+            if (kit[36] != null) {
+                if (!kit[36].getType().toString().contains("BOOTS")) {
+                    kit[36] = null;
+                }
+            }
+            if (kit[37] != null) {
+                if (!kit[37].getType().toString().contains("LEGGINGS")) {
+                    kit[37] = null;
+                }
+            }
+            if (kit[38] != null) {
+                if (!(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
+                    kit[38] = null;
+                }
+            }
+            if (kit[39] != null) {
+                if (!kit[39].getType().toString().contains("HELMET")) {
+                    kit[39] = null;
+                }
+            }
+
+
+            kitByKitIDMap.put(IDUtil.getPublicKitId(publickit), kit);
+            player.sendMessage(ChatColor.GREEN + "Public Kit " + publickit + " saved!");
+
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePublicKitToDB(publickit));
+            return true;
+        } else {
+            player.sendMessage(ChatColor.RED + "You cant save an empty kit!");
+        }
+
+
+        return false;
+
+    }
+
     public boolean savePublicKit(String id, ItemStack[] kit) {
         boolean notEmpty = false;
         for (ItemStack i : kit) {
@@ -374,12 +425,12 @@ public class KitManager {
     }
 
     public ItemStack[] getPlayerEC(UUID uuid, int slot) {
-            return kitByKitIDMap.get(IDUtil.getECId(uuid, slot));
+        return kitByKitIDMap.get(IDUtil.getECId(uuid, slot));
     }
 
 
     public ItemStack[] getPlayerKit(UUID uuid, int slot) {
-            return kitByKitIDMap.get(IDUtil.getPlayerKitId(uuid, slot));
+        return kitByKitIDMap.get(IDUtil.getPlayerKitId(uuid, slot));
     }
 
     public boolean hasPublicKit(String id) {
@@ -388,7 +439,7 @@ public class KitManager {
     }
 
     public ItemStack[] getPublicKit(String id) {
-            return kitByKitIDMap.get(IDUtil.getPublicKitId(id));
+        return kitByKitIDMap.get(IDUtil.getPublicKitId(id));
     }
 
     public void loadPlayerDataFromDB(UUID uuid) {
@@ -470,33 +521,33 @@ public class KitManager {
         return false;
     }
 
-    
+
     private void applyKitLoadEffects(Player player, boolean isEnderChest) {
 
-        if(isEnderChest) {
-            if(plugin.getConfig().getBoolean("heal-on-enderchest-load", false)) {
+        if (isEnderChest) {
+            if (plugin.getConfig().getBoolean("heal-on-enderchest-load", false)) {
                 player.setHealth(20);
             }
-            if(plugin.getConfig().getBoolean("feed-on-enderchest-load", false)) {
+            if (plugin.getConfig().getBoolean("feed-on-enderchest-load", false)) {
                 player.setFoodLevel(20);
             }
-            if(plugin.getConfig().getBoolean("set-saturation-on-enderchest-load", false)) {
+            if (plugin.getConfig().getBoolean("set-saturation-on-enderchest-load", false)) {
                 player.setSaturation(20);
             }
-            if(plugin.getConfig().getBoolean("remove-potion-effects-on-enderchest-load", false)) {
+            if (plugin.getConfig().getBoolean("remove-potion-effects-on-enderchest-load", false)) {
                 player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
             }
         } else {
-            if(plugin.getConfig().getBoolean("set-health-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("set-health-on-kit-load", false)) {
                 player.setHealth(20);
             }
-            if(plugin.getConfig().getBoolean("set-hunger-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("set-hunger-on-kit-load", false)) {
                 player.setFoodLevel(20);
             }
-            if(plugin.getConfig().getBoolean("set-saturation-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("set-saturation-on-kit-load", false)) {
                 player.setSaturation(20);
             }
-            if(plugin.getConfig().getBoolean("remove-potion-effects-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("remove-potion-effects-on-kit-load", false)) {
                 player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
             }
         }
