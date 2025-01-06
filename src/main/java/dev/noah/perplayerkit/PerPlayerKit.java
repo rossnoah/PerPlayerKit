@@ -33,8 +33,8 @@ public final class PerPlayerKit extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-
-        this.saveDefaultConfig();
+        ConfigManager configManager = new ConfigManager(this);
+        configManager.loadConfig();
 
         new ItemFilter(this);
         new BroadcastManager(this);
