@@ -1,6 +1,7 @@
 package dev.noah.perplayerkit.listeners;
 
 import dev.noah.perplayerkit.KitManager;
+import dev.noah.perplayerkit.UpdateChecker;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -20,15 +21,21 @@ import java.util.UUID;
 public class JoinListener implements Listener {
 
     private final Plugin plugin;
+    private final UpdateChecker updateChecker;
 
-
-    public JoinListener(Plugin plugin) {
+    public JoinListener(Plugin plugin, UpdateChecker updateChecker) {
         this.plugin = plugin;
+        this.updateChecker = updateChecker;
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+
+        if(player.hasPermission("perplayerkit.admin") && plugin.getConfig().getBoolean("feature.send-update-message-on-join",true)){
+            updateChecker.sendUpdateMessage(player);
+        }
+
         UUID uuid = player.getUniqueId();
 
         //  KitManager.loadFromSQL(uuid);

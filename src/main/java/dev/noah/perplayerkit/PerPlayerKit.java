@@ -91,44 +91,10 @@ public final class PerPlayerKit extends JavaPlugin {
         loadDatabaseData();
         getLogger().info("Database data loaded");
 
-        registerThings();
-
-        BroadcastManager.get().startScheduledBroadcast();
-
-    }
-
-    @Override
-    public void onDisable() {
-        closeDatabaseConnection();
-    }
+        UpdateChecker updateChecker = new UpdateChecker(this);
 
 
-    private void loadPublicKitsIdsFromConfig() {
-        // generate list of public kits from the config
-        ConfigurationSection publicKitsSection = getConfig().getConfigurationSection("publickits");
-
-        if (publicKitsSection == null) {
-            this.getLogger().warning("No public kits found in config!");
-        } else {
-
-            publicKitsSection.getKeys(false).forEach(key -> {
-                String name = getConfig().getString("publickits." + key + ".name");
-                Material icon = Material.valueOf(getConfig().getString("publickits." + key + ".icon"));
-                PublicKit kit = new PublicKit(key, name, icon);
-                KitManager.get().getPublicKitList().add(kit);
-            });
-        }
-    }
-
-    private void loadDatabaseData() {
-        KitRoomDataManager.get().loadFromDB();
-        KitManager.get().getPublicKitList().forEach(kit -> KitManager.get().loadPublicKitFromDB(kit.id));
-        Bukkit.getOnlinePlayers().forEach(player -> KitManager.get().loadPlayerDataFromDB(player.getUniqueId()));
-
-    }
-
-
-    private void registerThings() {
+        // REGISTER THINGS START
         KitSlotTabCompleter kitSlotTabCompleter = new KitSlotTabCompleter();
         ECSlotTabCompleter ecSlotTabCompleter = new ECSlotTabCompleter();
 
@@ -181,9 +147,8 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("repair").setExecutor(new RepairCommand());
 
 
-
         Bukkit.getPluginManager().registerEvents(regearCommand, this);
-        Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(this, updateChecker), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitMenuCloseListener(), this);
@@ -195,13 +160,48 @@ public final class PerPlayerKit extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         }
 
-        if(getConfig().getBoolean("anti-exploit.prevent-shulkers-dropping-items", true)) {
+        if (getConfig().getBoolean("anti-exploit.prevent-shulkers-dropping-items", true)) {
             Bukkit.getPluginManager().registerEvents(new ShulkerDropItemsListener(), this);
         }
 
+
+        // REGISTER THINGS END
+
+
+        BroadcastManager.get().startScheduledBroadcast();
+        updateChecker.printStartupStatus();
+
+    }
+
+    @Override
+    public void onDisable() {
+        closeDatabaseConnection();
     }
 
 
+    private void loadPublicKitsIdsFromConfig() {
+        // generate list of public kits from the config
+        ConfigurationSection publicKitsSection = getConfig().getConfigurationSection("publickits");
+
+        if (publicKitsSection == null) {
+            this.getLogger().warning("No public kits found in config!");
+        } else {
+
+            publicKitsSection.getKeys(false).forEach(key -> {
+                String name = getConfig().getString("publickits." + key + ".name");
+                Material icon = Material.valueOf(getConfig().getString("publickits." + key + ".icon"));
+                PublicKit kit = new PublicKit(key, name, icon);
+                KitManager.get().getPublicKitList().add(kit);
+            });
+        }
+    }
+
+    private void loadDatabaseData() {
+        KitRoomDataManager.get().loadFromDB();
+        KitManager.get().getPublicKitList().forEach(kit -> KitManager.get().loadPublicKitFromDB(kit.id));
+        Bukkit.getOnlinePlayers().forEach(player -> KitManager.get().loadPlayerDataFromDB(player.getUniqueId()));
+
+    }
 
 
     private void attemptDatabaseConnection(boolean disableOnFail) {
