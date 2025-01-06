@@ -255,6 +255,12 @@ public class GUI {
     }
 
     public Menu ViewPublicKitMenu(Player p, String id) {
+        ItemStack[] kit = KitManager.get().getPublicKit(id);
+
+        if (kit == null) {
+            return null;
+        }
+
         Menu menu = ChestMenu.builder(6)
                 .title(ChatColor.BLUE + "Viewing Public Kit: " + id)
                 .redraw(true)
@@ -263,8 +269,6 @@ public class GUI {
         for (int i = 0; i < 54; i++) {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
         }
-
-        ItemStack[] kit = KitManager.get().getPublicKit(id);
 
         for (int i = 9; i < 36; i++) {
             menu.getSlot(i).setItem(kit[i]);
@@ -342,9 +346,10 @@ public class GUI {
                 KitManager.get().loadPublicKit(player, id);
             } else if (info.getClickType() == ClickType.RIGHT) {
                 Menu m = ViewPublicKitMenu(player, id);
-                m.open(player);
+                if (m != null) {
+                    m.open(player);
+                }
             }
-
         });
     }
 
