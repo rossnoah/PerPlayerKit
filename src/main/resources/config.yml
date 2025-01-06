@@ -1,3 +1,7 @@
+
+config-version: 1 #do not change this value
+
+
 #Database credentials are only required if you are using MySQL or Redis
 # It is strongly recommended to use MySQL or SQLite
 # YAML should not be used in any environment
