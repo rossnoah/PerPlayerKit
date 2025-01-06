@@ -170,4 +170,6 @@ rekit-on-respawn: true
 rekit-on-kill: false
 
 broadcast-on-player-action: true #broadcasts when a player uses a kit, copies a kit, etc.
+
+send-update-message-on-join: true #sends a message to players with perplayerkit.admin when they join the server if a new version is available
 ```
