@@ -130,9 +130,10 @@ Allows customization of the regear command which is used on some servers in vari
 
 ```yaml
 regear:
-  command-cooldown: 5 #command cooldown in seconds
+  mode: "command" #OPTIONS: command, shulker
+  command-cooldown: 5 #command cooldown in seconds. recommended to be low or 0 if using shulker mode.
   damage-timer: 5 #time in seconds to wait after taking damage before players can regear
-  allow-while-using-elytra: true #set false to block regearing while using elytra
+  allow-while-using-elytra: true #set false to block regearing command while using elytra
   #
   # Allow regearing all items by setting:
   # invert-whitelist: true
@@ -146,6 +147,8 @@ regear:
     - OBSIDIAN
     - GLOWSTONE
     - RESPAWN_ANCHOR
+
+
 ```
 
 
