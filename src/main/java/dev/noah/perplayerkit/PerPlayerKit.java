@@ -150,6 +150,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
         this.getCommand("heal").setExecutor(new HealCommand());
         this.getCommand("repair").setExecutor(new RepairCommand());
+        this.getCommand("perplayerkit").setExecutor(new PerPlayerKitCommand(this));
 
 
         Bukkit.getPluginManager().registerEvents(regearCommand, this);

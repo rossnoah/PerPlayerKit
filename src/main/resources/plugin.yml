@@ -32,6 +32,11 @@ permissions:
 
 
 commands:
+
+  perplayerkit:
+    usage: /<command>
+    permission: perplayerkit.admin
+
   aboutperplayerkit:
     usage: /<command>
     default: true
