@@ -228,8 +228,8 @@ public class KitsXImporter {
                     continue;
                 }
 
-                // Adjusted to handle up to 41 slots
-                ItemStack[] kitItems = new ItemStack[41];
+                // Adjusted to handle up to 27 slots
+                ItemStack[] kitItems = new ItemStack[27];
                 for (String slotKey : yamlConfig.getConfigurationSection(uuid + "." + kitKey).getKeys(false)) {
                     int slot;
                     try {
@@ -239,8 +239,8 @@ public class KitsXImporter {
                         continue;
                     }
 
-                    if (slot < 0 || slot >= 30) {
-                        sender.sendMessage(ChatColor.YELLOW + "Slot " + slot + " in EC " + kitNumber + " is out of range (0-29). Skipping.");
+                    if (slot < 0 || slot >= 27) {
+                        sender.sendMessage(ChatColor.YELLOW + "Slot " + slot + " in EC " + kitNumber + " is out of range (0-26). Skipping.");
                         continue;
                     }
 
