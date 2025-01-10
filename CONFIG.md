@@ -159,20 +159,22 @@ A number of plugin features and settings. These can be enabled or disabled based
 ```yaml
 # Various feature flags for the plugin
 feature:
-set-health-on-kit-load: false
-set-hunger-on-kit-load: false
-set-saturation-on-kit-load: false
-remove-potion-effects-on-kit-load: false
-
-heal-on-enderchest-load: false
-feed-on-enderchest-load: false
-set-saturation-on-enderchest-load: false
-remove-potion-effects-on-enderchest-load: false
-
-rekit-on-respawn: true
-rekit-on-kill: false
-
-broadcast-on-player-action: true #broadcasts when a player uses a kit, copies a kit, etc.
-
-send-update-message-on-join: true #sends a message to players with perplayerkit.admin when they join the server if a new version is available
+    set-health-on-kit-load: false
+    set-hunger-on-kit-load: false
+    set-saturation-on-kit-load: false
+    remove-potion-effects-on-kit-load: false
+    
+    heal-on-enderchest-load: false
+    feed-on-enderchest-load: false
+    set-saturation-on-enderchest-load: false
+    remove-potion-effects-on-enderchest-load: false
+    
+    rekit-on-respawn: true
+    rekit-on-kill: false
+    
+    broadcast-on-player-action: true #broadcasts when a player uses a kit, copies a kit, etc.
+    
+    send-update-message-on-join: true #sends a message to players with perplayerkit.admin when they join the server if a new version is available
+    
+    old-death-drops: false #makes it so players drop items in a condensed area rather than spreading out when they die
 ```

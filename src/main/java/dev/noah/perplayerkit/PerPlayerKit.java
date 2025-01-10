@@ -8,6 +8,7 @@ import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
 import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
 import dev.noah.perplayerkit.listeners.antiexploit.ShulkerDropItemsListener;
+import dev.noah.perplayerkit.listeners.features.OldDeathDropListener;
 import dev.noah.perplayerkit.storage.StorageManager;
 import dev.noah.perplayerkit.storage.StorageSelector;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
@@ -161,6 +162,11 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRekitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new AboutCommandListener(), this);
+
+//        features
+        if(getConfig().getBoolean("feature.old-death-drops", false)) {
+            Bukkit.getPluginManager().registerEvents(new OldDeathDropListener(), this);
+        }
 
         if (getConfig().getBoolean("anti-exploit.block-spaces-in-commands", true)) {
             Bukkit.getPluginManager().registerEvents(new CommandListener(), this);

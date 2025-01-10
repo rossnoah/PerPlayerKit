@@ -133,3 +133,4 @@ feature:
 
   send-update-message-on-join: true #sends a message to players with perplayerkit.admin when they join the server if a new version is available
 
+  old-death-drops: false #makes it so players drop items in a condensed area rather than spreading out when they die
