@@ -525,29 +525,29 @@ public class KitManager {
     private void applyKitLoadEffects(Player player, boolean isEnderChest) {
 
         if (isEnderChest) {
-            if (plugin.getConfig().getBoolean("heal-on-enderchest-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.heal-on-enderchest-load", false)) {
                 player.setHealth(20);
             }
-            if (plugin.getConfig().getBoolean("feed-on-enderchest-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.feed-on-enderchest-load", false)) {
                 player.setFoodLevel(20);
             }
-            if (plugin.getConfig().getBoolean("set-saturation-on-enderchest-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.set-saturation-on-enderchest-load", false)) {
                 player.setSaturation(20);
             }
-            if (plugin.getConfig().getBoolean("remove-potion-effects-on-enderchest-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.remove-potion-effects-on-enderchest-load", false)) {
                 player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
             }
         } else {
-            if (plugin.getConfig().getBoolean("set-health-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.set-health-on-kit-load", false)) {
                 player.setHealth(20);
             }
-            if (plugin.getConfig().getBoolean("set-hunger-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.set-hunger-on-kit-load", false)) {
                 player.setFoodLevel(20);
             }
-            if (plugin.getConfig().getBoolean("set-saturation-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.set-saturation-on-kit-load", false)) {
                 player.setSaturation(20);
             }
-            if (plugin.getConfig().getBoolean("remove-potion-effects-on-kit-load", false)) {
+            if (plugin.getConfig().getBoolean("feature.remove-potion-effects-on-kit-load", false)) {
                 player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
             }
         }
