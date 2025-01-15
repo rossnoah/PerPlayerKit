@@ -168,11 +168,11 @@ public final class PerPlayerKit extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new OldDeathDropListener(), this);
         }
 
-        if (getConfig().getBoolean("anti-exploit.block-spaces-in-commands", true)) {
+        if (getConfig().getBoolean("anti-exploit.block-spaces-in-commands", false)) {
             Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         }
 
-        if (getConfig().getBoolean("anti-exploit.prevent-shulkers-dropping-items", true)) {
+        if (getConfig().getBoolean("anti-exploit.prevent-shulkers-dropping-items", false)) {
             Bukkit.getPluginManager().registerEvents(new ShulkerDropItemsListener(), this);
         }
 

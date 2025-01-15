@@ -118,10 +118,10 @@ This section allows you to enable or disable anti-exploit features, commonly app
 
 ```yaml
 anti-exploit:
-  only-allow-kitroom-items: true #requires that items be in the kitroom before they can be used in a kit.
-  import-filter: true #requires only-allow-kitroom-items to be true. prevents the duplications of items not in the kitroom by using the kit import button.
-  block-spaces-in-commands: true #prevents bypassing command filters.
-  prevent-shulkers-dropping-items: true #prevents shulkers from dropping items when broken. Anti-lag feature.
+  only-allow-kitroom-items: false #requires that items be in the kitroom before they can be used in a kit.
+  import-filter: false #requires only-allow-kitroom-items to be true. prevents the duplications of items not in the kitroom by using the kit import button.
+  block-spaces-in-commands: false #prevents bypassing command filters.
+  prevent-shulkers-dropping-items: false #prevents shulkers from dropping items when broken. Anti-lag feature.
 ```
 
 ### **Regear Command**

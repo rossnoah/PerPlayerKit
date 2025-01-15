@@ -30,7 +30,7 @@ public class GUI {
 
     public GUI(Plugin plugin) {
         this.plugin = plugin;
-        this.filterItemsOnImport = plugin.getConfig().getBoolean("anti-exploit.import-filter", true);
+        this.filterItemsOnImport = plugin.getConfig().getBoolean("anti-exploit.import-filter", false);
     }
 
     public static void addLoadPublicKit(Slot slot, String id) {

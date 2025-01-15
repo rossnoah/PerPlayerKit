@@ -26,7 +26,7 @@ public class ItemFilter {
         whitelist = new HashSet<>();
         this.plugin = plugin;
         instance = this;
-        isEnabled = plugin.getConfig().getBoolean("anti-exploit.only-allow-kitroom-items",true);
+        isEnabled = plugin.getConfig().getBoolean("anti-exploit.only-allow-kitroom-items",false);
     }
 
     public static ItemFilter get(){
