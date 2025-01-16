@@ -1,3 +1,21 @@
+/*
+ * Copyright 2022-2025 Noah Ross
+ *
+ * This file is part of PerPlayerKit.
+ *
+ * PerPlayerKit is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * PerPlayerKit is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with PerPlayerKit. If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.commands.*;
@@ -34,6 +52,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        notice();
 
         int bstatsId = 24380;
         Metrics metrics = new Metrics(this, bstatsId);
@@ -245,5 +264,36 @@ public final class PerPlayerKit extends JavaPlugin {
             }
         }
     }
+
+
+    private void notice(){
+        String notice = """
+                * PerPlayerKit is free software: you can redistribute it and/or modify it under
+                * the terms of the GNU Affero General Public License as published by the
+                * Free Software Foundation, either version 3 of the License, or (at your
+                * option) any later version.
+                *
+                * PerPlayerKit is distributed in the hope that it will be useful, but WITHOUT ANY
+                * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+                * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+                * more details.
+                *
+                * You should have received a copy of the GNU Affero General Public License
+                * along with PerPlayerKit. If not, see <https://www.gnu.org/licenses/>.""";
+
+
+        String otherInfo = """
+                * All users must be provided with the source code of the software, as per the AGPL-3.0 license.
+                * If you are using a modified version of PerPlayerKit, you must make the source code of your
+                * modified version available to all users, as per the AGPL-3.0 license.
+                * Consider modifying the /aboutperplayerkit command to include a link to your modified source code.
+                """;
+
+
+
+        getLogger().info(notice);
+        getLogger().info(otherInfo);
+    }
+
 
 }
