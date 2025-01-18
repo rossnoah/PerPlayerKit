@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.util;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -69,6 +70,10 @@ public class BroadcastManager {
 
     private void broadcastMessage(Player player, String message) {
         World world = player.getWorld();
+
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null) {
+            message = PlaceholderAPI.setPlaceholders(player, message);
+        }
 
         for (Player broadcastPlayer : world.getPlayers()) {
             if (broadcastPlayer.getLocation().distance(player.getLocation()) < broadcastDistance) {

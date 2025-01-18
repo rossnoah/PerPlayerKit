@@ -3,6 +3,9 @@ version: "${project.version}"
 main: dev.noah.perplayerkit.PerPlayerKit
 author: Noah Ross
 api-version: 1.19
+softdepend:
+  - PlaceholderAPI
+
 
 permissions:
   kit.admin:
