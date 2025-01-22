@@ -22,12 +22,11 @@ import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.CooldownManager;
+import dev.noah.perplayerkit.util.DisabledCommand;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.ShulkerBox;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,10 +36,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,18 +45,16 @@ import org.jetbrains.annotations.NotNull;
 public class RegearCommand implements CommandExecutor, Listener {
 
     private final Plugin plugin;
-    private final int commandCooldownInSeconds;
-    private final int damageCooldownInSeconds;
     private final CooldownManager commandCooldownManager;
     private final CooldownManager damageCooldownManager;
-    private boolean allowRegearWhileUsingElytra;
+    private final boolean allowRegearWhileUsingElytra;
     public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, ChatColor.BLUE + "Regear Shulker","&7● Restocks Your Kit", "&7● Use &9/rg &7to get another regear shulker");
     public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, ChatColor.BLUE + "Regear Shell","&7● Restocks Your Kit", "&7● Click to use!");
 
     public RegearCommand(Plugin plugin) {
         this.plugin = plugin;
-        this.commandCooldownInSeconds = plugin.getConfig().getInt("regear.command-cooldown", 5);
-        this.damageCooldownInSeconds = plugin.getConfig().getInt("regear.damage-timer", 5);
+        int commandCooldownInSeconds = plugin.getConfig().getInt("regear.command-cooldown", 5);
+        int damageCooldownInSeconds = plugin.getConfig().getInt("regear.damage-timer", 5);
         this.commandCooldownManager = new CooldownManager(commandCooldownInSeconds);
         this.damageCooldownManager = new CooldownManager(damageCooldownInSeconds);
         this.allowRegearWhileUsingElytra = plugin.getConfig().getBoolean("regear.allow-while-using-elytra", true);
@@ -81,8 +76,11 @@ public class RegearCommand implements CommandExecutor, Listener {
             return true;
         }
 
+        if (DisabledCommand.isBlockedInWorld(player)) {
+            return true;
+        }
 
-        if (plugin.getConfig().getString("regear.mode", "command").toLowerCase().equals("shulker")) {
+        if (plugin.getConfig().getString("regear.mode", "command").equalsIgnoreCase("shulker")) {
 
             int slot = player.getInventory().firstEmpty();
             if (slot == -1) {
@@ -98,7 +96,7 @@ public class RegearCommand implements CommandExecutor, Listener {
 
 
 
-        if (plugin.getConfig().getString("regear.mode", "command").toLowerCase().equals("command")) {
+        if (plugin.getConfig().getString("regear.mode", "command").equalsIgnoreCase("command")) {
 
             int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
 
