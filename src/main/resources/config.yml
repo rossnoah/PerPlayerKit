@@ -16,6 +16,7 @@ mysql:
   username: "username"
   password: "pa55w0rd"
   useSSL: false
+  maximumPoolSize: 10 #only change this if you know what your doing
 
 redis:
   host: "localhost"

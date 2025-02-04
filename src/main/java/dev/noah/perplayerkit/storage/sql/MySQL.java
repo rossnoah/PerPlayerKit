@@ -20,11 +20,9 @@ package dev.noah.perplayerkit.storage.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MySQL implements SQLDatabase {
@@ -58,6 +56,7 @@ public class MySQL implements SQLDatabase {
     public void connect() {
         if (!isConnected()) {
             HikariConfig config = new HikariConfig();
+            config.setMaximumPoolSize(plugin.getConfig().getInt("mysql.maximumPoolSize",10));
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=" + useSSL);
             config.setUsername(username);
             config.setPassword(password);
