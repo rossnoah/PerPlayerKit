@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.commands;
 
+import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.DisabledCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -47,9 +48,8 @@ public class EnderchestCommand implements CommandExecutor {
     }
 
     public void viewOnlyEC(Player p) {
-        ItemStack fill = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
-//        set name to nothing
-        fill.getItemMeta().setDisplayName("");
+
+        ItemStack fill = ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE,1,"");
 
         Menu menu = ChestMenu.builder(5).title(ChatColor.BLUE + "View Only Enderchest").build();
 
