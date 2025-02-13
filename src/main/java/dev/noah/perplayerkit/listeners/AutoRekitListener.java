@@ -59,7 +59,7 @@ public class AutoRekitListener implements Listener {
         }
 
         Player killer = e.getEntity().getKiller();
-        if (killer == null) {
+        if (killer == null || killer == e.getEntity()) {
             return;
         }
 
