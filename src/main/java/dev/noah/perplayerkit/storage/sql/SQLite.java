@@ -18,42 +18,66 @@
  */
 package dev.noah.perplayerkit.storage.sql;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.plugin.Plugin;
+
+import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class SQLite implements SQLDatabase {
 
-
+    private final Plugin plugin;
     private final String databasePath;
-    private Connection connection;
+    private HikariDataSource dataSource;
 
-    public SQLite(String databasePath) {
-        this.databasePath = databasePath;
+    public SQLite(Plugin plugin) {
+        this.plugin = plugin;
+        this.databasePath = new File(plugin.getDataFolder(),
+                plugin.getConfig().getString("sqlite.filename", "database.db")).getAbsolutePath();
     }
 
     public boolean isConnected() {
-        return (connection != null);
+        return (dataSource != null && !dataSource.isClosed());
     }
 
-    public void connect() throws ClassNotFoundException, SQLException {
+    public void connect() {
         if (!isConnected()) {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            try {
+                Class.forName("org.sqlite.JDBC");
+
+                HikariConfig config = new HikariConfig();
+                config.setJdbcUrl("jdbc:sqlite:" + databasePath);
+                config.setMaximumPoolSize(plugin.getConfig().getInt("sqlite.maximumPoolSize", 5));
+
+                // SQLite-specific settings to help with locking issues
+                config.addDataSourceProperty("journal_mode", "WAL");
+                config.addDataSourceProperty("synchronous", "NORMAL");
+                config.addDataSourceProperty("foreign_keys", "true");
+                config.addDataSourceProperty("busy_timeout", "3000");
+
+                // Connection testing
+                config.setConnectionTestQuery("SELECT 1");
+                config.setMinimumIdle(1);
+
+                dataSource = new HikariDataSource(config);
+            } catch (ClassNotFoundException e) {
+                plugin.getLogger().severe("SQLite JDBC driver not found: " + e.getMessage());
+            }
         }
     }
 
     public void disconnect() {
         if (isConnected()) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            dataSource.close();
         }
     }
 
-    public Connection getConnection() {
-        return connection;
+    public Connection getConnection() throws SQLException {
+        if (!isConnected()) {
+            connect();
+        }
+        return dataSource.getConnection();
     }
 }
