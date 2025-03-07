@@ -36,13 +36,13 @@ public class SQLStorage implements StorageManager {
     }
 
 
-    private void createTable() throws SQLException{
-        PreparedStatement ps;
-            ps = db.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kits "
-                    + "(KITID VARCHAR(100),KITDATA TEXT(15000), PRIMARY KEY (KITID) )");
+    private void createTable() throws SQLException {
+        try (PreparedStatement ps = db.getConnection().prepareStatement(
+                "CREATE TABLE IF NOT EXISTS kits (KITID VARCHAR(100), KITDATA TEXT(15000), PRIMARY KEY (KITID))")) {
             ps.executeUpdate();
-
+        }
     }
+
 
     @Override
     public void init() throws StorageOperationException {
@@ -78,80 +78,72 @@ public class SQLStorage implements StorageManager {
 
     @Override
     public void keepAlive() throws StorageConnectionException {
-        PreparedStatement ps;
-
-        try {
-            ps = db.getConnection().prepareStatement("SELECT 1");
-            ps.executeQuery();
+        try (PreparedStatement ps = db.getConnection().prepareStatement("SELECT 1");
+             ResultSet rs = ps.executeQuery()) {
         } catch (SQLException e) {
             throw new StorageConnectionException("Failed to keep the connection alive", e);
         }
-
     }
+
 
     @Override
     public void saveKitDataByID(String kitID, String data) {
-
-        try {
-            PreparedStatement ps = db.getConnection().prepareStatement("REPLACE INTO kits" +
-                    " (KITID,KITDATA) VALUES (?,?)");
+        try (PreparedStatement ps = db.getConnection().prepareStatement(
+                "REPLACE INTO kits (KITID, KITDATA) VALUES (?,?)")) {
             ps.setString(1, kitID);
             ps.setString(2, data);
             ps.executeUpdate();
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+
     @Override
     public String getKitDataByID(String kitID) {
         if (doesKitExistByID(kitID)) {
-            try {
-
-                PreparedStatement ps = db.getConnection().prepareStatement("SELECT KITDATA FROM kits WHERE KITID=?");
+            try (PreparedStatement ps = db.getConnection().prepareStatement(
+                    "SELECT KITDATA FROM kits WHERE KITID=?")) {
                 ps.setString(1, kitID);
-                ResultSet rs = ps.executeQuery();
-                String kitdata;
-
-                if (rs.next()) {
-                    kitdata = rs.getString(1);
-                    return kitdata;
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getString("KITDATA");
+                    }
                 }
-
             } catch (SQLException e) {
                 e.printStackTrace();
-                return "Error";
             }
+            return "Error";
         }
         return "Error";
     }
 
+
     @Override
     public boolean doesKitExistByID(String kitID) {
-
-        try {
-            PreparedStatement ps = db.getConnection().prepareStatement("SELECT * FROM kits WHERE KITID=?");
+        try (PreparedStatement ps = db.getConnection().prepareStatement(
+                "SELECT KITID FROM kits WHERE KITID=?")) {
             ps.setString(1, kitID);
-            ResultSet results = ps.executeQuery();
-            return results.next();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
+
     @Override
     public void deleteKitByID(String kitID) {
-
-        try {
-            PreparedStatement ps = db.getConnection().prepareStatement("DELETE FROM kits WHERE KITID=?");
+        try (PreparedStatement ps = db.getConnection().prepareStatement(
+                "DELETE FROM kits WHERE KITID=?")) {
             ps.setString(1, kitID);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 }
