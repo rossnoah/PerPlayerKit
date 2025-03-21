@@ -168,34 +168,34 @@ public class RegearCommand implements CommandExecutor, Listener {
     }
 
     @EventHandler
-    public void onShulkerShellClick(InventoryClickEvent event){
+    public void onShulkerShellClick(InventoryClickEvent event) {
+    if (event.getView().getTitle().equals("Regear Shulker")) {
+        Player player = (Player) event.getWhoClicked();
 
-        if(event.getCurrentItem()!=null && event.getCurrentItem().equals(REGEAR_SHELL_ITEM)){
-            Player player = (Player) event.getWhoClicked();
-            int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
-
-            if (slot == -1) {
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
-                return;
-            }
-
-            if (damageCooldownManager.isOnCooldown(player)) {
-                int secondsLeft = damageCooldownManager.getTimeLeft(player);
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
-                return;
-            }
-
-
-            player.closeInventory();
-
-
-            KitManager.get().regearKit(player, slot);
-            player.updateInventory();
-
-
-
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regeared!"));
-            BroadcastManager.get().broadcastPlayerRegeared(player);
+        if (event.getCurrentItem() == null || !event.getCurrentItem().equals(REGEAR_SHELL_ITEM)) {
+            event.setCancelled(true);
+            return;
         }
+
+        int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
+
+        if (slot == -1) {
+            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
+            return;
+        }
+
+        if (damageCooldownManager.isOnCooldown(player)) {
+            int secondsLeft = damageCooldownManager.getTimeLeft(player);
+            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
+            return;
+        }
+
+        player.closeInventory();
+
+        KitManager.get().regearKit(player, slot);
+        player.updateInventory();
+
+        BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regeared!"));
+        BroadcastManager.get().broadcastPlayerRegeared(player);
     }
 }
