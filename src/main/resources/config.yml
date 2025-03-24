@@ -103,7 +103,7 @@ regear:
   command-cooldown: 5 #command cooldown in seconds. recommended to be low or 0 if using shulker mode.
   damage-timer: 5 #time in seconds to wait after taking damage before players can regear
   allow-while-using-elytra: true #set false to block regearing command while using elytra
-  block-put-items-inside: false # set true to block put items inside the regear shulker
+  prevent-putting-items-in-regear-inventory: false # set true to prevent putting items inside the regear shulker inventory
   #
   # Allow regearing all items by setting:
   # invert-whitelist: true
