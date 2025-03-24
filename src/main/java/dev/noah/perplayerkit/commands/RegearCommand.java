@@ -48,6 +48,7 @@ public class RegearCommand implements CommandExecutor, Listener {
     private final CooldownManager commandCooldownManager;
     private final CooldownManager damageCooldownManager;
     private final boolean allowRegearWhileUsingElytra;
+    private final boolean putItemsInside;
     public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, ChatColor.BLUE + "Regear Shulker","&7● Restocks Your Kit", "&7● Use &9/rg &7to get another regear shulker");
     public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, ChatColor.BLUE + "Regear Shell","&7● Restocks Your Kit", "&7● Click to use!");
 
@@ -58,6 +59,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         this.commandCooldownManager = new CooldownManager(commandCooldownInSeconds);
         this.damageCooldownManager = new CooldownManager(damageCooldownInSeconds);
         this.allowRegearWhileUsingElytra = plugin.getConfig().getBoolean("regear.allow-while-using-elytra", true);
+        this.putItemsInside = plugin.getConfig().getBoolean("regear.put-items-inside", false);
     }
 
     @EventHandler
@@ -171,6 +173,11 @@ public class RegearCommand implements CommandExecutor, Listener {
     public void onShulkerShellClick(InventoryClickEvent event) {
     if (event.getView().getTitle().equals("Regear Shulker")) {
         Player player = (Player) event.getWhoClicked();
+
+        if (blockItemPlacement && (event.getCurrentItem() == null || !event.getCurrentItem().equals(REGEAR_SHELL_ITEM))) {
+                event.setCancelled(true);
+                return;
+            }
 
         if (event.getCurrentItem() == null || !event.getCurrentItem().equals(REGEAR_SHELL_ITEM)) {
             event.setCancelled(true);
