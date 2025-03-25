@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.Sound;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.slot.ClickOptions;
 import org.ipvp.canvas.slot.Slot;
@@ -462,6 +463,7 @@ public class GUI {
         slot.setClickHandler((player, info) -> {
             BroadcastManager.get().broadcastPlayerRepaired(player);
             PlayerUtil.repairAll(player);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 
         });
     }
@@ -471,6 +473,8 @@ public class GUI {
             if (info.getClickType().isShiftClick()) {
                 player.getInventory().clear();
                 player.sendMessage(ChatColor.GREEN + "Inventory cleared");
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                
             }
         });
     }
