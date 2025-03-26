@@ -18,9 +18,6 @@ mysql:
   useSSL: false
   maximumPoolSize: 10 #only change this if you know what your doing
 
-sqlite: #settings for the sqlite connection
-  maximumPoolSize: 5 #only change this if you know what your doing
-
 redis:
   host: "localhost"
   port: 6379
