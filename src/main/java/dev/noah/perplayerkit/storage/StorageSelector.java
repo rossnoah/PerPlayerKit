@@ -51,7 +51,7 @@ public class StorageSelector {
             case "sqlite":
             default:
                 //default to sqlite
-                db = new SQLite(plugin);
+                db = new SQLite(plugin.getDataFolder() + File.separator + "database.db");
                 storageManager = new SQLStorage(db);
                 break;
         }
