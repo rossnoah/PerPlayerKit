@@ -454,6 +454,7 @@ public class GUI {
                 }
                 KitRoomDataManager.get().setKitRoom(page, data);
                 player.sendMessage("saved menu");
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 1.0f, 1.0f);
 
             }
         });
