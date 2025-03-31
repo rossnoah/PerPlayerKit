@@ -28,7 +28,6 @@ import dev.noah.perplayerkit.util.PlayerUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.Sound;
@@ -64,7 +63,6 @@ public class GUI {
         Menu menu = createKitMenu(slot);
 
         if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot) != null) {
-
             ItemStack[] kit = KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot);
             for (int i = 0; i < 41; i++) {
                 menu.getSlot(i).setItem(kit[i]);
@@ -75,7 +73,6 @@ public class GUI {
         }
         for (int i = 41; i < 54; i++) {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
-
         }
         menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS, 1, "&7&lBOOTS"));
         menu.getSlot(46).setItem(createItem(Material.CHAINMAIL_LEGGINGS, 1, "&7&lLEGGINGS"));
@@ -83,8 +80,8 @@ public class GUI {
         menu.getSlot(48).setItem(createItem(Material.CHAINMAIL_HELMET, 1, "&7&lHELMET"));
         menu.getSlot(49).setItem(createItem(Material.SHIELD, 1, "&7&lOFFHAND"));
 
-        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Import from inventory"));
-        menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
+        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Click to import from inventory"));
+        menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Click to clear"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         addMainButton(menu.getSlot(53));
         addClear(menu.getSlot(52));
@@ -92,14 +89,12 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
-
     }
 
     public void OpenPublicKitEditor(Player p, String kitId) {
         Menu menu = createPublicKitMenu(kitId);
 
         if (KitManager.get().getItemStackArrayById(IDUtil.getPublicKitId(kitId)) != null) {
-
             ItemStack[] kit = KitManager.get().getItemStackArrayById(IDUtil.getPublicKitId(kitId));
             for (int i = 0; i < 41; i++) {
                 menu.getSlot(i).setItem(kit[i]);
@@ -110,7 +105,6 @@ public class GUI {
         }
         for (int i = 41; i < 54; i++) {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
-
         }
         menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS, 1, "&7&lBOOTS"));
         menu.getSlot(46).setItem(createItem(Material.CHAINMAIL_LEGGINGS, 1, "&7&lLEGGINGS"));
@@ -118,8 +112,8 @@ public class GUI {
         menu.getSlot(48).setItem(createItem(Material.CHAINMAIL_HELMET, 1, "&7&lHELMET"));
         menu.getSlot(49).setItem(createItem(Material.SHIELD, 1, "&7&lOFFHAND"));
 
-        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Import from inventory"));
-        menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
+        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Click to import from inventory"));
+        menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Click to clear"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         addMainButton(menu.getSlot(53));
         addClear(menu.getSlot(52));
@@ -127,7 +121,6 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
-
     }
 
     public void OpenECKitKenu(Player p, int slot) {
@@ -135,14 +128,11 @@ public class GUI {
 
         for (int i = 0; i < 9; i++) {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
-
         }
         for (int i = 36; i < 54; i++) {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
-
         }
         if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot) != null) {
-
             ItemStack[] kit = KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot);
             for (int i = 9; i < 36; i++) {
                 menu.getSlot(i).setItem(kit[i - 9]);
@@ -151,8 +141,8 @@ public class GUI {
         for (int i = 9; i < 36; i++) {
             allowModification(menu.getSlot(i));
         }
-        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Import from inventory"));
-        menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
+        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Click to import from inventory"));
+        menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Click to clear"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         addMainButton(menu.getSlot(53));
         addClear(menu.getSlot(52), 9, 36);
@@ -165,7 +155,6 @@ public class GUI {
         Menu menu = createInspectMenu(slot, target.toString());
 
         if (KitManager.get().getItemStackArrayById(target.toString() + slot) != null) {
-
             ItemStack[] kit = KitManager.get().getItemStackArrayById(target.toString() + slot);
             for (int i = 0; i < 41; i++) {
                 menu.getSlot(i).setItem(kit[i]);
@@ -174,7 +163,6 @@ public class GUI {
 
         for (int i = 41; i < 54; i++) {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
-
         }
         menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS, 1, "&7&lBOOTS"));
         menu.getSlot(46).setItem(createItem(Material.CHAINMAIL_LEGGINGS, 1, "&7&lLEGGINGS"));
@@ -183,27 +171,21 @@ public class GUI {
         menu.getSlot(49).setItem(createItem(Material.SHIELD, 1, "&7&lOFFHAND"));
 
         menu.open(p);
-
     }
 
     public void OpenMainMenu(Player p) {
         Menu menu = createMainMenu(p);
         for (int i = 0; i < 54; i++) {
-
             menu.getSlot(i).setItem(createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
         }
         for (int i = 9; i < 18; i++) {
-
-            menu.getSlot(i).setItem(createItem(Material.CHEST, 1, "&3&lKit " + (i - 8), "&7● Left click to load kit", "&7● Right click to edit kit"));
-            addEditLoad(menu.getSlot(i), i - 8);
-
+            menu.getSlot(i).setItem(createItem(Material.CHEST, 1, "&3&lKit " + (i - 8), "&7● Click to load kit"));
+            addLoad(menu.getSlot(i), i - 8);
         }
         for (int i = 18; i < 27; i++) {
             if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + (i - 17)) != null) {
-
-                menu.getSlot(i).setItem(createItem(Material.ENDER_CHEST, 1, "&3&lEnderchest " + (i - 17), "&7● Left click to load kit", "&7● Right click to edit kit"));
-                addEditLoadEC(menu.getSlot(i), i - 17);
-
+                menu.getSlot(i).setItem(createItem(Material.ENDER_CHEST, 1, "&3&lEnderchest " + (i - 17), "&7● Click to load kit"));
+                addLoadEC(menu.getSlot(i), i - 17);
             } else {
                 menu.getSlot(i).setItem(createItem(Material.ENDER_EYE, 1, "&3&lEnderchest " + (i - 17), "&7● Click to create"));
                 addEditEC(menu.getSlot(i), i - 17);
@@ -216,18 +198,16 @@ public class GUI {
                 menu.getSlot(i).setItem(createItem(Material.BOOK, 1, "&c&lKIT NOT FOUND", "&7● Click to create"));
             }
             addEdit(menu.getSlot(i), i - 26);
-
         }
 
         for (int i = 37; i < 44; i++) {
-
             menu.getSlot(i).setItem(createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
         }
 
         menu.getSlot(37).setItem(createItem(Material.NETHER_STAR, 1, "&a&lKIT ROOM"));
         menu.getSlot(38).setItem(createItem(Material.BOOKSHELF, 1, "&e&lPREMADE KITS"));
-        menu.getSlot(39).setItem(createItem(Material.OAK_SIGN, 1, "&a&lINFO", "&7● Click a kit slot to load your kit", "&7● Right click or click the book to edit", "&7● Share kits with /sharekit <slot>"));
-        menu.getSlot(41).setItem(createItem(Material.REDSTONE_BLOCK, 1, "&c&lCLEAR INVENTORY", "&7● Shift click"));
+        menu.getSlot(39).setItem(createItem(Material.OAK_SIGN, 1, "&a&lINFO", "&7● Click a kit slot to load your kit", "&7● Click the book to edit", "&7● Share kits with /sharekit <slot>"));
+        menu.getSlot(41).setItem(createItem(Material.REDSTONE_BLOCK, 1, "&c&lCLEAR INVENTORY", "&7● Click to clear"));
         menu.getSlot(42).setItem(createItem(Material.COMPASS, 1, "&a&lSHARE KITS", "&7● /sharekit <slot>"));
         menu.getSlot(43).setItem(createItem(Material.EXPERIENCE_BOTTLE, 1, "&a&lREPAIR ITEMS"));
         addRepairButton(menu.getSlot(43));
@@ -241,7 +221,6 @@ public class GUI {
 
     public void OpenKitRoom(Player p) {
         OpenKitRoom(p, 0);
-
     }
 
     public void OpenKitRoom(Player p, int page) {
@@ -250,7 +229,6 @@ public class GUI {
             allowModification(menu.getSlot(i));
         }
         for (int i = 45; i < 54; i++) {
-
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
         }
         if (KitRoomDataManager.get().getKitRoomPage(page) != null) {
@@ -266,7 +244,8 @@ public class GUI {
             menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
             addMainButton(menu.getSlot(53));
         } else {
-            menu.getSlot(53).setItem(createItem(Material.BARRIER, page + 1, "&c&lEDIT MENU", "&cSHIFT RIGHT CLICK TO SAVE"));
+            menu.getSlot(53).setItem(createItem(Material.BARRIER, page + 1, "&c&lEDIT MENU", "&cClick to save"));
+            addKitRoomSaveButton(menu.getSlot(53), page);
         }
         addKitRoom(menu.getSlot(47), 0);
         addKitRoom(menu.getSlot(48), 1);
@@ -283,11 +262,9 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
-
     }
 
     public Menu ViewPublicKitMenu(Player p, String id) {
-
         ItemStack[] kit = KitManager.get().getPublicKit(id);
 
         if (kit == null) {
@@ -303,7 +280,6 @@ public class GUI {
             menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
         }
 
-
         for (int i = 9; i < 36; i++) {
             menu.getSlot(i).setItem(kit[i]);
         }
@@ -318,8 +294,6 @@ public class GUI {
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         addPublicKitMenu(menu.getSlot(53));
         addLoadPublicKit(menu.getSlot(52), id);
-
-        // load kit button
 
         menu.open(p);
 
@@ -339,88 +313,58 @@ public class GUI {
         List<PublicKit> publicKitList = KitManager.get().getPublicKitList();
 
         for (int i = 0; i < publicKitList.size(); i++) {
-
             if (KitManager.get().hasPublicKit(publicKitList.get(i).id)) {
-
-
                 if(player.hasPermission("perplayerkit.admin")) {
-                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET+ publicKitList.get(i).name,"&7● [ADMIN] Shift click to edit"));
-                }else {
+                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET+ publicKitList.get(i).name,"&7● [ADMIN] Click to edit"));
+                } else {
                     menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET+ publicKitList.get(i).name));
                 }
                 addPublicKitButton(menu.getSlot(i + 18), publicKitList.get(i).id);
+            } else if (player.hasPermission("perplayerkit.admin")) {
+                menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET + publicKitList.get(i).name + " &c&l[UNASSIGNED]", "&7● Admins have not yet setup this kit yet", "&7● [ADMIN] Click to edit"));
             } else {
-                if(player.hasPermission("perplayerkit.admin")){
-                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET+ publicKitList.get(i).name+ " &c&l[UNASSIGNED]","&7● Admins have not yet setup this kit yet","&7● [ADMIN] Shift click to edit"));
-
-                }else{
-                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET+ publicKitList.get(i).name+ " &c&l[UNASSIGNED]","&7● Admins have not yet setup this kit yet"));
-                }
+                menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET + publicKitList.get(i).name + " &c&l[UNASSIGNED]", "&7● Admins have not yet setup this kit yet"));
             }
 
             if(player.hasPermission("perplayerkit.admin")){
-              addAdminPublicKitButton(menu.getSlot(i + 18), publicKitList.get(i).id);
+                addAdminPublicKitButton(menu.getSlot(i + 18), publicKitList.get(i).id);
             }
-
         }
 
         addMainButton(menu.getSlot(53));
-
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         menu.open(player);
-
     }
 
     public void addClear(Slot slot) {
         slot.setClickHandler((player, info) -> {
-            if (info.getClickType().isShiftClick()) {
-                Menu m = info.getClickedMenu();
-                for (int i = 0; i < 41; i++) {
-                    m.getSlot(i).setItem((org.bukkit.inventory.ItemStack) null);
-                }
+            Menu m = info.getClickedMenu();
+            for (int i = 0; i < 41; i++) {
+                m.getSlot(i).setItem((org.bukkit.inventory.ItemStack) null);
             }
         });
     }
 
     public void addClear(Slot slot, int start, int end) {
         slot.setClickHandler((player, info) -> {
-            if (info.getClickType().isShiftClick()) {
-                Menu m = info.getClickedMenu();
-                for (int i = start; i < end; i++) {
-                    m.getSlot(i).setItem((org.bukkit.inventory.ItemStack) null);
-                }
+            Menu m = info.getClickedMenu();
+            for (int i = start; i < end; i++) {
+                m.getSlot(i).setItem((org.bukkit.inventory.ItemStack) null);
             }
         });
     }
 
     public void addPublicKitButton(Slot slot, String id) {
-        slot.setClickHandler((player, info) -> {
-            if (info.getClickType() == ClickType.LEFT) {
-                KitManager.get().loadPublicKit(player, id);
-            } else if (info.getClickType() == ClickType.RIGHT) {
-                Menu m = ViewPublicKitMenu(player, id);
-                if(m != null) {
-                    m.open(player);
-                }
-            }
-
-        });
+        slot.setClickHandler((player, info) -> KitManager.get().loadPublicKit(player, id));
     }
+
     public void addAdminPublicKitButton(Slot slot, String id) {
         slot.setClickHandler((player, info) -> {
-            if (info.getClickType().isShiftClick()) {
+            if (player.hasPermission("perplayerkit.admin")) {
                 OpenPublicKitEditor(player, id);
-                return;
-            }
-            if (info.getClickType() == ClickType.LEFT) {
+            } else {
                 KitManager.get().loadPublicKit(player, id);
-            } else if (info.getClickType() == ClickType.RIGHT) {
-                Menu m = ViewPublicKitMenu(player, id);
-                if(m != null) {
-                    m.open(player);
-                }
             }
-
         });
     }
 
@@ -432,7 +376,6 @@ public class GUI {
         slot.setClickHandler((player, info) -> {
             OpenKitRoom(player);
             BroadcastManager.get().broadcastPlayerOpenedKitRoom(player);
-
         });
     }
 
@@ -446,17 +389,13 @@ public class GUI {
 
     public void addKitRoomSaveButton(Slot slot, int page) {
         slot.setClickHandler((player, info) -> {
-            if (info.getClickType().isRightClick() && info.getClickType().isShiftClick()) {
-                ItemStack[] data = new ItemStack[45];
-                for (int i = 0; i < 41; i++) {
-                    data[i] = player.getInventory().getContents()[i];
-
-                }
-                KitRoomDataManager.get().setKitRoom(page, data);
-                player.sendMessage("saved menu");
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 1.0f, 1.0f);
-
+            ItemStack[] data = new ItemStack[45];
+            for (int i = 0; i < 41; i++) {
+                data[i] = player.getInventory().getContents()[i];
             }
+            KitRoomDataManager.get().setKitRoom(page, data);
+            player.sendMessage("saved menu");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 1.0f, 1.0f);
         });
     }
 
@@ -465,18 +404,14 @@ public class GUI {
             BroadcastManager.get().broadcastPlayerRepaired(player);
             PlayerUtil.repairAll(player);
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-
         });
     }
 
     public void addClearButton(Slot slot) {
         slot.setClickHandler((player, info) -> {
-            if (info.getClickType().isShiftClick()) {
-                player.getInventory().clear();
-                player.sendMessage(ChatColor.GREEN + "Inventory cleared");
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
-                
-            }
+            player.getInventory().clear();
+            player.sendMessage(ChatColor.GREEN + "Inventory cleared");
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
         });
     }
 
@@ -493,7 +428,6 @@ public class GUI {
                 m.getSlot(i).setItem(inv[i]);
             }
         });
-
     }
 
     public void addImportEC(Slot slot) {
@@ -512,50 +446,24 @@ public class GUI {
     }
 
     public void addEdit(Slot slot, int i) {
-        slot.setClickHandler((player, info) -> {
-            if (info.getClickType().isLeftClick() || info.getClickType().isRightClick()) {
-                OpenKitMenu(player, i);
-            }
-        });
+        slot.setClickHandler((player, info) -> OpenKitMenu(player, i));
     }
 
     public void addEditEC(Slot slot, int i) {
-        slot.setClickHandler((player, info) -> {
-            if (info.getClickType().isLeftClick() || info.getClickType().isRightClick()) {
-                OpenECKitKenu(player, i);
-            }
-        });
+        slot.setClickHandler((player, info) -> OpenECKitKenu(player, i));
     }
 
     public void addLoad(Slot slot, int i) {
         slot.setClickHandler((player, info) -> {
-            if (info.getClickType() == ClickType.LEFT || info.getClickType() == ClickType.SHIFT_LEFT) {
-                KitManager.get().loadKit(player, i);
-                info.getClickedMenu().close();
-
-            }
+            KitManager.get().loadKit(player, i);
+            info.getClickedMenu().close();
         });
     }
 
-    public void addEditLoad(Slot slot, int i) {
+    public void addLoadEC(Slot slot, int i) {
         slot.setClickHandler((player, info) -> {
-            if (info.getClickType() == ClickType.LEFT || info.getClickType() == ClickType.SHIFT_LEFT) {
-                KitManager.get().loadKit(player, i);
-                info.getClickedMenu().close();
-            } else if (info.getClickType() == ClickType.RIGHT || info.getClickType() == ClickType.SHIFT_RIGHT) {
-                OpenKitMenu(player, i);
-            }
-        });
-    }
-
-    public void addEditLoadEC(Slot slot, int i) {
-        slot.setClickHandler((player, info) -> {
-            if (info.getClickType() == ClickType.LEFT || info.getClickType() == ClickType.SHIFT_LEFT) {
-                KitManager.get().loadEnderchest(player, i);
-                info.getClickedMenu().close();
-            } else if (info.getClickType() == ClickType.RIGHT || info.getClickType() == ClickType.SHIFT_RIGHT) {
-                OpenECKitKenu(player, i);
-            }
+            KitManager.get().loadEnderchest(player, i);
+            info.getClickedMenu().close();
         });
     }
 
@@ -587,5 +495,4 @@ public class GUI {
         ClickOptions options = ClickOptions.ALLOW_ALL;
         slot.setClickOptions(options);
     }
-
 }
