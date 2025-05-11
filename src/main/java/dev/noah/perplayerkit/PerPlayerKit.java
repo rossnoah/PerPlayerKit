@@ -146,6 +146,9 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("inspectkit").setExecutor(new InspectKitCommand(plugin));
         this.getCommand("inspectkit").setTabCompleter(new InspectKitCommand(plugin));
 
+        this.getCommand("inspectec").setExecutor(new InspectEcCommand(plugin));
+        this.getCommand("inspectec").setTabCompleter(new InspectEcCommand(plugin));
+
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
 
 

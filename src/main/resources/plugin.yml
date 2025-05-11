@@ -82,6 +82,10 @@ commands:
     usage: /<command>
     permission: perplayerkit.staff
 
+  inspectec:
+    usage: /<command>
+    permission: perplayerkit.staff
+
   publickit:
     usage: /<command>
     permission: perplayerkit.publickit
