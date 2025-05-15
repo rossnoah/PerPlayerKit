@@ -47,6 +47,9 @@ public class ShortECCommand implements CommandExecutor {
         if (label.matches("ec[1-9]")) {
             int ecNumber = Integer.parseInt(label.substring(2)); // Extract the number from the label
             KitManager.get().loadEnderchest(player, ecNumber);
+        } else if (label.matches("enderchest[1-9]")) {
+            int ecNumber = Integer.parseInt(label.substring(10)); // Extract the number from the label
+            KitManager.get().loadEnderchest(player, ecNumber);
         } else {
             player.sendMessage("Invalid command label.");
         }
