@@ -19,7 +19,10 @@
 package dev.noah.perplayerkit.listeners;
 
 import dev.noah.perplayerkit.KitManager;
+import dev.noah.perplayerkit.gui.GUI;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,11 +54,8 @@ public class KitMenuCloseListener implements Listener {
                         } else {
                             kit[i] = chestitems[i].clone();
                         }
-
                     }
                     KitManager.get().savekit(uuid, slot, kit);
-
-
                 }
             }
         }
@@ -79,11 +79,8 @@ public class KitMenuCloseListener implements Listener {
                         } else {
                             kit[i] = chestitems[i].clone();
                         }
-
                     }
-
                     KitManager.get().savePublicKit(player, publickit, kit);
-
                 }
             }
         }
@@ -108,7 +105,6 @@ public class KitMenuCloseListener implements Listener {
                         } else {
                             kit[i] = chestitems[i + 9].clone();
                         }
-
                     }
                     KitManager.get().saveEC(uuid, slot, kit);
                 }
@@ -116,4 +112,137 @@ public class KitMenuCloseListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onInspectKitEditorClose(InventoryCloseEvent e) {
+        Inventory inv = e.getInventory();
+        if (inv.getSize() == 54) {
+            if (inv.getLocation() == null) {
+                InventoryView view = e.getView();
+                if (view.getTitle().contains(ChatColor.BLUE + "Inspecting ") && view.getTitle().contains("'s kit ")) {
+                    Player p = (Player) e.getPlayer();
+                    if (!p.hasPermission("perplayerkit.admin")) {
+                        return;
+                    }
+                    String title = view.getTitle();
+                    String[] parts = title.replace(ChatColor.BLUE + "Inspecting ", "").split("'s kit ");
+                    if (parts.length != 2) {
+                        return;
+                    }
+                    String playerName = parts[0];
+                    int slot;
+                    try {
+                        slot = Integer.parseInt(parts[1]);
+                    } catch (NumberFormatException ex) {
+                        return;
+                    }
+
+                    UUID targetUuid = null;
+                    for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+                        if (playerName.equalsIgnoreCase(offlinePlayer.getName())) {
+                            targetUuid = offlinePlayer.getUniqueId();
+                            break;
+                        }
+                    }
+                    if (targetUuid == null) {
+                        Player onlinePlayer = Bukkit.getPlayerExact(playerName);
+                        if (onlinePlayer != null) {
+                            targetUuid = onlinePlayer.getUniqueId();
+                        }
+                    }
+                    if (targetUuid == null) {
+                        p.sendMessage(ChatColor.RED + "Could not find player " + playerName);
+                        return;
+                    }
+
+                    if (GUI.removeKitDeletionFlag(p)) {
+                        return;
+                    }
+
+                    ItemStack[] kit = new ItemStack[41];
+                    ItemStack[] chestitems = e.getInventory().getContents();
+
+                    for (int i = 0; i < 41; i++) {
+                        if (chestitems[i] == null) {
+                            kit[i] = null;
+                        } else {
+                            kit[i] = chestitems[i].clone();
+                        }
+                    }
+
+                    if (KitManager.get().savekit(targetUuid, slot, kit, true)) {
+                        p.sendMessage(ChatColor.GREEN + "Kit " + slot + " updated for player " + playerName + "!");
+                    } else {
+                        p.sendMessage(ChatColor.RED + "Failed to update kit for player " + playerName + "!");
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInspectEnderchestEditorClose(InventoryCloseEvent e) {
+        Inventory inv = e.getInventory();
+        if (inv.getSize() == 54) {
+            if (inv.getLocation() == null) {
+                InventoryView view = e.getView();
+                if (view.getTitle().contains(ChatColor.BLUE + "Inspecting ") && view.getTitle().contains("'s enderchest ")) {
+                    Player p = (Player) e.getPlayer();
+                    if (!p.hasPermission("perplayerkit.admin")) {
+                        return;
+                    }
+                    String title = view.getTitle();
+                    String[] parts = title.replace(ChatColor.BLUE + "Inspecting ", "").split("'s enderchest ");
+                    if (parts.length != 2) {
+                        return;
+                    }
+                    String playerName = parts[0];
+                    int slot;
+                    try {
+                        slot = Integer.parseInt(parts[1]);
+                    } catch (NumberFormatException ex) {
+                        return;
+                    }
+
+                    UUID targetUuid = null;
+                    for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+                        if (playerName.equalsIgnoreCase(offlinePlayer.getName())) {
+                            targetUuid = offlinePlayer.getUniqueId();
+                            break;
+                        }
+                    }
+                    if (targetUuid == null) {
+                        Player onlinePlayer = Bukkit.getPlayerExact(playerName);
+                        if (onlinePlayer != null) {
+                            targetUuid = onlinePlayer.getUniqueId();
+                        }
+                    }
+                    if (targetUuid == null) {
+                        p.sendMessage(ChatColor.RED + "Could not find player " + playerName);
+                        return;
+                    }
+
+                    if (GUI.removeKitDeletionFlag(p)) {
+                        return;
+                    }
+
+                    ItemStack[] kit = new ItemStack[27];
+                    ItemStack[] chestitems = e.getInventory().getContents();
+
+                    for (int i = 0; i < 27; i++) {
+                        if (chestitems[i + 9] == null) {
+                            kit[i] = null;
+                        } else {
+                            kit[i] = chestitems[i + 9].clone();
+                        }
+                    }
+
+                    if (KitManager.get().saveEC(targetUuid, slot, kit)) {
+                        p.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " updated for player " + playerName + "!");
+                    } else {
+                        p.sendMessage(ChatColor.RED + "Failed to update enderchest for player " + playerName + "!");
+                    }
+                }
+            }
+        }
+    }
 }
