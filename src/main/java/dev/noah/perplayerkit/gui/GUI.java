@@ -154,7 +154,7 @@ public class GUI {
         for (int i = 9; i < 36; i++) {
             allowModification(menu.getSlot(i));
         }
-        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Import from inventory"));
+        menu.getSlot(51).setItem(createItem(Material.ENDER_CHEST, 1, "&a&lIMPORT", "&7● Import from enderchest"));
         menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         addMainButton(menu.getSlot(53));
