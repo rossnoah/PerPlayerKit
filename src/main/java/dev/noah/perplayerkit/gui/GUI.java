@@ -510,6 +510,7 @@ public class GUI {
         slot.setClickHandler((player, info) -> {
             BroadcastManager.get().broadcastPlayerRepaired(player);
             PlayerUtil.repairAll(player);
+            player.updateInventory();
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         });
     }
