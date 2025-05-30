@@ -24,6 +24,7 @@ import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
@@ -314,6 +315,7 @@ public class KitManager {
         if (kit == null) {
             if (notFoundMessage != null) {
                 player.sendMessage(ChatColor.RED + notFoundMessage);
+                SoundManager.playFailure(player);
             }
             return false;
         }
@@ -327,7 +329,7 @@ public class KitManager {
         if (afterLoad != null) {
             afterLoad.run();
         }
-
+        SoundManager.playSuccess(player);
         applyKitLoadEffects(player, isEnderChest);
         return true;
     }

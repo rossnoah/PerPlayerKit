@@ -31,6 +31,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import dev.noah.perplayerkit.util.SoundManager;
 
 import java.util.List;
 
@@ -83,9 +84,10 @@ public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
         if (success) {
             kitManager.savePublicKitToDB(kidId);
             p.sendMessage("Saved kit " + kidId);
+            SoundManager.playSuccess(p);
         } else {
             p.sendMessage("Error saving kit " + kidId);
-
+            SoundManager.playFailure(p);
         }
 
         return true;

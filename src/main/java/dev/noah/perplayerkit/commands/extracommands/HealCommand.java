@@ -25,6 +25,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.jetbrains.annotations.NotNull;
 
 public class HealCommand implements CommandExecutor {
@@ -38,6 +39,7 @@ public class HealCommand implements CommandExecutor {
 
         BroadcastManager.get().broadcastPlayerHealed(player);
         PlayerUtil.healPlayer(player);
+        SoundManager.playSuccess(player);
         return true;
     }
 }

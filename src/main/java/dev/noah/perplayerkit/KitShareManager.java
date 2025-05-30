@@ -23,6 +23,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -80,6 +81,7 @@ public class KitShareManager {
             if (kitShareMap.putIfAbsent(id, kitManager.getPlayerKit(uuid, slot).clone()) == null) {
                 p.sendMessage(ChatColor.GREEN + "Use /copykit " + id + " to copy this kit");
                 p.sendMessage(ChatColor.GREEN + "Code expires in 15 minutes");
+                SoundManager.playSuccess(p);
 
 
                 new BukkitRunnable() {
@@ -94,10 +96,12 @@ public class KitShareManager {
 
             } else {
                 p.sendMessage(ChatColor.RED + "Unexpected error occurred, please try again.");
+                SoundManager.playFailure(p);
             }
 
         } else {
             p.sendMessage(ChatColor.RED + "Error, that kit does not exist");
+            SoundManager.playFailure(p);
         }
 
     }
@@ -112,6 +116,7 @@ public class KitShareManager {
             if (kitShareMap.putIfAbsent(id, kitManager.getPlayerEC(uuid, slot).clone()) == null) {
                 p.sendMessage(ChatColor.GREEN + "Use /copyEC " + id + " to copy this enderchest");
                 p.sendMessage(ChatColor.GREEN + "Code expires in 15 minutes");
+                SoundManager.playSuccess(p);
 
 
                 new BukkitRunnable() {
@@ -126,10 +131,12 @@ public class KitShareManager {
 
             } else {
                 p.sendMessage(ChatColor.RED + "Unexpected error occurred, please try again.");
+                SoundManager.playFailure(p);
             }
 
         } else {
             p.sendMessage(ChatColor.RED + "Error, that EC does not exist");
+            SoundManager.playFailure(p);
         }
 
     }
@@ -140,23 +147,27 @@ public class KitShareManager {
         String id = str.toUpperCase();
         if (!kitShareMap.containsKey(id)) {
             p.sendMessage(ChatColor.RED + "Error, kit does not exist or has expired");
+            SoundManager.playFailure(p);
             return;
         }
 
             ItemStack[] data = kitShareMap.get(id);
 
             if (data.length == 27) {
-                //enderchest
+            // enderchest
                 p.getEnderChest().setContents(kitShareMap.get(id));
                 BroadcastManager.get().broadcastPlayerCopiedEC(p);
+                SoundManager.playSuccess(p);
 
             } else if (data.length == 41) {
-                //inventory
+                // inventory
 
                 p.getInventory().setContents(kitShareMap.get(id));
                 BroadcastManager.get().broadcastPlayerCopiedKit(p);
+                SoundManager.playSuccess(p);
             } else {
                 p.sendMessage(ChatColor.RED + "Unexpected error occurred, please try again.");
+                SoundManager.playFailure(p);
             }
 
 

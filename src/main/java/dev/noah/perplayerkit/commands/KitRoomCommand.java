@@ -24,6 +24,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import dev.noah.perplayerkit.util.SoundManager;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,16 +39,20 @@ public class KitRoomCommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("load")) {
                 KitRoomDataManager.get().loadFromDB();
                 sender.sendMessage(ChatColor.GREEN + "Kit Room loaded from SQL");
+                if (sender instanceof Player p) SoundManager.playSuccess(p);
             } else if (args[0].equalsIgnoreCase("save")) {
                 KitRoomDataManager.get().saveToDBAsync();
                 sender.sendMessage(ChatColor.GREEN + "Kit Room saved to SQL");
+                if (sender instanceof Player p) SoundManager.playSuccess(p);
             } else {
-                sender.sendMessage(ChatColor.GREEN + "Incorrect Usage!");
+                sender.sendMessage(ChatColor.RED + "Incorrect Usage!");
                 sender.sendMessage("/kitroom <load/save>");
+                if (sender instanceof Player p) SoundManager.playFailure(p);
             }
         } else {
-            sender.sendMessage(ChatColor.GREEN + "Incorrect Usage!");
+            sender.sendMessage(ChatColor.RED + "Incorrect Usage!");
             sender.sendMessage("/kitroom <load/save>");
+            if (sender instanceof Player p) SoundManager.playFailure(p);
         }
 
 

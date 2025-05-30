@@ -36,6 +36,7 @@ public class DisabledCommand {
     public static boolean isBlockedInWorld(Player player) {
         if (isBlockedInWorld(player.getWorld())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', PerPlayerKit.getPlugin().getConfig().getString("disabled-command-message")));
+            SoundManager.playFailure(player);
             return true;
         }
         return false;

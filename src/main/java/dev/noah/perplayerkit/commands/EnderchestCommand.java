@@ -26,6 +26,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.type.ChestMenu;
@@ -44,6 +45,7 @@ public class EnderchestCommand implements CommandExecutor {
         }
 
         sender.sendMessage("Only players can use this command");
+        if (sender instanceof Player s) SoundManager.playFailure(s);
         return true;
     }
 
@@ -66,6 +68,7 @@ public class EnderchestCommand implements CommandExecutor {
             menu.getSlot(i + 9).setItem(items[i]);
         }
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 }
 
