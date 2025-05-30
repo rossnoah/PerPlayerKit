@@ -35,6 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import dev.noah.perplayerkit.util.SoundManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,7 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
             BroadcastManager.get().sendComponentMessage(player,
                     ERROR_PREFIX.append(
                             mm.deserialize("<red>You don't have permission to use this command.</red>")));
+            SoundManager.playFailure(player);
             return true;
         }
 
@@ -82,6 +84,7 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
             BroadcastManager.get().sendComponentMessage(player,
                     ERROR_PREFIX.append(
                             mm.deserialize("<red>Could not find a player with that name or UUID.</red>")));
+            SoundManager.playFailure(player);
             return true;
         }
 
@@ -97,6 +100,7 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
                     ERROR_PREFIX.append(
                             mm.deserialize("<red>Slot must be a number between " +
                                     MIN_SLOT + " and " + MAX_SLOT + ".</red>")));
+            SoundManager.playFailure(player);
             return true;
         }
 
@@ -122,6 +126,7 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
                             ERROR_PREFIX.append(
                                     mm.deserialize("<red>" + targetName +
                                             " does not have a kit in slot " + slot + "</red>")));
+                    SoundManager.playFailure(player);
                 }
             });
         });
@@ -134,6 +139,7 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
                         ERROR_PREFIX.append(
                                 mm.deserialize("<red>An error occurred while loading kit data. " +
                                         "See console for details.</red>")));
+                SoundManager.playFailure(player);
             });
             return null;
         });

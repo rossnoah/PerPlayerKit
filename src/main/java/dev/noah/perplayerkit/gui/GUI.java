@@ -46,6 +46,7 @@ import java.util.UUID;
 
 import static dev.noah.perplayerkit.gui.ItemUtil.addHideFlags;
 import static dev.noah.perplayerkit.gui.ItemUtil.createItem;
+import dev.noah.perplayerkit.util.SoundManager;
 
 public class GUI {
     private final Plugin plugin;
@@ -58,7 +59,10 @@ public class GUI {
     }
 
     public static void addLoadPublicKit(Slot slot, String id) {
-        slot.setClickHandler((player, info) -> KitManager.get().loadPublicKit(player, id));
+        slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
+            KitManager.get().loadPublicKit(player, id);
+        });
     }
 
     public static Menu createPublicKitMenu() {
@@ -99,6 +103,7 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 
     public void OpenPublicKitEditor(Player p, String kitId) {
@@ -131,6 +136,7 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 
     public void OpenECKitKenu(Player p, int slot) {
@@ -162,6 +168,7 @@ public class GUI {
         addImportEC(menu.getSlot(51));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 
     public void InspectKit(Player p, UUID target, int slot) {
@@ -184,7 +191,11 @@ public class GUI {
         menu.getSlot(49).setItem(createItem(Material.SHIELD, 1, "&7&lOFFHAND"));
 
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lCLOSE"));
-        menu.getSlot(53).setClickHandler((player, info) -> info.getClickedMenu().close());
+        menu.getSlot(53).setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
+            info.getClickedMenu().close();
+            SoundManager.playCloseGui(player);
+        });
 
         if (p.hasPermission("perplayerkit.admin")) {
             for (int i = 0; i < 41; i++) {
@@ -196,6 +207,7 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 
     public void InspectEc(Player p, UUID target, int slot) {
@@ -219,7 +231,11 @@ public class GUI {
         }
 
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lCLOSE"));
-        menu.getSlot(53).setClickHandler((player, info) -> info.getClickedMenu().close());
+        menu.getSlot(53).setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
+            info.getClickedMenu().close();
+            SoundManager.playCloseGui(player);
+        });
 
         if (p.hasPermission("perplayerkit.admin")) {
             for (int i = 9; i < 36; i++) {
@@ -231,6 +247,7 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 
     public void OpenMainMenu(Player p) {
@@ -277,6 +294,7 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 
     public void OpenKitRoom(Player p) {
@@ -320,6 +338,7 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        SoundManager.playOpenGui(p);
     }
 
     public Menu ViewPublicKitMenu(Player p, String id) {
@@ -354,6 +373,7 @@ public class GUI {
         addLoadPublicKit(menu.getSlot(52), id);
 
         menu.open(p);
+        SoundManager.playOpenGui(p);
 
         return menu;
     }
@@ -395,10 +415,12 @@ public class GUI {
 
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         menu.open(player);
+        SoundManager.playOpenGui(player);
     }
 
     public void addClear(Slot slot) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 Menu m = info.getClickedMenu();
                 for (int i = 0; i < 41; i++) {
@@ -410,6 +432,7 @@ public class GUI {
 
     public void addClear(Slot slot, int start, int end) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 Menu m = info.getClickedMenu();
                 for (int i = start; i < end; i++) {
@@ -421,30 +444,35 @@ public class GUI {
 
     public void addClearKit(Slot slot, UUID target, int slotNum) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 KitManager.get().deleteKit(target, slotNum);
                 player.sendMessage(ChatColor.GREEN + "Kit " + slotNum + " deleted for player!");
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                SoundManager.playSuccess(player);
                 kitDeletionFlag.add(player.getUniqueId());
                 info.getClickedMenu().close();
+                SoundManager.playCloseGui(player);
             }
         });
     }
 
     public void addClearEnderchest(Slot slot, UUID target, int slotNum) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 KitManager.get().deleteEnderchest(target, slotNum);
                 player.sendMessage(ChatColor.GREEN + "Enderchest " + slotNum + " deleted for player!");
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                SoundManager.playSuccess(player);
                 kitDeletionFlag.add(player.getUniqueId());
                 info.getClickedMenu().close();
+                SoundManager.playCloseGui(player);
             }
         });
     }
 
     public void addPublicKitButton(Slot slot, String id) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType() == ClickType.LEFT) {
                 KitManager.get().loadPublicKit(player, id);
             } else if (info.getClickType() == ClickType.RIGHT) {
@@ -458,6 +486,7 @@ public class GUI {
 
     public void addAdminPublicKitButton(Slot slot, String id) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 OpenPublicKitEditor(player, id);
                 return;
@@ -474,26 +503,37 @@ public class GUI {
     }
 
     public void addMainButton(Slot slot) {
-        slot.setClickHandler((player, info) -> OpenMainMenu(player));
+        slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
+            OpenMainMenu(player);
+        });
     }
 
     public void addKitRoom(Slot slot) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             OpenKitRoom(player);
             BroadcastManager.get().broadcastPlayerOpenedKitRoom(player);
         });
     }
 
     public void addKitRoom(Slot slot, int page) {
-        slot.setClickHandler((player, info) -> OpenKitRoom(player, page));
+        slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
+            OpenKitRoom(player, page);
+        });
     }
 
     public void addPublicKitMenu(Slot slot) {
-        slot.setClickHandler((player, info) -> OpenPublicKitMenu(player));
+        slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
+            OpenPublicKitMenu(player);
+        });
     }
 
     public void addKitRoomSaveButton(Slot slot, int page) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isRightClick() && info.getClickType().isShiftClick()) {
                 ItemStack[] data = new ItemStack[45];
                 for (int i = 0; i < 41; i++) {
@@ -501,32 +541,35 @@ public class GUI {
                 }
                 KitRoomDataManager.get().setKitRoom(page, data);
                 player.sendMessage("saved menu");
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 1.0f, 1.0f);
+                SoundManager.playSuccess(player);
             }
         });
     }
 
     public void addRepairButton(Slot slot) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             BroadcastManager.get().broadcastPlayerRepaired(player);
             PlayerUtil.repairAll(player);
             player.updateInventory();
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+            SoundManager.playSuccess(player);
         });
     }
 
     public void addClearButton(Slot slot) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 player.getInventory().clear();
                 player.sendMessage(ChatColor.GREEN + "Inventory cleared");
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                SoundManager.playSuccess(player);
             }
         });
     }
 
     public void addImport(Slot slot) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
             if (filterItemsOnImport) {
@@ -542,6 +585,7 @@ public class GUI {
 
     public void addImportEC(Slot slot) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
             if (filterItemsOnImport) {
@@ -557,6 +601,7 @@ public class GUI {
 
     public void addEdit(Slot slot, int i) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isLeftClick() || info.getClickType().isRightClick()) {
                 OpenKitMenu(player, i);
             }
@@ -565,6 +610,7 @@ public class GUI {
 
     public void addEditEC(Slot slot, int i) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType().isLeftClick() || info.getClickType().isRightClick()) {
                 OpenECKitKenu(player, i);
             }
@@ -573,9 +619,11 @@ public class GUI {
 
     public void addLoad(Slot slot, int i) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType() == ClickType.LEFT || info.getClickType() == ClickType.SHIFT_LEFT) {
                 KitManager.get().loadKit(player, i);
                 info.getClickedMenu().close();
+                SoundManager.playCloseGui(player);
             }
         });
     }

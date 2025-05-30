@@ -146,3 +146,16 @@ feature:
   send-update-message-on-join: true #sends a message to players with perplayerkit.admin when they join the server if a new version is available
 
   old-death-drops: false #makes it so players drop items in a condensed area rather than spreading out when they die
+
+# Sound settings for plugin feedback
+sounds:
+  # Sound to play on successful actions (e.g. kit load, save, delete, repair)
+  success: ENTITY_PLAYER_LEVELUP
+  # Sound to play on failed actions or errors
+  failure: ENTITY_ITEM_BREAK
+  # Sound for generic UI clicks
+  click: UI_BUTTON_CLICK
+  # Sound when opening a GUI/menu
+  open_gui: UI_BUTTON_CLICK
+  # Sound when closing a GUI/menu
+  close_gui: UI_BUTTON_CLICK

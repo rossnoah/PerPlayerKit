@@ -25,6 +25,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.jetbrains.annotations.NotNull;
 
 public class CopyKitCommand implements CommandExecutor {
@@ -42,6 +43,7 @@ public class CopyKitCommand implements CommandExecutor {
                 KitShareManager.get().copyKit(player, args[0]);
             } else {
                 player.sendMessage(ChatColor.RED + "Error, you must enter a kit code to copy");
+                SoundManager.playFailure(player);
             }
         } else {
             sender.sendMessage("Only players can use this command");

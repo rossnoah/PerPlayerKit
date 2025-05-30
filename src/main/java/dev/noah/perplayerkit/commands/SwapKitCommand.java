@@ -21,6 +21,7 @@ package dev.noah.perplayerkit.commands;
 import com.google.common.primitives.Ints;
 import dev.noah.perplayerkit.KitManager;
 import org.bukkit.ChatColor;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,6 +41,7 @@ public class SwapKitCommand implements CommandExecutor {
 
         if (args.length != 2) {
             player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");
+            SoundManager.playFailure(player);
             return true;
         }
 
@@ -49,6 +51,7 @@ public class SwapKitCommand implements CommandExecutor {
         if (slot1 == null || slot2 == null) {
             player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");
             player.sendMessage(ChatColor.RED + "Select real numbers");
+            SoundManager.playFailure(player);
             return true;
         }
 
@@ -57,11 +60,13 @@ public class SwapKitCommand implements CommandExecutor {
 
         if (!kitManager.hasKit(uuid, slot1)) {
             player.sendMessage(ChatColor.RED + "Kit " + slot1 + " doesn't exist!");
+            SoundManager.playFailure(player);
             return true;
         }
 
         if (!kitManager.hasKit(uuid, slot2)) {
             player.sendMessage(ChatColor.RED + "Kit " + slot2 + " doesn't exist!");
+            SoundManager.playFailure(player);
             return true;
         }
 
@@ -72,6 +77,7 @@ public class SwapKitCommand implements CommandExecutor {
         kitManager.saveEnderchestToDB(uuid, slot2);
 
         player.sendMessage(ChatColor.GREEN + "Kits " + slot1 + " and " + slot2 + " have been swapped!");
+        SoundManager.playSuccess(player);
         return true;
     }
 }

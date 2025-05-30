@@ -26,6 +26,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.jetbrains.annotations.NotNull;
 
 public class ShareECKitCommand implements CommandExecutor {
@@ -46,11 +47,13 @@ public class ShareECKitCommand implements CommandExecutor {
 
         if (args.length < 1) {
             player.sendMessage(ChatColor.RED + "Error, you must select a EC slot to share");
+            SoundManager.playFailure(player);
             return true;
         }
 
         if (shareECCommandCooldown.isOnCooldown(player)) {
             player.sendMessage(ChatColor.RED + "Please don't spam the command (5 second cooldown)");
+            SoundManager.playFailure(player);
             return true;
         }
 
@@ -58,6 +61,7 @@ public class ShareECKitCommand implements CommandExecutor {
 
         if (slot == null || slot < 1 || slot > 9) {
             player.sendMessage(ChatColor.RED + "Select a valid kit slot");
+            SoundManager.playFailure(player);
             return true;
         }
 
