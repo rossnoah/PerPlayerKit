@@ -21,6 +21,7 @@ package dev.noah.perplayerkit.commands;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.gui.GUI;
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.SoundManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -54,7 +55,7 @@ public class InspectEcCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, @NotNull String[] args) {
+            @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(ERROR_PREFIX.append(
                     mm.deserialize("<red>This command can only be executed by players.</red>")).toString());
@@ -104,14 +105,15 @@ public class InspectEcCommand implements CommandExecutor, TabCompleter {
         }).thenRun(() -> {
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (KitManager.get().hasEC(targetUuid, slot)) {
-                    GUI gui = new GUI(plugin);
-                    gui.InspectEc(player, targetUuid, slot);
+                    GUI.get().InspectEc(player, targetUuid, slot);
                 } else {
                     String targetName = getPlayerName(targetUuid);
+
                     BroadcastManager.get().sendComponentMessage(player,
                             ERROR_PREFIX.append(
                                     mm.deserialize("<red>" + targetName +
-                                            " does not have an enderchest in slot " + slot + "</red>")));
+                                            " does not have an enderchest kit in slot " + slot + "</red>")));
+                    SoundManager.playFailure(player);
                 }
             });
         });
@@ -132,9 +134,9 @@ public class InspectEcCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
-                                                @NotNull Command command,
-                                                @NotNull String label,
-                                                @NotNull String[] args) {
+            @NotNull Command command,
+            @NotNull String label,
+            @NotNull String[] args) {
         if (!(sender instanceof Player) || !sender.hasPermission("perplayerkit.inspect")) {
             return List.of();
         }

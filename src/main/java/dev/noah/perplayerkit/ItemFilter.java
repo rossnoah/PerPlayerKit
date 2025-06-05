@@ -33,7 +33,6 @@ import java.util.Set;
 
 public class ItemFilter {
 
-
     public static Set<String> whitelist;
     private static ItemFilter instance;
 
@@ -44,20 +43,26 @@ public class ItemFilter {
         whitelist = new HashSet<>();
         this.plugin = plugin;
         instance = this;
-        isEnabled = plugin.getConfig().getBoolean("anti-exploit.only-allow-kitroom-items",false);
+        reloadConfig();
     }
 
-    public static ItemFilter get(){
-        if(instance == null){
+    public static ItemFilter get() {
+        if (instance == null) {
             throw new IllegalStateException("ItemFilter has not been initialized yet!");
         }
         return instance;
     }
 
+    /**
+     * Reloads configuration settings for the ItemFilter
+     */
+    public void reloadConfig() {
+        isEnabled = ConfigManager.get().isOnlyAllowKitroomItems();
+    }
 
     public ItemStack[] filterItemStack(ItemStack[] input) {
 
-        if(!isEnabled){
+        if (!isEnabled) {
             return input;
         }
 
@@ -65,9 +70,8 @@ public class ItemFilter {
         for (ItemStack item : output) {
             if (!isSafe(item)) {
                 item.setType(Material.AIR);
-                //item = null;
+                // item = null;
             }
-
 
             if (item != null) {
 
@@ -80,9 +84,7 @@ public class ItemFilter {
                 }
             }
 
-
         }
-
 
         return output;
     }
@@ -122,7 +124,7 @@ public class ItemFilter {
         for (ItemStack[] itemStacks : items) {
             for (ItemStack item : itemStacks) {
                 if (item != null) {
-                        whitelist.add(item.getType().toString());
+                    whitelist.add(item.getType().toString());
                 }
             }
         }
@@ -131,6 +133,5 @@ public class ItemFilter {
     public void clearWhitelist() {
         whitelist.clear();
     }
-
 
 }

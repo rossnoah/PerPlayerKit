@@ -36,11 +36,14 @@ import java.util.List;
 public class PublicKitCommand implements CommandExecutor, TabCompleter {
 
     private Plugin plugin;
+
     public PublicKitCommand(Plugin plugin) {
         this.plugin = plugin;
     }
+
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("Only players can use this command");
             return true;
@@ -50,24 +53,23 @@ public class PublicKitCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        //if args.length<1 open the kit menu
+        // if args.length<1 open the kit menu
         if (args.length < 1) {
-            GUI kitMenu = new GUI(plugin);
-            kitMenu.OpenPublicKitMenu(player);
+            GUI.get().OpenPublicKitMenu(player);
             return true;
         }
 
-        //if args.length==1 open the kit menu with the kit
+        // if args.length==1 open the kit menu with the kit
         String kitName = args[0];
         KitManager.get().loadPublicKit(player, kitName);
 
         return true;
 
-
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+            @NotNull String alias, @NotNull String[] args) {
 
         if (args.length == 1) {
 
@@ -79,7 +81,6 @@ public class PublicKitCommand implements CommandExecutor, TabCompleter {
         }
 
         return null;
-
 
     }
 }

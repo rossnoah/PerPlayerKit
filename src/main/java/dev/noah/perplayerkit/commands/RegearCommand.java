@@ -23,25 +23,46 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.bukkit.scheduler.BukkitTask;
+import dev.noah.perplayerkit.ConfigManager;
+
+import java.util.concurrent.TimeUnit;
 
 public class RegearCommand implements CommandExecutor, Listener {
 
-    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, ChatColor.BLUE + "Regear Shulker", "&7● Restocks Your Kit", "&7● Use &9/rg &7to get another regear shulker");
-    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, ChatColor.BLUE + "Regear Shell", "&7● Restocks Your Kit", "&7● Click to use!");
+    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1,
+            ChatColor.BLUE + "Regear Shulker", "&7● Restocks Your Kit",
+            "&7● Use &9/rg &7to get another regear shulker");
+    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1,
+            ChatColor.BLUE + "Regear Shell", "&7● Restocks Your Kit", "&7● Click to use!");
     private final Plugin plugin;
-    private final CooldownManager commandCooldownManager;
-    private final CooldownManager damageCooldownManager;
-    private final boolean allowRegearWhileUsingElytra;
-    private final boolean preventPuttingItemsInRegearInventory;
+    private CooldownManager commandCooldownManager;
+    private CooldownManager damageCooldownManager;
+    private boolean allowRegearWhileUsingElytra;
+    private boolean preventPuttingItemsInRegearInventory;
+
+    private static RegearCommand instance;
 
     public RegearCommand(Plugin plugin) {
         this.plugin = plugin;
-        int commandCooldownInSeconds = plugin.getConfig().getInt("regear.command-cooldown", 5);
-        int damageCooldownInSeconds = plugin.getConfig().getInt("regear.damage-timer", 5);
+        reloadConfig();
+        instance = this;
+    }
+
+    public static RegearCommand getInstance() {
+        return instance;
+    }
+
+    /**
+     * Reloads configuration values for the RegearCommand
+     */
+    public void reloadConfig() {
+        int commandCooldownInSeconds = ConfigManager.get().getRegearCommandCooldown();
+        int damageCooldownInSeconds = ConfigManager.get().getRegearDamageTimer();
         this.commandCooldownManager = new CooldownManager(commandCooldownInSeconds);
         this.damageCooldownManager = new CooldownManager(damageCooldownInSeconds);
-        this.allowRegearWhileUsingElytra = plugin.getConfig().getBoolean("regear.allow-while-using-elytra", true);
-        this.preventPuttingItemsInRegearInventory = plugin.getConfig().getBoolean("regear.prevent-putting-items-in-regear-inventory", false);
+        this.allowRegearWhileUsingElytra = ConfigManager.get().isRegearAllowWhileUsingElytra();
+        this.preventPuttingItemsInRegearInventory = ConfigManager.get().isRegearPreventPuttingItemsInInventory();
     }
 
     @EventHandler
@@ -53,7 +74,8 @@ public class RegearCommand implements CommandExecutor, Listener {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("Only players can use this command!");
             return true;
@@ -63,46 +85,54 @@ public class RegearCommand implements CommandExecutor, Listener {
             return true;
         }
 
-        if (plugin.getConfig().getString("regear.mode", "command").equalsIgnoreCase("shulker")) {
+        if (ConfigManager.get().getRegearMode().equalsIgnoreCase("shulker")) {
             int slot = player.getInventory().firstEmpty();
             if (slot == -1) {
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>Your inventory is full, can't give you a regear shulker!"));
+                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage()
+                        .deserialize("<red>Your inventory is full, can't give you a regear shulker!"));
                 return true;
             }
 
             player.getInventory().setItem(slot, REGEAR_SHULKER_ITEM);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regear Shulker given!"));
+            BroadcastManager.get().sendComponentMessage(player,
+                    MiniMessage.miniMessage().deserialize("<green>Regear Shulker given!"));
 
             return true;
         }
 
-        if (plugin.getConfig().getString("regear.mode", "command").equalsIgnoreCase("command")) {
+        if (ConfigManager.get().getRegearMode().equalsIgnoreCase("command")) {
             int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
 
             if (slot == -1) {
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
+                BroadcastManager.get().sendComponentMessage(player,
+                        MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
                 return true;
             }
 
-            if (!allowRegearWhileUsingElytra && player.isGliding() && player.getInventory().getChestplate() != null && player.getInventory().getChestplate().getType() == Material.ELYTRA) {
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You cannot regear while using an elytra!"));
+            if (!allowRegearWhileUsingElytra && player.isGliding() && player.getInventory().getChestplate() != null
+                    && player.getInventory().getChestplate().getType() == Material.ELYTRA) {
+                BroadcastManager.get().sendComponentMessage(player,
+                        MiniMessage.miniMessage().deserialize("<red>You cannot regear while using an elytra!"));
                 return true;
             }
 
             if (damageCooldownManager.isOnCooldown(player)) {
                 int secondsLeft = damageCooldownManager.getTimeLeft(player);
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
+                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize(
+                        "<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
                 return true;
             }
 
             if (commandCooldownManager.isOnCooldown(player)) {
                 int secondsLeft = commandCooldownManager.getTimeLeft(player);
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must wait " + secondsLeft + " seconds before using this command again!"));
+                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize(
+                        "<red>You must wait " + secondsLeft + " seconds before using this command again!"));
                 return true;
             }
 
             KitManager.get().regearKit(player, slot);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regeared!"));
+            BroadcastManager.get().sendComponentMessage(player,
+                    MiniMessage.miniMessage().deserialize("<green>Regeared!"));
             BroadcastManager.get().broadcastPlayerRegeared(player);
 
             commandCooldownManager.setCooldown(player);
@@ -110,7 +140,8 @@ public class RegearCommand implements CommandExecutor, Listener {
             return true;
         }
 
-        BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>This command is not configured correctly, please contact an administrator."));
+        BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage()
+                .deserialize("<red>This command is not configured correctly, please contact an administrator."));
         return true;
     }
 
@@ -125,19 +156,21 @@ public class RegearCommand implements CommandExecutor, Listener {
         int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
 
         if (slot == -1) {
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
+            BroadcastManager.get().sendComponentMessage(player,
+                    MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
             return;
         }
 
         if (damageCooldownManager.isOnCooldown(player)) {
             int secondsLeft = damageCooldownManager.getTimeLeft(player);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
+            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize(
+                    "<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
             return;
         }
 
         player.getInventory().setItem(event.getHand(), null);
 
-//custom inv with holder
+        // custom inv with holder
         RegearInventoryHolder holder = new RegearInventoryHolder(player);
         Inventory inventory = holder.getInventory();
         player.openInventory(inventory);
@@ -154,7 +187,6 @@ public class RegearCommand implements CommandExecutor, Listener {
             return;
         }
 
-
         if (!currentItem.equals(REGEAR_SHELL_ITEM)) {
             if (preventPuttingItemsInRegearInventory) {
                 event.setCancelled(true);
@@ -167,13 +199,15 @@ public class RegearCommand implements CommandExecutor, Listener {
         int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
 
         if (slot == -1) {
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
+            BroadcastManager.get().sendComponentMessage(player,
+                    MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
             return;
         }
 
         if (damageCooldownManager.isOnCooldown(player)) {
             int secondsLeft = damageCooldownManager.getTimeLeft(player);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
+            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize(
+                    "<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
             return;
         }
 
@@ -185,7 +219,6 @@ public class RegearCommand implements CommandExecutor, Listener {
         BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regeared!"));
         BroadcastManager.get().broadcastPlayerRegeared(player);
     }
-
 
     public record RegearInventoryHolder(
             Player player) implements InventoryHolder {

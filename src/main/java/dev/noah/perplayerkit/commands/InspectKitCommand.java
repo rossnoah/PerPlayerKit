@@ -58,7 +58,7 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, @NotNull String[] args) {
+            @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(ERROR_PREFIX.append(
                     mm.deserialize("<red>This command can only be executed by players.</red>")).toString());
@@ -117,8 +117,7 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
             // Run on the main thread after data is loaded
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (KitManager.get().hasKit(targetUuid, slot)) {
-                    GUI gui = new GUI(plugin);
-                    gui.InspectKit(player, targetUuid, slot);
+                    GUI.get().InspectKit(player, targetUuid, slot);
                 } else {
                     String targetName = getPlayerName(targetUuid);
 
@@ -149,9 +148,9 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
-                                                @NotNull Command command,
-                                                @NotNull String label,
-                                                @NotNull String[] args) {
+            @NotNull Command command,
+            @NotNull String label,
+            @NotNull String[] args) {
         if (!(sender instanceof Player) || !sender.hasPermission("perplayerkit.inspect")) {
             return List.of();
         }
@@ -218,7 +217,8 @@ public class InspectKitCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Gets a player's name from their UUID, falling back to UUID string if name is not available.
+     * Gets a player's name from their UUID, falling back to UUID string if name is
+     * not available.
      *
      * @param uuid Player UUID
      * @return Player name or UUID string

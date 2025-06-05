@@ -19,24 +19,36 @@
 package dev.noah.perplayerkit.util;
 
 import dev.noah.perplayerkit.PerPlayerKit;
+import dev.noah.perplayerkit.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class DisabledCommand {
 
-
-
-
-    private static boolean isBlockedInWorld(World world) {
-        return PerPlayerKit.getPlugin().getConfig().getStringList("disabled-command-worlds").contains(world.getName());
+    /**
+     * Checks if the player is in a world where commands are disabled.
+     * 
+     * @param player The player to check
+     * @return true if commands are disabled in the player's world, false otherwise
+     */
+    public static boolean isBlockedInWorld(Player player) {
+        World world = player.getWorld();
+        return ConfigManager.get().getDisabledCommandWorlds().contains(world.getName());
     }
 
-
-    public static boolean isBlockedInWorld(Player player) {
-        if (isBlockedInWorld(player.getWorld())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', PerPlayerKit.getPlugin().getConfig().getString("disabled-command-message")));
-            SoundManager.playFailure(player);
+    /**
+     * Sends the disabled command message to the player if they are in a blocked
+     * world.
+     * 
+     * @param player The player to send the message to
+     * @return true if the player was in a blocked world and the message was sent,
+     *         false otherwise
+     */
+    public static boolean sendDisabledMessage(Player player) {
+        if (isBlockedInWorld(player)) {
+            player.sendMessage(
+                    ChatColor.translateAlternateColorCodes('&', ConfigManager.get().getDisabledCommandMessage()));
             return true;
         }
         return false;

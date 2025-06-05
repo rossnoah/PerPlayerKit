@@ -23,6 +23,9 @@ import org.bukkit.plugin.Plugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import dev.noah.perplayerkit.ConfigManager;
+
+import java.util.Set;
 
 public class RedisStorage implements StorageManager {
 
@@ -32,11 +35,12 @@ public class RedisStorage implements StorageManager {
     private JedisPool pool;
 
     private Plugin plugin;
+
     public RedisStorage(Plugin plugin) {
         this.plugin = plugin;
-        this.host = plugin.getConfig().getString("redis.host");
-        this.port = plugin.getConfig().getInt("redis.port") == 0 ? Integer.parseInt(plugin.getConfig().getString("redis.port","6379")) : plugin.getConfig().getInt("redis.port");
-        this.password = plugin.getConfig().getString("redis.password");
+        this.host = ConfigManager.get().getRedisHost();
+        this.port = ConfigManager.get().getRedisPort();
+        this.password = ConfigManager.get().getRedisPassword();
     }
 
     @Override

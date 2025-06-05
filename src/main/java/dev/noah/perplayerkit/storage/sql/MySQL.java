@@ -21,12 +21,13 @@ package dev.noah.perplayerkit.storage.sql;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.plugin.Plugin;
+import dev.noah.perplayerkit.ConfigManager;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MySQL implements SQLDatabase {
-
 
     private Plugin plugin;
     private final String host;
@@ -38,12 +39,23 @@ public class MySQL implements SQLDatabase {
 
     public MySQL(Plugin plugin) {
         this.plugin = plugin;
-        host = plugin.getConfig().getString("mysql.host");
-        port = plugin.getConfig().getString("mysql.port");
-        database = plugin.getConfig().getString("mysql.dbname");
-        username = plugin.getConfig().getString("mysql.username");
-        password = plugin.getConfig().getString("mysql.password");
-        useSSL = plugin.getConfig().getBoolean("mysql.useSSL", false);
+        host = ConfigManager.get().getMySQLHost();
+        port = ConfigManager.get().getMySQLPort();
+        database = ConfigManager.get().getMySQLDatabase();
+        username = ConfigManager.get().getMySQLUsername();
+        password = ConfigManager.get().getMySQLPassword();
+        useSSL = ConfigManager.get().getMySQLUseSSL();
+
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.addDataSourceProperty("useSSL", useSSL);
+        config.addDataSourceProperty("characterEncoding", "utf8");
+        config.addDataSourceProperty("useUnicode", "true");
+        config.setMaximumPoolSize(ConfigManager.get().getMySQLMaximumPoolSize());
+
+        dataSource = new HikariDataSource(config);
     }
 
     private HikariDataSource dataSource;
@@ -52,11 +64,10 @@ public class MySQL implements SQLDatabase {
         return (dataSource != null && !dataSource.isClosed());
     }
 
-
     public void connect() {
         if (!isConnected()) {
             HikariConfig config = new HikariConfig();
-            config.setMaximumPoolSize(plugin.getConfig().getInt("mysql.maximumPoolSize",10));
+            config.setMaximumPoolSize(ConfigManager.get().getMySQLMaximumPoolSize());
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=" + useSSL);
             config.setUsername(username);
             config.setPassword(password);

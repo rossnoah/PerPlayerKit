@@ -10,13 +10,19 @@ softdepend:
 permissions:
   kit.admin:
     children:
-        perplayerkit.admin: true
+      perplayerkit.admin: true
   kit.staff:
     children:
-        perplayerkit.staff: true
+      perplayerkit.staff: true
   kit.use:
     children:
       perplayerkit.use: true
+  perplayerkit.admin:
+    children:
+      perplayerkit.reload: true
+      perplayerkit.staff: true
+  perplayerkit.reload:
+    default: op
   perplayerkit.use:
     children:
       perplayerkit.menu: true
@@ -51,7 +57,8 @@ commands:
   kit:
     usage: /<command>
     permission: perplayerkit.menu
-    aliases: k
+    aliases:
+      - k
 
   copykit:
     usage: /<command>
@@ -96,81 +103,100 @@ commands:
   k1:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit1
+    aliases:
+      - kit1
   k2:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit2
+    aliases:
+      - kit2
   k3:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit3
+    aliases:
+      - kit3
   k4:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit4
+    aliases:
+      - kit4
   k5:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit5
+    aliases:
+      - kit5
   k6:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit6
+    aliases:
+      - kit6
   k7:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit7
+    aliases:
+      - kit7
   k8:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit8
+    aliases:
+      - kit8
   k9:
     usage: /<command>
     permission: perplayerkit.kit
-    aliases: kit9
+    aliases:
+      - kit9
 
   ec1:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest1
+    aliases:
+      - enderchest1
   ec2:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest2
+    aliases:
+      - enderchest2
   ec3:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest3
+    aliases:
+      - enderchest3
   ec4:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest4
+    aliases:
+      - enderchest4
   ec5:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest5
+    aliases:
+      - enderchest5
   ec6:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest6
+    aliases:
+      - enderchest6
   ec7:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest7
+    aliases:
+      - enderchest7
   ec8:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest8
+    aliases:
+      - enderchest8
   ec9:
     usage: /<command>
     permission: perplayerkit.enderchest
-    aliases: enderchest9
+    aliases:
+      - enderchest9
 
   enderchest:
     usage: /<command>
     permission: perplayerkit.viewenderchest
-    aliases: ec
+    aliases:
+      - ec
 
   savepublickit:
     usage: /<command> <id>
@@ -181,6 +207,7 @@ commands:
     permission: perplayerkit.regear
     aliases:
       - rg
+      
   heal:
     usage: /<command>
     permission: perplayerkit.heal
