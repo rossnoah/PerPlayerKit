@@ -64,13 +64,13 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.GRAY + "Author: " + plugin.getDescription().getAuthors().get(0));
                 return true;
             case "reload":
-                if (!sender.hasPermission("perplayerkit.admin")) {
+                if (!sender.hasPermission("perplayerkit.reload") &&
+                    !sender.hasPermission("perplayerkit.admin")) {
                     sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
                     return true;
                 }
                 sender.sendMessage(ChatColor.YELLOW + "Reloading PerPlayerKit...");
                 sender.sendMessage(ChatColor.GRAY + "This may take a moment...");
-
                 try {
                     long startTime = System.currentTimeMillis();
                     ((PerPlayerKit) plugin).reloadPlugin();
