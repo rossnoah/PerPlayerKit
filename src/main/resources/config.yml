@@ -1,4 +1,3 @@
-
 config-version: 1 #do not change this value
 
 
@@ -86,6 +85,7 @@ messages:
   player-copied-kit: "<gray>%player% copied a kit</gray>"
   player-copied-ec: "<gray>%player% copied an ender chest</gray>"
   player-regeared: "<gray>%player% regeared</gray>"
+  plugin-reloaded: "<green>PerPlayerKit configuration has been reloaded successfully!</green>"
 
 
 anti-exploit:

@@ -26,9 +26,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import dev.noah.perplayerkit.ConfigManager;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class KitManager {
     private static KitManager instance;
@@ -92,7 +97,8 @@ public class KitManager {
                         }
                     }
                     if (kit[38] != null) {
-                        if (!(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
+                        if (!(kit[38].getType().toString().contains("CHESTPLATE")
+                                || kit[38].getType().toString().contains("ELYTRA"))) {
                             kit[38] = null;
                         }
                     }
@@ -137,7 +143,8 @@ public class KitManager {
                 }
             }
             if (kit[38] != null) {
-                if (!(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
+                if (!(kit[38].getType().toString().contains("CHESTPLATE")
+                        || kit[38].getType().toString().contains("ELYTRA"))) {
                     kit[38] = null;
                 }
             }
@@ -180,7 +187,8 @@ public class KitManager {
                 }
             }
             if (kit[38] != null) {
-                if (!(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
+                if (!(kit[38].getType().toString().contains("CHESTPLATE")
+                        || kit[38].getType().toString().contains("ELYTRA"))) {
                     kit[38] = null;
                 }
             }
@@ -248,7 +256,8 @@ public class KitManager {
                             }
                         }
                         if (kit[38] != null) {
-                            if (!(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
+                            if (!(kit[38].getType().toString().contains("CHESTPLATE")
+                                    || kit[38].getType().toString().contains("ELYTRA"))) {
                                 kit[38] = null;
                             }
                         }
@@ -277,8 +286,8 @@ public class KitManager {
             return false;
         }
 
-        boolean invertWhitelist = plugin.getConfig().getBoolean("regear.invert-whitelist", false);
-        Set<String> whitelist = new HashSet<>(plugin.getConfig().getStringList("regear.whitelist"));
+        boolean invertWhitelist = ConfigManager.get().isRegearInvertWhitelist();
+        Set<String> whitelist = new HashSet<>(ConfigManager.get().getRegearWhitelist());
 
         ItemStack[] kit = kitByKitIDMap.get(IDUtil.getPlayerKitId(uuid, slot));
         ItemStack[] playerInventory = player.getInventory().getContents();
@@ -297,7 +306,8 @@ public class KitManager {
                 }
             }
 
-            if (playerInventory[i] == null || playerInventory[i].getType().isAir() || playerInventory[i].getType() == kit[i].getType()) {
+            if (playerInventory[i] == null || playerInventory[i].getType().isAir()
+                    || playerInventory[i].getType() == kit[i].getType()) {
                 playerInventory[i] = kit[i];
                 continue;
             }
@@ -306,7 +316,8 @@ public class KitManager {
         return true;
     }
 
-    private boolean loadKitInternal(Player player, String kitId, String notFoundMessage, boolean isEnderChest, Runnable afterLoad) {
+    private boolean loadKitInternal(Player player, String kitId, String notFoundMessage, boolean isEnderChest,
+            Runnable afterLoad) {
         if (player == null) {
             return false;
         }
@@ -335,11 +346,12 @@ public class KitManager {
     }
 
     public boolean loadKit(Player player, int slot) {
-        return loadKitInternal(player, IDUtil.getPlayerKitId(player.getUniqueId(), slot), "Kit " + slot + " does not exist!", false, () -> {
-            BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player);
-            player.sendMessage(ChatColor.GREEN + "Kit " + slot + " loaded!");
-            lastKitUsedByPlayer.put(player.getUniqueId(), slot);
-        });
+        return loadKitInternal(player, IDUtil.getPlayerKitId(player.getUniqueId(), slot),
+                "Kit " + slot + " does not exist!", false, () -> {
+                    BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player);
+                    player.sendMessage(ChatColor.GREEN + "Kit " + slot + " loaded!");
+                    lastKitUsedByPlayer.put(player.getUniqueId(), slot);
+                });
     }
 
     public boolean loadKitSilent(Player player, int slot) {
@@ -359,10 +371,11 @@ public class KitManager {
     }
 
     public boolean loadEnderchest(Player player, int slot) {
-        return loadKitInternal(player, IDUtil.getECId(player.getUniqueId(), slot), "Enderchest " + slot + " does not exist!", true, () -> {
-            BroadcastManager.get().broadcastPlayerLoadedEnderChest(player);
-            player.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " loaded!");
-        });
+        return loadKitInternal(player, IDUtil.getECId(player.getUniqueId(), slot),
+                "Enderchest " + slot + " does not exist!", true, () -> {
+                    BroadcastManager.get().broadcastPlayerLoadedEnderChest(player);
+                    player.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " loaded!");
+                });
     }
 
     public boolean loadEnderchestSilent(Player player, int slot) {
@@ -406,7 +419,8 @@ public class KitManager {
             if (!data.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                    kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot), ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+                    kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot),
+                            ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
                 } catch (IOException ignored) {
                 }
             }
@@ -416,7 +430,8 @@ public class KitManager {
             if (!data.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                    kitByKitIDMap.put(IDUtil.getECId(uuid, slot), ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+                    kitByKitIDMap.put(IDUtil.getECId(uuid, slot),
+                            ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
                 } catch (IOException ignored) {
                 }
             }
@@ -444,7 +459,8 @@ public class KitManager {
 
     private void saveKitToDB(String key, boolean removeAfterSave) {
         if (kitByKitIDMap.get(key) != null) {
-            PerPlayerKit.storageManager.saveKitDataByID(key, Serializer.itemStackArrayToBase64(ItemFilter.get().filterItemStack(kitByKitIDMap.get(key))));
+            PerPlayerKit.storageManager.saveKitDataByID(key,
+                    Serializer.itemStackArrayToBase64(ItemFilter.get().filterItemStack(kitByKitIDMap.get(key))));
             if (removeAfterSave) {
                 kitByKitIDMap.remove(key);
             }
@@ -466,7 +482,8 @@ public class KitManager {
     public boolean deleteKit(UUID uuid, int slot) {
         if (hasKit(uuid, slot)) {
             kitByKitIDMap.remove(IDUtil.getPlayerKitId(uuid, slot));
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> PerPlayerKit.storageManager.deleteKitByID(IDUtil.getPlayerKitId(uuid, slot)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin,
+                    () -> PerPlayerKit.storageManager.deleteKitByID(IDUtil.getPlayerKitId(uuid, slot)));
             return true;
         }
         return false;
@@ -475,7 +492,8 @@ public class KitManager {
     public boolean deleteEnderchest(UUID uuid, int slot) {
         if (hasEC(uuid, slot)) {
             kitByKitIDMap.remove(IDUtil.getECId(uuid, slot));
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> PerPlayerKit.storageManager.deleteKitByID(IDUtil.getECId(uuid, slot)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin,
+                    () -> PerPlayerKit.storageManager.deleteKitByID(IDUtil.getECId(uuid, slot)));
             return true;
         }
         return false;
@@ -487,30 +505,30 @@ public class KitManager {
         }
 
         if (isEnderChest) {
-            if (plugin.getConfig().getBoolean("feature.heal-on-enderchest-load", false)) {
+            if (ConfigManager.get().isHealOnEnderchestLoadEnabled()) {
                 player.setHealth(20);
             }
-            if (plugin.getConfig().getBoolean("feature.feed-on-enderchest-load", false)) {
+            if (ConfigManager.get().isFeedOnEnderchestLoadEnabled()) {
                 player.setFoodLevel(20);
             }
-            if (plugin.getConfig().getBoolean("feature.set-saturation-on-enderchest-load", false)) {
+            if (ConfigManager.get().isSetSaturationOnEnderchestLoadEnabled()) {
                 player.setSaturation(20);
             }
-            if (plugin.getConfig().getBoolean("feature.remove-potion-effects-on-enderchest-load", false)) {
-                player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+            if (ConfigManager.get().isRemovePotionEffectsOnEnderchestLoadEnabled()) {
+                player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
             }
         } else {
-            if (plugin.getConfig().getBoolean("feature.set-health-on-kit-load", false)) {
+            if (ConfigManager.get().isSetHealthOnKitLoadEnabled()) {
                 player.setHealth(20);
             }
-            if (plugin.getConfig().getBoolean("feature.set-hunger-on-kit-load", false)) {
+            if (ConfigManager.get().isSetHungerOnKitLoadEnabled()) {
                 player.setFoodLevel(20);
             }
-            if (plugin.getConfig().getBoolean("feature.set-saturation-on-kit-load", false)) {
+            if (ConfigManager.get().isSetSaturationOnKitLoadEnabled()) {
                 player.setSaturation(20);
             }
-            if (plugin.getConfig().getBoolean("feature.remove-potion-effects-on-kit-load", false)) {
-                player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+            if (ConfigManager.get().isRemovePotionEffectsOnKitLoadEnabled()) {
+                player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
             }
         }
     }
