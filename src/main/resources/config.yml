@@ -76,6 +76,8 @@ publickits:
 
 prefix: "<gray>[<aqua>Kits</aqua>]</gray> "
 
+use-display-name: false #For example, set to true if you want to display nicknames set by other plugins.
+
 messages:
   player-repaired: "<gray>%player% repaired their gear</gray>"
   player-healed: "<gray>%player% healed themselves</gray>"
