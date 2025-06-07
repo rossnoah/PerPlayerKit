@@ -95,7 +95,15 @@ public class BroadcastManager {
 
         String message = plugin.getConfig().getString(key.getKey(), "<gray><aqua>%player%</aqua> " +
                 "performed an action.</gray>");
-        message = message.replace("%player%", player.getName());
+
+        String playerName;
+        if (plugin.getConfig().getBoolean("use-display-name", false)) {
+            playerName = player.getDisplayName();
+        } else {
+            playerName = player.getName();
+        }
+
+        message = message.replace("%player%", playerName);
 
         broadcastMessage(player, message);
 

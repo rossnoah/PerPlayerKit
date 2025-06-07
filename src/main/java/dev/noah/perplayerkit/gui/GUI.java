@@ -62,6 +62,7 @@ public class GUI {
         slot.setClickHandler((player, info) -> {
             SoundManager.playClick(player);
             KitManager.get().loadPublicKit(player, id);
+            info.getClickedMenu().close();
         });
     }
 
@@ -475,6 +476,7 @@ public class GUI {
             SoundManager.playClick(player);
             if (info.getClickType() == ClickType.LEFT) {
                 KitManager.get().loadPublicKit(player, id);
+                info.getClickedMenu().close();
             } else if (info.getClickType() == ClickType.RIGHT) {
                 Menu m = ViewPublicKitMenu(player, id);
                 if (m != null) {
