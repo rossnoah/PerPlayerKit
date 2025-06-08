@@ -1,5 +1,10 @@
 # PerPlayerKit
+
 Join the discord for more information and support: [Discord](https://discord.gg/5djuBSKWuV)
+
+## 🚀 Quick Start
+
+New to PerPlayerKit? Check out our [Simple Setup Guide](./SIMPLE_SETUP_GUIDE.md) for a step-by-step walkthrough that gets you up and running in minutes!
 
 ![Main Menu](./images/MainMenu.png)
 
