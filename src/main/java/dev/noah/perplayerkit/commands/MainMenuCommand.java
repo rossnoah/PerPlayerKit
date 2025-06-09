@@ -30,20 +30,21 @@ import org.jetbrains.annotations.NotNull;
 public class MainMenuCommand implements CommandExecutor {
 
     private Plugin plugin;
+
     public MainMenuCommand(Plugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s,
+            @NotNull String[] strings) {
         Player p = (Player) commandSender;
 
         if (DisabledCommand.isBlockedInWorld(p)) {
             return true;
         }
 
-        GUI main = new GUI(plugin);
-        main.OpenMainMenu(p);
+        GUI.get().OpenMainMenu(p);
         return true;
     }
 }
