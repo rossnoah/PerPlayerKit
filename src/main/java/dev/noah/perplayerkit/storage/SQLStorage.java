@@ -22,12 +22,12 @@ import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import dev.noah.perplayerkit.storage.sql.SQLDatabase;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLStorage implements StorageManager {
-
 
     private final SQLDatabase db;
 
@@ -35,29 +35,29 @@ public class SQLStorage implements StorageManager {
         this.db = db;
     }
 
-
-    private void createTable() throws SQLException {
-        try (PreparedStatement ps = db.getConnection().prepareStatement(
+    private void createTable() throws SQLException, StorageConnectionException {
+        // FIX: The Connection is now inside the try-with-resources block
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS kits (KITID VARCHAR(100), KITDATA TEXT(15000), PRIMARY KEY (KITID))")) {
             ps.executeUpdate();
         }
     }
 
-
     @Override
     public void init() throws StorageOperationException {
         try {
             createTable();
-        }catch (SQLException e) {
+        } catch (SQLException | StorageConnectionException e) { // FIX: Added StorageConnectionException
            throw new StorageOperationException("Failed to initialize the database", e);
         }
     }
 
     @Override
     public void connect() throws StorageConnectionException {
-        try{
+        try {
             db.connect();
-        }catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new StorageConnectionException("Failed to connect to the database", e);
         }
     }
@@ -78,72 +78,73 @@ public class SQLStorage implements StorageManager {
 
     @Override
     public void keepAlive() throws StorageConnectionException {
-        try (PreparedStatement ps = db.getConnection().prepareStatement("SELECT 1");
-             ResultSet rs = ps.executeQuery()) {
+        // FIX: The Connection is now inside the try-with-resources block
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT 1")) {
+             ps.executeQuery(); // Some drivers require executeQuery for SELECT
         } catch (SQLException e) {
             throw new StorageConnectionException("Failed to keep the connection alive", e);
         }
     }
 
-
     @Override
     public void saveKitDataByID(String kitID, String data) {
-        try (PreparedStatement ps = db.getConnection().prepareStatement(
+        // FIX: The Connection is now inside the try-with-resources block
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
                 "REPLACE INTO kits (KITID, KITDATA) VALUES (?,?)")) {
             ps.setString(1, kitID);
             ps.setString(2, data);
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException | StorageConnectionException e) {
             e.printStackTrace();
         }
     }
 
-
     @Override
     public String getKitDataByID(String kitID) {
-        if (doesKitExistByID(kitID)) {
-            try (PreparedStatement ps = db.getConnection().prepareStatement(
+        // FIX: The Connection is now inside the try-with-resources block
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
                     "SELECT KITDATA FROM kits WHERE KITID=?")) {
-                ps.setString(1, kitID);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return rs.getString("KITDATA");
-                    }
+            ps.setString(1, kitID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("KITDATA");
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
-            return "Error";
+        } catch (SQLException | StorageConnectionException e) {
+            e.printStackTrace();
         }
-        return "Error";
+        return "Error"; // Return "Error" if not found or on exception
     }
-
 
     @Override
     public boolean doesKitExistByID(String kitID) {
-        try (PreparedStatement ps = db.getConnection().prepareStatement(
+        // FIX: The Connection is now inside the try-with-resources block
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
                 "SELECT KITID FROM kits WHERE KITID=?")) {
             ps.setString(1, kitID);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
-        } catch (SQLException e) {
+        } catch (SQLException | StorageConnectionException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-
     @Override
     public void deleteKitByID(String kitID) {
-        try (PreparedStatement ps = db.getConnection().prepareStatement(
+        // FIX: The Connection is now inside the try-with-resources block
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
                 "DELETE FROM kits WHERE KITID=?")) {
             ps.setString(1, kitID);
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException | StorageConnectionException e) {
             e.printStackTrace();
         }
     }
-
-
 }
