@@ -35,8 +35,7 @@ public class SQLStorage implements StorageManager {
         this.db = db;
     }
 
-    private void createTable() throws SQLException, StorageConnectionException {
-        // FIX: The Connection is now inside the try-with-resources block
+    private void createTable() throws SQLException {
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS kits (KITID VARCHAR(100), KITDATA TEXT(15000), PRIMARY KEY (KITID))")) {
@@ -48,7 +47,7 @@ public class SQLStorage implements StorageManager {
     public void init() throws StorageOperationException {
         try {
             createTable();
-        } catch (SQLException | StorageConnectionException e) { // FIX: Added StorageConnectionException
+        } catch (SQLException e) {
            throw new StorageOperationException("Failed to initialize the database", e);
         }
     }
@@ -78,10 +77,9 @@ public class SQLStorage implements StorageManager {
 
     @Override
     public void keepAlive() throws StorageConnectionException {
-        // FIX: The Connection is now inside the try-with-resources block
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT 1")) {
-             ps.executeQuery(); // Some drivers require executeQuery for SELECT
+             ps.executeQuery();
         } catch (SQLException e) {
             throw new StorageConnectionException("Failed to keep the connection alive", e);
         }
@@ -89,21 +87,19 @@ public class SQLStorage implements StorageManager {
 
     @Override
     public void saveKitDataByID(String kitID, String data) {
-        // FIX: The Connection is now inside the try-with-resources block
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(
                 "REPLACE INTO kits (KITID, KITDATA) VALUES (?,?)")) {
             ps.setString(1, kitID);
             ps.setString(2, data);
             ps.executeUpdate();
-        } catch (SQLException | StorageConnectionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public String getKitDataByID(String kitID) {
-        // FIX: The Connection is now inside the try-with-resources block
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(
                     "SELECT KITDATA FROM kits WHERE KITID=?")) {
@@ -113,15 +109,14 @@ public class SQLStorage implements StorageManager {
                     return rs.getString("KITDATA");
                 }
             }
-        } catch (SQLException | StorageConnectionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "Error"; // Return "Error" if not found or on exception
+        return "Error";
     }
 
     @Override
     public boolean doesKitExistByID(String kitID) {
-        // FIX: The Connection is now inside the try-with-resources block
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(
                 "SELECT KITID FROM kits WHERE KITID=?")) {
@@ -129,7 +124,7 @@ public class SQLStorage implements StorageManager {
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
-        } catch (SQLException | StorageConnectionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -137,13 +132,12 @@ public class SQLStorage implements StorageManager {
 
     @Override
     public void deleteKitByID(String kitID) {
-        // FIX: The Connection is now inside the try-with-resources block
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(
                 "DELETE FROM kits WHERE KITID=?")) {
             ps.setString(1, kitID);
             ps.executeUpdate();
-        } catch (SQLException | StorageConnectionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
