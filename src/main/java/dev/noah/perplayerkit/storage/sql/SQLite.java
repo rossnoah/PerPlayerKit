@@ -24,7 +24,6 @@ import java.sql.SQLException;
 
 public class SQLite implements SQLDatabase {
 
-
     private final String databasePath;
     private Connection connection;
 
@@ -33,7 +32,11 @@ public class SQLite implements SQLDatabase {
     }
 
     public boolean isConnected() {
-        return (connection != null);
+        try {
+            return connection != null && !connection.isClosed() && connection.isValid(1);
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public void connect() throws ClassNotFoundException, SQLException {
@@ -43,17 +46,20 @@ public class SQLite implements SQLDatabase {
         }
     }
 
-    public void disconnect() {
-        if (isConnected()) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    public void disconnect() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
         }
     }
 
-    public Connection getConnection() {
+    public Connection getConnection() throws SQLException {
+        if (!isConnected()) {
+            try {
+                connect();
+            } catch (ClassNotFoundException e) {
+                throw new SQLException("Failed to load SQLite driver", e);
+            }
+        }
         return connection;
     }
 }
