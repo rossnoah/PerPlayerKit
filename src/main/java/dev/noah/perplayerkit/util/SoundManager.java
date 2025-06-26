@@ -1,23 +1,26 @@
 package dev.noah.perplayerkit.util;
 
 import dev.noah.perplayerkit.PerPlayerKit;
+import dev.noah.perplayerkit.ConfigManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 /**
- * Manages playing configurable sounds for plugin feedback (success, error, UI interactions).
+ * Manages playing configurable sounds for plugin feedback (success, error, UI
+ * interactions).
  */
 public class SoundManager {
     private static final String BASE_KEY = "sounds.";
 
     private static Sound getSound(String key, String defaultName) {
         String path = BASE_KEY + key;
-        String soundName = PerPlayerKit.getPlugin().getConfig().getString(path, defaultName);
+        String soundName = ConfigManager.get().getSound(path, defaultName);
         try {
             return Sound.valueOf(soundName);
         } catch (IllegalArgumentException ex) {
             PerPlayerKit.getPlugin().getLogger()
-                .warning("Invalid sound '" + soundName + "' for config key '" + path + "'. Using default '" + defaultName + "'.");
+                    .warning("Invalid sound '" + soundName + "' for config key '" + path + "'. Using default '"
+                            + defaultName + "'.");
             return Sound.valueOf(defaultName);
         }
     }
