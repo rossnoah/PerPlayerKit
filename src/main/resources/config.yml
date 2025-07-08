@@ -151,13 +151,14 @@ feature:
 
 # Sound settings for plugin feedback
 sounds:
-  # Sound to play on successful actions (e.g. kit load, save, delete, repair)
+  enabled: true
+  # Sound played on successful actions (e.g. saving a kit)
   success: ENTITY_PLAYER_LEVELUP
-  # Sound to play on failed actions or errors
+  # Sound played on failed actions (e.g. attempting to use a disabled command)
   failure: ENTITY_ITEM_BREAK
-  # Sound for generic UI clicks
+  # Sound played when a button is clicked in a GUI
   click: UI_BUTTON_CLICK
-  # Sound when opening a GUI/menu
+  # Sound played when a GUI is opened
   open_gui: UI_BUTTON_CLICK
-  # Sound when closing a GUI/menu
+  # Sound played when a GUI is closed
   close_gui: UI_BUTTON_CLICK

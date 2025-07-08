@@ -112,6 +112,26 @@ publickits:
 ```
 
 
+### **Sounds**
+
+This section allows you to enable, disable, and customize the sounds played by the plugin.
+
+```yaml
+sounds:
+  enabled: true # Set to false to disable all plugin sounds.
+  # Sound played on successful actions (e.g. saving a kit)
+  success: ENTITY_PLAYER_LEVELUP
+  # Sound played on failed actions (e.g. attempting to use a disabled command)
+  failure: ENTITY_ITEM_BREAK
+  # Sound played when a button is clicked in a GUI
+  click: UI_BUTTON_CLICK
+  # Sound played when a GUI is opened
+  open_gui: UI_BUTTON_CLICK
+  # Sound played when a GUI is closed
+  close_gui: UI_BUTTON_CLICK
+```
+
+
 ### **Anti-Exploit**
 
 This section allows you to enable or disable anti-exploit features, commonly applicable to this plugin.
