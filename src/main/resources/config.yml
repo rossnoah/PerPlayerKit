@@ -23,6 +23,15 @@ redis:
   port: 6379
   password: "pa55w0rd"
 
+# Automatic backup settings for file-based storage (SQLite, YAML)
+backup:
+  enabled: true # Enable automatic backups for file-based storage methods
+  # Retention policy:
+  # - 1 backup per hour for the last 24 hours
+  # - 1 backup per day for the last 7 days  
+  # - 1 backup per week for the last 30 days
+  # - 1 backup per month for the last 365 days
+  # Backups are stored in the plugins/PerPlayerKit/backups/ directory
 
 motd:
   enabled: true
