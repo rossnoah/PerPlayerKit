@@ -27,7 +27,6 @@ import java.io.File;
 
 public class StorageSelector {
 
-
     private StorageManager storageManager;
     private Plugin plugin;
 
@@ -39,7 +38,8 @@ public class StorageSelector {
 
             case "yml":
             case "yaml":
-                storageManager = new YAMLStorage(plugin,plugin.getDataFolder() + File.separator + "please-use-a-real-database.yml");
+                storageManager = new YAMLStorage(plugin,
+                        plugin.getDataFolder() + File.separator + "please-use-a-real-database.yml");
                 break;
             case "redis":
                 storageManager = new RedisStorage(plugin);
@@ -50,8 +50,8 @@ public class StorageSelector {
                 break;
             case "sqlite":
             default:
-                //default to sqlite
-                db = new SQLite(plugin.getDataFolder() + File.separator + "database.db");
+                // default to sqlite
+                db = new SQLite(plugin);
                 storageManager = new SQLStorage(db);
                 break;
         }
@@ -61,6 +61,5 @@ public class StorageSelector {
     public StorageManager getDbManager() {
         return storageManager;
     }
-
 
 }
