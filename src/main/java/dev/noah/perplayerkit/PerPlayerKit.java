@@ -156,39 +156,43 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("deletekit").setTabCompleter(kitSlotTabCompleter);
 
         this.getCommand("inspectkit").setExecutor(new InspectKitCommand(plugin));
-        this.getCommand("inspectkit").setTabCompleter(kitSlotTabCompleter);
+        this.getCommand("inspectkit").setTabCompleter(new InspectKitCommand(plugin));
 
         this.getCommand("inspectec").setExecutor(new InspectEcCommand(plugin));
-        this.getCommand("inspectec").setTabCompleter(ecSlotTabCompleter);
+        this.getCommand("inspectec").setTabCompleter(new InspectEcCommand(plugin));
 
         this.getCommand("enderchest").setExecutor(new EnderchestCommand());
-        this.getCommand("enderchest").setTabCompleter(ecSlotTabCompleter);
 
-        this.getCommand("regear").setExecutor(new RegearCommand(this));
+        SavePublicKitCommand savePublicKitCommand = new SavePublicKitCommand();
+        this.getCommand("savepublickit").setExecutor(savePublicKitCommand);
+        this.getCommand("savepublickit").setTabCompleter(savePublicKitCommand);
 
-        this.getCommand("publickit").setExecutor(new PublicKitCommand(plugin));
+        PublicKitCommand publicKitCommand = new PublicKitCommand(plugin);
+        this.getCommand("publickit").setExecutor(publicKitCommand);
+        this.getCommand("publickit").setTabCompleter(publicKitCommand);
 
-        this.getCommand("savepublickit").setExecutor(new SavePublicKitCommand());
-        this.getCommand("savepublickit").setTabCompleter(kitSlotTabCompleter);
+        for (int i = 1; i <= 9; i++) {
+            this.getCommand("k" + i).setExecutor(new ShortKitCommand());
+        }
 
-        this.getCommand("perplayerkit").setExecutor(new PerPlayerKitCommand(plugin));
+        for (int i = 1; i <= 9; i++) {
+            this.getCommand("ec" + i).setExecutor(new ShortECCommand());
+        }
 
-        this.getCommand("repair").setExecutor(new RepairCommand());
+        RegearCommand regearCommand = new RegearCommand(this);
+        this.getCommand("regear").setExecutor(regearCommand);
+
         this.getCommand("heal").setExecutor(new HealCommand());
+        this.getCommand("repair").setExecutor(new RepairCommand());
+        this.getCommand("perplayerkit").setExecutor(new PerPlayerKitCommand(this));
 
-        this.getCommand("shortkit").setExecutor(new ShortKitCommand());
-        this.getCommand("shortkit").setTabCompleter(kitSlotTabCompleter);
-
-        this.getCommand("shortec").setExecutor(new ShortECCommand());
-        this.getCommand("shortec").setTabCompleter(ecSlotTabCompleter);
-
-        Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
-        Bukkit.getPluginManager().registerEvents(new AutoRekitListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new JoinListener(plugin, updateChecker), this);
+        Bukkit.getPluginManager().registerEvents(regearCommand, this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(this, updateChecker), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitMenuCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
-
+        Bukkit.getPluginManager().registerEvents(new AutoRekitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new AboutCommandListener(), this);
 
         // features
