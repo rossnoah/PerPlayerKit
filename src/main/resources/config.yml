@@ -149,6 +149,8 @@ feature:
   set-saturation-on-enderchest-load: false
   remove-potion-effects-on-enderchest-load: false
 
+  heal-remove-effects: false #makes the /heal command remove potion effects in addition to healing
+
   rekit-on-respawn: true
   rekit-on-kill: false
 

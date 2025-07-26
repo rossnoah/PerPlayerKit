@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.util;
 
+import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +51,12 @@ public class PlayerUtil {
         p.setHealth(20);
         p.setFoodLevel(20);
         p.setSaturation(20);
+
+        // Remove potion effects if configured to do so
+        if (PerPlayerKit.getPlugin().getConfig().getBoolean("feature.heal-remove-effects", false)) {
+            p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
+        }
+
         p.sendMessage(ChatColor.GREEN + "You have been healed!");
     }
 
