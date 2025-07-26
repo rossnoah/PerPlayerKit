@@ -67,8 +67,6 @@ public class ConfigManager {
                     updated = true;
                 }
                 continue;
-            }else if(key.startsWith("publickits")){
-                continue;
             }
 
             // Add missing keys for everything else
