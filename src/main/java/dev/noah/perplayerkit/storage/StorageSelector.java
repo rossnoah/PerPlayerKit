@@ -39,7 +39,7 @@ public class StorageSelector {
             case "yml":
             case "yaml":
                 storageManager = new YAMLStorage(plugin,
-                        plugin.getDataFolder() + File.separator + "please-use-a-real-database.yml");
+                        new File(plugin.getDataFolder(), "please-use-a-real-database.yml").getAbsolutePath());
                 break;
             case "redis":
                 storageManager = new RedisStorage(plugin);

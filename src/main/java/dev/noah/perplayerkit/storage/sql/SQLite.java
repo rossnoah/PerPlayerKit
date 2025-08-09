@@ -34,7 +34,7 @@ public class SQLite implements SQLDatabase {
 
     public SQLite(Plugin plugin) {
         this.plugin = plugin;
-        this.databasePath = plugin.getDataFolder() + File.separator + "database.db";
+        this.databasePath = plugin.getDataFolder().getAbsolutePath().replace('\\', '/') + "/database.db";
     }
 
     public boolean isConnected() {
@@ -55,7 +55,6 @@ public class SQLite implements SQLDatabase {
                     "&cache_size=10000" + // 10MB cache (negative = KB, positive = pages)
                     "&temp_store=MEMORY" + // Use memory for temp tables
                     "&mmap_size=268435456" + // 256MB memory-mapped I/O
-                    "&optimize" + // Run PRAGMA optimize on connection
                     "&foreign_keys=ON" + // Enable foreign key constraints
                     "&busy_timeout=30000"); // 30 second busy timeout
 
