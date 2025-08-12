@@ -40,7 +40,7 @@ public class ConfigManager {
     public void loadConfig() {
         if (configFile.exists()) {
             mergeMissingKeys();
-        }else{
+        } else {
             plugin.saveDefaultConfig();
         }
         plugin.saveConfig();
@@ -67,7 +67,7 @@ public class ConfigManager {
                     updated = true;
                 }
                 continue;
-            }else if(key.startsWith("publickits")){
+            } else if (key.startsWith("publickits")) {
                 continue;
             }
 

@@ -18,7 +18,12 @@
  */
 package dev.noah.perplayerkit;
 
+import dev.noah.perplayerkit.api.LegacyAPIBridge;
+import dev.noah.perplayerkit.api.PerPlayerKitAPI;
+import dev.noah.perplayerkit.api.PerPlayerKitAPIProvider;
 import dev.noah.perplayerkit.commands.*;
+import dev.noah.perplayerkit.commands.NewGuiCommand;
+import dev.noah.perplayerkit.commands.ThemeSwitchCommand;
 import dev.noah.perplayerkit.commands.extracommands.HealCommand;
 import dev.noah.perplayerkit.commands.extracommands.RepairCommand;
 import dev.noah.perplayerkit.commands.tabcompleters.ECSlotTabCompleter;
@@ -33,6 +38,8 @@ import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import dev.noah.perplayerkit.util.BackupManager;
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.FoliaCompatScheduler;
+import dev.noah.perplayerkit.gui2.core.GuiManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -41,14 +48,21 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 
-public final class PerPlayerKit extends JavaPlugin {
+public final class PerPlayerKit extends JavaPlugin implements PerPlayerKitAPIProvider.APIProvider {
 
     public static Plugin plugin;
     public static StorageManager storageManager;
+    public static GuiManager guiManager;
     private BackupManager backupManager;
+    private PerPlayerKitAPI api;
 
     public static Plugin getPlugin() {
         return plugin;
+    }
+
+    @Override
+    public PerPlayerKitAPI getAPI() {
+        return api;
     }
 
     @Override
@@ -111,7 +125,7 @@ public final class PerPlayerKit extends JavaPlugin {
             getLogger().info("Backup system not needed for non-file-based storage: " + dbType);
         }
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+        FoliaCompatScheduler.runAsyncTimer(this, () -> {
 
             if (storageManager.isConnected()) {
                 try {
@@ -128,6 +142,15 @@ public final class PerPlayerKit extends JavaPlugin {
 
         loadDatabaseData();
         getLogger().info("Database data loaded");
+
+        // Initialize advanced GUI system
+        guiManager = new GuiManager(this);
+        getLogger().info("Advanced GUI System initialized");
+
+        // Initialize the modern API
+        this.api = new LegacyAPIBridge(this);
+        PerPlayerKitAPIProvider.setInstance(api);
+        getLogger().info("PerPlayerKit API v" + api.getAPIVersion() + " initialized");
 
         UpdateChecker updateChecker = new UpdateChecker(this);
 
@@ -185,6 +208,11 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("heal").setExecutor(new HealCommand());
         this.getCommand("repair").setExecutor(new RepairCommand());
         this.getCommand("perplayerkit").setExecutor(new PerPlayerKitCommand(this));
+        this.getCommand("newgui").setExecutor(new NewGuiCommand());
+        
+        ThemeSwitchCommand themeSwitchCommand = new ThemeSwitchCommand();
+        this.getCommand("theme").setExecutor(themeSwitchCommand);
+        this.getCommand("theme").setTabCompleter(themeSwitchCommand);
 
         Bukkit.getPluginManager().registerEvents(regearCommand, this);
         Bukkit.getPluginManager().registerEvents(new JoinListener(this, updateChecker), this);
@@ -217,6 +245,12 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // Clear the API instance
+        PerPlayerKitAPIProvider.clearInstance();
+        
+        // Cancel all scheduled tasks
+        FoliaCompatScheduler.cancelAllTasks(this);
+        
         closeDatabaseConnection();
 
         // Shutdown backup manager if it exists

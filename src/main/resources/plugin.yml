@@ -189,3 +189,15 @@ commands:
     usage: /<command>
     permission: perplayerkit.repair
 
+  newgui:
+    usage: /<command> [gui-name]
+    permission: perplayerkit.menu
+    description: Open the new advanced GUI system
+    aliases: [ngui, gui2]
+
+  theme:
+    usage: /<command> [theme-name]
+    permission: perplayerkit.menu
+    description: Switch GUI themes or open theme selector
+    aliases: [themes, guitheme]
+

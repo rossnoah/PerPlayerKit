@@ -87,6 +87,30 @@ prefix: "<gray>[<aqua>Kits</aqua>]</gray> "
 
 use-display-name: false #For example, set to true if you want to display nicknames set by other plugins.
 
+# Advanced GUI System Configuration
+gui:
+  # Default theme for new players and when no theme is specified
+  default-theme: "default" # Options: default, dark, neon, medieval
+  
+  # Allow players to switch themes
+  allow-theme-switching: true
+  
+  # Remember player theme preferences
+  remember-player-themes: true
+  
+  # Available themes (set to false to disable a theme)
+  available-themes:
+    default: true
+    dark: true
+    neon: true
+    medieval: true
+  
+  # Hot-reload GUI configurations (development feature)
+  hot-reload: false
+  
+  # Cache GUI configurations in memory for performance
+  cache-configs: true
+
 messages:
   player-repaired: "<gray>%player% repaired their gear</gray>"
   player-healed: "<gray>%player% healed themselves</gray>"
