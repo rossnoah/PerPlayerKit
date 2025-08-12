@@ -1,0 +1,300 @@
+# PerPlayerKit Kit Editor GUI
+# Advanced example showing inventory interaction, live updates, and complex layouts
+# 
+# This demonstrates:
+# - Custom inventory layouts 
+# - Live data binding with real-time updates
+# - Complex action chains
+# - Inventory interaction zones
+# - Armor slot validation
+# - Import/export functionality
+
+title: "&9Kit Editor - Slot {slot_number}"
+size: 54
+theme: "default"
+
+# Enable real-time updates for dynamic content
+settings:
+  update_interval: 10  # Update every 0.5 seconds
+  allow_cursor_dropping: true
+  close_on_click_outside: false
+
+# Data context - values passed from main menu
+data:
+  slot_number: 1
+  kit_exists: false
+  item_count: 0
+  last_saved: "never"
+
+# Visual layout - inventory-style with control panel
+layout:
+  type: "custom"
+  zones:
+    # Main inventory area (first 4 rows + hotbar)
+    inventory:
+      slots: "0-35,41"
+      type: "editable" 
+      validation: "kit_items"
+    
+    # Armor slots
+    armor:
+      slots: "36-39"
+      type: "editable"
+      validation: "armor_only"
+      
+    # Offhand
+    offhand:
+      slots: "40"
+      type: "editable"
+      validation: "any_item"
+      
+    # Control panel
+    controls:
+      slots: "42-53"
+      type: "fixed"
+
+# Components for different zones
+components:
+
+  # Inventory slots - allow free editing
+  inventory_slot:
+    type: "dynamic_item"
+    update_source: "kit_data"
+    editable: true
+    validation:
+      - type: "not_blacklisted"
+      - type: "not_overpowered"
+    on_change:
+      - type: "validate_kit"
+      - type: "update_item_count"
+      - type: "mark_unsaved"
+      
+  # Armor slots with validation
+  armor_slot:
+    type: "conditional"
+    condition:
+      type: "equals"
+      value1: "{slot_type}"
+      value2: "helmet"
+    true:
+      material: CHAINMAIL_HELMET
+      name: "&7&lHELMET SLOT"
+      lore:
+        - "&7Place helmet items here"
+        - "{if:{has_item}:&aItem: {item_name}:&cEmpty}"
+    # Similar conditions for other armor types...
+    
+  # Control buttons
+  import_button:
+    type: "static"
+    material: CHEST
+    name: "&a&lIMPORT FROM INVENTORY"
+    lore:
+      - "&7Import items from your current inventory"
+      - "&7This will overwrite the current kit"
+      - ""
+      - "{if:{has_unsaved_changes}:&eYou have unsaved changes!:}"
+    actions:
+      click:
+        - type: "conditional_action"
+          condition:
+            type: "context_exists"
+            key: "unsaved_changes"
+          true:
+            - type: "open_confirmation"
+              title: "Import and lose changes?"
+              confirm_action: "import_inventory"
+          false:
+            - type: "import_inventory"
+        - type: "play_sound"
+          sound: "BLOCK_CHEST_OPEN"
+          
+  clear_button:
+    type: "static" 
+    material: BARRIER
+    name: "&c&lCLEAR KIT"
+    lore:
+      - "&7Clear all items from this kit"
+      - "&cShift click to confirm"
+    actions:
+      shift_click:
+        - type: "clear_kit_items"
+        - type: "update_display"
+        - type: "play_sound"
+          sound: "ENTITY_ITEM_BREAK"
+        - type: "message"
+          text: "&aKit cleared!"
+          
+  save_button:
+    type: "conditional"
+    condition:
+      type: "context_exists"
+      key: "unsaved_changes"
+    true:
+      material: EMERALD_BLOCK
+      name: "&a&lSAVE KIT"
+      lore:
+        - "&7Save your kit changes"
+        - "&aYou have unsaved changes"
+        - ""
+        - "&7Items: {item_count}"
+        - "&7Last saved: {last_saved}"
+      enchanted: true
+      actions:
+        click:
+          - type: "save_kit"
+            slot: "{slot_number}"
+          - type: "play_sound"
+            sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+          - type: "message"
+            text: "&aKit saved successfully!"
+          - type: "clear_context"
+            key: "unsaved_changes"
+          - type: "update_display"
+    false:
+      material: GREEN_CONCRETE
+      name: "&7&lKIT SAVED"
+      lore:
+        - "&7Your kit is up to date"
+        - ""
+        - "&7Items: {item_count}"
+        - "&7Last saved: {last_saved}"
+        
+  preview_button:
+    type: "static"
+    material: SPYGLASS
+    name: "&e&lPREVIEW KIT"
+    lore:
+      - "&7See what your kit looks like"
+      - "&7This will temporarily load the kit"
+    actions:
+      click:
+        - type: "preview_kit"
+          slot: "{slot_number}"
+        - type: "message"
+          text: "&eKit previewed! Use /kit {slot_number} to load it properly."
+          
+  back_button:
+    type: "static"
+    material: OAK_DOOR
+    name: "&c&lBACK TO MENU"
+    lore:
+      - "&7Return to main menu"
+      - "{if:{has_unsaved_changes}:&eYou have unsaved changes!:}"
+    actions:
+      click:
+        - type: "conditional_action"
+          condition:
+            type: "context_exists"
+            key: "unsaved_changes"
+          true:
+            - type: "open_confirmation"
+              title: "Leave without saving?"
+              message: "You have unsaved changes that will be lost!"
+              confirm_action: "open_gui:main-menu"
+          false:
+            - type: "open_gui"
+              gui: "main-menu"
+
+# Slot mappings for the control panel
+slots:
+  # Armor slot labels
+  "45":
+    type: "static"
+    material: CHAINMAIL_BOOTS
+    name: "&7&lBOOTS"
+    lore:
+      - "&7Armor slot for boots"
+    
+  "46":
+    type: "static"
+    material: CHAINMAIL_LEGGINGS  
+    name: "&7&lLEGGINGS"
+    lore:
+      - "&7Armor slot for leggings"
+      
+  "47":
+    type: "static"
+    material: CHAINMAIL_CHESTPLATE
+    name: "&7&lCHESTPLATE"
+    lore:
+      - "&7Armor slot for chestplate"
+      
+  "48":
+    type: "static"
+    material: CHAINMAIL_HELMET
+    name: "&7&lHELMET" 
+    lore:
+      - "&7Armor slot for helmet"
+      
+  "49":
+    type: "static"
+    material: SHIELD
+    name: "&7&lOFFHAND"
+    lore:
+      - "&7Slot for shields and offhand items"
+
+  # Control buttons
+  "50": "import_button"
+  "51": "clear_button" 
+  "52": "save_button"
+  "53": "back_button"
+  
+  # Additional features
+  "44":
+    type: "static"
+    material: KNOWLEDGE_BOOK
+    name: "&b&lKIT INFO"
+    lore:
+      - "&7Kit slot: &f{slot_number}"
+      - "&7Total items: &f{item_count}"
+      - "&7Armor pieces: &f{armor_count}"
+      - "&7Last modified: &f{last_modified}"
+      - ""
+      - "&7Kit exists: {if:{kit_exists}:&aYes:&cNo}"
+
+# Advanced features
+
+# Real-time validation rules
+validation:
+  rules:
+    - name: "no_blacklisted_items"
+      type: "item_blacklist"
+      items: ["BEDROCK", "COMMAND_BLOCK", "BARRIER"]
+      message: "&cThis item is not allowed in kits!"
+      
+    - name: "no_overpowered_items"
+      type: "enchantment_limits"
+      limits:
+        sharpness: 5
+        protection: 4
+        efficiency: 5
+      message: "&cItem enchantments are too powerful!"
+      
+    - name: "armor_slot_validation"
+      type: "armor_slots"
+      enforce: true
+      message: "&cThat item doesn't belong in this armor slot!"
+
+# Auto-save settings
+auto_save:
+  enabled: true
+  interval: 60  # Auto-save every 60 seconds if changes exist
+  message: "&7Kit auto-saved"
+
+# Keyboard shortcuts (if supported by client)
+shortcuts:
+  "CTRL+S": "save_kit"
+  "CTRL+I": "import_inventory" 
+  "CTRL+Z": "undo_change"
+  "ESC": "back_to_menu"
+
+# Help tooltips
+help:
+  enabled: true
+  tips:
+    - "Drag items from your inventory to edit your kit"
+    - "Right-click items to get information about them"
+    - "Use import to quickly copy your current inventory"
+    - "Don't forget to save your changes!"
+    - "Armor must be placed in the correct slots"

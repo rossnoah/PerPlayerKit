@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(find:*)",
+      "Bash(mvn clean:*)",
+      "Bash(mkdir:*)",
+      "Bash(mvn:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": []
+  }
+}

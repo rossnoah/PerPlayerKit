@@ -1,0 +1,195 @@
+# PerPlayerKit Default Theme
+# This theme defines the default look and feel for all GUIs
+# 
+# Themes can be applied globally or per-GUI and allow consistent
+# styling across your entire server interface.
+
+# Theme metadata
+name: "Default Theme"
+description: "Clean blue theme with modern styling"
+version: "1.0"
+author: "PerPlayerKit"
+
+# Global color scheme
+colors:
+  primary: "&9"      # Main theme color (blue)
+  secondary: "&3"    # Secondary color (dark aqua)
+  accent: "&a"       # Accent color (green)
+  success: "&a"      # Success messages
+  warning: "&6"      # Warning messages
+  error: "&c"        # Error messages
+  muted: "&7"        # Muted/disabled text
+  highlight: "&f"    # Important text
+  
+# Material palette - consistent materials across GUIs
+materials:
+  border: "BLUE_STAINED_GLASS_PANE"
+  background: "GRAY_STAINED_GLASS_PANE"
+  button: "STONE_BUTTON"
+  navigation: "ARROW"
+  confirm: "LIME_CONCRETE"
+  cancel: "RED_CONCRETE"
+  info: "OAK_SIGN"
+  divider: "IRON_BARS"
+  
+# Component styles - applied to specific component types
+component_styles:
+  
+  # Kit slots get special highlighting
+  kit_slot:
+    exists:
+      name_format: "{colors.accent}&l{name}"
+      lore_format:
+        - "{colors.muted}● {action_text}"
+        - ""
+        - "{colors.primary}Items: {colors.highlight}{item_count}"
+      enchant_if_last_used: true
+    empty:
+      name_format: "{colors.muted}{name}"
+      lore_format:
+        - "{colors.muted}● Click to create"
+      
+  # Buttons get consistent styling  
+  button:
+    name_format: "{colors.primary}&l{name}"
+    lore_format: 
+      - "{colors.muted}{description}"
+    hover_effect: "glow"
+    
+  # Border elements are minimalist
+  border:
+    material: "{materials.border}"
+    name: " "
+    hide_flags: true
+    
+  # Info components use sign material
+  info:
+    material: "{materials.info}"
+    name_format: "{colors.accent}&l{name}"
+    lore_format:
+      - "{colors.muted}{line}"
+
+# Animation settings
+animations:
+  enabled: true
+  
+  # Smooth transitions when opening GUIs
+  gui_open:
+    type: "fade_in"
+    duration: "0.3s"
+    
+  # Hover effects on interactive components
+  hover:
+    type: "glow"
+    duration: "0.1s"
+    
+  # Success actions get celebration effects
+  success:
+    type: "sparkle"
+    duration: "1s"
+    
+  # Loading states show progress
+  loading:
+    type: "pulse"
+    duration: "infinite"
+
+# Sound effects
+sounds:
+  enabled: true
+  
+  # GUI interactions
+  gui_open: "UI_BUTTON_CLICK"
+  gui_close: "UI_BUTTON_CLICK"
+  page_turn: "ITEM_BOOK_PAGE_TURN"
+  
+  # Actions
+  kit_load: "ENTITY_PLAYER_LEVELUP"
+  kit_save: "BLOCK_CHEST_CLOSE"
+  success: "ENTITY_EXPERIENCE_ORB_PICKUP"
+  error: "BLOCK_ANVIL_BREAK"
+  warning: "BLOCK_NOTE_BLOCK_PLING"
+  
+  # Button interactions
+  button_click: "UI_BUTTON_CLICK"
+  button_hover: "UI_BUTTON_CLICK"
+
+# Typography settings
+typography:
+  # Title formatting for GUIs
+  title_format: "{colors.primary}{title}"
+  
+  # Standard text sizes (using Minecraft font tricks)
+  small_text: "&7&o"
+  normal_text: "&7"
+  large_text: "&f&l"
+  
+  # Special formatting
+  emphasis: "&l"
+  italic: "&o"
+  underline: "&n"
+  strikethrough: "&m"
+
+# Layout preferences
+layout:
+  # Preferred spacing between elements
+  padding: 1
+  margin: 1
+  
+  # Grid alignment
+  align_items: "center"
+  justify_content: "center"
+  
+  # Border width for bordered layouts
+  border_width: 1
+
+# Component templates that use this theme
+templates:
+  
+  # Standard navigation bar
+  nav_bar:
+    height: 1
+    components:
+      back_button:
+        material: "ARROW" 
+        name: "{colors.secondary}&lBack"
+        slot: 0
+      title:
+        material: "{materials.info}"
+        name: "{colors.primary}&l{gui_title}"
+        slot: 4
+      close_button:
+        material: "BARRIER"
+        name: "{colors.error}&lClose" 
+        slot: 8
+        
+  # Standard border pattern
+  border:
+    material: "{materials.border}"
+    name: " "
+    slots: "edges"
+    hide_flags: true
+    
+  # Confirmation dialog template
+  confirmation:
+    size: 27
+    background: "{materials.background}"
+    components:
+      confirm:
+        material: "{materials.confirm}"
+        name: "{colors.success}&lConfirm"
+        slot: 11
+      cancel:
+        material: "{materials.cancel}"
+        name: "{colors.error}&lCancel"
+        slot: 15
+
+# Theme-specific data
+data:
+  # Server branding that can be used in placeholders
+  server_name: "Your Server"
+  server_color: "{colors.primary}"
+  
+  # Default messages
+  no_permission: "{colors.error}You don't have permission!"
+  loading_text: "{colors.muted}Loading..."
+  error_text: "{colors.error}Something went wrong!"

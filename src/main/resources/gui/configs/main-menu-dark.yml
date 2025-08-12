@@ -1,0 +1,244 @@
+# PerPlayerKit Dark Main Menu Configuration
+# Alternative main menu layout optimized for the dark theme
+
+name: "Dark Main Menu"
+title: "&5⬡ &dPlayer Kit Menu &5⬡"
+size: 45  # 5 rows for a more compact layout
+theme: "dark"
+
+# Dark-themed layout with central focus
+layout:
+  type: "custom"
+  pattern:
+    - "bbbbbbbbb"  # Row 0: Full border
+    - "b1234567b"  # Row 1: Kit slots with borders
+    - "babcdefgb"  # Row 2: Enderchest slots with borders
+    - "bhhijklmb"  # Row 3: Action buttons with borders
+    - "bbbbbbbbb"  # Row 4: Full border
+
+  definitions:
+    b: "border"
+    1-7: "kit_slots"
+    a-g: "enderchest_slots"
+    h: "public_kits"
+    i: "kit_room"
+    j: "reload_config"
+    k: "regear"
+    l: "copy_kit"
+    m: "theme_switcher"
+
+# Dark-themed data context
+data:
+  player_name: "{player.name}"
+  server_name: "&5⬡ Dark Server ⬡"
+  current_theme: "dark"
+  
+  # Kit data bindings
+  kit_1: "{player.kit.1}"
+  kit_2: "{player.kit.2}"
+  kit_3: "{player.kit.3}"
+  kit_4: "{player.kit.4}"
+  kit_5: "{player.kit.5}"
+  kit_6: "{player.kit.6}"
+  kit_7: "{player.kit.7}"
+  
+  # Enderchest data bindings
+  ec_1: "{player.enderchest.1}"
+  ec_2: "{player.enderchest.2}"
+  ec_3: "{player.enderchest.3}"
+  ec_4: "{player.enderchest.4}"
+  ec_5: "{player.enderchest.5}"
+  ec_6: "{player.enderchest.6}"
+  ec_7: "{player.enderchest.7}"
+
+# Component configurations for dark theme
+components:
+  
+  # Kit slots - more compact in dark theme
+  kit_slots:
+    type: "kit_slot"
+    slots: [10, 11, 12, 13, 14, 15, 16]
+    data_binding: "player.kits"
+    actions:
+      left_click:
+        type: "load_kit"
+        params:
+          slot: "{slot_number}"
+      right_click:
+        type: "save_kit"
+        params:
+          slot: "{slot_number}"
+          confirmation: true
+      shift_left_click:
+        type: "open_kit_preview"
+        params:
+          slot: "{slot_number}"
+  
+  # Enderchest slots - horizontal layout
+  enderchest_slots:
+    type: "enderchest_slot"
+    slots: [19, 20, 21, 22, 23, 24, 25]
+    data_binding: "player.enderchests"
+    actions:
+      left_click:
+        type: "open_enderchest"
+        params:
+          slot: "{slot_number}"
+      right_click:
+        type: "save_enderchest"
+        params:
+          slot: "{slot_number}"
+          confirmation: true
+  
+  # Specialized action buttons for dark theme
+  public_kits:
+    type: "button"
+    slot: 28
+    material: "PURPLE_STAINED_GLASS"
+    name: "&d⬢ Public Kits"
+    lore:
+      - "&8Browse pre-made kit templates"
+      - "&8designed by administrators"
+      - ""
+      - "&5» Click to explore"
+    actions:
+      left_click:
+        type: "open_gui"
+        params:
+          gui: "public-kits"
+    conditions:
+      - type: "permission"
+        value: "perplayerkit.publickit"
+  
+  kit_room:
+    type: "button"
+    slot: 29
+    material: "AMETHYST_SHARD"
+    name: "&d⬢ Kit Room"
+    lore:
+      - "&8Access the shared kit building area"
+      - "&8for collaborative kit creation"
+      - ""
+      - "&5» Click to enter"
+    actions:
+      left_click:
+        type: "execute_command"
+        params:
+          command: "kitroom"
+    conditions:
+      - type: "permission"
+        value: "perplayerkit.admin"
+  
+  reload_config:
+    type: "button"
+    slot: 30
+    material: "PURPLE_CONCRETE"
+    name: "&d⬢ Reload Config"
+    lore:
+      - "&8Refresh all configuration files"
+      - "&8and apply changes immediately"
+      - ""
+      - "&5» Click to reload"
+      - "&8&oAdmin only"
+    enchanted: true
+    actions:
+      left_click:
+        type: "reload_config"
+        params:
+          confirmation: true
+    conditions:
+      - type: "permission"
+        value: "perplayerkit.admin"
+  
+  regear:
+    type: "button"
+    slot: 31
+    material: "MAGENTA_CONCRETE"
+    name: "&d⬢ Quick Regear"
+    lore:
+      - "&8Instantly re-equip your last used kit"
+      - "&8perfect for quick respawning"
+      - ""
+      - "&5» Click to regear"
+    actions:
+      left_click:
+        type: "execute_command"
+        params:
+          command: "regear"
+    conditions:
+      - type: "permission"
+        value: "perplayerkit.regear"
+  
+  copy_kit:
+    type: "button"
+    slot: 32
+    material: "LIGHT_PURPLE_STAINED_GLASS"
+    name: "&d⬢ Copy Kit"
+    lore:
+      - "&8Copy your current inventory"
+      - "&8to another kit slot"
+      - ""
+      - "&5» Click to copy"
+    actions:
+      left_click:
+        type: "open_gui"
+        params:
+          gui: "kit-copy"
+    conditions:
+      - type: "permission"
+        value: "perplayerkit.copykit"
+  
+  theme_switcher:
+    type: "button"
+    slot: 33
+    material: "ENDER_EYE"
+    name: "&d⬢ Theme Switcher"
+    lore:
+      - "&8Switch between different GUI themes"
+      - "&8Current: &5Dark Theme"
+      - ""
+      - "&7Available themes:"
+      - "&8• &7Default"
+      - "&8• &5Dark &8(current)"
+      - "&8• &bNeon"
+      - "&8• &6Medieval"
+      - ""
+      - "&5» Click to switch"
+    actions:
+      left_click:
+        type: "open_gui"
+        params:
+          gui: "theme-selector"
+  
+  # Border elements with dark theme styling
+  border:
+    type: "border"
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+    material: "BLACK_STAINED_GLASS_PANE"
+    name: " "
+    hide_flags: true
+
+# Dark theme specific effects
+effects:
+  open_sound: "BLOCK_PORTAL_AMBIENT"
+  close_sound: "BLOCK_PORTAL_AMBIENT"
+  
+  particle_effects:
+    enabled: true
+    type: "PORTAL"
+    count: 5
+    
+  animations:
+    slot_highlight: "purple_glow"
+    button_hover: "dark_shimmer"
+
+# Advanced features for dark theme
+features:
+  auto_refresh: true
+  refresh_interval: 30  # seconds
+  
+  hover_previews: true
+  quick_actions: true
+  
+  theme_persistence: true
+  remember_layout: true

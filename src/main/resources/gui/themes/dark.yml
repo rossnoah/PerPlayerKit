@@ -1,0 +1,214 @@
+# PerPlayerKit Dark Theme
+# Sleek dark interface with purple accents and modern styling
+
+name: "Dark Theme"
+description: "Sleek dark interface with purple accents for a modern look"
+version: "1.0"
+author: "PerPlayerKit"
+
+# Dark color scheme with purple accents
+colors:
+  primary: "&5"        # Purple
+  secondary: "&d"      # Light purple/magenta
+  accent: "&b"         # Aqua for highlights
+  success: "&a"        # Green
+  warning: "&6"        # Gold
+  error: "&c"          # Red
+  muted: "&8"          # Dark gray
+  highlight: "&f"      # White
+  background: "&0"     # Black
+  text: "&7"           # Gray text
+  
+# Dark materials palette
+materials:
+  border: "BLACK_STAINED_GLASS_PANE"
+  background: "GRAY_STAINED_GLASS_PANE"
+  button: "BLACKSTONE_BUTTON"
+  navigation: "PURPLE_STAINED_GLASS"
+  confirm: "PURPLE_CONCRETE"
+  cancel: "MAGENTA_CONCRETE"
+  info: "DARK_OAK_SIGN"
+  divider: "IRON_BARS"
+  accent: "AMETHYST_SHARD"
+  
+# Component styles for dark theme
+component_styles:
+  
+  # Kit slots get purple highlighting
+  kit_slot:
+    exists:
+      name_format: "{colors.secondary}&l{name}"
+      lore_format:
+        - "{colors.muted}▸ {action_text}"
+        - ""
+        - "{colors.primary}Items: {colors.highlight}{item_count}"
+        - "{colors.text}Last used: {last_used}"
+      enchant_if_last_used: true
+    empty:
+      name_format: "{colors.muted}&l{name}"
+      lore_format:
+        - "{colors.muted}▸ Click to create"
+        - "{colors.text}Empty slot ready for items"
+      
+  # Enderchest slots with aqua accents
+  enderchest_slot:
+    exists:
+      name_format: "{colors.accent}&l{name}"
+      lore_format:
+        - "{colors.muted}▸ {action_text}"
+        - "{colors.primary}Storage: {colors.highlight}{item_count} items"
+    empty:
+      name_format: "{colors.muted}&l{name}"
+      lore_format:
+        - "{colors.muted}▸ Click to create"
+        
+  # Buttons with dark styling
+  button:
+    name_format: "{colors.primary}&l◆ {name}"
+    lore_format: 
+      - "{colors.text}{description}"
+      - ""
+      - "{colors.muted}▸ Click to activate"
+    hover_effect: "glow"
+    
+  # Border elements are completely black
+  border:
+    material: "{materials.border}"
+    name: " "
+    hide_flags: true
+    
+  # Info components use dark oak
+  info:
+    material: "{materials.info}"
+    name_format: "{colors.accent}&l◈ {name}"
+    lore_format:
+      - "{colors.text}{line}"
+
+  # Admin components get special purple treatment
+  admin:
+    name_format: "{colors.primary}&l♦ {name}"
+    lore_format:
+      - "{colors.secondary}{description}"
+      - ""
+      - "{colors.muted}▸ Admin access required"
+    enchanted: true
+
+# Dark theme animations
+animations:
+  enabled: true
+  
+  gui_open:
+    type: "fade_in"
+    duration: "0.4s"
+    
+  hover:
+    type: "purple_glow"
+    duration: "0.2s"
+    
+  success:
+    type: "purple_sparkle"
+    duration: "1.2s"
+    
+  loading:
+    type: "purple_pulse"
+    duration: "infinite"
+
+# Dark theme sounds
+sounds:
+  enabled: true
+  
+  gui_open: "BLOCK_PORTAL_AMBIENT"
+  gui_close: "BLOCK_PORTAL_AMBIENT"
+  page_turn: "ITEM_BOOK_PAGE_TURN"
+  
+  kit_load: "BLOCK_AMETHYST_BLOCK_CHIME"
+  kit_save: "BLOCK_ENDER_CHEST_CLOSE"
+  success: "BLOCK_AMETHYST_CLUSTER_BREAK"
+  error: "BLOCK_GLASS_BREAK"
+  warning: "BLOCK_NOTE_BLOCK_BASS"
+  
+  button_click: "UI_BUTTON_CLICK"
+  button_hover: "BLOCK_AMETHYST_BLOCK_STEP"
+
+# Dark typography
+typography:
+  title_format: "{colors.primary}&l{title}"
+  
+  small_text: "&8&o"
+  normal_text: "&7"
+  large_text: "&f&l"
+  
+  emphasis: "&d&l"
+  italic: "&5&o"
+  underline: "&d&n"
+
+# Dark layout preferences
+layout:
+  padding: 1
+  margin: 1
+  align_items: "center"
+  justify_content: "center"
+  border_width: 1
+
+# Dark theme templates
+templates:
+  
+  # Dark navigation bar
+  nav_bar:
+    height: 1
+    background: "{materials.border}"
+    components:
+      back_button:
+        material: "PURPLE_STAINED_GLASS" 
+        name: "{colors.secondary}&l◀ Back"
+        slot: 0
+      title:
+        material: "{materials.info}"
+        name: "{colors.primary}&l{gui_title}"
+        slot: 4
+      close_button:
+        material: "MAGENTA_CONCRETE"
+        name: "{colors.error}&l✕ Close" 
+        slot: 8
+        
+  # Dark border pattern
+  border:
+    material: "{materials.border}"
+    name: " "
+    slots: "edges"
+    hide_flags: true
+    
+  # Dark confirmation dialog
+  confirmation:
+    size: 27
+    background: "{materials.background}"
+    components:
+      confirm:
+        material: "{materials.confirm}"
+        name: "{colors.success}&l✓ Confirm"
+        slot: 11
+      cancel:
+        material: "{materials.cancel}"
+        name: "{colors.error}&l✕ Cancel"
+        slot: 15
+      info:
+        material: "{materials.info}"
+        name: "{colors.warning}&l⚠ Warning"
+        slot: 13
+
+# Dark theme specific data
+data:
+  server_name: "Dark Server"
+  server_color: "{colors.primary}"
+  
+  no_permission: "{colors.error}⚠ Access Denied"
+  loading_text: "{colors.muted}Loading..."
+  error_text: "{colors.error}❌ Error occurred"
+  success_text: "{colors.success}✓ Success"
+  
+# Special dark theme features
+features:
+  particle_effects: true
+  ambient_sounds: true
+  gradient_backgrounds: true
+  glow_effects: true

@@ -1,0 +1,249 @@
+# PerPlayerKit Advanced GUI Configuration
+# Main Menu - The primary kit selection interface
+# 
+# This example demonstrates:
+# - Visual layout patterns
+# - Dynamic kit slot components
+# - Conditional rendering based on permissions
+# - Action system with multiple click types
+# - Theme integration
+# - Template usage
+
+# Basic GUI properties
+title: "&9{player_name}'s Kits"
+size: 54
+theme: "default"
+templates:
+  - "borders"
+  - "navigation"
+
+# Settings for this GUI
+settings:
+  close_on_click_outside: true
+  allow_item_dropping: false
+  update_interval: 20  # Update every second for dynamic content
+
+# Visual layout using grid pattern
+layout:
+  type: "grid"
+  pattern:
+    - "xxxxxxxxx"
+    - "x1234567x"
+    - "xabcdefgx"  
+    - "xxxxxxxxx"
+    - "xxnnnnnxx"
+    - "xxnxixfxx"
+  definitions:
+    x: "border"
+    1-7: "kit_slots"
+    a-g: "enderchest_slots"
+    n: "navigation"
+    i: "info_button" 
+    f: "features"
+
+# Component definitions
+components:
+  
+  # Border component - fills edges with glass panes
+  border:
+    type: "static"
+    material: BLUE_STAINED_GLASS_PANE
+    name: " "
+    hide_flags: true
+    
+  # Dynamic kit slot component
+  kit_slots:
+    type: "kit_slot"
+    slot_number: "{slot_index}"  # Will be resolved based on position
+    states:
+      exists:
+        material: KNOWLEDGE_BOOK
+        name: "&a&lKit {slot_number}"
+        lore:
+          - "&7Left click to load kit"
+          - "&7Right click to edit kit"
+          - "&7Items: {kit_item_count}"
+          - ""
+          - "&8Last used: {kit_last_used:never}"
+        enchanted: false
+      empty:
+        material: BOOK
+        name: "&c&lKit {slot_number} - Empty"
+        lore:
+          - "&7Click to create this kit"
+          - "&7Drag items from your inventory"
+        enchanted: false
+    actions:
+      left_click:
+        - type: "load_kit"
+          slot: "{slot_number}"
+        - type: "play_sound"
+          sound: "UI_BUTTON_CLICK"
+        - type: "close_menu"
+      right_click:
+        - type: "open_gui"
+          gui: "kit-editor"
+          data:
+            slot_number: "{slot_number}"
+      shift_left_click:
+        - type: "load_kit"
+          slot: "{slot_number}"
+        - type: "broadcast"
+          message: "&a{player_name} loaded kit {slot_number}!"
+    
+  # Enderchest slots with similar functionality
+  enderchest_slots:
+    type: "conditional"
+    condition:
+      type: "has_enderchest"
+      slot: "{slot_index}"
+    true:
+      material: ENDER_CHEST
+      name: "&3&lEnderchest {slot_number}"
+      lore:
+        - "&7Left click to load"
+        - "&7Right click to edit"
+        - "&7Items: {ec_item_count}"
+      actions:
+        left_click: "load_enderchest:{slot_number}"
+        right_click: "open_gui:enderchest-editor:{slot_number}"
+    false:
+      material: ENDER_EYE
+      name: "&3&lEnderchest {slot_number}"
+      lore:
+        - "&7Click to create"
+      actions:
+        click: "open_gui:enderchest-editor:{slot_number}"
+    
+  # Navigation components
+  navigation:
+    type: "static"
+    material: BLUE_STAINED_GLASS_PANE
+    name: " "
+    
+  # Information button
+  info_button:
+    type: "static"
+    material: OAK_SIGN
+    name: "&a&lINFO"
+    lore:
+      - "&7● Click a kit slot to load your kit"
+      - "&7● Right click or click the book to edit" 
+      - "&7● Share kits with /sharekit <slot>"
+      - ""
+      - "&7Current server time: {time:HH:mm:ss}"
+      - "&7Your level: {player_level}"
+      
+  # Features section with conditional admin tools
+  features:
+    type: "conditional" 
+    condition:
+      type: "has_permission"
+      permission: "perplayerkit.admin"
+    true:
+      material: COMMAND_BLOCK
+      name: "&c&lAdmin Tools"
+      lore:
+        - "&7Access admin features"
+        - ""
+        - "&cThis is visible because you"
+        - "&chave admin permissions!"
+      actions:
+        click: "open_gui:admin-panel"
+    false:
+      material: EXPERIENCE_BOTTLE
+      name: "&a&lREPAIR ITEMS" 
+      lore:
+        - "&7Click to repair all items"
+        - "&7Cost: Free"
+      actions:
+        click:
+          - type: "repair_items"
+          - type: "play_sound" 
+            sound: "BLOCK_ANVIL_USE"
+
+# Advanced slot mappings with expressions
+slots:
+  
+  # Kit room button (bottom left)
+  "37":
+    type: "static"
+    material: NETHER_STAR
+    name: "&a&lKIT ROOM"
+    lore:
+      - "&7Access the community kit room"
+      - "&7Share and discover kits!"
+      - ""
+      - "&7Players online: {format:{players_online}:%.0f}"
+    actions:
+      click:
+        - type: "open_gui"
+          gui: "kit-room"
+        - type: "broadcast"
+          message: "&7{player_name} opened the kit room"
+    
+  # Public kits button
+  "38":
+    type: "static"
+    material: BOOKSHELF
+    name: "&e&lPREMADE KITS"
+    lore:
+      - "&7Browse server premade kits"
+      - "&7Perfect for getting started!"
+    actions:
+      click: "open_gui:public-kits"
+      
+  # Clear inventory button (with confirmation)
+  "41":
+    type: "conditional"
+    condition:
+      type: "context_exists" 
+      key: "confirm_clear"
+    true:
+      material: REDSTONE_BLOCK
+      name: "&c&lCONFIRM CLEAR"
+      lore:
+        - "&cThis will clear your inventory!"
+        - "&cClick again to confirm"
+      enchanted: true
+      actions:
+        click:
+          - type: "clear_inventory"
+          - type: "message"
+            text: "&aInventory cleared!"
+          - type: "play_sound"
+            sound: "ENTITY_ITEM_BREAK"
+    false:
+      material: ORANGE_TERRACOTTA
+      name: "&6&lCLEAR INVENTORY"
+      lore:
+        - "&7Shift click to clear inventory"
+        - "&cBe careful - this cannot be undone!"
+      actions:
+        shift_click:
+          - type: "set_context"
+            key: "confirm_clear"
+            value: true
+          - type: "refresh_gui"
+
+  # Share kits info
+  "42":
+    type: "static" 
+    material: COMPASS
+    name: "&a&lSHARE KITS"
+    lore:
+      - "&7Use &f/sharekit <slot>&7 to share"
+      - "&7Other players can import your kit"
+      - ""
+      - "&7Recent shares:"
+      - "{recent_shares:  &8● None yet}"
+    actions:
+      click:
+        type: "message"
+        text: "&7Use &a/sharekit <slot>&7 to share a kit!"
+
+# Data bindings - default values for placeholders
+data:
+  players_online: 0
+  recent_shares: "  &8● None yet"
+  kit_last_used: "never"

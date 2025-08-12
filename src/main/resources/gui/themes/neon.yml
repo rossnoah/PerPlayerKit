@@ -1,0 +1,213 @@
+# PerPlayerKit Neon Theme
+# Vibrant cyber-style interface with electric colors and futuristic feel
+
+name: "Neon Theme"
+description: "Vibrant cyber-style interface with electric colors and futuristic feel"
+version: "1.0"
+author: "PerPlayerKit"
+
+# Electric neon color scheme
+colors:
+  primary: "&b"        # Electric cyan
+  secondary: "&3"      # Dark aqua
+  accent: "&e"         # Electric yellow
+  success: "&a"        # Neon green
+  warning: "&6"        # Electric orange
+  error: "&c"          # Electric red
+  muted: "&8"          # Dark gray
+  highlight: "&f"      # Bright white
+  electric: "&d"       # Magenta
+  cyber: "&5"          # Purple
+  
+# Neon materials - bright and electric
+materials:
+  border: "CYAN_STAINED_GLASS_PANE"
+  background: "BLACK_STAINED_GLASS_PANE"
+  button: "LIGHT_BLUE_CONCRETE"
+  navigation: "CYAN_CONCRETE"
+  confirm: "LIME_CONCRETE"
+  cancel: "RED_CONCRETE"
+  info: "ACACIA_SIGN"
+  divider: "LIGHTNING_ROD"
+  accent: "PRISMARINE_CRYSTALS"
+  glow: "GLOW_INK_SAC"
+  
+# Neon component styles
+component_styles:
+  
+  kit_slot:
+    exists:
+      name_format: "&f&l⚡ {colors.primary}{name} &f⚡"
+      lore_format:
+        - "{colors.accent}» {action_text}"
+        - ""
+        - "{colors.primary}⚡ Items: {colors.highlight}{item_count}"
+        - "{colors.electric}⟩ Last used: {last_used}"
+        - ""
+        - "{colors.cyber}▰▰▰▰▰ READY ▰▰▰▰▰"
+      enchanted: true
+    empty:
+      name_format: "&8&l⚡ {colors.muted}{name} &8⚡"
+      lore_format:
+        - "{colors.muted}» Click to initialize"
+        - "{colors.accent}⟩ Empty data slot"
+        
+  enderchest_slot:
+    exists:
+      name_format: "&f&l⬡ {colors.accent}{name} &f⬡"
+      lore_format:
+        - "{colors.primary}» {action_text}"
+        - "{colors.accent}⚡ Storage: {colors.highlight}{item_count} units"
+        - "{colors.cyber}▰▰▰ ONLINE ▰▰▰"
+      enchanted: true
+    empty:
+      name_format: "&8&l⬡ {colors.muted}{name} &8⬡"
+      lore_format:
+        - "{colors.muted}» Initialize storage unit"
+        
+  button:
+    name_format: "{colors.accent}&l⟦ {name} ⟧"
+    lore_format: 
+      - "{colors.primary}{description}"
+      - ""
+      - "{colors.electric}» CLICK TO EXECUTE «"
+    enchanted: true
+    
+  border:
+    material: "{materials.border}"
+    name: " "
+    hide_flags: true
+    
+  info:
+    material: "{materials.info}"
+    name_format: "{colors.primary}&l⟨ {name} ⟩"
+    lore_format:
+      - "{colors.accent}{line}"
+
+  admin:
+    name_format: "{colors.error}&l⚡ ADMIN ACCESS ⚡"
+    lore_format:
+      - "{colors.primary}{description}"
+      - ""
+      - "{colors.electric}» AUTHORIZED PERSONNEL ONLY «"
+    enchanted: true
+
+# Electric animations
+animations:
+  enabled: true
+  
+  gui_open:
+    type: "electric_surge"
+    duration: "0.2s"
+    
+  hover:
+    type: "neon_glow"
+    duration: "0.1s"
+    
+  success:
+    type: "electric_explosion"
+    duration: "0.8s"
+    
+  loading:
+    type: "neon_pulse"
+    duration: "infinite"
+
+# Cyber sounds
+sounds:
+  enabled: true
+  
+  gui_open: "ENTITY_LIGHTNING_BOLT_THUNDER"
+  gui_close: "BLOCK_BEACON_DEACTIVATE"
+  page_turn: "BLOCK_LEVER_CLICK"
+  
+  kit_load: "BLOCK_BEACON_POWER_SELECT"
+  kit_save: "BLOCK_BEACON_ACTIVATE"
+  success: "ENTITY_LIGHTNING_BOLT_IMPACT"
+  error: "BLOCK_REDSTONE_TORCH_BURNOUT"
+  warning: "BLOCK_NOTE_BLOCK_BIT"
+  
+  button_click: "BLOCK_STONE_BUTTON_CLICK_ON"
+  button_hover: "BLOCK_TRIPWIRE_CLICK_ON"
+
+# Cyber typography
+typography:
+  title_format: "&f&l⟦ {colors.primary}{title} &f&l⟧"
+  
+  small_text: "&3&o"
+  normal_text: "&b"
+  large_text: "&f&l"
+  
+  emphasis: "&e&l"
+  italic: "&d&o"
+  underline: "&b&n"
+
+# Neon layout
+layout:
+  padding: 1
+  margin: 1
+  align_items: "center"
+  justify_content: "center"
+  border_width: 2  # Thicker borders for neon effect
+
+# Cyber templates
+templates:
+  
+  nav_bar:
+    height: 1
+    background: "{materials.background}"
+    components:
+      back_button:
+        material: "CYAN_CONCRETE" 
+        name: "{colors.primary}&l◀◀ BACK"
+        slot: 0
+      title:
+        material: "{materials.info}"
+        name: "&f&l⟨ {colors.primary}{gui_title} &f&l⟩"
+        slot: 4
+      close_button:
+        material: "RED_CONCRETE"
+        name: "{colors.error}&l✕✕ EXIT"
+        slot: 8
+        
+  border:
+    material: "{materials.border}"
+    name: " "
+    slots: "edges"
+    hide_flags: true
+    
+  confirmation:
+    size: 27
+    background: "{materials.background}"
+    components:
+      confirm:
+        material: "{materials.confirm}"
+        name: "{colors.success}&l⚡ EXECUTE ⚡"
+        slot: 11
+        enchanted: true
+      cancel:
+        material: "{materials.cancel}"
+        name: "{colors.error}&l⚡ ABORT ⚡"
+        slot: 15
+        enchanted: true
+      info:
+        material: "LIGHTNING_ROD"
+        name: "{colors.warning}&l⚠ SYSTEM WARNING ⚠"
+        slot: 13
+
+# Neon theme data
+data:
+  server_name: "⚡ CYBER SERVER ⚡"
+  server_color: "{colors.primary}"
+  
+  no_permission: "{colors.error}⚡ ACCESS DENIED ⚡"
+  loading_text: "{colors.accent}» LOADING SYSTEM DATA..."
+  error_text: "{colors.error}⚡ SYSTEM ERROR"
+  success_text: "{colors.success}⚡ OPERATION SUCCESSFUL"
+  
+# Neon special features
+features:
+  electric_effects: true
+  glow_particles: true
+  cyber_sounds: true
+  holographic_text: true
+  lightning_transitions: true

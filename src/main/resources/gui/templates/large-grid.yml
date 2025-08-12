@@ -1,0 +1,83 @@
+# Large Grid Template
+# A 6x9 menu template for displaying many items
+
+name: "Large Grid Template"
+size: 54
+description: "Large 6-row grid with maximum content space"
+
+# Template layout for maximum content
+layout:
+  type: "custom"
+  pattern:
+    - "bbbbbbbbb"  # Row 0: Border
+    - "b1234567b"  # Row 1: Content row 1
+    - "babcdefgb"  # Row 2: Content row 2  
+    - "bhijklmnb"  # Row 3: Content row 3
+    - "bopqrstub"  # Row 4: Content row 4
+    - "bbbbbbbbb"  # Row 5: Border with navigation
+
+# Template component definitions
+template_components:
+  
+  # Border frame
+  border:
+    type: "border"
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53]
+    material: "{theme.materials.border}"
+    name: " "
+    hide_flags: true
+  
+  # Content grid - 4 rows x 7 columns = 28 slots
+  content_grid:
+    type: "placeholder"
+    slots: [10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43]
+    description: "Main content grid with 28 available slots"
+
+# Extended navigation for large menus
+navigation:
+  back_button:
+    enabled: true
+    slot: 45
+    material: "{theme.materials.navigation}"
+    name: "{theme.colors.secondary}◀ Back"
+    
+  home_button:
+    enabled: true
+    slot: 49
+    material: "{theme.materials.info}"
+    name: "{theme.colors.primary}⌂ Home"
+    
+  close_button:
+    enabled: true
+    slot: 53
+    material: "{theme.materials.cancel}"
+    name: "{theme.colors.error}✕ Close"
+
+# Pagination support for large datasets
+pagination:
+  enabled: true
+  items_per_page: 28
+  
+  previous_page:
+    slot: 46
+    material: "ARROW"
+    name: "{theme.colors.secondary}← Previous"
+    
+  page_indicator:
+    slot: 49
+    material: "PAPER"
+    name: "{theme.colors.primary}Page {current_page} of {total_pages}"
+    
+  next_page:
+    slot: 52
+    material: "ARROW"
+    name: "{theme.colors.secondary}Next →"
+
+# Template metadata
+template_info:
+  category: "large"
+  content_slots: 28
+  supports_pagination: true
+  supports_navigation: true
+  recommended_themes: ["neon", "default"]
+  best_for: ["inventories", "collections", "archives"]

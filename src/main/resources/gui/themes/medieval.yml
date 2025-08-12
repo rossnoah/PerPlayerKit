@@ -1,0 +1,209 @@
+# PerPlayerKit Medieval Theme
+# Classic fantasy-themed interface with earthy tones and medieval styling
+
+name: "Medieval Theme"
+description: "Classic fantasy interface with earthy tones and medieval-inspired elements"
+version: "1.0"
+author: "PerPlayerKit"
+
+# Medieval color scheme - earthy and warm
+colors:
+  primary: "&6"        # Gold
+  secondary: "&e"      # Yellow
+  accent: "&c"         # Red
+  success: "&a"        # Green
+  warning: "&6"        # Gold
+  error: "&4"          # Dark red
+  muted: "&8"          # Dark gray
+  highlight: "&f"      # White
+  earth: "&8"          # Dark gray
+  royal: "&9"          # Blue
+  
+# Medieval materials - wood, stone, leather
+materials:
+  border: "DARK_OAK_LOG"
+  background: "OAK_PLANKS"
+  button: "OAK_BUTTON"
+  navigation: "OAK_WOOD"
+  confirm: "GREEN_WOOL"
+  cancel: "RED_WOOL"
+  info: "OAK_SIGN"
+  divider: "IRON_BARS"
+  accent: "GOLD_INGOT"
+  
+# Medieval component styles
+component_styles:
+  
+  kit_slot:
+    exists:
+      name_format: "&6⚔ &e{name} &6⚔"
+      lore_format:
+        - "&8» {action_text}"
+        - ""
+        - "&6Items: &f{item_count}"
+        - "&8Last equipped: {last_used}"
+        - ""
+        - "&c⚔ Ready for Battle ⚔"
+      enchanted: true
+    empty:
+      name_format: "&8⚔ &7{name} &8⚔"
+      lore_format:
+        - "&8» Click to forge"
+        - "&7Empty armory slot"
+        
+  enderchest_slot:
+    exists:
+      name_format: "&6✦ &e{name} &6✦"
+      lore_format:
+        - "&8» {action_text}"
+        - "&6Storage: &f{item_count} items"
+        - "&c✦ Vault Available ✦"
+      enchanted: true
+    empty:
+      name_format: "&8✦ &7{name} &8✦"
+      lore_format:
+        - "&8» Initialize vault"
+        
+  button:
+    name_format: "&6[&e {name} &6]"
+    lore_format: 
+      - "&8{description}"
+      - ""
+      - "&c» Click to Proceed «"
+    enchanted: false
+    
+  border:
+    material: "{materials.border}"
+    name: " "
+    hide_flags: true
+    
+  info:
+    material: "{materials.info}"
+    name_format: "&6⚜ {name} ⚜"
+    lore_format:
+      - "&8{line}"
+
+  admin:
+    name_format: "&4⚜ NOBLE ACCESS ⚜"
+    lore_format:
+      - "&6{description}"
+      - ""
+      - "&c» Royal Authority Required «"
+    enchanted: true
+
+# Medieval animations
+animations:
+  enabled: true
+  
+  gui_open:
+    type: "castle_gates"
+    duration: "0.5s"
+    
+  hover:
+    type: "golden_shimmer"
+    duration: "0.3s"
+    
+  success:
+    type: "royal_fanfare"
+    duration: "1.5s"
+    
+  loading:
+    type: "torch_flicker"
+    duration: "infinite"
+
+# Medieval sounds
+sounds:
+  enabled: true
+  
+  gui_open: "BLOCK_CHEST_OPEN"
+  gui_close: "BLOCK_CHEST_CLOSE"
+  page_turn: "ITEM_BOOK_PAGE_TURN"
+  
+  kit_load: "ITEM_ARMOR_EQUIP_LEATHER"
+  kit_save: "BLOCK_ANVIL_USE"
+  success: "ENTITY_PLAYER_LEVELUP"
+  error: "ENTITY_VILLAGER_NO"
+  warning: "BLOCK_NOTE_BLOCK_BASS"
+  
+  button_click: "BLOCK_WOOD_BUTTON_CLICK_ON"
+  button_hover: "BLOCK_WOOD_STEP"
+
+# Medieval typography
+typography:
+  title_format: "&6⚜ {title} ⚜"
+  
+  small_text: "&8&o"
+  normal_text: "&8"
+  large_text: "&6&l"
+  
+  emphasis: "&e&l"
+  italic: "&6&o"
+  underline: "&e&n"
+
+# Medieval layout
+layout:
+  padding: 1
+  margin: 1
+  align_items: "center"
+  justify_content: "center"
+  border_width: 1
+
+# Medieval templates
+templates:
+  
+  nav_bar:
+    height: 1
+    background: "{materials.border}"
+    components:
+      back_button:
+        material: "OAK_WOOD" 
+        name: "&6◄ Return"
+        slot: 0
+      title:
+        material: "{materials.info}"
+        name: "&6⚜ {gui_title} ⚜"
+        slot: 4
+      close_button:
+        material: "RED_WOOL"
+        name: "&4✕ Close"
+        slot: 8
+        
+  border:
+    material: "{materials.border}"
+    name: " "
+    slots: "edges"
+    hide_flags: true
+    
+  confirmation:
+    size: 27
+    background: "{materials.background}"
+    components:
+      confirm:
+        material: "{materials.confirm}"
+        name: "&a✓ Confirm"
+        slot: 11
+      cancel:
+        material: "{materials.cancel}"
+        name: "&c✕ Cancel"
+        slot: 15
+      info:
+        material: "{materials.info}"
+        name: "&6⚠ Warning"
+        slot: 13
+
+# Medieval theme data
+data:
+  server_name: "⚜ Medieval Realm ⚜"
+  server_color: "{colors.primary}"
+  
+  no_permission: "&4⚠ Access Forbidden"
+  loading_text: "&8» Preparing armory..."
+  error_text: "&4⚠ Quest Failed"
+  success_text: "&a✓ Quest Complete"
+  
+# Medieval special features
+features:
+  torch_lighting: true
+  stone_textures: true
+  wooden_sounds: true
+  royal_effects: true

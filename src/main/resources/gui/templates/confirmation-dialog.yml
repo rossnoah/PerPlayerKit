@@ -1,0 +1,78 @@
+# Confirmation Dialog Template
+# A simple confirmation prompt template
+
+name: "Confirmation Dialog Template"
+size: 27
+description: "Simple yes/no confirmation dialog"
+
+# Centered confirmation layout
+layout:
+  type: "custom"
+  pattern:
+    - "bbbbbbbbb"  # Row 0: Border
+    - "bbyesnoob"  # Row 1: Border + confirm/cancel + border
+    - "bbbbbbbbb"  # Row 2: Border
+
+# Template component definitions
+template_components:
+  
+  # Border frame
+  border:
+    type: "border"
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+    material: "{theme.materials.border}"
+    name: " "
+    hide_flags: true
+  
+  # Confirmation buttons
+  confirm_button:
+    type: "button"
+    slot: 11
+    material: "{theme.materials.confirm}"
+    name: "{theme.colors.success}✓ Confirm"
+    lore:
+      - "{theme.colors.success}Click to proceed"
+      - ""
+      - "{confirmation_message}"
+    enchanted: true
+    actions:
+      left_click:
+        type: "confirm_action"
+        
+  cancel_button:
+    type: "button"
+    slot: 15
+    material: "{theme.materials.cancel}"
+    name: "{theme.colors.error}✕ Cancel"
+    lore:
+      - "{theme.colors.error}Click to cancel"
+      - ""
+      - "No changes will be made"
+    actions:
+      left_click:
+        type: "cancel_action"
+  
+  # Information display
+  info_display:
+    type: "info"
+    slot: 13
+    material: "{theme.materials.info}"
+    name: "{theme.colors.warning}⚠ Confirmation Required"
+    lore:
+      - "{info_message}"
+      - ""
+      - "{theme.colors.muted}Choose an option below"
+
+# Template data placeholders
+data_placeholders:
+  confirmation_message: "Are you sure you want to proceed?"
+  info_message: "This action requires confirmation"
+  action_type: "unknown"
+
+# Template metadata  
+template_info:
+  category: "dialog"
+  content_slots: 3
+  supports_navigation: false
+  recommended_themes: ["all"]
+  best_for: ["confirmations", "warnings", "decisions"]

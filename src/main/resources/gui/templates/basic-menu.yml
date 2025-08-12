@@ -1,0 +1,52 @@
+# Basic Menu Template
+# A simple 3x9 menu template that can be reused
+
+name: "Basic Menu Template"
+size: 27
+description: "Simple 3-row menu with border and content area"
+
+# Template layout pattern
+layout:
+  type: "custom"
+  pattern:
+    - "bbbbbbbbb"  # Row 0: Border
+    - "bcontentb"  # Row 1: Border + content area + border
+    - "bbbbbbbbb"  # Row 2: Border
+
+# Template component definitions
+template_components:
+  
+  # Border component template
+  border:
+    type: "border"
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+    material: "{theme.materials.border}"
+    name: " "
+    hide_flags: true
+  
+  # Content area - can be customized by implementer
+  content:
+    type: "placeholder"
+    slots: [10, 11, 12, 13, 14, 15, 16]
+    description: "Content area for custom components"
+
+# Navigation template
+navigation:
+  back_button:
+    enabled: true
+    slot: 18
+    material: "{theme.materials.navigation}"
+    name: "{theme.colors.secondary}◀ Back"
+    
+  close_button:
+    enabled: true
+    slot: 26
+    material: "{theme.materials.cancel}"
+    name: "{theme.colors.error}✕ Close"
+
+# Template metadata
+template_info:
+  category: "basic"
+  content_slots: 7
+  supports_navigation: true
+  recommended_themes: ["default", "dark", "medieval"]
