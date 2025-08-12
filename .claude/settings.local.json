@@ -6,7 +6,8 @@
       "Bash(mvn clean:*)",
       "Bash(mkdir:*)",
       "Bash(mvn:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }
