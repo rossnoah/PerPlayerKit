@@ -282,7 +282,7 @@ public class KitManager {
 
         ItemStack[] kit = kitByKitIDMap.get(IDUtil.getPlayerKitId(uuid, slot));
         ItemStack[] playerInventory = player.getInventory().getContents();
-        for (int i = 0; i < playerInventory.length; i++) {
+        for (int i = 0; i < Math.min(playerInventory.length, kit.length); i++) {
             if (kit[i] == null) {
                 continue;
             }
