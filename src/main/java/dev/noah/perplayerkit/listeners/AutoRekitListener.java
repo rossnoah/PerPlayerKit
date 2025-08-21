@@ -42,7 +42,7 @@ public class AutoRekitListener implements Listener {
             return;
         }
 
-        if (!e.getPlayer().hasPermission("kit.use")) {
+        if (!e.getPlayer().hasPermission("perplayerkit.rekitonrespawn")) {
             return;
         }
 
@@ -63,7 +63,7 @@ public class AutoRekitListener implements Listener {
             return;
         }
 
-        if (!killer.hasPermission("kit.use")) {
+        if (!killer.hasPermission("perplayerkit.rekitonkill")) {
             return;
         }
 

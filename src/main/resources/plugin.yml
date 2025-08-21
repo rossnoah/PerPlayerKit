@@ -32,6 +32,8 @@ permissions:
       perplayerkit.regear: true
       perplayerkit.heal: true
       perplayerkit.repair: true
+      perplayerkit.rekitonrespawn: true
+      perplayerkit.rekitonkill: true
 
 
 commands:

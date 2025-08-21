@@ -1,6 +1,6 @@
 # PerPlayerKit Command Docs
 
-- **Version:** 1.5.0
+- **Version:** 1.6.2
 - **Author(s):** Noah Ross
 - **Minimum Spigot/Paper Version:** 1.19
 
@@ -10,6 +10,7 @@ The following table outlines each command, its usage, aliases, and permissions r
 
 | Command             | Aliases                  | Permission                     |
 |---------------------|--------------------------|--------------------------------|
+| `perplayerkit`      | `N/A`                    | `perplayerkit.admin`           |
 | `aboutperplayerkit` | `N/A`                    | `N/A`                          |
 | `kitroom`           | `N/A`                    | `perplayerkit.admin`           |
 | `kit`               | `k`                      | `perplayerkit.menu`            |
@@ -19,6 +20,7 @@ The following table outlines each command, its usage, aliases, and permissions r
 | `swapkit`           | `N/A`                    | `perplayerkit.swapkit`         |
 | `deletekit`         | `N/A`                    | `perplayerkit.deletekit`       |
 | `inspectkit`        | `N/A`                    | `perplayerkit.staff`           |
+| `inspectec`         | `N/A`                    | `perplayerkit.staff`           |
 | `publickit`         | `pk, premadekit`         | `perplayerkit.publickit`       |
 | `k1`                | `kit1`                   | `perplayerkit.kit`             |
 | `k2`                | `kit2`                   | `perplayerkit.kit`             |
@@ -48,9 +50,9 @@ The following table outlines each command, its usage, aliases, and permissions r
 
 The following table outlines each top-level permission and the sub-permissions it grants.
 
-| Permission         | Grants                                                                                                                                                                                                                                                                                                                            |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `kit.admin`        | `perplayerkit.admin`                                                                                                                                                                                                                                                                                                              |
-| `kit.staff`        | `perplayerkit.staff`                                                                                                                                                                                                                                                                                                              |
-| `kit.use`          | `perplayerkit.use`                                                                                                                                                                                                                                                                                                                |
-| `perplayerkit.use` | `perplayerkit.menu`, `perplayerkit.copykit`, `perplayerkit.sharekit`, `perplayerkit.shareenderchest`, `perplayerkit.swapkit`, `perplayerkit.deletekit`, `perplayerkit.publickit`, `perplayerkit.kit`, `perplayerkit.enderchest`, `perplayerkit.viewenderchest`, `perplayerkit.regear`, `perplayerkit.heal`, `perplayerkit.repair` |
+| Permission         | Grants                                                                                                                                                                                                                                                                                                                                                                                       |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `kit.admin`        | `perplayerkit.admin`                                                                                                                                                                                                                                                                                                                                                                         |
+| `kit.staff`        | `perplayerkit.staff`                                                                                                                                                                                                                                                                                                                                                                         |
+| `kit.use`          | `perplayerkit.use`                                                                                                                                                                                                                                                                                                                                                                           |
+| `perplayerkit.use` | `perplayerkit.menu`, `perplayerkit.copykit`, `perplayerkit.sharekit`, `perplayerkit.shareenderchest`, `perplayerkit.swapkit`, `perplayerkit.deletekit`, `perplayerkit.publickit`, `perplayerkit.kit`, `perplayerkit.enderchest`, `perplayerkit.viewenderchest`, `perplayerkit.regear`, `perplayerkit.heal`, `perplayerkit.repair`, `perplayerkit.rekitonrespawn`, `perplayerkit.rekitonkill` |
