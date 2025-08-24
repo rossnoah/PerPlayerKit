@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.gui;
 
+import dev.noah.perplayerkit.util.StyleManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -52,6 +53,10 @@ public class ItemUtil {
         }
 
         return item;
+    }
+
+    public static ItemStack createGlassPane() {
+        return createItem(StyleManager.get().getGlassMaterial(), 1, " ");
     }
 
     public static ItemStack createItem(Material material, String name) {
