@@ -5,9 +5,9 @@ import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.CooldownManager;
 import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.StyleManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,8 +26,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegearCommand implements CommandExecutor, Listener {
 
-    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, ChatColor.BLUE + "Regear Shulker", "&7● Restocks Your Kit", "&7● Use &9/rg &7to get another regear shulker");
-    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, ChatColor.BLUE + "Regear Shell", "&7● Restocks Your Kit", "&7● Click to use!");
+    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, StyleManager.get().getPrimaryColor() + "Regear Shulker", "&7● Restocks Your Kit", "&7● Use " + StyleManager.get().getPrimaryColor() + "/rg &7to get another regear shulker");
+    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, StyleManager.get().getPrimaryColor() + "Regear Shell", "&7● Restocks Your Kit", "&7● Click to use!");
+
     private final Plugin plugin;
     private final CooldownManager commandCooldownManager;
     private final CooldownManager damageCooldownManager;
@@ -192,7 +193,7 @@ public class RegearCommand implements CommandExecutor, Listener {
 
         @Override
         public @NotNull Inventory getInventory() {
-            Inventory inventory = Bukkit.createInventory(this, 27, ChatColor.BLUE + "Regear Shulker");
+            Inventory inventory = Bukkit.createInventory(this, 27, StyleManager.get().getPrimaryColor() + "Regear Shulker");
             inventory.setItem(13, REGEAR_SHELL_ITEM);
             return inventory;
         }

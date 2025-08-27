@@ -53,6 +53,9 @@ scheduled-broadcast: #uses mini message format
     - "<white>Want to share a kit? Use the <aqua>/sharekit <slot><white> command!"
     - "<white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
 
+interface:
+  glass-material: BLUE_STAINED_GLASS_PANE
+  main-color: "<blue>" # Plugin main color (MiniMessage format: <blue>, <red>, <green>, etc.)
 
 kitroom:
   items:
