@@ -52,7 +52,7 @@ public class EnderchestCommand implements CommandExecutor {
 
         ItemStack fill = ItemUtil.createGlassPane();
 
-        Menu menu = ChestMenu.builder(5).title(StyleManager.get().getMainColor() + "View Only Enderchest").build();
+        Menu menu = ChestMenu.builder(5).title(StyleManager.get().getPrimaryColor() + "View Only Enderchest").build();
 
 
         for (int i = 0; i < 9; i++) {

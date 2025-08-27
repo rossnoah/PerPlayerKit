@@ -64,7 +64,7 @@ public class GUI {
     }
 
     public static Menu createPublicKitMenu() {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Public Kit Room").redraw(true).build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Public Kit Room").redraw(true).build();
     }
 
     public static boolean removeKitDeletionFlag(Player player) {
@@ -349,7 +349,7 @@ public class GUI {
             }
             return null;
         }
-        Menu menu = ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Viewing Public Kit: " + id).redraw(true).build();
+        Menu menu = ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Viewing Public Kit: " + id).redraw(true).build();
 
         for (int i = 0; i < 54; i++) {
             menu.getSlot(i).setItem(ItemUtil.createGlassPane());
@@ -650,31 +650,31 @@ public class GUI {
     }
 
     public Menu createKitMenu(int slot) {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Kit: " + slot).build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Kit: " + slot).build();
     }
 
     public Menu createPublicKitMenu(String id) {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Public Kit: " + id).build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Public Kit: " + id).build();
     }
 
     public Menu createECMenu(int slot) {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Enderchest: " + slot).build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Enderchest: " + slot).build();
     }
 
     public Menu createInspectMenu(int slot, String playerName) {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Inspecting " + playerName + "'s kit " + slot).build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Inspecting " + playerName + "'s kit " + slot).build();
     }
 
     public Menu createInspectEcMenu(int slot, String playerName) {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Inspecting " + playerName + "'s enderchest " + slot).build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Inspecting " + playerName + "'s enderchest " + slot).build();
     }
 
     public Menu createMainMenu(Player p) {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + p.getName() + "'s Kits").build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + p.getName() + "'s Kits").build();
     }
 
     public Menu createKitRoom() {
-        return ChestMenu.builder(6).title(StyleManager.get().getMainColor() + "Kit Room").redraw(true).build();
+        return ChestMenu.builder(6).title(StyleManager.get().getPrimaryColor() + "Kit Room").redraw(true).build();
     }
 
     public void allowModification(Slot slot) {

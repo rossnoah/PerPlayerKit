@@ -26,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegearCommand implements CommandExecutor, Listener {
 
-    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, StyleManager.get().getMainColor() + "Regear Shulker", "&7● Restocks Your Kit", "&7● Use " + StyleManager.get().getMainColor() + "/rg &7to get another regear shulker");
-    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, StyleManager.get().getMainColor() + "Regear Shell", "&7● Restocks Your Kit", "&7● Click to use!");
+    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, StyleManager.get().getPrimaryColor() + "Regear Shulker", "&7● Restocks Your Kit", "&7● Use " + StyleManager.get().getPrimaryColor() + "/rg &7to get another regear shulker");
+    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, StyleManager.get().getPrimaryColor() + "Regear Shell", "&7● Restocks Your Kit", "&7● Click to use!");
 
     private final Plugin plugin;
     private final CooldownManager commandCooldownManager;
@@ -193,7 +193,7 @@ public class RegearCommand implements CommandExecutor, Listener {
 
         @Override
         public @NotNull Inventory getInventory() {
-            Inventory inventory = Bukkit.createInventory(this, 27, StyleManager.get().getMainColor() + "Regear Shulker");
+            Inventory inventory = Bukkit.createInventory(this, 27, StyleManager.get().getPrimaryColor() + "Regear Shulker");
             inventory.setItem(13, REGEAR_SHELL_ITEM);
             return inventory;
         }

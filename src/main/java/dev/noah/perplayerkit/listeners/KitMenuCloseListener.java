@@ -42,10 +42,10 @@ public class KitMenuCloseListener implements Listener {
         if (inv.getSize() == 54) {
             if (inv.getLocation() == null) {
                 InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getMainColor() + "Kit: ")) {
+                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Kit: ")) {
                     Player p = (Player) e.getPlayer();
                     UUID uuid = p.getUniqueId();
-                    int slot = Integer.parseInt(view.getTitle().replace(StyleManager.get().getMainColor() + "Kit: ", ""));
+                    int slot = Integer.parseInt(view.getTitle().replace(StyleManager.get().getPrimaryColor() + "Kit: ", ""));
                     ItemStack[] kit = new ItemStack[41];
                     ItemStack[] chestitems = e.getInventory().getContents();
 
@@ -68,9 +68,9 @@ public class KitMenuCloseListener implements Listener {
         if (inv.getSize() == 54) {
             if (inv.getLocation() == null) {
                 InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getMainColor() + "Public Kit: ")) {
+                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Public Kit: ")) {
                     Player player = (Player) e.getPlayer();
-                    String publickit = view.getTitle().replace(StyleManager.get().getMainColor() + "Public Kit: ", "");
+                    String publickit = view.getTitle().replace(StyleManager.get().getPrimaryColor() + "Public Kit: ", "");
                     ItemStack[] kit = new ItemStack[41];
                     ItemStack[] chestitems = e.getInventory().getContents();
 
@@ -93,10 +93,10 @@ public class KitMenuCloseListener implements Listener {
         if (inv.getSize() == 54) {
             if (inv.getLocation() == null) {
                 InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getMainColor() + "Enderchest: ")) {
+                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Enderchest: ")) {
                     Player p = (Player) e.getPlayer();
                     UUID uuid = p.getUniqueId();
-                    int slot = Integer.parseInt(view.getTitle().replace(StyleManager.get().getMainColor() + "Enderchest: ", ""));
+                    int slot = Integer.parseInt(view.getTitle().replace(StyleManager.get().getPrimaryColor() + "Enderchest: ", ""));
                     ItemStack[] kit = new ItemStack[27];
                     ItemStack[] chestitems = e.getInventory().getContents();
 
@@ -119,13 +119,13 @@ public class KitMenuCloseListener implements Listener {
         if (inv.getSize() == 54) {
             if (inv.getLocation() == null) {
                 InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getMainColor() + "Inspecting ") && view.getTitle().contains("'s kit ")) {
+                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Inspecting ") && view.getTitle().contains("'s kit ")) {
                     Player p = (Player) e.getPlayer();
                     if (!p.hasPermission("perplayerkit.admin")) {
                         return;
                     }
                     String title = view.getTitle();
-                    String[] parts = title.replace(StyleManager.get().getMainColor() + "Inspecting ", "").split("'s kit ");
+                    String[] parts = title.replace(StyleManager.get().getPrimaryColor() + "Inspecting ", "").split("'s kit ");
                     if (parts.length != 2) {
                         return;
                     }
@@ -186,13 +186,13 @@ public class KitMenuCloseListener implements Listener {
         if (inv.getSize() == 54) {
             if (inv.getLocation() == null) {
                 InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getMainColor() + "Inspecting ") && view.getTitle().contains("'s enderchest ")) {
+                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Inspecting ") && view.getTitle().contains("'s enderchest ")) {
                     Player p = (Player) e.getPlayer();
                     if (!p.hasPermission("perplayerkit.admin")) {
                         return;
                     }
                     String title = view.getTitle();
-                    String[] parts = title.replace(StyleManager.get().getMainColor() + "Inspecting ", "").split("'s enderchest ");
+                    String[] parts = title.replace(StyleManager.get().getPrimaryColor() + "Inspecting ", "").split("'s enderchest ");
                     if (parts.length != 2) {
                         return;
                     }

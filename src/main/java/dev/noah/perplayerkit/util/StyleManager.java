@@ -54,7 +54,7 @@ public class StyleManager {
         return glassMaterial;
     }
 
-    public String getMainColor() {
+    public String getPrimaryColor() {
         return titleColor;
     }
 }

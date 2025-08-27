@@ -41,7 +41,7 @@ public class KitRoomSaveListener implements Listener {
                     InventoryView view = e.getView();
                     Player p = (Player) e.getWhoClicked();
 
-                    if (view.getTitle().contains(StyleManager.get().getMainColor() + p.getName() + "'s Kits")) {
+                    if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + p.getName() + "'s Kits")) {
                         ItemStack saveButton = e.getInventory().getItem(53);
                         if (saveButton != null && saveButton.getType() == Material.BARRIER) {
                             if (e.getSlot() == 53) {
