@@ -20,15 +20,19 @@ package dev.noah.perplayerkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Container;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ItemFilter {
@@ -71,11 +75,26 @@ public class ItemFilter {
 
             if (item != null) {
 
-                if (item.getType().toString().contains("SHULKER_BOX")) {
-                    if (item.getItemMeta() instanceof BlockStateMeta blockStateMeta) {
-                        if (blockStateMeta.getBlockState() instanceof ShulkerBox shulker) {
-                            shulker.getInventory().setContents(filterItemStack(shulker.getInventory().getContents()));
+                if (item.getItemMeta() instanceof BlockStateMeta blockStateMeta) {
+                    if (blockStateMeta.getBlockState() instanceof Container container) {
+                        container.getInventory().setContents(filterItemStack(container.getInventory().getContents()));
+                        blockStateMeta.setBlockState(container);
+                        item.setItemMeta(blockStateMeta);
+                    }
+                }
+
+                // Handle bundles
+                if (item.getItemMeta() instanceof BundleMeta bundleMeta) {
+                    List<ItemStack> bundleItems = bundleMeta.getItems();
+                    if (!bundleItems.isEmpty()) {
+                        List<ItemStack> filteredItems = new ArrayList<>();
+                        for (ItemStack bundleItem : bundleItems) {
+                            if (isSafe(bundleItem)) {
+                                filteredItems.add(bundleItem);
+                            }
                         }
+                        bundleMeta.setItems(filteredItems);
+                        item.setItemMeta(bundleMeta);
                     }
                 }
             }
@@ -122,7 +141,7 @@ public class ItemFilter {
         for (ItemStack[] itemStacks : items) {
             for (ItemStack item : itemStacks) {
                 if (item != null) {
-                        whitelist.add(item.getType().toString());
+                    whitelist.add(item.getType().toString());
                 }
             }
         }
