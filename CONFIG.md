@@ -1,5 +1,59 @@
 # Configuration Overview:
 
+## MiniMessage Format
+
+All color and text formatting in this configuration uses **MiniMessage format**. This is a modern, flexible text formatting system that replaces legacy color codes.
+
+### Common Colors
+
+Named colors are the simplest way to add color:
+- `<red>` - Red text
+- `<green>` - Green text
+- `<blue>` - Blue text
+- `<yellow>` - Yellow text
+- `<aqua>` - Aqua/Cyan text
+- `<gray>` - Gray text
+- `<white>` - White text
+- `<black>` - Black text
+- `<dark_red>` - Dark red
+- `<dark_green>` - Dark green
+- `<dark_blue>` - Dark blue
+- `<dark_gray>` - Dark gray
+- `<dark_aqua>` - Dark aqua
+- `<gold>` - Gold/Orange
+
+### RGB Colors
+
+For precise color control, use RGB hex colors:
+- `<color:#FF0000>` - Red (RGB format: #RRGGBB)
+- `<color:#00FF00>` - Green
+- `<color:#0000FF>` - Blue
+- `<color:#FF6B35>` - Custom orange
+- `<color:#A0E7E5>` - Custom teal
+
+### Text Formatting
+
+Combine colors with formatting:
+- `<b>` - Bold text
+- `<i>` - Italic text
+- `<u>` - Underlined text
+- `<st>` - Strikethrough text
+- `<obf>` - Obfuscated text
+- `<reset>` - Reset formatting
+
+### Examples
+
+```
+<red>Error:</red> <gray>Something went wrong</gray>
+<green><b>Success!</b></green> Your kit has been saved.
+<color:#FF6B35><b>Important:</b></color> This is a custom orange color.
+<aqua>Type <u>/kit</u> to get started!</aqua>
+```
+
+For a complete reference of all available options, see the [MiniMessage documentation](https://docs.papermc.io/adventure/minimessage/).
+
+---
+
 ### **Database Credentials**
 
 Select either storage type. SQLite is recommended for small servers, while MySQL is recommended for larger servers or multi-server setups.
@@ -63,7 +117,7 @@ scheduled-broadcast:
 
 ### **Kit Room**
 
-Defines kits and their visual representation in the UI. This section uses the old text formating using & color codes.
+Defines kits and their visual representation in the UI. Kit names are displayed in their default color.
 
 ```yaml
 kitroom:
@@ -89,20 +143,20 @@ kitroom:
 
 ### **Disabled Command Worlds**
 
-Lists worlds where kit commands are disabled. Players in these worlds will see a custom error message if they attempt to use the commands. This section uses the old text formating using & color codes.
+Lists worlds where kit commands are disabled. Players in these worlds will see a custom error message if they attempt to use the commands. This section uses mini message format for styling.
 
 ```yaml
 disabled-command-worlds:
   - "example_world" # Add worlds where kit commands should be restricted.
 
-disabled-command-message: "&cKits are disabled here!" # Message displayed to players in disabled worlds.
+disabled-command-message: "<red>Kits are disabled here!</red>" # Message displayed to players in disabled worlds (MiniMessage format).
 ```
 
 ---
 
 ### **Public Kits**
 
-Allows customization of publicly available kits. By default, this section is commented out and needs to be configured based on requirements. This section uses the old text formating using & color codes.
+Allows customization of publicly available kits. By default, this section is commented out and needs to be configured based on requirements. Kit names are displayed in their default color.
 
 ```yaml
 publickits:

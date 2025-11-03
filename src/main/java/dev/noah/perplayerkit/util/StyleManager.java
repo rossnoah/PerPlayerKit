@@ -50,6 +50,15 @@ public class StyleManager {
         }
     }
 
+    public static String convertMiniMessage(String miniMessage) {
+        try {
+            Component component = MiniMessage.miniMessage().deserialize(miniMessage + "test");
+            return LegacyComponentSerializer.legacySection().serialize(component).replace("test", "");
+        } catch (Exception e) {
+            return miniMessage;
+        }
+    }
+
     public Material getGlassMaterial() {
         return glassMaterial;
     }

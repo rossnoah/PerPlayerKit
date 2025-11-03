@@ -42,7 +42,7 @@ public class KitRoomDataManager {
 
 
         ItemStack[] defaultPage = new ItemStack[45];
-        defaultPage[0] = ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, "&bDefault Kit Room Item");
+        defaultPage[0] = ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, "<aqua>Default Kit Room Item</aqua>");
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
         kitroomData.add(defaultPage);
