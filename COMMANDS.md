@@ -46,6 +46,27 @@ The following table outlines each command, its usage, aliases, and permissions r
 | `heal`              | `N/A`                    | `perplayerkit.heal`            |
 | `repair`            | `N/A`                    | `perplayerkit.repair`          |
 
+## Regear Command Details
+
+The regear system allows players to restock items from their loaded kit. The behavior of the `/rg` and `/regear` commands can be configured independently:
+
+### Modes
+
+**Command Mode**: Directly restocks whitelisted items from the player's loaded kit
+- Cooldown applies between uses
+- Damage timer prevents regearing while in combat
+- Only whitelisted items are restocked
+
+**Shulker Mode**: Gives the player a regear shulker box
+- Player places the shulker on the ground to open a special interface
+- Player clicks the regear shell inside to trigger the restock
+- Cooldown applies between command uses
+- Damage timer prevents regearing while in combat
+
+### Configuration
+
+Both `/rg` and `/regear` can use different modes. See **CONFIG.md** → **Regear Command** for configuration options (`rg-mode` and `regear-mode`).
+
 ## Permissions
 
 The following table outlines each top-level permission and the sub-permissions it grants.

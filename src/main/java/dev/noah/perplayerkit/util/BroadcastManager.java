@@ -68,6 +68,12 @@ public class BroadcastManager {
         return MiniMessage.miniMessage().deserialize(formattedMessage);
     }
 
+    private boolean isKitLoadingMessage(MessageKey key) {
+        return key == MessageKey.PLAYER_LOADED_PRIVATE_KIT ||
+               key == MessageKey.PLAYER_LOADED_PUBLIC_KIT ||
+               key == MessageKey.PLAYER_LOADED_ENDER_CHEST;
+    }
+
     private void broadcastMessage(Player player, String message, String permission) {
         World world = player.getWorld();
 
@@ -92,6 +98,11 @@ public class BroadcastManager {
         }
 
         if(plugin.getConfig().getBoolean("messages.disable-kit-messages", false)){
+            return;
+        }
+
+        // Check if this is a kit loading message and if kit message broadcasts are disabled
+        if (isKitLoadingMessage(key) && !plugin.getConfig().getBoolean("feature.broadcast-kit-messages", true)) {
             return;
         }
 

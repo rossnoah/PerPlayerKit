@@ -138,7 +138,8 @@ anti-exploit:
 
 
 regear:
-  mode: "command" #OPTIONS: command, shulker
+  rg-mode: "command" #OPTIONS: command, shulker
+  regear-mode: "command" #OPTIONS: command, shulker
   command-cooldown: 5 #command cooldown in seconds. recommended to be low or 0 if using shulker mode.
   damage-timer: 5 #time in seconds to wait after taking damage before players can regear
   allow-while-using-elytra: true #set false to block regearing command while using elytra
@@ -184,6 +185,8 @@ feature:
 
   rekit-on-respawn: true
   rekit-on-kill: false
+
+  broadcast-kit-messages: true #broadcasts when a player loads a kit (applies to both kits and enderchesets)
 
   broadcast-on-player-action: true #broadcasts when a player uses a kit, copies a kit, etc.
 

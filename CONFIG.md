@@ -203,11 +203,12 @@ anti-exploit:
 
 ### **Regear Command**
 
-Allows customization of the regear command which is used on some servers in various competition formats.
+Allows customization of the regear commands which are used on some servers in various competition formats. The `/rg` and `/regear` commands can be configured independently to use different modes.
 
 ```yaml
 regear:
-  mode: "command" #OPTIONS: command, shulker
+  rg-mode: "command" #OPTIONS: command, shulker - Behavior for /rg command
+  regear-mode: "command" #OPTIONS: command, shulker - Behavior for /regear command
   command-cooldown: 5 #command cooldown in seconds. recommended to be low or 0 if using shulker mode.
   damage-timer: 5 #time in seconds to wait after taking damage before players can regear
   allow-while-using-elytra: true #set false to block regearing command while using elytra
@@ -224,8 +225,27 @@ regear:
     - OBSIDIAN
     - GLOWSTONE
     - RESPAWN_ANCHOR
+```
 
+#### Regear Mode Options:
 
+- **command**: Directly restocks items from the player's loaded kit (only whitelisted items are restocked)
+- **shulker**: Gives the player a physical regear shulker box that they can place and interact with
+
+#### Example Configurations:
+
+**Both commands use same mode:**
+```yaml
+regear:
+  rg-mode: "command"
+  regear-mode: "command"
+```
+
+**Different modes for different commands:**
+```yaml
+regear:
+  rg-mode: "shulker"      # /rg gives a shulker
+  regear-mode: "command"  # /regear directly restocks items
 ```
 
 
@@ -240,18 +260,40 @@ feature:
     set-hunger-on-kit-load: false
     set-saturation-on-kit-load: false
     remove-potion-effects-on-kit-load: false
-    
+
     heal-on-enderchest-load: false
     feed-on-enderchest-load: false
     set-saturation-on-enderchest-load: false
     remove-potion-effects-on-enderchest-load: false
-    
+
     rekit-on-respawn: true
     rekit-on-kill: false
-    
+
+    broadcast-kit-messages: true #broadcasts when a player loads a kit or enderchest
+
     broadcast-on-player-action: true #broadcasts when a player uses a kit, copies a kit, etc.
-    
+
     send-update-message-on-join: true #sends a message to players with perplayerkit.admin when they join the server if a new version is available
-    
+
     old-death-drops: false #makes it so players drop items in a condensed area rather than spreading out when they die
 ```
+
+#### Feature Flag Descriptions:
+
+**Kit Loading Features:**
+- **rekit-on-respawn**: Automatically loads the player's last used kit when they respawn after death
+- **rekit-on-kill**: Automatically loads the player's last used kit when they kill another player
+- **broadcast-kit-messages**: Controls whether broadcast messages are sent when players load kits or enderchesets (e.g., "Player loaded a kit"). When set to `false`, these specific kit-loading broadcast messages are suppressed
+
+**Action Broadcast Features:**
+- **broadcast-on-player-action**: Controls whether broadcast messages are sent for other player actions like copying kits, repairing gear, opening kit room, etc. This does NOT affect kit loading messages (controlled by `broadcast-kit-messages`)
+
+**Health/Hunger Features:**
+- **set-health-on-kit-load**: Sets player health to full when loading a kit
+- **set-hunger-on-kit-load**: Sets player hunger to full when loading a kit
+- **set-saturation-on-kit-load**: Sets player saturation to full when loading a kit
+- **remove-potion-effects-on-kit-load**: Removes all potion effects when loading a kit
+- **heal-on-enderchest-load**: Sets player health to full when loading an enderchest
+- **feed-on-enderchest-load**: Sets player hunger to full when loading an enderchest
+- **set-saturation-on-enderchest-load**: Sets player saturation to full when loading an enderchest
+- **remove-potion-effects-on-enderchest-load**: Removes all potion effects when loading an enderchest

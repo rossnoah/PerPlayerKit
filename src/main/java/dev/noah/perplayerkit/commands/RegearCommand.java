@@ -64,7 +64,17 @@ public class RegearCommand implements CommandExecutor, Listener {
             return true;
         }
 
-        if (plugin.getConfig().getString("regear.mode", "command").equalsIgnoreCase("shulker")) {
+        // Determine which mode to use based on the command label
+        String effectiveMode;
+        if (label.equalsIgnoreCase("rg")) {
+            effectiveMode = plugin.getConfig().getString("regear.rg-mode", "command");
+        } else if (label.equalsIgnoreCase("regear")) {
+            effectiveMode = plugin.getConfig().getString("regear.regear-mode", "command");
+        } else {
+            effectiveMode = plugin.getConfig().getString("regear.rg-mode", "command"); // Default fallback
+        }
+
+        if (effectiveMode.equalsIgnoreCase("shulker")) {
             int slot = player.getInventory().firstEmpty();
             if (slot == -1) {
                 BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>Your inventory is full, can't give you a regear shulker!"));
@@ -77,7 +87,7 @@ public class RegearCommand implements CommandExecutor, Listener {
             return true;
         }
 
-        if (plugin.getConfig().getString("regear.mode", "command").equalsIgnoreCase("command")) {
+        if (effectiveMode.equalsIgnoreCase("command")) {
             int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
 
             if (slot == -1) {
