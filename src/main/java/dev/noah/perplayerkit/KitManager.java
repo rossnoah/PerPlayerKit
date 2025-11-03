@@ -350,7 +350,7 @@ public class KitManager {
         return loadKitInternal(player, IDUtil.getPublicKitId(id), "Kit does not exist!", false, () -> {
             BroadcastManager.get().broadcastPlayerLoadedPublicKit(player);
             player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
-            player.sendMessage(ChatColor.GRAY + "You can save this kit by importing into the kit editor");
+            player.sendMessage(ChatColor.GRAY + "You can save a custom version this kit by importing into the kit editor");
         });
     }
 
