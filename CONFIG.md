@@ -114,24 +114,58 @@ publickits:
 
 ### **Messages**
 
-This section controls the messages broadcast to players when they perform various kit-related actions. Messages use mini message format for styling.
+This section controls the messages broadcast to players when they perform various kit-related actions. Messages use mini message format for styling. Each message type can be individually enabled/disabled and customized with a custom permission node.
 
 ```yaml
 messages:
   disable-kit-messages: false # Set to true to disable all kit action messages (e.g. player loaded a kit, player repaired gear, etc.)
-  player-repaired: "<gray>%player% repaired their gear</gray>"
-  player-healed: "<gray>%player% healed themselves</gray>"
-  player-opened-kit-room: "<gray>%player% opened the Kit Room</gray>"
-  player-loaded-private-kit: "<gray>%player% loaded a kit</gray>"
-  player-loaded-public-kit: "<gray>%player% loaded a public kit</gray>"
-  player-loaded-enderchest: "<gray>%player% loaded an ender chest.</gray>"
-  player-copied-kit: "<gray>%player% copied a kit</gray>"
-  player-copied-ec: "<gray>%player% copied an ender chest</gray>"
-  player-regeared: "<gray>%player% regeared</gray>"
+  player-repaired:
+    enabled: true # Enable or disable this specific message type
+    message: "<gray>%player% repaired their gear</gray>" # Message content in mini message format
+    permission: "perplayerkit.kitnotify" # Permission required to see this message (default permission defaults to true)
+  player-healed:
+    enabled: true
+    message: "<gray>%player% healed themselves</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-opened-kit-room:
+    enabled: true
+    message: "<gray>%player% opened the Kit Room</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-loaded-private-kit:
+    enabled: true
+    message: "<gray>%player% loaded a kit</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-loaded-public-kit:
+    enabled: true
+    message: "<gray>%player% loaded a public kit</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-loaded-enderchest:
+    enabled: true
+    message: "<gray>%player% loaded an ender chest.</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-copied-kit:
+    enabled: true
+    message: "<gray>%player% copied a kit</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-copied-ec:
+    enabled: true
+    message: "<gray>%player% copied an ender chest</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-regeared:
+    enabled: true
+    message: "<gray>%player% regeared</gray>"
+    permission: "perplayerkit.kitnotify"
 ```
 
-- **disable-kit-messages**: Set to `true` to completely suppress all kit action messages. When enabled, players will not see any broadcasts for kit-related actions, regardless of the broadcast-on-player-action feature flag.
-- The action messages support the `%player%` placeholder which is replaced with the player's name (or display name if `use-display-name` is enabled).
+#### Message Configuration Fields:
+
+- **enabled**: Set to `false` to disable a specific message type. When disabled, the message will not be broadcast to any players.
+- **message**: The content of the message in mini message format. Supports the `%player%` placeholder which is replaced with the player's name (or display name if `use-display-name` is enabled).
+- **permission**: The permission node required for players to see this message. Players without this permission will not see the broadcast. Defaults to `perplayerkit.kitnotify` which defaults to `true`.
+
+#### Global Settings:
+
+- **disable-kit-messages**: Set to `true` to completely suppress all kit action messages. When enabled, players will not see any broadcasts for kit-related actions, regardless of the broadcast-on-player-action feature flag or individual message permissions. This acts as a global on/off switch.
 
 ---
 

@@ -92,15 +92,42 @@ use-display-name: false #For example, set to true if you want to display nicknam
 
 messages:
   disable-kit-messages: false # Set to true to disable all kit action messages (e.g. player loaded a kit, player repaired gear, etc.)
-  player-repaired: "<gray>%player% repaired their gear</gray>"
-  player-healed: "<gray>%player% healed themselves</gray>"
-  player-opened-kit-room: "<gray>%player% opened the Kit Room</gray>"
-  player-loaded-private-kit: "<gray>%player% loaded a kit</gray>"
-  player-loaded-public-kit: "<gray>%player% loaded a public kit</gray>"
-  player-loaded-enderchest: "<gray>%player% loaded an ender chest.</gray>"
-  player-copied-kit: "<gray>%player% copied a kit</gray>"
-  player-copied-ec: "<gray>%player% copied an ender chest</gray>"
-  player-regeared: "<gray>%player% regeared</gray>"
+  player-repaired:
+    enabled: true
+    message: "<gray>%player% repaired their gear</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-healed:
+    enabled: true
+    message: "<gray>%player% healed themselves</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-opened-kit-room:
+    enabled: true
+    message: "<gray>%player% opened the Kit Room</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-loaded-private-kit:
+    enabled: true
+    message: "<gray>%player% loaded a kit</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-loaded-public-kit:
+    enabled: true
+    message: "<gray>%player% loaded a public kit</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-loaded-enderchest:
+    enabled: true
+    message: "<gray>%player% loaded an ender chest.</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-copied-kit:
+    enabled: true
+    message: "<gray>%player% copied a kit</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-copied-ec:
+    enabled: true
+    message: "<gray>%player% copied an ender chest</gray>"
+    permission: "perplayerkit.kitnotify"
+  player-regeared:
+    enabled: true
+    message: "<gray>%player% regeared</gray>"
+    permission: "perplayerkit.kitnotify"
 
 
 anti-exploit:

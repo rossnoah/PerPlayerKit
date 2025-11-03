@@ -68,7 +68,7 @@ public class BroadcastManager {
         return MiniMessage.miniMessage().deserialize(formattedMessage);
     }
 
-    private void broadcastMessage(Player player, String message) {
+    private void broadcastMessage(Player player, String message, String permission) {
         World world = player.getWorld();
 
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null) {
@@ -77,7 +77,10 @@ public class BroadcastManager {
 
         for (Player broadcastPlayer : world.getPlayers()) {
             if (broadcastPlayer.getLocation().distance(player.getLocation()) < broadcastDistance) {
-                audience.player(broadcastPlayer).sendMessage(prefix.append(MiniMessage.miniMessage().deserialize(message)));
+                // Check if the broadcast player has permission to see this message
+                if (broadcastPlayer.hasPermission(permission)) {
+                    audience.player(broadcastPlayer).sendMessage(prefix.append(MiniMessage.miniMessage().deserialize(message)));
+                }
             }
         }
     }
@@ -96,8 +99,19 @@ public class BroadcastManager {
             return;
         }
 
-        String message = plugin.getConfig().getString(key.getKey(), "<gray><aqua>%player%</aqua> " +
+        String messageConfigPath = key.getKey();
+        String enabledPath = messageConfigPath + ".enabled";
+        String messagePath = messageConfigPath + ".message";
+        String permissionPath = messageConfigPath + ".permission";
+
+        // Check if message is enabled
+        if (!plugin.getConfig().getBoolean(enabledPath, true)) {
+            return;
+        }
+
+        String message = plugin.getConfig().getString(messagePath, "<gray><aqua>%player%</aqua> " +
                 "performed an action.</gray>");
+        String permission = plugin.getConfig().getString(permissionPath, "perplayerkit.kitnotify");
 
         String playerName;
         if (plugin.getConfig().getBoolean("use-display-name", false)) {
@@ -108,7 +122,7 @@ public class BroadcastManager {
 
         message = message.replace("%player%", playerName);
 
-        broadcastMessage(player, message);
+        broadcastMessage(player, message, permission);
 
         if (cooldownManager != null) {
             cooldownManager.setCooldown(player);

@@ -56,3 +56,11 @@ The following table outlines each top-level permission and the sub-permissions i
 | `kit.staff`        | `perplayerkit.staff`                                                                                                                                                                                                                                                                                                                                                                         |
 | `kit.use`          | `perplayerkit.use`                                                                                                                                                                                                                                                                                                                                                                           |
 | `perplayerkit.use` | `perplayerkit.menu`, `perplayerkit.copykit`, `perplayerkit.sharekit`, `perplayerkit.shareenderchest`, `perplayerkit.swapkit`, `perplayerkit.deletekit`, `perplayerkit.publickit`, `perplayerkit.kit`, `perplayerkit.enderchest`, `perplayerkit.viewenderchest`, `perplayerkit.regear`, `perplayerkit.heal`, `perplayerkit.repair`, `perplayerkit.rekitonrespawn`, `perplayerkit.rekitonkill` |
+
+## Message Notifications
+
+The following permission controls which kit-related action messages players see:
+
+| Permission              | Purpose                                                                                          |
+|-------------------------|--------------------------------------------------------------------------------------------------|
+| `perplayerkit.kitnotify` | Allows players to see notifications about kit-related actions (e.g., when other players load kits, repair gear, etc.). **Defaults to `true`** - all players can see these messages by default. Set to `false` to hide all kit action messages from a player. |
