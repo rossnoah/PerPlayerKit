@@ -91,6 +91,7 @@ prefix: "<gray>[<aqua>Kits</aqua>]</gray> "
 use-display-name: false #For example, set to true if you want to display nicknames set by other plugins.
 
 messages:
+  disable-kit-messages: false # Set to true to disable all kit action messages (e.g. player loaded a kit, player repaired gear, etc.)
   player-repaired: "<gray>%player% repaired their gear</gray>"
   player-healed: "<gray>%player% healed themselves</gray>"
   player-opened-kit-room: "<gray>%player% opened the Kit Room</gray>"

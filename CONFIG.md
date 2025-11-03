@@ -112,6 +112,29 @@ publickits:
 ```
 
 
+### **Messages**
+
+This section controls the messages broadcast to players when they perform various kit-related actions. Messages use mini message format for styling.
+
+```yaml
+messages:
+  disable-kit-messages: false # Set to true to disable all kit action messages (e.g. player loaded a kit, player repaired gear, etc.)
+  player-repaired: "<gray>%player% repaired their gear</gray>"
+  player-healed: "<gray>%player% healed themselves</gray>"
+  player-opened-kit-room: "<gray>%player% opened the Kit Room</gray>"
+  player-loaded-private-kit: "<gray>%player% loaded a kit</gray>"
+  player-loaded-public-kit: "<gray>%player% loaded a public kit</gray>"
+  player-loaded-enderchest: "<gray>%player% loaded an ender chest.</gray>"
+  player-copied-kit: "<gray>%player% copied a kit</gray>"
+  player-copied-ec: "<gray>%player% copied an ender chest</gray>"
+  player-regeared: "<gray>%player% regeared</gray>"
+```
+
+- **disable-kit-messages**: Set to `true` to completely suppress all kit action messages. When enabled, players will not see any broadcasts for kit-related actions, regardless of the broadcast-on-player-action feature flag.
+- The action messages support the `%player%` placeholder which is replaced with the player's name (or display name if `use-display-name` is enabled).
+
+---
+
 ### **Sounds**
 
 This section allows you to enable, disable, and customize the sounds played by the plugin.

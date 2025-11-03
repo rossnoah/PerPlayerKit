@@ -88,6 +88,9 @@ public class BroadcastManager {
             return;
         }
 
+        if(plugin.getConfig().getBoolean("messages.disable-kit-messages", false)){
+            return;
+        }
 
         if (cooldownManager != null && cooldownManager.isOnCooldown(player)) {
             return;
