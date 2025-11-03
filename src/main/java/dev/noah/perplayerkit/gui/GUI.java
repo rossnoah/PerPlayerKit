@@ -289,7 +289,6 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
-        SoundManager.playOpenGui(p);
     }
 
     public void OpenKitRoom(Player p) {
@@ -360,6 +359,12 @@ public class GUI {
         for (int i = 36; i < 41; i++) {
             menu.getSlot(i + 9).setItem(kit[i]);
         }
+
+        menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS, 1, "&7&lBOOTS"));
+        menu.getSlot(46).setItem(createItem(Material.CHAINMAIL_LEGGINGS, 1, "&7&lLEGGINGS"));
+        menu.getSlot(47).setItem(createItem(Material.CHAINMAIL_CHESTPLATE, 1, "&7&lCHESTPLATE"));
+        menu.getSlot(48).setItem(createItem(Material.CHAINMAIL_HELMET, 1, "&7&lHELMET"));
+        menu.getSlot(49).setItem(createItem(Material.SHIELD, 1, "&7&lOFFHAND"));
 
         menu.getSlot(52).setItem(createItem(Material.APPLE, 1, "&a&lLOAD KIT"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
