@@ -101,7 +101,6 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
-        SoundManager.playOpenGui(p);
     }
 
     public void OpenPublicKitEditor(Player p, String kitId) {
@@ -134,7 +133,6 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
-        SoundManager.playOpenGui(p);
     }
 
     public void OpenECKitKenu(Player p, int slot) {
@@ -166,7 +164,6 @@ public class GUI {
         addImportEC(menu.getSlot(51));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
-        SoundManager.playOpenGui(p);
     }
 
     public void InspectKit(Player p, UUID target, int slot) {
@@ -336,7 +333,6 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
-        SoundManager.playOpenGui(p);
     }
 
     public Menu ViewPublicKitMenu(Player p, String id) {
@@ -371,7 +367,6 @@ public class GUI {
         addLoadPublicKit(menu.getSlot(52), id);
 
         menu.open(p);
-        SoundManager.playOpenGui(p);
 
         return menu;
     }
@@ -413,7 +408,6 @@ public class GUI {
 
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
         menu.open(player);
-        SoundManager.playOpenGui(player);
     }
 
     public void addClear(Slot slot) {
@@ -629,6 +623,7 @@ public class GUI {
 
     public void addEditLoad(Slot slot, int i) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType() == ClickType.LEFT || info.getClickType() == ClickType.SHIFT_LEFT) {
                 KitManager.get().loadKit(player, i);
                 info.getClickedMenu().close();
@@ -640,6 +635,7 @@ public class GUI {
 
     public void addEditLoadEC(Slot slot, int i) {
         slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
             if (info.getClickType() == ClickType.LEFT || info.getClickType() == ClickType.SHIFT_LEFT) {
                 KitManager.get().loadEnderchest(player, i);
                 info.getClickedMenu().close();
