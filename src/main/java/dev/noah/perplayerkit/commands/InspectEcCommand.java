@@ -21,10 +21,9 @@ package dev.noah.perplayerkit.commands;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.gui.GUI;
 import dev.noah.perplayerkit.util.BroadcastManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import dev.noah.perplayerkit.util.SoundManager;
+
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,11 +40,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static dev.noah.perplayerkit.commands.InspectCommandUtil.*;
+
 public class InspectEcCommand implements CommandExecutor, TabCompleter {
-    private static final int MIN_SLOT = 1;
-    private static final int MAX_SLOT = 9;
-    private static final MiniMessage mm = MiniMessage.miniMessage();
-    private static final Component ERROR_PREFIX = mm.deserialize("<red>Error:</red> ");
     private final Plugin plugin;
 
     public InspectEcCommand(Plugin plugin) {
@@ -65,22 +62,16 @@ public class InspectEcCommand implements CommandExecutor, TabCompleter {
             BroadcastManager.get().sendComponentMessage(player,
                     ERROR_PREFIX.append(
                             mm.deserialize("<red>You don't have permission to use this command.</red>")));
+            SoundManager.playFailure(player);
             return true;
         }
 
         if (args.length < 2) {
-            showUsage(player);
+            showUsage(player, "inspectec");
             return true;
         }
 
-        UUID targetUuid = resolvePlayerIdentifier(args[0]);
-        if (targetUuid == null) {
-            BroadcastManager.get().sendComponentMessage(player,
-                    ERROR_PREFIX.append(
-                            mm.deserialize("<red>Could not find a player with that name or UUID.</red>")));
-            return true;
-        }
-
+        // Parse slot number
         int slot;
         try {
             slot = Integer.parseInt(args[1]);
@@ -92,30 +83,53 @@ public class InspectEcCommand implements CommandExecutor, TabCompleter {
                     ERROR_PREFIX.append(
                             mm.deserialize("<red>Slot must be a number between " +
                                     MIN_SLOT + " and " + MAX_SLOT + ".</red>")));
+            SoundManager.playFailure(player);
             return true;
         }
 
-        Player targetPlayer = Bukkit.getPlayer(targetUuid);
+        // Resolve player identifier asynchronously
+        CompletableFuture<Void> future = resolvePlayerIdentifierAsync(args[0])
+                .thenCompose(targetUuid -> {
+                    if (targetUuid == null) {
+                        // Player not found - schedule error message on main thread
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            BroadcastManager.get().sendComponentMessage(player,
+                                    ERROR_PREFIX.append(
+                                            mm.deserialize("<red>Could not find a player with that name or UUID.</red>")));
+                            SoundManager.playFailure(player);
+                        });
+                        return CompletableFuture.completedFuture(null);
+                    }
 
-        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            if (targetPlayer == null) {
-                KitManager.get().loadPlayerDataFromDB(targetUuid);
-            }
-        }).thenRun(() -> {
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                if (KitManager.get().hasEC(targetUuid, slot)) {
-                    GUI gui = new GUI(plugin);
-                    gui.InspectEc(player, targetUuid, slot);
-                } else {
-                    String targetName = getPlayerName(targetUuid);
-                    BroadcastManager.get().sendComponentMessage(player,
-                            ERROR_PREFIX.append(
-                                    mm.deserialize("<red>" + targetName +
-                                            " does not have an enderchest in slot " + slot + "</red>")));
-                }
-            });
-        });
+                    // Check if player is online first
+                    Player targetPlayer = Bukkit.getPlayer(targetUuid);
 
+                    // Load player data asynchronously
+                    return CompletableFuture.runAsync(() -> {
+                        if (targetPlayer == null) {
+                            // Only load from DB if player is offline
+                            KitManager.get().loadPlayerDataFromDB(targetUuid);
+                        }
+                    }).thenRun(() -> {
+                        // Run on the main thread after data is loaded
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (KitManager.get().hasEC(targetUuid, slot)) {
+                                GUI gui = new GUI(plugin);
+                                gui.InspectEc(player, targetUuid, slot);
+                            } else {
+                                String targetName = getPlayerName(targetUuid);
+
+                                BroadcastManager.get().sendComponentMessage(player,
+                                        ERROR_PREFIX.append(
+                                                mm.deserialize("<red>" + targetName +
+                                                        " does not have an enderchest in slot " + slot + "</red>")));
+                                SoundManager.playFailure(player);
+                            }
+                        });
+                    });
+                });
+
+        // Handle exceptions
         future.exceptionally(ex -> {
             Bukkit.getScheduler().runTask(plugin, () -> {
                 plugin.getLogger().severe("Error loading enderchest data: " + ex.getMessage());
@@ -123,6 +137,7 @@ public class InspectEcCommand implements CommandExecutor, TabCompleter {
                         ERROR_PREFIX.append(
                                 mm.deserialize("<red>An error occurred while loading enderchest data. " +
                                         "See console for details.</red>")));
+                SoundManager.playFailure(player);
             });
             return null;
         });
@@ -161,42 +176,5 @@ public class InspectEcCommand implements CommandExecutor, TabCompleter {
         }
 
         return new ArrayList<>();
-    }
-
-    private UUID resolvePlayerIdentifier(String identifier) {
-        try {
-            return UUID.fromString(identifier);
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        Player onlinePlayer = Bukkit.getPlayerExact(identifier);
-        if (onlinePlayer != null) {
-            return onlinePlayer.getUniqueId();
-        }
-
-        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-            if (identifier.equalsIgnoreCase(offlinePlayer.getName())) {
-                return offlinePlayer.getUniqueId();
-            }
-        }
-
-        return null;
-    }
-
-    private String getPlayerName(UUID uuid) {
-        Player onlinePlayer = Bukkit.getPlayer(uuid);
-        if (onlinePlayer != null) {
-            return onlinePlayer.getName();
-        }
-
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-        String name = offlinePlayer.getName();
-        return name != null ? name : uuid.toString();
-    }
-
-    private void showUsage(Player player) {
-        BroadcastManager.get().sendComponentMessage(player,
-                ERROR_PREFIX.append(
-                        mm.deserialize("<red>Usage: /inspectec <player|uuid> <slot></red>")));
     }
 }
