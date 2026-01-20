@@ -24,6 +24,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class RedisStorage implements StorageManager {
 
     private final String host;
@@ -129,5 +132,16 @@ public class RedisStorage implements StorageManager {
             throw new IllegalStateException("Redis pool is not initialized. Call connect() first.");
         }
         return pool.getResource();
+    }
+
+    @Override
+    public Set<String> getAllKitIDs() {
+        Set<String> kitIDs = new HashSet<>();
+        try (Jedis jedis = getConnection()) {
+            kitIDs.addAll(jedis.keys("*"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return kitIDs;
     }
 }

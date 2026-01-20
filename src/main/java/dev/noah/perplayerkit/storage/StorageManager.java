@@ -21,6 +21,8 @@ package dev.noah.perplayerkit.storage;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 
+import java.util.Set;
+
 public interface StorageManager {
 
 
@@ -41,6 +43,8 @@ public interface StorageManager {
     boolean doesKitExistByID(String kitID);
 
     void deleteKitByID(String kitID);
+
+    Set<String> getAllKitIDs();
 
 }
 

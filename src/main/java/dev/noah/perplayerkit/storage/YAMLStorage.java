@@ -28,7 +28,9 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class YAMLStorage implements StorageManager {
 
@@ -124,5 +126,10 @@ public class YAMLStorage implements StorageManager {
         try (FileWriter writer = new FileWriter(storageFile)) {
             yaml.dump(data, writer);
         }
+    }
+
+    @Override
+    public Set<String> getAllKitIDs() {
+        return new HashSet<>(data.keySet());
     }
 }

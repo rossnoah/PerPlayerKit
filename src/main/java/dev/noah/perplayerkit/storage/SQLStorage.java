@@ -26,6 +26,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SQLStorage implements StorageManager {
 
@@ -140,5 +142,20 @@ public class SQLStorage implements StorageManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Set<String> getAllKitIDs() {
+        Set<String> kitIDs = new HashSet<>();
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT KITID FROM kits");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                kitIDs.add(rs.getString("KITID"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return kitIDs;
     }
 }

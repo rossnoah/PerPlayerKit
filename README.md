@@ -32,6 +32,8 @@ To use the plugin run the server with the plugin in the "plugins" folder, then s
 
 More configuration options are available, please refer to the [configuration documentation](./CONFIG.md).
 
+Need to switch storage backends? See the [Storage Migration Guide](./MIGRATION.md) for instructions on migrating data between SQLite, MySQL, Redis, and YAML storage types.
+
 ## Commands and Permissions
 
 For detailed information on commands and permissions, please refer to the [command documentation](./COMMANDS.md).
