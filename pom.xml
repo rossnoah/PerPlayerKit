@@ -6,7 +6,7 @@
 
     <groupId>dev.noah</groupId>
     <artifactId>PerPlayerKit</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
     <packaging>jar</packaging>
 
     <name>PerPlayerKit</name>
