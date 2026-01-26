@@ -184,7 +184,14 @@ feature:
   heal-remove-effects: false #makes the /heal command remove potion effects in addition to healing
 
   rekit-on-respawn: true
-  rekit-on-kill: false
+  rekit-on-kill:
+    enabled: false
+    # World filtering based on killer's current world
+    # If world-whitelist is not empty, rekit-on-kill only works in those worlds
+    # If world-whitelist is empty and world-blacklist is not empty, rekit-on-kill works everywhere except those worlds
+    # If both are empty, rekit-on-kill works in all worlds
+    world-whitelist: []
+    world-blacklist: []
 
   broadcast-kit-messages: true #broadcasts when a player loads a kit (applies to both kits and enderchesets)
 

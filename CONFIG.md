@@ -336,7 +336,7 @@ feature:
 
 **Kit Loading Features:**
 - **rekit-on-respawn**: Automatically loads the player's last used kit when they respawn after death
-- **rekit-on-kill**: Automatically loads the player's last used kit when they kill another player
+- **rekit-on-kill**: Automatically loads the killer's last used kit when they kill another player. See [Rekit on Kill Configuration](#rekit-on-kill-configuration) for advanced options
 - **broadcast-kit-messages**: Controls whether broadcast messages are sent when players load kits or enderchesets (e.g., "Player loaded a kit"). When set to `false`, these specific kit-loading broadcast messages are suppressed
 
 **Action Broadcast Features:**
@@ -351,3 +351,70 @@ feature:
 - **feed-on-enderchest-load**: Sets player hunger to full when loading an enderchest
 - **set-saturation-on-enderchest-load**: Sets player saturation to full when loading an enderchest
 - **remove-potion-effects-on-enderchest-load**: Removes all potion effects when loading an enderchest
+
+---
+
+### **Rekit on Kill Configuration**
+
+The `rekit-on-kill` feature automatically loads the killer's last used kit when they kill another player. This feature supports world-based filtering to control where it activates, based on the killer's current world.
+
+```yaml
+feature:
+  rekit-on-kill:
+    enabled: false
+    # World filtering based on killer's current world
+    # If world-whitelist is not empty, rekit-on-kill only works in those worlds
+    # If world-whitelist is empty and world-blacklist is not empty, rekit-on-kill works everywhere except those worlds
+    # If both are empty, rekit-on-kill works in all worlds
+    world-whitelist: []
+    world-blacklist: []
+```
+
+#### Configuration Options:
+
+- **enabled**: Set to `true` to enable the rekit-on-kill feature
+- **world-whitelist**: List of world names where rekit-on-kill is allowed. If this list is not empty, the feature only works in these worlds
+- **world-blacklist**: List of world names where rekit-on-kill is disabled. Only used if `world-whitelist` is empty
+
+#### World Filtering Logic:
+
+1. If `world-whitelist` contains worlds → only allow rekit-on-kill in those worlds
+2. If `world-whitelist` is empty but `world-blacklist` contains worlds → allow rekit-on-kill everywhere except those worlds
+3. If both lists are empty → allow rekit-on-kill in all worlds
+
+#### Example Configurations:
+
+**Enable globally (all worlds):**
+```yaml
+feature:
+  rekit-on-kill:
+    enabled: true
+    world-whitelist: []
+    world-blacklist: []
+```
+
+**Only enable in specific arena worlds:**
+```yaml
+feature:
+  rekit-on-kill:
+    enabled: true
+    world-whitelist:
+      - "pvp_arena"
+      - "duel_world"
+    world-blacklist: []
+```
+
+**Enable everywhere except spawn/lobby:**
+```yaml
+feature:
+  rekit-on-kill:
+    enabled: true
+    world-whitelist: []
+    world-blacklist:
+      - "spawn"
+      - "lobby"
+```
+
+#### Backwards Compatibility:
+
+Existing configurations using the old boolean format (`rekit-on-kill: false` or `rekit-on-kill: true`) will continue to work. When the plugin updates, it will automatically add the new configuration keys with default values. No manual changes are required.
