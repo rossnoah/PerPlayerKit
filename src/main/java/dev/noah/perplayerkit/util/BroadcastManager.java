@@ -92,6 +92,10 @@ public class BroadcastManager {
     }
 
     private void broadcastMessage(Player player, BroadcastManager.MessageKey key, CooldownManager cooldownManager) {
+        broadcastMessage(player, key, cooldownManager, null);
+    }
+
+    private void broadcastMessage(Player player, BroadcastManager.MessageKey key, CooldownManager cooldownManager, String kitName) {
 
         if(!plugin.getConfig().getBoolean("feature.broadcast-on-player-action",true)){
             return;
@@ -133,6 +137,10 @@ public class BroadcastManager {
 
         message = message.replace("%player%", playerName);
 
+        if (kitName != null) {
+            message = message.replace("%kitname%", kitName);
+        }
+
         broadcastMessage(player, message, permission);
 
         if (cooldownManager != null) {
@@ -152,12 +160,12 @@ public class BroadcastManager {
         broadcastMessage(player, MessageKey.PLAYER_OPENED_KIT_ROOM, kitroomBroadcastCooldown);
     }
 
-    public void broadcastPlayerLoadedPrivateKit(Player player) {
-        broadcastMessage(player, MessageKey.PLAYER_LOADED_PRIVATE_KIT, null);
+    public void broadcastPlayerLoadedPrivateKit(Player player, String kitName) {
+        broadcastMessage(player, MessageKey.PLAYER_LOADED_PRIVATE_KIT, null, kitName);
     }
 
-    public void broadcastPlayerLoadedPublicKit(Player player) {
-        broadcastMessage(player, MessageKey.PLAYER_LOADED_PUBLIC_KIT, null);
+    public void broadcastPlayerLoadedPublicKit(Player player, String kitName) {
+        broadcastMessage(player, MessageKey.PLAYER_LOADED_PUBLIC_KIT, null, kitName);
     }
 
     public void broadcastPlayerLoadedEnderChest(Player player) {
