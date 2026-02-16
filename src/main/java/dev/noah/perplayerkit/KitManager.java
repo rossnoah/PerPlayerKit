@@ -336,7 +336,7 @@ public class KitManager {
 
     public boolean loadKit(Player player, int slot) {
         return loadKitInternal(player, IDUtil.getPlayerKitId(player.getUniqueId(), slot), "Kit " + slot + " does not exist!", false, () -> {
-            BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player);
+            BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player, "Kit " + slot);
             player.sendMessage(ChatColor.GREEN + "Kit " + slot + " loaded!");
             lastKitUsedByPlayer.put(player.getUniqueId(), slot);
         });
@@ -347,8 +347,13 @@ public class KitManager {
     }
 
     public boolean loadPublicKit(Player player, String id) {
+        String kitDisplayName = publicKitList.stream()
+                .filter(k -> k.id.equals(id))
+                .map(k -> k.name)
+                .findFirst()
+                .orElse(id);
         return loadKitInternal(player, IDUtil.getPublicKitId(id), "Kit does not exist!", false, () -> {
-            BroadcastManager.get().broadcastPlayerLoadedPublicKit(player);
+            BroadcastManager.get().broadcastPlayerLoadedPublicKit(player, kitDisplayName);
             player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
             player.sendMessage(ChatColor.GRAY + "You can save a custom version this kit by importing into the kit editor");
         });
