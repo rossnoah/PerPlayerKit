@@ -18,6 +18,9 @@
  */
 package dev.noah.perplayerkit.commands;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -27,6 +30,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -63,14 +68,36 @@ public class InspectCommandUtil {
             return CompletableFuture.completedFuture(onlinePlayer.getUniqueId());
         }
 
-        // Search offline players asynchronously (this can be slow)
+        // Look up UUID via Mojang API (avoids the very slow Bukkit.getOfflinePlayers() scan)
         return CompletableFuture.supplyAsync(() -> {
-            for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-                if (identifier.equalsIgnoreCase(offlinePlayer.getName())) {
-                    return offlinePlayer.getUniqueId();
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("https://api.mojang.com/users/profiles/minecraft/" + identifier)
+                        .build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String body = response.body().string();
+                        // Parse the "id" field: {"id":"<uuid-no-dashes>","name":"<name>"}
+                        int idStart = body.indexOf("\"id\":\"") + 6;
+                        int idEnd = body.indexOf("\"", idStart);
+                        if (idStart > 5 && idEnd > idStart) {
+                            String raw = body.substring(idStart, idEnd);
+                            // Insert dashes into the 32-char UUID string
+                            String formatted = raw.substring(0, 8) + "-"
+                                    + raw.substring(8, 12) + "-"
+                                    + raw.substring(12, 16) + "-"
+                                    + raw.substring(16, 20) + "-"
+                                    + raw.substring(20);
+                            return UUID.fromString(formatted);
+                        }
+                    }
                 }
+            } catch (IOException ignored) {
+                // Fall through to offline UUID computation
             }
-            return null;
+            // Fallback for offline/cracked-mode servers: compute deterministic offline UUID
+            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8));
         });
     }
 
