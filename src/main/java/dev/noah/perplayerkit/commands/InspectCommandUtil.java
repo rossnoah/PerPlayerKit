@@ -75,22 +75,21 @@ public class InspectCommandUtil {
                 Request request = new Request.Builder()
                         .url("https://api.mojang.com/users/profiles/minecraft/" + identifier)
                         .build();
-                try (Response response = client.newCall(request).execute()) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String body = response.body().string();
-                        // Parse the "id" field: {"id":"<uuid-no-dashes>","name":"<name>"}
-                        int idStart = body.indexOf("\"id\":\"") + 6;
-                        int idEnd = body.indexOf("\"", idStart);
-                        if (idStart > 5 && idEnd > idStart) {
-                            String raw = body.substring(idStart, idEnd);
-                            // Insert dashes into the 32-char UUID string
-                            String formatted = raw.substring(0, 8) + "-"
-                                    + raw.substring(8, 12) + "-"
-                                    + raw.substring(12, 16) + "-"
-                                    + raw.substring(16, 20) + "-"
-                                    + raw.substring(20);
-                            return UUID.fromString(formatted);
-                        }
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful() && response.body() != null) {
+                    String body = response.body().string();
+                    // Parse the "id" field: {"id":"<uuid-no-dashes>","name":"<name>"}
+                    int idStart = body.indexOf("\"id\":\"") + 6;
+                    int idEnd = body.indexOf("\"", idStart);
+                    if (idStart > 5 && idEnd > idStart) {
+                        String raw = body.substring(idStart, idEnd);
+                        // Insert dashes into the 32-char UUID string
+                        String formatted = raw.substring(0, 8) + "-"
+                                + raw.substring(8, 12) + "-"
+                                + raw.substring(12, 16) + "-"
+                                + raw.substring(16, 20) + "-"
+                                + raw.substring(20);
+                        return UUID.fromString(formatted);
                     }
                 }
             } catch (IOException ignored) {
