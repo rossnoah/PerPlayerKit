@@ -23,9 +23,11 @@ import dev.noah.perplayerkit.util.IDUtil;
 import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 
 import java.io.IOException;
 import java.util.*;
@@ -297,8 +299,27 @@ public class KitManager {
                 }
             }
 
-            if (playerInventory[i] == null || playerInventory[i].getType().isAir() || playerInventory[i].getType() == kit[i].getType()) {
-                playerInventory[i] = kit[i];
+            ItemStack kitItem = kit[i].clone();
+
+            // Filter contents of any shulker box (or other container) against the same whitelist,
+            // preventing players from bypassing regear restrictions by hiding items inside shulkers.
+            if (kitItem.getItemMeta() instanceof BlockStateMeta blockStateMeta
+                    && blockStateMeta.getBlockState() instanceof Container container) {
+                ItemStack[] contents = container.getInventory().getContents();
+                for (int j = 0; j < contents.length; j++) {
+                    if (contents[j] == null) continue;
+                    boolean onList = whitelist.contains(contents[j].getType().toString());
+                    if (invertWhitelist ? onList : !onList) {
+                        contents[j] = null;
+                    }
+                }
+                container.getInventory().setContents(contents);
+                blockStateMeta.setBlockState(container);
+                kitItem.setItemMeta(blockStateMeta);
+            }
+
+            if (playerInventory[i] == null || playerInventory[i].getType().isAir() || playerInventory[i].getType() == kitItem.getType()) {
+                playerInventory[i] = kitItem;
                 continue;
             }
         }
