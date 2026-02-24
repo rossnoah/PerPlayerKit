@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -48,7 +49,21 @@ public class AutoRekitListener implements Listener {
             return;
         }
 
-        KitManager.get().loadLastKit(e.getPlayer());
+        long delay = plugin.getConfig().getLong("feature.rekit-on-respawn-delay", 0);
+        Player player = e.getPlayer();
+
+        if (delay <= 0) {
+            KitManager.get().loadLastKit(player);
+        } else {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (player.isOnline()) {
+                        KitManager.get().loadLastKit(player);
+                    }
+                }
+            }.runTaskLater(plugin, delay);
+        }
     }
 
     @EventHandler

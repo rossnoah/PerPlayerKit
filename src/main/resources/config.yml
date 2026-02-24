@@ -184,6 +184,7 @@ feature:
   heal-remove-effects: false #makes the /heal command remove potion effects in addition to healing
 
   rekit-on-respawn: true
+  rekit-on-respawn-delay: 0 #delay in ticks before re-applying kit on respawn (20 ticks = 1 second). useful if another plugin gives items on respawn.
   rekit-on-kill:
     enabled: false
     # World filtering based on killer's current world

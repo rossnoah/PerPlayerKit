@@ -122,6 +122,7 @@ feature:
 ```yaml
 feature:
   rekit-on-respawn: true
+  rekit-on-respawn-delay: 0 #delay in ticks (20 ticks = 1 second). useful if another plugin gives items on respawn.
 ```
 
 ### Disable Kits in Certain Worlds:

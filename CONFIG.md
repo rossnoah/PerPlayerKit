@@ -321,6 +321,7 @@ feature:
     remove-potion-effects-on-enderchest-load: false
 
     rekit-on-respawn: true
+    rekit-on-respawn-delay: 0 #delay in ticks before re-applying kit on respawn (20 ticks = 1 second)
     rekit-on-kill: false
 
     broadcast-kit-messages: true #broadcasts when a player loads a kit or enderchest
@@ -336,6 +337,7 @@ feature:
 
 **Kit Loading Features:**
 - **rekit-on-respawn**: Automatically loads the player's last used kit when they respawn after death
+- **rekit-on-respawn-delay**: Delay in ticks before re-applying the kit on respawn (20 ticks = 1 second). Useful if another plugin gives items on respawn. Default: `0` (instant)
 - **rekit-on-kill**: Automatically loads the killer's last used kit when they kill another player. See [Rekit on Kill Configuration](#rekit-on-kill-configuration) for advanced options
 - **broadcast-kit-messages**: Controls whether broadcast messages are sent when players load kits or enderchesets (e.g., "Player loaded a kit"). When set to `false`, these specific kit-loading broadcast messages are suppressed
 
