@@ -224,50 +224,54 @@ public class KitManager {
         return false;
     }
 
+    public boolean saveECSilent(UUID uuid, int slot, ItemStack[] kit) {
+        boolean notEmpty = false;
+        for (ItemStack i : kit) {
+            if (i != null) {
+                notEmpty = true;
+                break;
+            }
+        }
+
+        if (!notEmpty) {
+            return false;
+        }
+
+        kitByKitIDMap.put(IDUtil.getECId(uuid, slot), kit);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> saveEnderchestToDB(uuid, slot));
+        return true;
+    }
+
     public boolean savekit(UUID uuid, int slot, ItemStack[] kit, boolean silent) {
         if (silent) {
-            if (Bukkit.getPlayer(uuid) != null) {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    boolean notEmpty = false;
-                    for (ItemStack i : kit) {
-                        if (i != null) {
-                            if (!notEmpty) {
-                                notEmpty = true;
-                            }
-                        }
-                    }
-
-                    if (notEmpty) {
-                        if (kit[36] != null) {
-                            if (!kit[36].getType().toString().contains("BOOTS")) {
-                                kit[36] = null;
-                            }
-                        }
-                        if (kit[37] != null) {
-                            if (!kit[37].getType().toString().contains("LEGGINGS")) {
-                                kit[37] = null;
-                            }
-                        }
-                        if (kit[38] != null) {
-                            if (!(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
-                                kit[38] = null;
-                            }
-                        }
-                        if (kit[39] != null) {
-                            if (!kit[39].getType().toString().contains("HELMET")) {
-                                kit[39] = null;
-                            }
-                        }
-
-                        kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot), ItemFilter.get().filterItemStack(kit));
-                        return true;
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You cant save an empty kit!");
-                    }
+            boolean notEmpty = false;
+            for (ItemStack i : kit) {
+                if (i != null) {
+                    notEmpty = true;
+                    break;
                 }
             }
-            return false;
+
+            if (!notEmpty) {
+                return false;
+            }
+
+            if (kit[36] != null && !kit[36].getType().toString().contains("BOOTS")) {
+                kit[36] = null;
+            }
+            if (kit[37] != null && !kit[37].getType().toString().contains("LEGGINGS")) {
+                kit[37] = null;
+            }
+            if (kit[38] != null && !(kit[38].getType().toString().contains("CHESTPLATE") || kit[38].getType().toString().contains("ELYTRA"))) {
+                kit[38] = null;
+            }
+            if (kit[39] != null && !kit[39].getType().toString().contains("HELMET")) {
+                kit[39] = null;
+            }
+
+            kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot), ItemFilter.get().filterItemStack(kit));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePlayerKitToDB(uuid, slot));
+            return true;
         } else {
             return savekit(uuid, slot, kit);
         }

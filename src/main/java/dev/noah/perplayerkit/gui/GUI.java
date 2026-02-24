@@ -36,8 +36,10 @@ import org.ipvp.canvas.slot.ClickOptions;
 import org.ipvp.canvas.slot.Slot;
 import org.ipvp.canvas.type.ChestMenu;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -49,6 +51,15 @@ public class GUI {
     private final Plugin plugin;
     private final boolean filterItemsOnImport;
     private static final Set<UUID> kitDeletionFlag = new HashSet<>();
+    private static final Map<UUID, UUID> inspectTargets = new HashMap<>();
+
+    public static void setInspectTarget(UUID inspector, UUID target) {
+        inspectTargets.put(inspector, target);
+    }
+
+    public static UUID getAndRemoveInspectTarget(UUID inspector) {
+        return inspectTargets.remove(inspector);
+    }
 
     public GUI(Plugin plugin) {
         this.plugin = plugin;
@@ -167,6 +178,7 @@ public class GUI {
     }
 
     public void InspectKit(Player p, UUID target, int slot) {
+        setInspectTarget(p.getUniqueId(), target);
         String playerName = getPlayerName(target);
         Menu menu = createInspectMenu(slot, playerName);
 
@@ -206,6 +218,7 @@ public class GUI {
     }
 
     public void InspectEc(Player p, UUID target, int slot) {
+        setInspectTarget(p.getUniqueId(), target);
         String playerName = getPlayerName(target);
         Menu menu = createInspectEcMenu(slot, playerName);
 
@@ -217,9 +230,9 @@ public class GUI {
             menu.getSlot(i).setItem(ItemUtil.createGlassPane());
 
         }
-        if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot) != null) {
+        if (KitManager.get().getItemStackArrayById(target + "ec" + slot) != null) {
 
-            ItemStack[] kit = KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot);
+            ItemStack[] kit = KitManager.get().getItemStackArrayById(target + "ec" + slot);
             for (int i = 9; i < 36; i++) {
                 menu.getSlot(i).setItem(kit[i - 9]);
             }

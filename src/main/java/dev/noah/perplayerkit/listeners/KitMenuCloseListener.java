@@ -22,8 +22,6 @@ import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.gui.GUI;
 import dev.noah.perplayerkit.util.StyleManager;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -124,6 +122,12 @@ public class KitMenuCloseListener implements Listener {
                     if (!p.hasPermission("perplayerkit.admin")) {
                         return;
                     }
+
+                    UUID targetUuid = GUI.getAndRemoveInspectTarget(p.getUniqueId());
+                    if (targetUuid == null) {
+                        return;
+                    }
+
                     String title = view.getTitle();
                     String[] parts = title.replace(StyleManager.get().getPrimaryColor() + "Inspecting ", "").split("'s kit ");
                     if (parts.length != 2) {
@@ -134,24 +138,6 @@ public class KitMenuCloseListener implements Listener {
                     try {
                         slot = Integer.parseInt(parts[1]);
                     } catch (NumberFormatException ex) {
-                        return;
-                    }
-
-                    UUID targetUuid = null;
-                    for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-                        if (playerName.equalsIgnoreCase(offlinePlayer.getName())) {
-                            targetUuid = offlinePlayer.getUniqueId();
-                            break;
-                        }
-                    }
-                    if (targetUuid == null) {
-                        Player onlinePlayer = Bukkit.getPlayerExact(playerName);
-                        if (onlinePlayer != null) {
-                            targetUuid = onlinePlayer.getUniqueId();
-                        }
-                    }
-                    if (targetUuid == null) {
-                        p.sendMessage(ChatColor.RED + "Could not find player " + playerName);
                         return;
                     }
 
@@ -191,6 +177,12 @@ public class KitMenuCloseListener implements Listener {
                     if (!p.hasPermission("perplayerkit.admin")) {
                         return;
                     }
+
+                    UUID targetUuid = GUI.getAndRemoveInspectTarget(p.getUniqueId());
+                    if (targetUuid == null) {
+                        return;
+                    }
+
                     String title = view.getTitle();
                     String[] parts = title.replace(StyleManager.get().getPrimaryColor() + "Inspecting ", "").split("'s enderchest ");
                     if (parts.length != 2) {
@@ -201,24 +193,6 @@ public class KitMenuCloseListener implements Listener {
                     try {
                         slot = Integer.parseInt(parts[1]);
                     } catch (NumberFormatException ex) {
-                        return;
-                    }
-
-                    UUID targetUuid = null;
-                    for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-                        if (playerName.equalsIgnoreCase(offlinePlayer.getName())) {
-                            targetUuid = offlinePlayer.getUniqueId();
-                            break;
-                        }
-                    }
-                    if (targetUuid == null) {
-                        Player onlinePlayer = Bukkit.getPlayerExact(playerName);
-                        if (onlinePlayer != null) {
-                            targetUuid = onlinePlayer.getUniqueId();
-                        }
-                    }
-                    if (targetUuid == null) {
-                        p.sendMessage(ChatColor.RED + "Could not find player " + playerName);
                         return;
                     }
 
@@ -237,7 +211,7 @@ public class KitMenuCloseListener implements Listener {
                         }
                     }
 
-                    if (KitManager.get().saveEC(targetUuid, slot, kit)) {
+                    if (KitManager.get().saveECSilent(targetUuid, slot, kit)) {
                         p.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " updated for player " + playerName + "!");
                     } else {
                         p.sendMessage(ChatColor.RED + "Failed to update enderchest for player " + playerName + "!");
