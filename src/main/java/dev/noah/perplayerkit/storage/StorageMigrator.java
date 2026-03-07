@@ -52,10 +52,10 @@ public class StorageMigrator {
         try {
             // Create storage managers
             log(progressCallback, "Creating source storage connection (" + sourceType + ")...");
-            source = new StorageSelector(plugin, sourceType).getDbManager();
+            source = createStorageManager(sourceType);
 
             log(progressCallback, "Creating destination storage connection (" + destinationType + ")...");
-            destination = new StorageSelector(plugin, destinationType).getDbManager();
+            destination = createStorageManager(destinationType);
 
             // Connect to both
             log(progressCallback, "Connecting to source storage...");
@@ -123,6 +123,10 @@ public class StorageMigrator {
                 }
             }
         }
+    }
+
+    StorageManager createStorageManager(String storageType) {
+        return new StorageSelector(plugin, storageType).getDbManager();
     }
 
     private void log(Consumer<String> callback, String message) {
