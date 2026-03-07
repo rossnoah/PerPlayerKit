@@ -19,13 +19,12 @@
 package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.gui.ItemUtil;
-import dev.noah.perplayerkit.util.DisabledCommand;
 import dev.noah.perplayerkit.util.StyleManager;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.type.ChestMenu;
@@ -34,17 +33,12 @@ import org.jetbrains.annotations.NotNull;
 public class EnderchestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player player) {
-
-            if (DisabledCommand.isBlockedInWorld(player)) {
-                return true;
-            }
-            viewOnlyEC(player);
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        if (player == null) {
             return true;
         }
 
-        sender.sendMessage("Only players can use this command");
-        if (sender instanceof Player s) SoundManager.playFailure(s);
+        viewOnlyEC(player);
         return true;
     }
 
@@ -70,5 +64,3 @@ public class EnderchestCommand implements CommandExecutor {
         SoundManager.playOpenGui(p);
     }
 }
-
-

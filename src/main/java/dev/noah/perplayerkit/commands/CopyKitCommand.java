@@ -18,7 +18,6 @@
  */
 package dev.noah.perplayerkit.commands;
 
-import dev.noah.perplayerkit.util.DisabledCommand;
 import dev.noah.perplayerkit.KitShareManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,22 +30,16 @@ import org.jetbrains.annotations.NotNull;
 public class CopyKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        if (player == null) {
+            return true;
+        }
 
-        if (sender instanceof Player player) {
-
-            if (DisabledCommand.isBlockedInWorld(player)) {
-                return true;
-            }
-
-
-            if (args.length > 0) {
-                KitShareManager.get().copyKit(player, args[0]);
-            } else {
-                player.sendMessage(ChatColor.RED + "Error, you must enter a kit code to copy");
-                SoundManager.playFailure(player);
-            }
+        if (args.length > 0) {
+            KitShareManager.get().copyKit(player, args[0]);
         } else {
-            sender.sendMessage("Only players can use this command");
+            player.sendMessage(ChatColor.RED + "Error, you must enter a kit code to copy");
+            SoundManager.playFailure(player);
         }
 
         return true;

@@ -18,31 +18,22 @@
  */
 package dev.noah.perplayerkit.commands;
 
-import dev.noah.perplayerkit.gui.GUI;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
+import com.google.common.primitives.Ints;
+import org.jetbrains.annotations.Nullable;
 
-public class MainMenuCommand implements CommandExecutor {
-
-    private final Plugin plugin;
-
-    public MainMenuCommand(Plugin plugin) {
-        this.plugin = plugin;
+public final class SlotArgumentParser {
+    private SlotArgumentParser() {
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(commandSender);
-        if (player == null) {
-            return true;
-        }
+    public static @Nullable Integer parseSlot(String slotArgument) {
+        return Ints.tryParse(slotArgument);
+    }
 
-        GUI main = new GUI(plugin);
-        main.OpenMainMenu(player);
-        return true;
+    public static @Nullable Integer parseSlotInRange(String slotArgument, int min, int max) {
+        Integer slot = parseSlot(slotArgument);
+        if (slot == null || slot < min || slot > max) {
+            return null;
+        }
+        return slot;
     }
 }

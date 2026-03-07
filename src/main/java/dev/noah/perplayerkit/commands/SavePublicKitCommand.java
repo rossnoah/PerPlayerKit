@@ -18,7 +18,6 @@
  */
 package dev.noah.perplayerkit.commands;
 
-import dev.noah.perplayerkit.util.DisabledCommand;
 import dev.noah.perplayerkit.ItemFilter;
 import dev.noah.perplayerkit.KitManager;
 import org.bukkit.ChatColor;
@@ -38,33 +37,26 @@ import java.util.List;
 public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //if not player
-        if (!(sender instanceof Player p)) {
-            sender.sendMessage("Only players can use this command");
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        if (player == null) {
             return true;
         }
-
-        if (DisabledCommand.isBlockedInWorld(p)) {
-            return true;
-        }
-
-        //if not enough arguments
 
         if (args.length < 1) {
-            p.sendMessage(ChatColor.RED + "You need to specify a kit id");
-            p.sendMessage(ChatColor.RED + "Usage: /" + label + " <kitid>");
+            player.sendMessage(ChatColor.RED + "You need to specify a kit id");
+            player.sendMessage(ChatColor.RED + "Usage: /" + label + " <kitid>");
             return true;
         }
 
         String kidId = args[0];
 
         if (KitManager.get().getPublicKitList().stream().noneMatch(kit -> kit.id.equals(kidId))) {
-            p.sendMessage(ChatColor.RED + "Public kit " + kidId + " does not exist");
-            p.sendMessage(ChatColor.RED + "You may need to add a public kit in the config");
+            player.sendMessage(ChatColor.RED + "Public kit " + kidId + " does not exist");
+            player.sendMessage(ChatColor.RED + "You may need to add a public kit in the config");
             return true;
         }
 
-        Inventory inv = p.getInventory();
+        Inventory inv = player.getInventory();
 
         ItemStack[] data = new ItemStack[41];
 //        copy inventory into data
@@ -83,11 +75,11 @@ public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
         boolean success = kitManager.savePublicKit(kidId, data);
         if (success) {
             kitManager.savePublicKitToDB(kidId);
-            p.sendMessage("Saved kit " + kidId);
-            SoundManager.playSuccess(p);
+            player.sendMessage("Saved kit " + kidId);
+            SoundManager.playSuccess(player);
         } else {
-            p.sendMessage("Error saving kit " + kidId);
-            SoundManager.playFailure(p);
+            player.sendMessage("Error saving kit " + kidId);
+            SoundManager.playFailure(player);
         }
 
         return true;

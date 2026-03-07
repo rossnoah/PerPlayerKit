@@ -18,55 +18,57 @@
  */
 package dev.noah.perplayerkit.commands;
 
-import dev.noah.perplayerkit.KitManager;
+import dev.noah.perplayerkit.util.CooldownManager;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import dev.noah.perplayerkit.util.SoundManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+import java.util.function.BiConsumer;
 
-public class DeleteKitCommand implements CommandExecutor {
+public abstract class AbstractShareSlotCommand implements CommandExecutor {
+
+    private static final int COOLDOWN_SECONDS = 5;
+    private final CooldownManager cooldownManager = new CooldownManager(COOLDOWN_SECONDS);
+    private final String missingSlotMessage;
+    private final BiConsumer<Player, Integer> shareAction;
+
+    protected AbstractShareSlotCommand(String missingSlotMessage, BiConsumer<Player, Integer> shareAction) {
+        this.missingSlotMessage = missingSlotMessage;
+        this.shareAction = shareAction;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender, ChatColor.RED + "Only Players can use this!");
+        Player player = CommandGuards.requirePlayer(sender);
         if (player == null) {
             return true;
         }
 
-        UUID uuid = player.getUniqueId();
-        if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + "Usage: /deletekit <slot>");
+        if (args.length < 1) {
+            player.sendMessage(ChatColor.RED + missingSlotMessage);
             SoundManager.playFailure(player);
             return true;
         }
 
-        Integer slot = SlotArgumentParser.parseSlot(args[0]);
-        KitManager kitManager = KitManager.get();
+        if (cooldownManager.isOnCooldown(player)) {
+            player.sendMessage(ChatColor.RED + "Please don't spam the command (5 second cooldown)");
+            SoundManager.playFailure(player);
+            return true;
+        }
+
+        Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
         if (slot == null) {
-            player.sendMessage(ChatColor.RED + "Usage: /deletekit <slot>");
-            player.sendMessage(ChatColor.RED + "Select a real number");
+            player.sendMessage(ChatColor.RED + "Select a valid kit slot");
             SoundManager.playFailure(player);
             return true;
         }
 
-        if (!kitManager.hasKit(uuid, slot)) {
-            player.sendMessage(ChatColor.RED + "Kit " + slot + " doesnt exist!");
-            SoundManager.playFailure(player);
-            return true;
-        }
-
-        if (kitManager.deleteKit(uuid, slot)) {
-            player.sendMessage(ChatColor.GREEN + "Kit " + slot + " deleted!");
-            SoundManager.playSuccess(player);
-        } else {
-            player.sendMessage(ChatColor.RED + "Kit deletion failed!");
-            SoundManager.playFailure(player);
-        }
-
+        shareAction.accept(player, slot);
+        cooldownManager.setCooldown(player);
         return true;
     }
 }
