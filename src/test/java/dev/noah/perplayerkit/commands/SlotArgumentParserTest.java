@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit.commands;
 
+import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
