@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -24,7 +26,10 @@ class StorageMigratorTest {
     @BeforeEach
     void setUp() {
         plugin = mock(Plugin.class);
-        when(plugin.getLogger()).thenReturn(java.util.logging.Logger.getLogger("StorageMigratorTest"));
+        Logger logger = Logger.getLogger("StorageMigratorTest");
+        logger.setUseParentHandlers(false);
+        logger.setLevel(Level.OFF);
+        when(plugin.getLogger()).thenReturn(logger);
     }
 
     @Test

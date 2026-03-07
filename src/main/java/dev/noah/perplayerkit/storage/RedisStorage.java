@@ -18,7 +18,6 @@
  */
 package dev.noah.perplayerkit.storage;
 
-import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.plugin.Plugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -62,7 +61,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             return "PONG".equals(jedis.ping());
         } catch (Exception e) {
-            e.printStackTrace();
+            logRedisFailure("connectivity check", e);
             return false;
         }
     }
@@ -84,7 +83,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             jedis.ping();
         } catch (Exception e) {
-            e.printStackTrace();
+            logRedisFailure("keepalive", e);
         }
     }
 
@@ -93,7 +92,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             jedis.set(kitID, data);
         } catch (Exception e) {
-            e.printStackTrace();
+            logRedisFailure("save operation for kit ID " + kitID, e);
         }
     }
 
@@ -103,7 +102,7 @@ public class RedisStorage implements StorageManager {
             String data = jedis.get(kitID);
             return data == null ? "Error" : data;
         } catch (Exception e) {
-            e.printStackTrace();
+            logRedisFailure("read operation for kit ID " + kitID, e);
             return "Error";
         }
     }
@@ -113,7 +112,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             return jedis.exists(kitID);
         } catch (Exception e) {
-            e.printStackTrace();
+            logRedisFailure("existence check for kit ID " + kitID, e);
             return false;
         }
     }
@@ -123,7 +122,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             jedis.del(kitID);
         } catch (Exception e) {
-            e.printStackTrace();
+            logRedisFailure("delete operation for kit ID " + kitID, e);
         }
     }
 
@@ -140,8 +139,15 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             kitIDs.addAll(jedis.keys("*"));
         } catch (Exception e) {
-            e.printStackTrace();
+            logRedisFailure("list operation", e);
         }
         return kitIDs;
+    }
+
+    private void logRedisFailure(String operation, Exception exception) {
+        if (plugin == null || plugin.getLogger() == null) {
+            return;
+        }
+        plugin.getLogger().fine("Redis " + operation + " failed: " + exception.getMessage());
     }
 }
