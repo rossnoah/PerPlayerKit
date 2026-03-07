@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit.commands;
 
+import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.util.DisabledCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

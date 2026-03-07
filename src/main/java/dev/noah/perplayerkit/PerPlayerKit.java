@@ -18,11 +18,27 @@
  */
 package dev.noah.perplayerkit;
 
-import dev.noah.perplayerkit.commands.*;
-import dev.noah.perplayerkit.commands.extracommands.HealCommand;
-import dev.noah.perplayerkit.commands.extracommands.RepairCommand;
-import dev.noah.perplayerkit.commands.tabcompleters.ECSlotTabCompleter;
-import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
+import dev.noah.perplayerkit.commands.admin.AboutCommandListener;
+import dev.noah.perplayerkit.commands.admin.KitRoomCommand;
+import dev.noah.perplayerkit.commands.admin.PerPlayerKitCommand;
+import dev.noah.perplayerkit.commands.admin.SavePublicKitCommand;
+import dev.noah.perplayerkit.commands.completion.ECSlotTabCompleter;
+import dev.noah.perplayerkit.commands.completion.KitSlotTabCompleter;
+import dev.noah.perplayerkit.commands.features.HealCommand;
+import dev.noah.perplayerkit.commands.features.RegearCommand;
+import dev.noah.perplayerkit.commands.features.RepairCommand;
+import dev.noah.perplayerkit.commands.inspect.InspectEcCommand;
+import dev.noah.perplayerkit.commands.inspect.InspectKitCommand;
+import dev.noah.perplayerkit.commands.kits.DeleteKitCommand;
+import dev.noah.perplayerkit.commands.kits.EnderchestCommand;
+import dev.noah.perplayerkit.commands.kits.MainMenuCommand;
+import dev.noah.perplayerkit.commands.kits.PublicKitCommand;
+import dev.noah.perplayerkit.commands.kits.SwapKitCommand;
+import dev.noah.perplayerkit.commands.share.CopyKitCommand;
+import dev.noah.perplayerkit.commands.share.ShareECKitCommand;
+import dev.noah.perplayerkit.commands.share.ShareKitCommand;
+import dev.noah.perplayerkit.commands.shortcuts.ShortECCommand;
+import dev.noah.perplayerkit.commands.shortcuts.ShortKitCommand;
 import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
 import dev.noah.perplayerkit.listeners.antiexploit.ShulkerDropItemsListener;

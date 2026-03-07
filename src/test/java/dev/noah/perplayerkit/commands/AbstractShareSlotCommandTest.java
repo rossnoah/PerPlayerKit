@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit.commands;
 
+import dev.noah.perplayerkit.commands.share.AbstractShareSlotCommand;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
