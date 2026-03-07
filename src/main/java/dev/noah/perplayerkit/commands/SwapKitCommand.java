@@ -18,7 +18,6 @@
  */
 package dev.noah.perplayerkit.commands;
 
-import com.google.common.primitives.Ints;
 import dev.noah.perplayerkit.KitManager;
 import org.bukkit.ChatColor;
 import dev.noah.perplayerkit.util.SoundManager;
@@ -34,8 +33,8 @@ import java.util.UUID;
 public class SwapKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only Players can use this!");
+        Player player = CommandGuards.requirePlayer(sender, ChatColor.RED + "Only Players can use this!");
+        if (player == null) {
             return true;
         }
 
@@ -45,8 +44,8 @@ public class SwapKitCommand implements CommandExecutor {
             return true;
         }
 
-        Integer slot1 = Ints.tryParse(args[0]);
-        Integer slot2 = Ints.tryParse(args[1]);
+        Integer slot1 = SlotArgumentParser.parseSlot(args[0]);
+        Integer slot2 = SlotArgumentParser.parseSlot(args[1]);
 
         if (slot1 == null || slot2 == null) {
             player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");

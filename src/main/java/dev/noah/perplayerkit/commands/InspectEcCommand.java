@@ -20,161 +20,43 @@ package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.gui.GUI;
-import dev.noah.perplayerkit.util.BroadcastManager;
-import dev.noah.perplayerkit.util.SoundManager;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static dev.noah.perplayerkit.commands.InspectCommandUtil.*;
-
-public class InspectEcCommand implements CommandExecutor, TabCompleter {
-    private final Plugin plugin;
+public class InspectEcCommand extends AbstractInspectCommand {
 
     public InspectEcCommand(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ERROR_PREFIX.append(
-                    mm.deserialize("<red>This command can only be executed by players.</red>")).toString());
-            return true;
-        }
-
-        if (!player.hasPermission("perplayerkit.inspect")) {
-            BroadcastManager.get().sendComponentMessage(player,
-                    ERROR_PREFIX.append(
-                            mm.deserialize("<red>You don't have permission to use this command.</red>")));
-            SoundManager.playFailure(player);
-            return true;
-        }
-
-        if (args.length < 2) {
-            showUsage(player, "inspectec");
-            return true;
-        }
-
-        // Parse slot number
-        int slot;
-        try {
-            slot = Integer.parseInt(args[1]);
-            if (slot < MIN_SLOT || slot > MAX_SLOT) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException e) {
-            BroadcastManager.get().sendComponentMessage(player,
-                    ERROR_PREFIX.append(
-                            mm.deserialize("<red>Slot must be a number between " +
-                                    MIN_SLOT + " and " + MAX_SLOT + ".</red>")));
-            SoundManager.playFailure(player);
-            return true;
-        }
-
-        // Resolve player identifier asynchronously
-        CompletableFuture<Void> future = resolvePlayerIdentifierAsync(args[0])
-                .thenCompose(targetUuid -> {
-                    if (targetUuid == null) {
-                        // Player not found - schedule error message on main thread
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            BroadcastManager.get().sendComponentMessage(player,
-                                    ERROR_PREFIX.append(
-                                            mm.deserialize("<red>Could not find a player with that name or UUID.</red>")));
-                            SoundManager.playFailure(player);
-                        });
-                        return CompletableFuture.completedFuture(null);
-                    }
-
-                    // Check if player is online first
-                    Player targetPlayer = Bukkit.getPlayer(targetUuid);
-
-                    // Load player data asynchronously
-                    return CompletableFuture.runAsync(() -> {
-                        if (targetPlayer == null) {
-                            // Only load from DB if player is offline
-                            KitManager.get().loadPlayerDataFromDB(targetUuid);
-                        }
-                    }).thenRun(() -> {
-                        // Run on the main thread after data is loaded
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            if (KitManager.get().hasEC(targetUuid, slot)) {
-                                GUI gui = new GUI(plugin);
-                                gui.InspectEc(player, targetUuid, slot);
-                            } else {
-                                String targetName = getPlayerName(targetUuid);
-
-                                BroadcastManager.get().sendComponentMessage(player,
-                                        ERROR_PREFIX.append(
-                                                mm.deserialize("<red>" + targetName +
-                                                        " does not have an enderchest in slot " + slot + "</red>")));
-                                SoundManager.playFailure(player);
-                            }
-                        });
-                    });
-                });
-
-        // Handle exceptions
-        future.exceptionally(ex -> {
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                plugin.getLogger().severe("Error loading enderchest data: " + ex.getMessage());
-                BroadcastManager.get().sendComponentMessage(player,
-                        ERROR_PREFIX.append(
-                                mm.deserialize("<red>An error occurred while loading enderchest data. " +
-                                        "See console for details.</red>")));
-                SoundManager.playFailure(player);
-            });
-            return null;
-        });
-
-        return true;
+    protected String usageCommand() {
+        return "inspectec";
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
-                                                @NotNull Command command,
-                                                @NotNull String label,
-                                                @NotNull String[] args) {
-        if (!(sender instanceof Player) || !sender.hasPermission("perplayerkit.inspect")) {
-            return List.of();
-        }
+    protected boolean hasData(UUID targetUuid, int slot) {
+        return KitManager.get().hasEC(targetUuid, slot);
+    }
 
-        if (args.length == 1) {
-            String input = args[0].toLowerCase();
-            List<String> completions = new ArrayList<>(Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(input))
-                    .toList());
-            if (input.length() >= 4 && input.contains("-")) {
-                completions.addAll(Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getUniqueId)
-                        .map(UUID::toString)
-                        .filter(uuid -> uuid.startsWith(input))
-                        .toList());
-            }
-            return completions;
-        } else if (args.length == 2) {
-            return IntStream.rangeClosed(MIN_SLOT, MAX_SLOT)
-                    .mapToObj(String::valueOf)
-                    .filter(slot -> slot.startsWith(args[1]))
-                    .collect(Collectors.toList());
-        }
+    @Override
+    protected void openInspectGui(Player inspector, UUID targetUuid, int slot) {
+        GUI gui = new GUI(plugin);
+        gui.InspectEc(inspector, targetUuid, slot);
+    }
 
-        return new ArrayList<>();
+    @Override
+    protected String missingDataMessage(String targetName, int slot) {
+        return "<red>" + targetName + " does not have an enderchest in slot " + slot + "</red>";
+    }
+
+    @Override
+    protected String loadErrorLogMessage() {
+        return "Error loading enderchest data";
+    }
+
+    @Override
+    protected String loadErrorUserMessage() {
+        return "<red>An error occurred while loading enderchest data. See console for details.</red>";
     }
 }

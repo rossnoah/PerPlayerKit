@@ -4,7 +4,6 @@ import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.CooldownManager;
-import dev.noah.perplayerkit.util.DisabledCommand;
 import dev.noah.perplayerkit.util.StyleManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -28,6 +27,7 @@ public class RegearCommand implements CommandExecutor, Listener {
 
     public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, StyleManager.get().getPrimaryColor() + "Regear Shulker", "<gray>● Restocks Your Kit</gray>", "<gray>● Use </gray>" + StyleManager.get().getPrimaryColor() + "<gray>/rg to get another regear shulker</gray>");
     public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, StyleManager.get().getPrimaryColor() + "Regear Shell", "<gray>● Restocks Your Kit</gray>", "<gray>● Click to use!</gray>");
+    private static final MiniMessage MM = MiniMessage.miniMessage();
 
     private final Plugin plugin;
     private final CooldownManager commandCooldownManager;
@@ -55,73 +55,23 @@ public class RegearCommand implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command!");
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender, "Only players can use this command!");
+        if (player == null) {
             return true;
         }
 
-        if (DisabledCommand.isBlockedInWorld(player)) {
-            return true;
-        }
-
-        // Determine which mode to use based on the command label
-        String effectiveMode;
-        if (label.equalsIgnoreCase("rg")) {
-            effectiveMode = plugin.getConfig().getString("regear.rg-mode", "command");
-        } else if (label.equalsIgnoreCase("regear")) {
-            effectiveMode = plugin.getConfig().getString("regear.regear-mode", "command");
-        } else {
-            effectiveMode = plugin.getConfig().getString("regear.rg-mode", "command"); // Default fallback
-        }
-
+        String effectiveMode = getEffectiveMode(label);
         if (effectiveMode.equalsIgnoreCase("shulker")) {
-            int slot = player.getInventory().firstEmpty();
-            if (slot == -1) {
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>Your inventory is full, can't give you a regear shulker!"));
-                return true;
-            }
-
-            player.getInventory().setItem(slot, REGEAR_SHULKER_ITEM);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regear Shulker given!"));
-
+            handleShulkerMode(player);
             return true;
         }
 
         if (effectiveMode.equalsIgnoreCase("command")) {
-            int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
-
-            if (slot == -1) {
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
-                return true;
-            }
-
-            if (!allowRegearWhileUsingElytra && player.isGliding() && player.getInventory().getChestplate() != null && player.getInventory().getChestplate().getType() == Material.ELYTRA) {
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You cannot regear while using an elytra!"));
-                return true;
-            }
-
-            if (damageCooldownManager.isOnCooldown(player)) {
-                int secondsLeft = damageCooldownManager.getTimeLeft(player);
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
-                return true;
-            }
-
-            if (commandCooldownManager.isOnCooldown(player)) {
-                int secondsLeft = commandCooldownManager.getTimeLeft(player);
-                BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must wait " + secondsLeft + " seconds before using this command again!"));
-                return true;
-            }
-
-            KitManager.get().regearKit(player, slot);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regeared!"));
-            BroadcastManager.get().broadcastPlayerRegeared(player);
-
-            commandCooldownManager.setCooldown(player);
-
+            handleCommandMode(player);
             return true;
         }
 
-        BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>This command is not configured correctly, please contact an administrator."));
+        sendMessage(player, "<red>This command is not configured correctly, please contact an administrator.");
         return true;
     }
 
@@ -133,22 +83,17 @@ public class RegearCommand implements CommandExecutor, Listener {
         event.setCancelled(true);
         Player player = event.getPlayer();
 
-        int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
-
-        if (slot == -1) {
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
+        Integer slot = getLastLoadedKitSlot(player);
+        if (slot == null) {
             return;
         }
 
-        if (damageCooldownManager.isOnCooldown(player)) {
-            int secondsLeft = damageCooldownManager.getTimeLeft(player);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
+        if (isDamageCooldownBlocked(player)) {
             return;
         }
 
         player.getInventory().setItem(event.getHand(), null);
 
-//custom inv with holder
         RegearInventoryHolder holder = new RegearInventoryHolder(player);
         Inventory inventory = holder.getInventory();
         player.openInventory(inventory);
@@ -175,16 +120,12 @@ public class RegearCommand implements CommandExecutor, Listener {
 
         Player player = holder.player();
 
-        int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
-
-        if (slot == -1) {
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You have not loaded a kit yet!"));
+        Integer slot = getLastLoadedKitSlot(player);
+        if (slot == null) {
             return;
         }
 
-        if (damageCooldownManager.isOnCooldown(player)) {
-            int secondsLeft = damageCooldownManager.getTimeLeft(player);
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!"));
+        if (isDamageCooldownBlocked(player)) {
             return;
         }
 
@@ -193,8 +134,102 @@ public class RegearCommand implements CommandExecutor, Listener {
         KitManager.get().regearKit(player, slot);
         player.updateInventory();
 
-        BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize("<green>Regeared!"));
+        announceRegearSuccess(player);
+    }
+
+    private String getEffectiveMode(String label) {
+        if (label.equalsIgnoreCase("rg")) {
+            return plugin.getConfig().getString("regear.rg-mode", "command");
+        }
+        if (label.equalsIgnoreCase("regear")) {
+            return plugin.getConfig().getString("regear.regear-mode", "command");
+        }
+        return plugin.getConfig().getString("regear.rg-mode", "command");
+    }
+
+    private void handleShulkerMode(Player player) {
+        int slot = player.getInventory().firstEmpty();
+        if (slot == -1) {
+            sendMessage(player, "<red>Your inventory is full, can't give you a regear shulker!");
+            return;
+        }
+
+        player.getInventory().setItem(slot, REGEAR_SHULKER_ITEM);
+        sendMessage(player, "<green>Regear Shulker given!");
+    }
+
+    private void handleCommandMode(Player player) {
+        Integer slot = getLastLoadedKitSlot(player);
+        if (slot == null) {
+            return;
+        }
+        if (isElytraBlocked(player)) {
+            return;
+        }
+        if (isDamageCooldownBlocked(player)) {
+            return;
+        }
+        if (isCommandCooldownBlocked(player)) {
+            return;
+        }
+
+        KitManager.get().regearKit(player, slot);
+        announceRegearSuccess(player);
+        commandCooldownManager.setCooldown(player);
+    }
+
+    private Integer getLastLoadedKitSlot(Player player) {
+        int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
+        if (slot != -1) {
+            return slot;
+        }
+
+        sendMessage(player, "<red>You have not loaded a kit yet!");
+        return null;
+    }
+
+    private boolean isElytraBlocked(Player player) {
+        if (allowRegearWhileUsingElytra) {
+            return false;
+        }
+        if (!player.isGliding()) {
+            return false;
+        }
+        if (player.getInventory().getChestplate() == null || player.getInventory().getChestplate().getType() != Material.ELYTRA) {
+            return false;
+        }
+
+        sendMessage(player, "<red>You cannot regear while using an elytra!");
+        return true;
+    }
+
+    private boolean isDamageCooldownBlocked(Player player) {
+        if (!damageCooldownManager.isOnCooldown(player)) {
+            return false;
+        }
+
+        int secondsLeft = damageCooldownManager.getTimeLeft(player);
+        sendMessage(player, "<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!");
+        return true;
+    }
+
+    private boolean isCommandCooldownBlocked(Player player) {
+        if (!commandCooldownManager.isOnCooldown(player)) {
+            return false;
+        }
+
+        int secondsLeft = commandCooldownManager.getTimeLeft(player);
+        sendMessage(player, "<red>You must wait " + secondsLeft + " seconds before using this command again!");
+        return true;
+    }
+
+    private void announceRegearSuccess(Player player) {
+        sendMessage(player, "<green>Regeared!");
         BroadcastManager.get().broadcastPlayerRegeared(player);
+    }
+
+    private void sendMessage(Player player, String message) {
+        BroadcastManager.get().sendComponentMessage(player, MM.deserialize(message));
     }
 
 
