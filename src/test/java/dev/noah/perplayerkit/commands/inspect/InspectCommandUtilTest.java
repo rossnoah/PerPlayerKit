@@ -42,7 +42,9 @@ class InspectCommandUtilTest {
     void selectResolvedUuidUsesOfflineFallbackWhenServerIsOfflineMode() {
         String identifier = "TargetPlayer";
 
-        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid(identifier, null, () -> null, false);
+        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid(identifier, null, () -> {
+            throw new RuntimeException("mojang should not be consulted");
+        }, false);
 
         assertEquals(UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8)),
                 resolvedUuid);

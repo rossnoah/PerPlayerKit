@@ -165,13 +165,13 @@ public class InspectCommandUtil {
             return cachedOfflinePlayer;
         }
 
+        if (!onlineMode) {
+            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8));
+        }
+
         UUID mojangUuid = mojangLookup.get();
         if (mojangUuid != null) {
             return mojangUuid;
-        }
-
-        if (!onlineMode) {
-            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8));
         }
 
         return null;
