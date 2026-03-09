@@ -31,8 +31,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 public class InspectCommandUtil {
     public static final int MIN_SLOT = 1;
@@ -69,28 +71,9 @@ public class InspectCommandUtil {
 
         return CompletableFuture.supplyAsync(() -> {
             UUID cachedOfflinePlayer = findCachedOfflinePlayerUuid(identifier);
-            if (cachedOfflinePlayer != null) {
-                return cachedOfflinePlayer;
-            }
-
-            return lookupPlayerUuidFromMojang(identifier);
+            return selectResolvedUuid(identifier, cachedOfflinePlayer,
+                    () -> lookupPlayerUuidFromMojang(identifier), Bukkit.getOnlineMode());
         });
-    }
-
-    /**
-     * Gets a player's name from their UUID.
-     *
-     * @param uuid Player UUID
-     * @return Player name, or null if the UUID cannot be associated with a known player name
-     */
-    public static @Nullable String getPlayerName(@NotNull UUID uuid) {
-        Player onlinePlayer = Bukkit.getPlayer(uuid);
-        if (onlinePlayer != null) {
-            return onlinePlayer.getName();
-        }
-
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-        return offlinePlayer.getName();
     }
 
     /**
@@ -154,5 +137,23 @@ public class InspectCommandUtil {
         } catch (IOException | IllegalArgumentException ignored) {
             return null;
         }
+    }
+
+    static @Nullable UUID selectResolvedUuid(@NotNull String identifier, @Nullable UUID cachedOfflinePlayer,
+                                             @NotNull Supplier<UUID> mojangLookup, boolean onlineMode) {
+        if (cachedOfflinePlayer != null) {
+            return cachedOfflinePlayer;
+        }
+
+        UUID mojangUuid = mojangLookup.get();
+        if (mojangUuid != null) {
+            return mojangUuid;
+        }
+
+        if (!onlineMode) {
+            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8));
+        }
+
+        return null;
     }
 }

@@ -41,10 +41,10 @@ import java.util.stream.IntStream;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.ERROR_PREFIX;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.MAX_SLOT;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.MIN_SLOT;
-import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.getPlayerName;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.mm;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.resolvePlayerIdentifierAsync;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.showUsage;
+import static dev.noah.perplayerkit.util.PlayerUtil.getPlayerName;
 
 public abstract class AbstractInspectCommand implements CommandExecutor, TabCompleter {
     protected final Plugin plugin;
@@ -179,11 +179,6 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
         }
 
         String targetName = getPlayerName(targetUuid);
-        if (targetName == null) {
-            showPlayerNotFound(inspector);
-            return;
-        }
-
         BroadcastManager.get().sendComponentMessage(inspector,
                 ERROR_PREFIX.append(mm.deserialize(missingDataMessage(targetName, slot))));
         SoundManager.playFailure(inspector);
