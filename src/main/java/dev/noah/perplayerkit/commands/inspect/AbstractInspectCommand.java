@@ -113,8 +113,7 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
                     return targetOnlineFuture.thenCompose(targetOnline -> {
                         CompletableFuture<Void> loadFuture = targetOnline
                                 ? CompletableFuture.completedFuture(null)
-                                : CompletableFuture.runAsync(() ->
-                                KitManager.get().loadPlayerDataFromDB(targetUuid));
+                                : CompletableFuture.runAsync(() -> KitManager.get().loadPlayerDataFromDB(targetUuid));
 
                         return loadFuture.thenRun(() -> Bukkit.getScheduler().runTask(plugin, () -> {
                             Player currentSender = Bukkit.getPlayer(senderUuid);
