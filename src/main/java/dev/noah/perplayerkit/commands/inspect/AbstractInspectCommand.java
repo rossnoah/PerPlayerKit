@@ -95,12 +95,7 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
         CompletableFuture<Void> future = resolvePlayerIdentifierAsync(args[0])
                 .thenCompose(targetUuid -> {
                     if (targetUuid == null) {
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            BroadcastManager.get().sendComponentMessage(player,
-                                    ERROR_PREFIX.append(
-                                            mm.deserialize("<red>Could not find a player with that name or UUID.</red>")));
-                            SoundManager.playFailure(player);
-                        });
+                        Bukkit.getScheduler().runTask(plugin, () -> showPlayerNotFound(player));
                         return CompletableFuture.completedFuture(null);
                     }
 
@@ -184,8 +179,20 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
         }
 
         String targetName = getPlayerName(targetUuid);
+        if (targetName == null) {
+            showPlayerNotFound(inspector);
+            return;
+        }
+
         BroadcastManager.get().sendComponentMessage(inspector,
                 ERROR_PREFIX.append(mm.deserialize(missingDataMessage(targetName, slot))));
         SoundManager.playFailure(inspector);
+    }
+
+    private void showPlayerNotFound(Player player) {
+        BroadcastManager.get().sendComponentMessage(player,
+                ERROR_PREFIX.append(
+                        mm.deserialize("<red>Could not find a player with that name or UUID.</red>")));
+        SoundManager.playFailure(player);
     }
 }
