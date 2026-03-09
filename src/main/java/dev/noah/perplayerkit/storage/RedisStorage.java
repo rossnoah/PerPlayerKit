@@ -148,6 +148,10 @@ public class RedisStorage implements StorageManager {
         if (plugin == null || plugin.getLogger() == null) {
             return;
         }
-        plugin.getLogger().fine("Redis " + operation + " failed: " + exception.getMessage());
+        plugin.getLogger().severe("Redis " + operation + " failed: " + exception.getMessage());
+        plugin.getLogger().severe(exception.toString());
+        for (StackTraceElement element : exception.getStackTrace()) {
+            plugin.getLogger().severe("\tat " + element);
+        }
     }
 }
