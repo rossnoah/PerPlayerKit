@@ -24,15 +24,12 @@ import dev.noah.perplayerkit.KitRoomDataManager;
 import dev.noah.perplayerkit.PublicKit;
 import dev.noah.perplayerkit.util.*;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.ipvp.canvas.Menu;
-import org.ipvp.canvas.slot.ClickOptions;
 import org.ipvp.canvas.slot.Slot;
 
 import java.util.HashMap;
@@ -46,6 +43,7 @@ import static dev.noah.perplayerkit.gui.ItemUtil.addHideFlags;
 import static dev.noah.perplayerkit.gui.ItemUtil.createItem;
 import static dev.noah.perplayerkit.gui.ItemUtil.createGlassPane;
 import static dev.noah.perplayerkit.gui.GuiLayoutUtils.*;
+import static dev.noah.perplayerkit.util.PlayerUtil.getPlayerName;
 
 public class GUI {
     private final Plugin plugin;
@@ -72,10 +70,6 @@ public class GUI {
             KitManager.get().loadPublicKit(player, id);
             info.getClickedMenu().close();
         });
-    }
-
-    public static Menu createPublicKitMenu() {
-        return GuiMenuFactory.createPublicKitRoomMenu();
     }
 
     public static boolean removeKitDeletionFlag(Player player) {
@@ -611,48 +605,5 @@ public class GUI {
                 OpenECKitKenu(player, i);
             }
         });
-    }
-
-    public Menu createKitMenu(int slot) {
-        return GuiMenuFactory.createKitMenu(slot);
-    }
-
-    public Menu createPublicKitMenu(String id) {
-        return GuiMenuFactory.createPublicKitMenu(id);
-    }
-
-    public Menu createECMenu(int slot) {
-        return GuiMenuFactory.createECMenu(slot);
-    }
-
-    public Menu createInspectMenu(int slot, String playerName) {
-        return GuiMenuFactory.createInspectMenu(slot, playerName);
-    }
-
-    public Menu createInspectEcMenu(int slot, String playerName) {
-        return GuiMenuFactory.createInspectEcMenu(slot, playerName);
-    }
-
-    public Menu createMainMenu(Player p) {
-        return GuiMenuFactory.createMainMenu(p);
-    }
-
-    public Menu createKitRoom() {
-        return GuiMenuFactory.createKitRoomMenu();
-    }
-
-    public void allowModification(Slot slot) {
-        ClickOptions options = ClickOptions.ALLOW_ALL;
-        slot.setClickOptions(options);
-    }
-
-    private String getPlayerName(UUID uuid) {
-        Player onlinePlayer = Bukkit.getPlayer(uuid);
-        if (onlinePlayer != null) {
-            return onlinePlayer.getName();
-        }
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-        String name = offlinePlayer.getName();
-        return name != null ? name : uuid.toString();
     }
 }

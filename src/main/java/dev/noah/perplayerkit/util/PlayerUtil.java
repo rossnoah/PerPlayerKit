@@ -19,11 +19,16 @@
 package dev.noah.perplayerkit.util;
 
 import dev.noah.perplayerkit.PerPlayerKit;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 public class PlayerUtil {
 
@@ -64,6 +69,20 @@ public class PlayerUtil {
         p.setHealth(20);
         p.setFoodLevel(20);
         p.setSaturation(20);
+    }
+
+    public static @NotNull String getPlayerName(@NotNull UUID uuid) {
+        Player onlinePlayer = Bukkit.getPlayer(uuid);
+        if (onlinePlayer != null) {
+            return onlinePlayer.getName();
+        }
+
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        return fallbackPlayerName(offlinePlayer.getName(), uuid);
+    }
+
+    static @NotNull String fallbackPlayerName(String playerName, @NotNull UUID uuid) {
+        return playerName != null ? playerName : uuid.toString();
     }
 
 }
