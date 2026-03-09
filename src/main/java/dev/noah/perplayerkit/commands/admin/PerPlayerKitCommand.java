@@ -184,6 +184,6 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
         }
 
-        return null;
+        return List.of();
     }
 }
