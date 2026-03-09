@@ -82,6 +82,7 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
         if (!importer.checkForFiles()) {
             sender.sendMessage(ChatColor.RED + "Missing files to import");
             sender.sendMessage(ChatColor.RED + "Copy data folder from KitsX into the PerPlayerKit folder");
+            return true;
         }
 
         importer.importFiles();
