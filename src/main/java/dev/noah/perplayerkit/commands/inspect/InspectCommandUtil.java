@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -89,13 +90,32 @@ public class InspectCommandUtil {
     }
 
     private static @Nullable UUID findCachedOfflinePlayerUuid(@NotNull String identifier) {
-        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-            String name = offlinePlayer.getName();
-            if (name != null && name.equalsIgnoreCase(identifier)) {
-                return offlinePlayer.getUniqueId();
-            }
+        OfflinePlayer cachedOfflinePlayer = getOfflinePlayerIfCached(identifier);
+        if (cachedOfflinePlayer == null) {
+            return null;
         }
-        return null;
+
+        String cachedName = cachedOfflinePlayer.getName();
+        if (cachedName == null || !cachedName.equalsIgnoreCase(identifier)) {
+            return null;
+        }
+
+        return cachedOfflinePlayer.getUniqueId();
+    }
+
+    private static @Nullable OfflinePlayer getOfflinePlayerIfCached(@NotNull String identifier) {
+        Object server = Bukkit.getServer();
+        if (server == null) {
+            return null;
+        }
+
+        try {
+            Method method = server.getClass().getMethod("getOfflinePlayerIfCached", String.class);
+            Object offlinePlayer = method.invoke(server, identifier);
+            return offlinePlayer instanceof OfflinePlayer ? (OfflinePlayer) offlinePlayer : null;
+        } catch (ReflectiveOperationException ignored) {
+            return null;
+        }
     }
 
     private static @Nullable UUID lookupPlayerUuidFromMojang(@NotNull String identifier) {

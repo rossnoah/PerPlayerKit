@@ -1,12 +1,19 @@
 package dev.noah.perplayerkit.commands.inspect;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
 
 class InspectCommandUtilTest {
 
@@ -46,5 +53,21 @@ class InspectCommandUtilTest {
         UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid("TargetPlayer", null, () -> null, true);
 
         assertNull(resolvedUuid);
+    }
+
+    @Test
+    void findCachedOfflinePlayerUuidDoesNotScanOfflinePlayers() throws Exception {
+        Method method = InspectCommandUtil.class.getDeclaredMethod("findCachedOfflinePlayerUuid", String.class);
+        method.setAccessible(true);
+        Server server = mock(Server.class);
+
+        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+            bukkit.when(Bukkit::getServer).thenReturn(server);
+
+            UUID cachedUuid = (UUID) method.invoke(null, "TargetPlayer");
+
+            assertNull(cachedUuid);
+            bukkit.verify(Bukkit::getOfflinePlayers, never());
+        }
     }
 }
