@@ -182,6 +182,9 @@ public class GUI {
     public void InspectEc(Player p, UUID target, int slot) {
         setInspectTarget(p.getUniqueId(), target);
         String playerName = getPlayerName(target);
+        if (playerName == null) {
+            playerName = target.toString();
+        }
         Menu menu = GuiMenuFactory.createInspectEcMenu(slot, playerName);
 
         setGlassPaneRange(menu, 0, EC_CONTENT_START);

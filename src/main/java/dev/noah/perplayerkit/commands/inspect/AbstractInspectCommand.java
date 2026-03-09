@@ -92,27 +92,53 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
             return true;
         }
 
+        UUID senderUuid = player.getUniqueId();
         CompletableFuture<Void> future = resolvePlayerIdentifierAsync(args[0])
                 .thenCompose(targetUuid -> {
                     if (targetUuid == null) {
-                        Bukkit.getScheduler().runTask(plugin, () -> showPlayerNotFound(player));
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            Player currentSender = Bukkit.getPlayer(senderUuid);
+                            if (currentSender == null) {
+                                return;
+                            }
+                            showPlayerNotFound(currentSender);
+                        });
                         return CompletableFuture.completedFuture(null);
                     }
 
-                    Player targetPlayer = Bukkit.getPlayer(targetUuid);
-                    return CompletableFuture.runAsync(() -> {
-                        if (targetPlayer == null) {
-                            KitManager.get().loadPlayerDataFromDB(targetUuid);
-                        }
-                    }).thenRun(() -> Bukkit.getScheduler().runTask(plugin, () -> showInspectResult(player, targetUuid, slot)));
+                    CompletableFuture<Boolean> targetOnlineFuture = new CompletableFuture<>();
+                    Bukkit.getScheduler().runTask(plugin,
+                            () -> targetOnlineFuture.complete(Bukkit.getPlayer(targetUuid) != null));
+
+                    return targetOnlineFuture.thenCompose(targetOnline -> {
+                        CompletableFuture<Void> loadFuture = targetOnline
+                                ? CompletableFuture.completedFuture(null)
+                                : CompletableFuture.runAsync(() ->
+                                KitManager.get().loadPlayerDataFromDB(targetUuid));
+
+                        return loadFuture.thenRun(() -> Bukkit.getScheduler().runTask(plugin, () -> {
+                            Player currentSender = Bukkit.getPlayer(senderUuid);
+                            if (currentSender == null) {
+                                return;
+                            }
+
+                            Player currentTarget = Bukkit.getPlayer(targetUuid);
+                            showInspectResult(currentSender, currentTarget, targetUuid, slot);
+                        }));
+                    });
                 });
 
         future.exceptionally(ex -> {
             Bukkit.getScheduler().runTask(plugin, () -> {
                 plugin.getLogger().severe(loadErrorLogMessage() + ": " + ex.getMessage());
-                BroadcastManager.get().sendComponentMessage(player,
+                Player currentSender = Bukkit.getPlayer(senderUuid);
+                if (currentSender == null) {
+                    return;
+                }
+
+                BroadcastManager.get().sendComponentMessage(currentSender,
                         ERROR_PREFIX.append(mm.deserialize(loadErrorUserMessage())));
-                SoundManager.playFailure(player);
+                SoundManager.playFailure(currentSender);
             });
             return null;
         });
@@ -172,13 +198,16 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
         }
     }
 
-    private void showInspectResult(Player inspector, UUID targetUuid, int slot) {
+    private void showInspectResult(Player inspector, @Nullable Player targetPlayer, UUID targetUuid, int slot) {
         if (hasData(targetUuid, slot)) {
             openInspectGui(inspector, targetUuid, slot);
             return;
         }
 
-        String targetName = getPlayerName(targetUuid);
+        String targetName = targetPlayer != null ? targetPlayer.getName() : getPlayerName(targetUuid);
+        if (targetName == null) {
+            targetName = targetUuid.toString();
+        }
         BroadcastManager.get().sendComponentMessage(inspector,
                 ERROR_PREFIX.append(mm.deserialize(missingDataMessage(targetName, slot))));
         SoundManager.playFailure(inspector);
