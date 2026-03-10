@@ -59,6 +59,15 @@ public class KitManager {
         return kitByKitIDMap.get(id);
     }
 
+    private void cacheKit(String id, ItemStack[] kit) {
+        if (kit == null) {
+            kitByKitIDMap.remove(id);
+            return;
+        }
+
+        kitByKitIDMap.put(id, kit);
+    }
+
     public List<PublicKit> getPublicKitList() {
         return publicKitList;
     }
@@ -105,7 +114,7 @@ public class KitManager {
                         }
                     }
 
-                    kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot), kit);
+                    cacheKit(IDUtil.getPlayerKitId(uuid, slot), kit);
                     player.sendMessage(ChatColor.GREEN + "Kit " + slot + " saved!");
 
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePlayerKitToDB(uuid, slot));
@@ -150,7 +159,7 @@ public class KitManager {
                 }
             }
 
-            kitByKitIDMap.put(IDUtil.getPublicKitId(publickit), kit);
+            cacheKit(IDUtil.getPublicKitId(publickit), kit);
             player.sendMessage(ChatColor.GREEN + "Public Kit " + publickit + " saved!");
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePublicKitToDB(publickit));
@@ -193,7 +202,7 @@ public class KitManager {
                 }
             }
 
-            kitByKitIDMap.put(IDUtil.getPublicKitId(id), kit);
+            cacheKit(IDUtil.getPublicKitId(id), kit);
             return true;
         }
         return false;
@@ -213,7 +222,7 @@ public class KitManager {
                 }
 
                 if (notEmpty) {
-                    kitByKitIDMap.put(IDUtil.getECId(uuid, slot), kit);
+                    cacheKit(IDUtil.getECId(uuid, slot), kit);
                     player.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " saved!");
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> saveEnderchestToDB(uuid, slot));
                     return true;
@@ -238,7 +247,7 @@ public class KitManager {
             return false;
         }
 
-        kitByKitIDMap.put(IDUtil.getECId(uuid, slot), kit);
+        cacheKit(IDUtil.getECId(uuid, slot), kit);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> saveEnderchestToDB(uuid, slot));
         return true;
     }
@@ -270,7 +279,7 @@ public class KitManager {
                 kit[39] = null;
             }
 
-            kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot), ItemFilter.get().filterItemStack(kit));
+            cacheKit(IDUtil.getPlayerKitId(uuid, slot), ItemFilter.get().filterItemStack(kit));
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePlayerKitToDB(uuid, slot));
             return true;
         } else {
@@ -437,7 +446,8 @@ public class KitManager {
             if (!data.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                    kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot), ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+                    cacheKit(IDUtil.getPlayerKitId(uuid, slot),
+                            ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
                 } catch (IOException ignored) {
                 }
             }
@@ -447,7 +457,8 @@ public class KitManager {
             if (!data.equalsIgnoreCase("error")) {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                    kitByKitIDMap.put(IDUtil.getECId(uuid, slot), ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+                    cacheKit(IDUtil.getECId(uuid, slot),
+                            ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
                 } catch (IOException ignored) {
                 }
             }
@@ -487,7 +498,7 @@ public class KitManager {
         if (!data.equalsIgnoreCase("error")) {
             try {
                 ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                kitByKitIDMap.put(IDUtil.getPublicKitId(id), ItemFilter.get().filterItemStack(kit));
+                cacheKit(IDUtil.getPublicKitId(id), ItemFilter.get().filterItemStack(kit));
             } catch (IOException ignored) {
                 plugin.getLogger().info("Error loading public kit " + id);
             }
