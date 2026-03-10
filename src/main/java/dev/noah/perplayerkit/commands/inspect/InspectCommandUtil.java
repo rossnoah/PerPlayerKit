@@ -50,10 +50,11 @@ public class InspectCommandUtil {
     /**
      * Attempts to resolve a player identifier (name or UUID) to a UUID asynchronously.
      * This method first tries to parse as UUID, then checks online players synchronously,
-     * and finally searches cached offline players and Mojang asynchronously.
+     * and finally searches cached offline players and Mojang asynchronously before
+     * falling back to the deterministic offline-mode UUID.
      *
      * @param identifier Player name or UUID string
-     * @return CompletableFuture containing UUID if found, null otherwise
+     * @return CompletableFuture containing the resolved UUID
      */
     public static CompletableFuture<UUID> resolvePlayerIdentifierAsync(String identifier) {
         // First try to parse as UUID
@@ -73,7 +74,7 @@ public class InspectCommandUtil {
         return CompletableFuture.supplyAsync(() -> {
             UUID cachedOfflinePlayer = findCachedOfflinePlayerUuid(identifier);
             return selectResolvedUuid(identifier, cachedOfflinePlayer,
-                    () -> lookupPlayerUuidFromMojang(identifier), Bukkit.getOnlineMode());
+                    () -> lookupPlayerUuidFromMojang(identifier));
         });
     }
 
@@ -159,14 +160,10 @@ public class InspectCommandUtil {
         }
     }
 
-    static @Nullable UUID selectResolvedUuid(@NotNull String identifier, @Nullable UUID cachedOfflinePlayer,
-                                             @NotNull Supplier<UUID> mojangLookup, boolean onlineMode) {
+    static @NotNull UUID selectResolvedUuid(@NotNull String identifier, @Nullable UUID cachedOfflinePlayer,
+                                            @NotNull Supplier<UUID> mojangLookup) {
         if (cachedOfflinePlayer != null) {
             return cachedOfflinePlayer;
-        }
-
-        if (!onlineMode) {
-            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8));
         }
 
         UUID mojangUuid = mojangLookup.get();
@@ -174,6 +171,6 @@ public class InspectCommandUtil {
             return mojangUuid;
         }
 
-        return null;
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8));
     }
 }
