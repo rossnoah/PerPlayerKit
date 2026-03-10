@@ -31,11 +31,12 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class KitManager {
     private static KitManager instance;
     private final PerPlayerKit plugin;
-    private final HashMap<String, ItemStack[]> kitByKitIDMap;
+    private final Map<String, ItemStack[]> kitByKitIDMap;
     private final HashMap<UUID, Integer> lastKitUsedByPlayer;
     private final List<PublicKit> publicKitList;
 
@@ -43,7 +44,7 @@ public class KitManager {
         this.plugin = plugin;
         lastKitUsedByPlayer = new HashMap<>();
         publicKitList = new ArrayList<>();
-        kitByKitIDMap = new HashMap<>();
+        kitByKitIDMap = new ConcurrentHashMap<>();
         instance = this;
     }
 
