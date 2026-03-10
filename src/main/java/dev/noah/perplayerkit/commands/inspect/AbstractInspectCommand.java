@@ -74,14 +74,6 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
             return true;
         }
 
-        if (!hasCommandPermission(player, command)) {
-            BroadcastManager.get().sendComponentMessage(player,
-                    ERROR_PREFIX.append(
-                            mm.deserialize("<red>You don't have permission to use this command.</red>")));
-            SoundManager.playFailure(player);
-            return true;
-        }
-
         if (args.length < 2) {
             showUsage(player, usageCommand());
             return true;
@@ -150,7 +142,7 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
                                                 @NotNull Command command,
                                                 @NotNull String label,
                                                 @NotNull String[] args) {
-        if (!(sender instanceof Player) || !hasCommandPermission(sender, command)) {
+        if (!(sender instanceof Player)) {
             return List.of();
         }
 
@@ -178,11 +170,6 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
         }
 
         return new ArrayList<>();
-    }
-
-    private boolean hasCommandPermission(@NotNull CommandSender sender, @NotNull Command command) {
-        String permission = command.getPermission();
-        return permission == null || permission.isBlank() || sender.hasPermission(permission);
     }
 
     private int parseSlot(String slotArg, Player player) {
