@@ -447,7 +447,7 @@ public class KitManager {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
                     cacheKit(IDUtil.getPlayerKitId(uuid, slot),
-                            ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+                            ItemFilter.get().filterItemStack(kit));
                 } catch (IOException ignored) {
                 }
             }
@@ -458,7 +458,7 @@ public class KitManager {
                 try {
                     ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
                     cacheKit(IDUtil.getECId(uuid, slot),
-                            ItemFilter.get().filterItemStack(Serializer.itemStackArrayFromBase64(data)));
+                            ItemFilter.get().filterItemStack(kit));
                 } catch (IOException ignored) {
                 }
             }
