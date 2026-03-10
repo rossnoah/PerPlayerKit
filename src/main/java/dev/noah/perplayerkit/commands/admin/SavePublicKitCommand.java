@@ -93,7 +93,8 @@ public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1) {
-            return KitManager.get().getPublicKitList().stream().map(kit -> kit.id).toList();
+            List<String> ids = KitManager.get().getPublicKitList().stream().map(kit -> kit.id).toList();
+            return ids.isEmpty() ? null : ids;
         }
 
         return null;
