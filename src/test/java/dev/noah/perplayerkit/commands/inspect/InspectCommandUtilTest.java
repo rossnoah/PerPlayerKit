@@ -24,7 +24,7 @@ class InspectCommandUtilTest {
         UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid("TargetPlayer", cachedUuid,
                 () -> {
                     throw new AssertionError("Mojang lookup should not run when cached player exists");
-                }, false);
+                });
 
         assertEquals(cachedUuid, resolvedUuid);
     }
@@ -33,28 +33,19 @@ class InspectCommandUtilTest {
     void selectResolvedUuidUsesMojangResultWhenCacheMisses() {
         UUID mojangUuid = UUID.randomUUID();
 
-        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid("TargetPlayer", null, () -> mojangUuid, true);
+        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid("TargetPlayer", null, () -> mojangUuid);
 
         assertEquals(mojangUuid, resolvedUuid);
     }
 
     @Test
-    void selectResolvedUuidUsesOfflineFallbackWhenServerIsOfflineMode() {
+    void selectResolvedUuidUsesOfflineFallbackWhenMojangLookupMisses() {
         String identifier = "TargetPlayer";
 
-        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid(identifier, null, () -> {
-            throw new RuntimeException("mojang should not be consulted");
-        }, false);
+        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid(identifier, null, () -> null);
 
         assertEquals(UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8)),
                 resolvedUuid);
-    }
-
-    @Test
-    void selectResolvedUuidReturnsNullWhenServerIsOnlineModeAndNoMatchExists() {
-        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid("TargetPlayer", null, () -> null, true);
-
-        assertNull(resolvedUuid);
     }
 
     @Test
