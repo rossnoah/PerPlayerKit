@@ -326,6 +326,7 @@ public class GUI {
             menu.getSlot(i + 9).setItem(kit[i]);
         }
 
+        setArmorAndOffhandIndicators(menu);
         menu.getSlot(LOAD_PUBLIC_KIT_SLOT).setItem(createItem(Material.APPLE, 1, "<green><b>LOAD KIT</b></green>"));
         menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>BACK</b></red>"));
         addPublicKitMenu(menu.getSlot(BACK_SLOT));
