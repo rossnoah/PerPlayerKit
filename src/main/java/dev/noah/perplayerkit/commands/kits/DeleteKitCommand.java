@@ -46,7 +46,7 @@ public class DeleteKitCommand implements CommandExecutor {
             return true;
         }
 
-        Integer slot = SlotArgumentParser.parseSlot(args[0]);
+        Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
         KitManager kitManager = KitManager.get();
         if (slot == null) {
             player.sendMessage(ChatColor.RED + "Usage: /deletekit <slot>");
