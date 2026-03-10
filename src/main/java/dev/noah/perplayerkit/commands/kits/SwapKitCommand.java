@@ -46,8 +46,8 @@ public class SwapKitCommand implements CommandExecutor {
             return true;
         }
 
-        Integer slot1 = SlotArgumentParser.parseSlot(args[0]);
-        Integer slot2 = SlotArgumentParser.parseSlot(args[1]);
+        Integer slot1 = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
+        Integer slot2 = SlotArgumentParser.parseSlotInRange(args[1], 1, 9);
 
         if (slot1 == null || slot2 == null) {
             player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");
