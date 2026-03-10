@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,13 +38,10 @@ class InspectCommandUtilTest {
     }
 
     @Test
-    void selectResolvedUuidUsesOfflineFallbackWhenMojangLookupMisses() {
-        String identifier = "TargetPlayer";
+    void selectResolvedUuidReturnsNullWhenAllLookupsMiss() {
+        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid("TargetPlayer", null, () -> null);
 
-        UUID resolvedUuid = InspectCommandUtil.selectResolvedUuid(identifier, null, () -> null);
-
-        assertEquals(UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8)),
-                resolvedUuid);
+        assertNull(resolvedUuid);
     }
 
     @Test

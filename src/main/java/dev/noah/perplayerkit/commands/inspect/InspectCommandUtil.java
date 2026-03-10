@@ -32,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -50,13 +49,13 @@ public class InspectCommandUtil {
     /**
      * Attempts to resolve a player identifier (name or UUID) to a UUID asynchronously.
      * This method first tries to parse as UUID, then checks online players synchronously,
-     * and finally searches cached offline players and Mojang asynchronously before
-     * falling back to the deterministic offline-mode UUID.
+     * and finally searches cached offline players and Mojang asynchronously.
      *
      * @param identifier Player name or UUID string
-     * @return CompletableFuture containing the resolved UUID
+     * @return CompletableFuture containing the resolved UUID, or null when the player
+     * could not be identified from local cache or Mojang
      */
-    public static CompletableFuture<UUID> resolvePlayerIdentifierAsync(String identifier) {
+    public static CompletableFuture<@Nullable UUID> resolvePlayerIdentifierAsync(String identifier) {
         // First try to parse as UUID
         try {
             UUID uuid = UUID.fromString(identifier);
@@ -160,8 +159,8 @@ public class InspectCommandUtil {
         }
     }
 
-    static @NotNull UUID selectResolvedUuid(@NotNull String identifier, @Nullable UUID cachedOfflinePlayer,
-                                            @NotNull Supplier<UUID> mojangLookup) {
+    static @Nullable UUID selectResolvedUuid(@NotNull String identifier, @Nullable UUID cachedOfflinePlayer,
+                                             @NotNull Supplier<UUID> mojangLookup) {
         if (cachedOfflinePlayer != null) {
             return cachedOfflinePlayer;
         }
@@ -171,6 +170,6 @@ public class InspectCommandUtil {
             return mojangUuid;
         }
 
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + identifier).getBytes(StandardCharsets.UTF_8));
+        return null;
     }
 }
