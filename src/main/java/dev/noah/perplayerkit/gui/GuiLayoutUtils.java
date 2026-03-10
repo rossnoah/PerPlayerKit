@@ -34,6 +34,7 @@ public final class GuiLayoutUtils {
     public static final int ARMOR_INDICATOR_START = 45;
     public static final int OFFHAND_INDICATOR_SLOT = 49;
     public static final int IMPORT_SLOT = 51;
+    public static final int LOAD_PUBLIC_KIT_SLOT = 52;
     public static final int CLEAR_SLOT = 52;
     public static final int BACK_SLOT = 53;
 
