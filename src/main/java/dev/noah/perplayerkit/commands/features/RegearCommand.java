@@ -26,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegearCommand implements CommandExecutor, Listener {
 
-    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, StyleManager.get().getPrimaryColor() + "Regear Shulker", "<gray>● Restocks Your Kit</gray>", "<gray>● Use </gray>" + StyleManager.get().getPrimaryColor() + "<gray>/rg to get another regear shulker</gray>");
-    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, StyleManager.get().getPrimaryColor() + "Regear Shell", "<gray>● Restocks Your Kit</gray>", "<gray>● Click to use!</gray>");
+    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, StyleManager.get().getPrimaryColorTag() + "Regear Shulker", "<gray>● Restocks Your Kit</gray>", "<gray>● Use </gray>" + StyleManager.get().getPrimaryColorTag() + "/rg to get another regear shulker");
+    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, StyleManager.get().getPrimaryColorTag() + "Regear Shell", "<gray>● Restocks Your Kit</gray>", "<gray>● Click to use!</gray>");
     private static final MiniMessage MM = MiniMessage.miniMessage();
 
     private final Plugin plugin;
