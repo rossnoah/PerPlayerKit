@@ -39,6 +39,7 @@ import dev.noah.perplayerkit.commands.share.ShareECKitCommand;
 import dev.noah.perplayerkit.commands.share.ShareKitCommand;
 import dev.noah.perplayerkit.commands.shortcuts.ShortECCommand;
 import dev.noah.perplayerkit.commands.shortcuts.ShortKitCommand;
+import dev.noah.perplayerkit.gui.configurable.ConfigurableGuiService;
 import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
 import dev.noah.perplayerkit.listeners.antiexploit.ShulkerDropItemsListener;
@@ -87,6 +88,7 @@ public final class PerPlayerKit extends JavaPlugin {
         new KitManager(this);
         new KitShareManager(this);
         new KitRoomDataManager(this);
+        new ConfigurableGuiService(this);
 
         loadPublicKitsIdsFromConfig();
         getLogger().info("Public Kit Configuration Loaded");
@@ -209,8 +211,6 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JoinListener(this, updateChecker), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
-        Bukkit.getPluginManager().registerEvents(new KitMenuCloseListener(), this);
-        Bukkit.getPluginManager().registerEvents(new KitRoomSaveListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRekitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new AboutCommandListener(), this);
 

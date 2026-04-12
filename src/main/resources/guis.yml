@@ -1,0 +1,822 @@
+guis:
+  main-menu:
+    rows: 6
+    title: "%primary_color%%viewer_name%'s Kits"
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      player-kits:
+        order: 10
+        type: component
+        component: player-kit-selector
+        slots: "9-17"
+        start-index: 1
+        variants:
+          default:
+            item:
+              material: CHEST
+              name: "<dark_aqua><b>Kit %slot%</b></dark_aqua>"
+              lore:
+                - "<gray>● Left click to load kit</gray>"
+                - "<gray>● Right click to edit kit</gray>"
+            actions:
+              left:
+                - type: load-player-kit
+                  close: true
+              right:
+                - type: open-gui
+                  gui: player-kit-editor
+                  context:
+                    slot: "%slot%"
+      enderchests:
+        order: 20
+        type: component
+        component: enderchest-selector
+        slots: "18-26"
+        start-index: 1
+        variants:
+          exists:
+            item:
+              material: ENDER_CHEST
+              name: "<dark_aqua><b>Enderchest %slot%</b></dark_aqua>"
+              lore:
+                - "<gray>● Left click to load kit</gray>"
+                - "<gray>● Right click to edit kit</gray>"
+            actions:
+              left:
+                - type: load-enderchest
+                  close: true
+              right:
+                - type: open-gui
+                  gui: enderchest-editor
+                  context:
+                    slot: "%slot%"
+          missing:
+            item:
+              material: ENDER_EYE
+              name: "<dark_aqua><b>Enderchest %slot%</b></dark_aqua>"
+              lore:
+                - "<gray>● Click to create</gray>"
+            actions:
+              any:
+                - type: open-gui
+                  gui: enderchest-editor
+                  context:
+                    slot: "%slot%"
+      kit-status:
+        order: 30
+        type: component
+        component: kit-status-selector
+        slots: "27-35"
+        start-index: 1
+        variants:
+          exists:
+            item:
+              material: KNOWLEDGE_BOOK
+              name: "<green><b>KIT EXISTS</b></green>"
+              lore:
+                - "<gray>● Click to edit</gray>"
+            actions:
+              any:
+                - type: open-gui
+                  gui: player-kit-editor
+                  context:
+                    slot: "%slot%"
+          missing:
+            item:
+              material: BOOK
+              name: "<red><b>KIT NOT FOUND</b></red>"
+              lore:
+                - "<gray>● Click to create</gray>"
+            actions:
+              any:
+                - type: open-gui
+                  gui: player-kit-editor
+                  context:
+                    slot: "%slot%"
+      kit-room:
+        order: 40
+        type: static
+        slots: "37"
+        item:
+          material: NETHER_STAR
+          name: "<green><b>KIT ROOM</b></green>"
+        actions:
+          any:
+            - type: open-gui
+              gui: kit-room
+              context:
+                page: "0"
+                page_display: "1"
+            - type: broadcast-kit-room-opened
+      public-kits:
+        order: 41
+        type: static
+        slots: "38"
+        item:
+          material: BOOKSHELF
+          name: "<yellow><b>PREMADE KITS</b></yellow>"
+        actions:
+          any:
+            - type: open-gui
+              gui: public-kit-menu
+      info:
+        order: 42
+        type: static
+        slots: "39"
+        item:
+          material: OAK_SIGN
+          name: "<green><b>INFO</b></green>"
+          lore:
+            - "<gray>● Click a kit slot to load your kit</gray>"
+            - "<gray>● Right click or click the book to edit</gray>"
+            - "<gray>● Share kits with /sharekit <slot></gray>"
+      clear-inventory:
+        order: 43
+        type: static
+        slots: "41"
+        item:
+          material: REDSTONE_BLOCK
+          name: "<red><b>CLEAR INVENTORY</b></red>"
+          lore:
+            - "<gray>● Shift click</gray>"
+        actions:
+          shift:
+            - type: clear-player-inventory
+      share-info:
+        order: 44
+        type: static
+        slots: "42"
+        item:
+          material: COMPASS
+          name: "<green><b>SHARE KITS</b></green>"
+          lore:
+            - "<gray>● /sharekit <slot></gray>"
+      repair:
+        order: 45
+        type: static
+        slots: "43"
+        item:
+          material: EXPERIENCE_BOTTLE
+          name: "<green><b>REPAIR ITEMS</b></green>"
+        actions:
+          any:
+            - type: repair-player-items
+
+  player-kit-editor:
+    rows: 6
+    title: "%primary_color%Kit: %slot%"
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: kit-data
+        slots: "0-40"
+        editable: true
+      boots:
+        order: 20
+        type: static
+        slots: "45"
+        item:
+          material: CHAINMAIL_BOOTS
+          name: "<gray><b>BOOTS</b></gray>"
+      leggings:
+        order: 21
+        type: static
+        slots: "46"
+        item:
+          material: CHAINMAIL_LEGGINGS
+          name: "<gray><b>LEGGINGS</b></gray>"
+      chestplate:
+        order: 22
+        type: static
+        slots: "47"
+        item:
+          material: CHAINMAIL_CHESTPLATE
+          name: "<gray><b>CHESTPLATE</b></gray>"
+      helmet:
+        order: 23
+        type: static
+        slots: "48"
+        item:
+          material: CHAINMAIL_HELMET
+          name: "<gray><b>HELMET</b></gray>"
+      offhand:
+        order: 24
+        type: static
+        slots: "49"
+        item:
+          material: SHIELD
+          name: "<gray><b>OFFHAND</b></gray>"
+      import:
+        order: 30
+        type: static
+        slots: "51"
+        item:
+          material: CHEST
+          name: "<green><b>IMPORT</b></green>"
+          lore:
+            - "<gray>● Import from inventory</gray>"
+        actions:
+          any:
+            - type: import-player-inventory
+              slots: "0-40"
+      clear:
+        order: 31
+        type: static
+        slots: "52"
+        item:
+          material: BARRIER
+          name: "<red><b>CLEAR KIT</b></red>"
+          lore:
+            - "<gray>● Shift click to clear</gray>"
+        actions:
+          shift:
+            - type: clear-editor-range
+              slots: "0-40"
+      back:
+        order: 32
+        type: static
+        slots: "53"
+        item:
+          material: OAK_DOOR
+          name: "<red><b>BACK</b></red>"
+        actions:
+          any:
+            - type: open-gui
+              gui: main-menu
+
+  public-kit-editor:
+    rows: 6
+    title: "%primary_color%Public Kit: %public_kit_id%"
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: kit-data
+        slots: "0-40"
+        editable: true
+      boots:
+        order: 20
+        type: static
+        slots: "45"
+        item:
+          material: CHAINMAIL_BOOTS
+          name: "<gray><b>BOOTS</b></gray>"
+      leggings:
+        order: 21
+        type: static
+        slots: "46"
+        item:
+          material: CHAINMAIL_LEGGINGS
+          name: "<gray><b>LEGGINGS</b></gray>"
+      chestplate:
+        order: 22
+        type: static
+        slots: "47"
+        item:
+          material: CHAINMAIL_CHESTPLATE
+          name: "<gray><b>CHESTPLATE</b></gray>"
+      helmet:
+        order: 23
+        type: static
+        slots: "48"
+        item:
+          material: CHAINMAIL_HELMET
+          name: "<gray><b>HELMET</b></gray>"
+      offhand:
+        order: 24
+        type: static
+        slots: "49"
+        item:
+          material: SHIELD
+          name: "<gray><b>OFFHAND</b></gray>"
+      import:
+        order: 30
+        type: static
+        slots: "51"
+        item:
+          material: CHEST
+          name: "<green><b>IMPORT</b></green>"
+          lore:
+            - "<gray>● Import from inventory</gray>"
+        actions:
+          any:
+            - type: import-player-inventory
+              slots: "0-40"
+      clear:
+        order: 31
+        type: static
+        slots: "52"
+        item:
+          material: BARRIER
+          name: "<red><b>CLEAR KIT</b></red>"
+          lore:
+            - "<gray>● Shift click to clear</gray>"
+        actions:
+          shift:
+            - type: clear-editor-range
+              slots: "0-40"
+      back:
+        order: 32
+        type: static
+        slots: "53"
+        item:
+          material: OAK_DOOR
+          name: "<red><b>BACK</b></red>"
+        actions:
+          any:
+            - type: open-gui
+              gui: main-menu
+
+  enderchest-editor:
+    rows: 6
+    title: "%primary_color%Enderchest: %slot%"
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: enderchest-data
+        slots: "9-35"
+        editable: true
+      import:
+        order: 30
+        type: static
+        slots: "51"
+        item:
+          material: ENDER_CHEST
+          name: "<green><b>IMPORT</b></green>"
+          lore:
+            - "<gray>● Import from enderchest</gray>"
+        actions:
+          any:
+            - type: import-player-enderchest
+              slots: "9-35"
+      clear:
+        order: 31
+        type: static
+        slots: "52"
+        item:
+          material: BARRIER
+          name: "<red><b>CLEAR KIT</b></red>"
+          lore:
+            - "<gray>● Shift click to clear</gray>"
+        actions:
+          shift:
+            - type: clear-editor-range
+              slots: "9-35"
+      back:
+        order: 32
+        type: static
+        slots: "53"
+        item:
+          material: OAK_DOOR
+          name: "<red><b>BACK</b></red>"
+        actions:
+          any:
+            - type: open-gui
+              gui: main-menu
+
+  inspect-kit:
+    rows: 6
+    title: "%primary_color%Inspecting %target_name%'s kit %slot%"
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: kit-data
+        slots: "0-40"
+      admin-data:
+        order: 11
+        type: component
+        component: kit-data
+        permission: perplayerkit.admin
+        slots: "0-40"
+        editable: true
+      boots:
+        order: 20
+        type: static
+        slots: "45"
+        item:
+          material: CHAINMAIL_BOOTS
+          name: "<gray><b>BOOTS</b></gray>"
+      leggings:
+        order: 21
+        type: static
+        slots: "46"
+        item:
+          material: CHAINMAIL_LEGGINGS
+          name: "<gray><b>LEGGINGS</b></gray>"
+      chestplate:
+        order: 22
+        type: static
+        slots: "47"
+        item:
+          material: CHAINMAIL_CHESTPLATE
+          name: "<gray><b>CHESTPLATE</b></gray>"
+      helmet:
+        order: 23
+        type: static
+        slots: "48"
+        item:
+          material: CHAINMAIL_HELMET
+          name: "<gray><b>HELMET</b></gray>"
+      offhand:
+        order: 24
+        type: static
+        slots: "49"
+        item:
+          material: SHIELD
+          name: "<gray><b>OFFHAND</b></gray>"
+      delete:
+        order: 30
+        type: static
+        permission: perplayerkit.admin
+        slots: "52"
+        item:
+          material: BARRIER
+          name: "<red><b>CLEAR KIT</b></red>"
+          lore:
+            - "<gray>● Shift click to delete kit</gray>"
+        actions:
+          shift:
+            - type: delete-player-kit
+              slot: "%slot%"
+              close: true
+              skip-close-save: true
+              success-message: "<green>Kit %slot% deleted for player!</green>"
+      close:
+        order: 31
+        type: static
+        slots: "53"
+        item:
+          material: OAK_DOOR
+          name: "<red><b>CLOSE</b></red>"
+        actions:
+          any:
+            - type: close
+
+  inspect-enderchest:
+    rows: 6
+    title: "%primary_color%Inspecting %target_name%'s enderchest %slot%"
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: enderchest-data
+        slots: "9-35"
+      admin-data:
+        order: 11
+        type: component
+        component: enderchest-data
+        permission: perplayerkit.admin
+        slots: "9-35"
+        editable: true
+      delete:
+        order: 30
+        type: static
+        permission: perplayerkit.admin
+        slots: "52"
+        item:
+          material: BARRIER
+          name: "<red><b>CLEAR ENDERCHEST</b></red>"
+          lore:
+            - "<gray>● Shift click to delete enderchest</gray>"
+        actions:
+          shift:
+            - type: delete-player-enderchest
+              slot: "%slot%"
+              close: true
+              skip-close-save: true
+              success-message: "<green>Enderchest %slot% deleted for player!</green>"
+      close:
+        order: 31
+        type: static
+        slots: "53"
+        item:
+          material: OAK_DOOR
+          name: "<red><b>CLOSE</b></red>"
+        actions:
+          any:
+            - type: close
+
+  public-kit-menu:
+    rows: 6
+    title: "%primary_color%Public Kit Room"
+    redraw: true
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      coming-soon:
+        order: 5
+        type: static
+        slots: "18-35"
+        item:
+          material: BOOK
+          name: "<gray><b>MORE KITS COMING SOON</b></gray>"
+      list:
+        order: 10
+        type: component
+        component: public-kit-list
+        slots: "18-35"
+        variants:
+          assigned:
+            item:
+              material: "@public_kit_icon"
+              name: "<reset>%public_kit_name%"
+            actions:
+              left:
+                - type: load-public-kit
+                  public-kit-id: "%public_kit_id%"
+                  close: true
+              right:
+                - type: open-gui
+                  gui: public-kit-viewer
+                  context:
+                    public_kit_id: "%public_kit_id%"
+                    public_kit_name: "%public_kit_name%"
+                    public_kit_icon: "%public_kit_icon%"
+          unassigned:
+            item:
+              material: "@public_kit_icon"
+              name: "<reset>%public_kit_name% <red><b>[UNASSIGNED]</b></red>"
+              lore:
+                - "<gray>● Admins have not yet setup this kit yet</gray>"
+          admin_assigned:
+            item:
+              material: "@public_kit_icon"
+              name: "<reset>%public_kit_name%"
+              lore:
+                - "<gray>● [ADMIN] Shift click to edit</gray>"
+            actions:
+              shift:
+                - type: open-gui
+                  gui: public-kit-editor
+                  context:
+                    public_kit_id: "%public_kit_id%"
+                    public_kit_name: "%public_kit_name%"
+                    public_kit_icon: "%public_kit_icon%"
+              left:
+                - type: load-public-kit
+                  public-kit-id: "%public_kit_id%"
+                  close: true
+              right:
+                - type: open-gui
+                  gui: public-kit-viewer
+                  context:
+                    public_kit_id: "%public_kit_id%"
+                    public_kit_name: "%public_kit_name%"
+                    public_kit_icon: "%public_kit_icon%"
+          admin_unassigned:
+            item:
+              material: "@public_kit_icon"
+              name: "<reset>%public_kit_name% <red><b>[UNASSIGNED]</b></red>"
+              lore:
+                - "<gray>● Admins have not yet setup this kit yet</gray>"
+                - "<gray>● [ADMIN] Shift click to edit</gray>"
+            actions:
+              shift:
+                - type: open-gui
+                  gui: public-kit-editor
+                  context:
+                    public_kit_id: "%public_kit_id%"
+                    public_kit_name: "%public_kit_name%"
+                    public_kit_icon: "%public_kit_icon%"
+      back:
+        order: 20
+        type: static
+        slots: "53"
+        item:
+          material: OAK_DOOR
+          name: "<red><b>BACK</b></red>"
+        actions:
+          any:
+            - type: open-gui
+              gui: main-menu
+
+  public-kit-viewer:
+    rows: 6
+    title: "%primary_color%Viewing Public Kit: %public_kit_id%"
+    redraw: true
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: kit-data
+        slots: "0-40"
+      boots:
+        order: 20
+        type: static
+        slots: "45"
+        item:
+          material: CHAINMAIL_BOOTS
+          name: "<gray><b>BOOTS</b></gray>"
+      leggings:
+        order: 21
+        type: static
+        slots: "46"
+        item:
+          material: CHAINMAIL_LEGGINGS
+          name: "<gray><b>LEGGINGS</b></gray>"
+      chestplate:
+        order: 22
+        type: static
+        slots: "47"
+        item:
+          material: CHAINMAIL_CHESTPLATE
+          name: "<gray><b>CHESTPLATE</b></gray>"
+      helmet:
+        order: 23
+        type: static
+        slots: "48"
+        item:
+          material: CHAINMAIL_HELMET
+          name: "<gray><b>HELMET</b></gray>"
+      offhand:
+        order: 24
+        type: static
+        slots: "49"
+        item:
+          material: SHIELD
+          name: "<gray><b>OFFHAND</b></gray>"
+      load:
+        order: 30
+        type: static
+        slots: "52"
+        item:
+          material: APPLE
+          name: "<green><b>LOAD KIT</b></green>"
+        actions:
+          any:
+            - type: load-public-kit
+              public-kit-id: "%public_kit_id%"
+              close: true
+      back:
+        order: 31
+        type: static
+        slots: "53"
+        item:
+          material: OAK_DOOR
+          name: "<red><b>BACK</b></red>"
+        actions:
+          any:
+            - type: open-gui
+              gui: public-kit-menu
+
+  kit-room:
+    rows: 6
+    title: "%primary_color%Kit Room"
+    redraw: true
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-53"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: kit-room-data
+        slots: "0-44"
+        editable: true
+      refill:
+        order: 20
+        type: static
+        slots: "45"
+        item:
+          material: BEACON
+          name: "<dark_aqua><b>REFILL</b></dark_aqua>"
+        actions:
+          any:
+            - type: open-gui
+              gui: kit-room
+              context:
+                page: "%page%"
+                page_display: "%page_display%"
+      categories:
+        order: 30
+        type: component
+        component: kit-room-category-buttons
+        slots: "47-51"
+        start-page: 0
+        variants:
+          default:
+            item:
+              material: "@kitroom_material"
+              name: "<reset>%kitroom_name%"
+              hide-flags: true
+            actions:
+              any:
+                - type: open-gui
+                  gui: kit-room
+                  context:
+                    page: "%page%"
+                    page_display: "%page_display%"
+          active:
+            item:
+              material: "@kitroom_material"
+              name: "<reset>%kitroom_name%"
+              hide-flags: true
+              glow: true
+            actions:
+              any:
+                - type: open-gui
+                  gui: kit-room
+                  context:
+                    page: "%page%"
+                    page_display: "%page_display%"
+      control:
+        order: 40
+        type: component
+        component: kit-room-control
+        slots: "53"
+        variants:
+          viewer:
+            item:
+              material: OAK_DOOR
+              name: "<red><b>BACK</b></red>"
+            actions:
+              any:
+                - type: open-gui
+                  gui: main-menu
+          editor:
+            item:
+              material: BARRIER
+              name: "<red><b>EDIT MENU</b></red>"
+              lore:
+                - "<red>SHIFT RIGHT CLICK TO SAVE</red>"
+            actions:
+              shift_right:
+                - type: save-kit-room-page
+                  success-message: "<green>Saved kitroom page: %page_display%</green>"
+
+  view-only-enderchest:
+    rows: 5
+    title: "%primary_color%View Only Enderchest"
+    elements:
+      fill:
+        order: 0
+        type: fill
+        slots: "0-44"
+        item:
+          material: "@glass"
+          name: " "
+      data:
+        order: 10
+        type: component
+        component: player-enderchest-data
+        slots: "9-35"
