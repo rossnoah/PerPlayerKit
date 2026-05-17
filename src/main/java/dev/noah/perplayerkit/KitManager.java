@@ -20,9 +20,9 @@ package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.IDUtil;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import dev.noah.perplayerkit.util.SoundManager;
@@ -115,12 +115,12 @@ public class KitManager {
                     }
 
                     cacheKit(IDUtil.getPlayerKitId(uuid, slot), kit);
-                    player.sendMessage(ChatColor.GREEN + "Kit " + slot + " saved!");
+                    Lang.get().send(player, "success.kit-saved", "slot", String.valueOf(slot));
 
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePlayerKitToDB(uuid, slot));
                     return true;
                 } else {
-                    player.sendMessage(ChatColor.RED + "You cant save an empty kit!");
+                    Lang.get().send(player, "error.empty-kit");
                 }
             }
         }
@@ -160,12 +160,12 @@ public class KitManager {
             }
 
             cacheKit(IDUtil.getPublicKitId(publickit), kit);
-            player.sendMessage(ChatColor.GREEN + "Public Kit " + publickit + " saved!");
+            Lang.get().send(player, "success.public-kit-saved", "kitname", publickit);
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePublicKitToDB(publickit));
             return true;
         } else {
-            player.sendMessage(ChatColor.RED + "You cant save an empty kit!");
+            Lang.get().send(player, "error.empty-kit");
         }
         return false;
     }
@@ -223,11 +223,11 @@ public class KitManager {
 
                 if (notEmpty) {
                     cacheKit(IDUtil.getECId(uuid, slot), kit);
-                    player.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " saved!");
+                    Lang.get().send(player, "success.ec-saved", "slot", String.valueOf(slot));
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> saveEnderchestToDB(uuid, slot));
                     return true;
                 } else {
-                    player.sendMessage(ChatColor.RED + "You cant save an empty enderchest!");
+                    Lang.get().send(player, "error.empty-ec");
                 }
             }
         }
@@ -341,7 +341,7 @@ public class KitManager {
         return true;
     }
 
-    private boolean loadKitInternal(Player player, String kitId, String notFoundMessage, boolean isEnderChest, Runnable afterLoad) {
+    private boolean loadKitInternal(Player player, String kitId, Runnable notFoundMessage, boolean isEnderChest, Runnable afterLoad) {
         if (player == null) {
             return false;
         }
@@ -349,7 +349,7 @@ public class KitManager {
         ItemStack[] kit = kitByKitIDMap.get(kitId);
         if (kit == null) {
             if (notFoundMessage != null) {
-                player.sendMessage(ChatColor.RED + notFoundMessage);
+                notFoundMessage.run();
                 SoundManager.playFailure(player);
             }
             return false;
@@ -370,11 +370,13 @@ public class KitManager {
     }
 
     public boolean loadKit(Player player, int slot) {
-        return loadKitInternal(player, IDUtil.getPlayerKitId(player.getUniqueId(), slot), "Kit " + slot + " does not exist!", false, () -> {
-            BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player, "Kit " + slot);
-            player.sendMessage(ChatColor.GREEN + "Kit " + slot + " loaded!");
-            lastKitUsedByPlayer.put(player.getUniqueId(), slot);
-        });
+        return loadKitInternal(player, IDUtil.getPlayerKitId(player.getUniqueId(), slot),
+                () -> Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot)),
+                false, () -> {
+                    BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player, "Kit " + slot);
+                    Lang.get().send(player, "success.kit-loaded", "slot", String.valueOf(slot));
+                    lastKitUsedByPlayer.put(player.getUniqueId(), slot);
+                });
     }
 
     public boolean loadKitSilent(Player player, int slot) {
@@ -387,11 +389,13 @@ public class KitManager {
                 .map(k -> k.name)
                 .findFirst()
                 .orElse(id);
-        return loadKitInternal(player, IDUtil.getPublicKitId(id), "Kit does not exist!", false, () -> {
-            BroadcastManager.get().broadcastPlayerLoadedPublicKit(player, kitDisplayName);
-            player.sendMessage(ChatColor.GREEN + "Public Kit loaded!");
-            player.sendMessage(ChatColor.GRAY + "You can save a custom version this kit by importing into the kit editor");
-        });
+        return loadKitInternal(player, IDUtil.getPublicKitId(id),
+                () -> Lang.get().send(player, "error.kit-not-found"),
+                false, () -> {
+                    BroadcastManager.get().broadcastPlayerLoadedPublicKit(player, kitDisplayName);
+                    Lang.get().send(player, "success.public-kit-loaded");
+                    Lang.get().send(player, "info.custom-version-available");
+                });
     }
 
     public boolean loadPublicKitSilent(Player player, String id) {
@@ -399,10 +403,12 @@ public class KitManager {
     }
 
     public boolean loadEnderchest(Player player, int slot) {
-        return loadKitInternal(player, IDUtil.getECId(player.getUniqueId(), slot), "Enderchest " + slot + " does not exist!", true, () -> {
-            BroadcastManager.get().broadcastPlayerLoadedEnderChest(player);
-            player.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " loaded!");
-        });
+        return loadKitInternal(player, IDUtil.getECId(player.getUniqueId(), slot),
+                () -> Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot)),
+                true, () -> {
+                    BroadcastManager.get().broadcastPlayerLoadedEnderChest(player);
+                    Lang.get().send(player, "success.ec-loaded", "slot", String.valueOf(slot));
+                });
     }
 
     public boolean loadEnderchestSilent(Player player, int slot) {

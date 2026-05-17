@@ -19,7 +19,7 @@
 package dev.noah.perplayerkit.commands.admin;
 
 import dev.noah.perplayerkit.KitRoomDataManager;
-import org.bukkit.ChatColor;
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,14 +45,14 @@ public class KitRoomCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase(LOAD)) {
             KitRoomDataManager.get().loadFromDB();
-            sender.sendMessage(ChatColor.GREEN + "Kit Room loaded from SQL");
+            Lang.get().send(sender, "success.kitroom-loaded");
             if (sender instanceof Player p) SoundManager.playSuccess(p);
             return true;
         }
 
         if (args[0].equalsIgnoreCase(SAVE)) {
             KitRoomDataManager.get().saveToDBAsync();
-            sender.sendMessage(ChatColor.GREEN + "Kit Room saved to SQL");
+            Lang.get().send(sender, "success.kitroom-saved");
             if (sender instanceof Player p) SoundManager.playSuccess(p);
             return true;
         }
@@ -73,8 +73,8 @@ public class KitRoomCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendUsageError(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Incorrect Usage!");
-        sender.sendMessage("/kitroom <load/save>");
+        Lang.get().send(sender, "error.incorrect-usage");
+        Lang.get().sendNoPrefix(sender, "command.kitroom-usage-hint");
         if (sender instanceof Player p) {
             SoundManager.playFailure(p);
         }

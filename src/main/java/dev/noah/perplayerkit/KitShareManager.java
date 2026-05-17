@@ -19,11 +19,11 @@
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.Lang;
+import dev.noah.perplayerkit.util.SoundManager;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -79,31 +79,26 @@ public class KitShareManager {
             String id = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
 
             if (kitShareMap.putIfAbsent(id, kitManager.getPlayerKit(uuid, slot).clone()) == null) {
-                p.sendMessage(ChatColor.GREEN + "Use /copykit " + id + " to copy this kit");
-                p.sendMessage(ChatColor.GREEN + "Code expires in 15 minutes");
+                Lang.get().send(p, "info.share-kit-code", "code", id);
+                Lang.get().send(p, "info.share-code-expiry");
                 SoundManager.playSuccess(p);
 
-
                 new BukkitRunnable() {
-
                     @Override
                     public void run() {
                         kitShareMap.remove(id);
                     }
-
                 }.runTaskLater(plugin, 15 * 60 * 20);
 
-
             } else {
-                p.sendMessage(ChatColor.RED + "Unexpected error occurred, please try again.");
+                Lang.get().send(p, "error.unexpected");
                 SoundManager.playFailure(p);
             }
 
         } else {
-            p.sendMessage(ChatColor.RED + "Error, that kit does not exist");
+            Lang.get().send(p, "error.kit-not-found");
             SoundManager.playFailure(p);
         }
-
     }
 
 
@@ -114,31 +109,26 @@ public class KitShareManager {
             String id = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
 
             if (kitShareMap.putIfAbsent(id, kitManager.getPlayerEC(uuid, slot).clone()) == null) {
-                p.sendMessage(ChatColor.GREEN + "Use /copyEC " + id + " to copy this enderchest");
-                p.sendMessage(ChatColor.GREEN + "Code expires in 15 minutes");
+                Lang.get().send(p, "info.share-ec-code", "code", id);
+                Lang.get().send(p, "info.share-code-expiry");
                 SoundManager.playSuccess(p);
 
-
                 new BukkitRunnable() {
-
                     @Override
                     public void run() {
                         kitShareMap.remove(id);
                     }
-
                 }.runTaskLater(plugin, 15 * 60 * 20);
 
-
             } else {
-                p.sendMessage(ChatColor.RED + "Unexpected error occurred, please try again.");
+                Lang.get().send(p, "error.unexpected");
                 SoundManager.playFailure(p);
             }
 
         } else {
-            p.sendMessage(ChatColor.RED + "Error, that EC does not exist");
+            Lang.get().send(p, "error.ec-not-found");
             SoundManager.playFailure(p);
         }
-
     }
 
 
@@ -146,32 +136,25 @@ public class KitShareManager {
 
         String id = str.toUpperCase();
         if (!kitShareMap.containsKey(id)) {
-            p.sendMessage(ChatColor.RED + "Error, kit does not exist or has expired");
+            Lang.get().send(p, "error.kit-expired");
             SoundManager.playFailure(p);
             return;
         }
 
-            ItemStack[] data = kitShareMap.get(id);
+        ItemStack[] data = kitShareMap.get(id);
 
-            if (data.length == 27) {
-            // enderchest
-                p.getEnderChest().setContents(kitShareMap.get(id));
-                BroadcastManager.get().broadcastPlayerCopiedEC(p);
-                SoundManager.playSuccess(p);
+        if (data.length == 27) {
+            p.getEnderChest().setContents(kitShareMap.get(id));
+            BroadcastManager.get().broadcastPlayerCopiedEC(p);
+            SoundManager.playSuccess(p);
 
-            } else if (data.length == 41) {
-                // inventory
-
-                p.getInventory().setContents(kitShareMap.get(id));
-                BroadcastManager.get().broadcastPlayerCopiedKit(p);
-                SoundManager.playSuccess(p);
-            } else {
-                p.sendMessage(ChatColor.RED + "Unexpected error occurred, please try again.");
-                SoundManager.playFailure(p);
-            }
-
-
+        } else if (data.length == 41) {
+            p.getInventory().setContents(kitShareMap.get(id));
+            BroadcastManager.get().broadcastPlayerCopiedKit(p);
+            SoundManager.playSuccess(p);
+        } else {
+            Lang.get().send(p, "error.unexpected");
+            SoundManager.playFailure(p);
+        }
     }
-
-
 }

@@ -20,7 +20,7 @@ package dev.noah.perplayerkit.commands.share;
 
 import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
-import org.bukkit.ChatColor;
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,7 +39,7 @@ public class CopyKitCommand implements CommandExecutor {
         if (args.length > 0) {
             KitShareManager.get().copyKit(player, args[0]);
         } else {
-            player.sendMessage(ChatColor.RED + "Error, you must enter a kit code to copy");
+            Lang.get().send(player, "error.missing-kit-code");
             SoundManager.playFailure(player);
         }
 

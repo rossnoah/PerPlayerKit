@@ -5,8 +5,8 @@ import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.CooldownManager;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.StyleManager;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -26,15 +26,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegearCommand implements CommandExecutor, Listener {
 
-    public static final ItemStack REGEAR_SHULKER_ITEM = ItemUtil.createItem(Material.WHITE_SHULKER_BOX, 1, StyleManager.get().getPrimaryColorTag() + "Regear Shulker", "<gray>● Restocks Your Kit</gray>", "<gray>● Use </gray>" + StyleManager.get().getPrimaryColorTag() + "/rg to get another regear shulker");
-    public static final ItemStack REGEAR_SHELL_ITEM = ItemUtil.createItem(Material.SHULKER_SHELL, 1, StyleManager.get().getPrimaryColorTag() + "Regear Shell", "<gray>● Restocks Your Kit</gray>", "<gray>● Click to use!</gray>");
-    private static final MiniMessage MM = MiniMessage.miniMessage();
-
     private final Plugin plugin;
     private final CooldownManager commandCooldownManager;
     private final CooldownManager damageCooldownManager;
     private final boolean allowRegearWhileUsingElytra;
     private final boolean preventPuttingItemsInRegearInventory;
+    private final ItemStack regearShulkerItem;
+    private final ItemStack regearShellItem;
 
     public RegearCommand(Plugin plugin) {
         this.plugin = plugin;
@@ -44,6 +42,22 @@ public class RegearCommand implements CommandExecutor, Listener {
         this.damageCooldownManager = new CooldownManager(damageCooldownInSeconds);
         this.allowRegearWhileUsingElytra = plugin.getConfig().getBoolean("regear.allow-while-using-elytra", true);
         this.preventPuttingItemsInRegearInventory = plugin.getConfig().getBoolean("regear.prevent-putting-items-in-regear-inventory", false);
+
+        String primaryTag = StyleManager.get().getPrimaryColorTag();
+        this.regearShulkerItem = ItemUtil.createItem(
+                Material.WHITE_SHULKER_BOX,
+                1,
+                primaryTag + Lang.get().raw("gui.regear-shulker-name"),
+                Lang.get().raw("gui.lore-regear-restocks"),
+                Lang.get().raw("gui.lore-regear-shulker-use", "primary", primaryTag)
+        );
+        this.regearShellItem = ItemUtil.createItem(
+                Material.SHULKER_SHELL,
+                1,
+                primaryTag + Lang.get().raw("gui.regear-shell-name"),
+                Lang.get().raw("gui.lore-regear-restocks"),
+                Lang.get().raw("gui.lore-regear-shell-click")
+        );
     }
 
     @EventHandler
@@ -56,7 +70,7 @@ public class RegearCommand implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(sender, "Only players can use this command!");
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
         if (player == null) {
             return true;
         }
@@ -72,13 +86,13 @@ public class RegearCommand implements CommandExecutor, Listener {
             return true;
         }
 
-        sendMessage(player, "<red>This command is not configured correctly, please contact an administrator.");
+        Lang.get().send(player, "error.regear-misconfigured");
         return true;
     }
 
     @EventHandler
     public void onShulkerPlace(BlockPlaceEvent event) {
-        if (!event.getItemInHand().equals(REGEAR_SHULKER_ITEM)) {
+        if (!event.getItemInHand().equals(regearShulkerItem)) {
             return;
         }
         event.setCancelled(true);
@@ -96,7 +110,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         player.getInventory().setItem(event.getHand(), null);
 
         RegearInventoryHolder holder = new RegearInventoryHolder(player);
-        Inventory inventory = holder.getInventory();
+        Inventory inventory = createRegearInventory(holder);
         player.openInventory(inventory);
     }
 
@@ -112,7 +126,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         }
 
 
-        if (!currentItem.equals(REGEAR_SHELL_ITEM)) {
+        if (!currentItem.equals(regearShellItem)) {
             if (preventPuttingItemsInRegearInventory) {
                 event.setCancelled(true);
             }
@@ -151,12 +165,12 @@ public class RegearCommand implements CommandExecutor, Listener {
     private void handleShulkerMode(Player player) {
         int slot = player.getInventory().firstEmpty();
         if (slot == -1) {
-            sendMessage(player, "<red>Your inventory is full, can't give you a regear shulker!");
+            Lang.get().send(player, "error.inventory-full");
             return;
         }
 
-        player.getInventory().setItem(slot, REGEAR_SHULKER_ITEM);
-        sendMessage(player, "<green>Regear Shulker given!");
+        player.getInventory().setItem(slot, regearShulkerItem);
+        Lang.get().send(player, "success.shulker-given");
     }
 
     private void handleCommandMode(Player player) {
@@ -185,7 +199,7 @@ public class RegearCommand implements CommandExecutor, Listener {
             return slot;
         }
 
-        sendMessage(player, "<red>You have not loaded a kit yet!");
+        Lang.get().send(player, "error.no-kit-loaded");
         return null;
     }
 
@@ -200,7 +214,7 @@ public class RegearCommand implements CommandExecutor, Listener {
             return false;
         }
 
-        sendMessage(player, "<red>You cannot regear while using an elytra!");
+        Lang.get().send(player, "error.regear-elytra-blocked");
         return true;
     }
 
@@ -210,7 +224,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         }
 
         int secondsLeft = damageCooldownManager.getTimeLeft(player);
-        sendMessage(player, "<red>You must be out of combat for " + secondsLeft + " more seconds before regearing!");
+        Lang.get().send(player, "error.regear-combat-cooldown", "seconds", String.valueOf(secondsLeft));
         return true;
     }
 
@@ -220,17 +234,21 @@ public class RegearCommand implements CommandExecutor, Listener {
         }
 
         int secondsLeft = commandCooldownManager.getTimeLeft(player);
-        sendMessage(player, "<red>You must wait " + secondsLeft + " seconds before using this command again!");
+        Lang.get().send(player, "error.regear-command-cooldown", "seconds", String.valueOf(secondsLeft));
         return true;
     }
 
     private void announceRegearSuccess(Player player) {
-        sendMessage(player, "<green>Regeared!");
+        Lang.get().send(player, "success.regeared");
         BroadcastManager.get().broadcastPlayerRegeared(player);
     }
 
-    private void sendMessage(Player player, String message) {
-        BroadcastManager.get().sendComponentMessage(player, MM.deserialize(message));
+
+    private Inventory createRegearInventory(RegearInventoryHolder holder) {
+        Inventory inventory = Bukkit.createInventory(holder, 27,
+                StyleManager.get().getPrimaryColor() + Lang.get().legacy("gui.regear-shulker-title"));
+        inventory.setItem(13, regearShellItem);
+        return inventory;
     }
 
 
@@ -239,9 +257,10 @@ public class RegearCommand implements CommandExecutor, Listener {
 
         @Override
         public @NotNull Inventory getInventory() {
-            Inventory inventory = Bukkit.createInventory(this, 27, StyleManager.get().getPrimaryColor() + "Regear Shulker");
-            inventory.setItem(13, REGEAR_SHELL_ITEM);
-            return inventory;
+            // Inventory is created externally via RegearCommand#createRegearInventory.
+            // This method is required by InventoryHolder but not used at runtime — the
+            // inventory is opened through createRegearInventory which assigns the holder.
+            throw new UnsupportedOperationException("Use RegearCommand#createRegearInventory");
         }
     }
 }

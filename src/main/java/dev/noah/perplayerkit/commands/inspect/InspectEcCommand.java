@@ -46,8 +46,8 @@ public class InspectEcCommand extends AbstractInspectCommand {
     }
 
     @Override
-    protected String missingDataMessage(String targetName, int slot) {
-        return "<red>" + targetName + " does not have an enderchest in slot " + slot + "</red>";
+    protected String missingDataKey() {
+        return "error.inspect-ec-missing";
     }
 
     @Override
@@ -56,7 +56,7 @@ public class InspectEcCommand extends AbstractInspectCommand {
     }
 
     @Override
-    protected String loadErrorUserMessage() {
-        return "<red>An error occurred while loading enderchest data. See console for details.</red>";
+    protected String loadErrorUserKey() {
+        return "error.inspect-ec-load-error";
     }
 }

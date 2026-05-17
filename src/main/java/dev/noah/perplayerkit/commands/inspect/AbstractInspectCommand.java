@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.commands.inspect;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -38,10 +39,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.ERROR_PREFIX;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.MAX_SLOT;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.MIN_SLOT;
-import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.mm;
+import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.errorPrefix;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.resolvePlayerIdentifierAsync;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.showUsage;
 import static dev.noah.perplayerkit.util.PlayerUtil.getPlayerName;
@@ -59,18 +59,17 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
 
     protected abstract void openInspectGui(Player inspector, UUID targetUuid, int slot);
 
-    protected abstract String missingDataMessage(String targetName, int slot);
+    protected abstract String missingDataKey();
 
     protected abstract String loadErrorLogMessage();
 
-    protected abstract String loadErrorUserMessage();
+    protected abstract String loadErrorUserKey();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ERROR_PREFIX.append(
-                    mm.deserialize("<red>This command can only be executed by players.</red>")).toString());
+            Lang.get().send(sender, "error.players-only-inspect");
             return true;
         }
 
@@ -128,7 +127,7 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
                 }
 
                 BroadcastManager.get().sendComponentMessage(currentSender,
-                        ERROR_PREFIX.append(mm.deserialize(loadErrorUserMessage())));
+                        errorPrefix().append(Lang.get().component(loadErrorUserKey())));
                 SoundManager.playFailure(currentSender);
             });
             return null;
@@ -181,9 +180,8 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
             return slot;
         } catch (NumberFormatException e) {
             BroadcastManager.get().sendComponentMessage(player,
-                    ERROR_PREFIX.append(
-                            mm.deserialize("<red>Slot must be a number between " +
-                                    MIN_SLOT + " and " + MAX_SLOT + ".</red>")));
+                    errorPrefix().append(Lang.get().component("error.invalid-slot-range",
+                            "min", String.valueOf(MIN_SLOT), "max", String.valueOf(MAX_SLOT))));
             SoundManager.playFailure(player);
             return -1;
         }
@@ -200,14 +198,14 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
             targetName = targetUuid.toString();
         }
         BroadcastManager.get().sendComponentMessage(inspector,
-                ERROR_PREFIX.append(mm.deserialize(missingDataMessage(targetName, slot))));
+                errorPrefix().append(Lang.get().component(missingDataKey(),
+                        "player", targetName, "slot", String.valueOf(slot))));
         SoundManager.playFailure(inspector);
     }
 
     private void showPlayerNotFound(Player player) {
         BroadcastManager.get().sendComponentMessage(player,
-                ERROR_PREFIX.append(
-                        mm.deserialize("<red>Could not find a player with that name or UUID.</red>")));
+                errorPrefix().append(Lang.get().component("error.player-not-found")));
         SoundManager.playFailure(player);
     }
 }

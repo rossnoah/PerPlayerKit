@@ -29,23 +29,22 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BroadcastManager {
 
     private static final int LINE_LENGTH = 60; // Length of the strikethrough line
-    private static final String FIGURE_SPACE = "\u2007"; // A whitespace character of consistent width
+    private static final String FIGURE_SPACE = " "; // A whitespace character of consistent width
     private static BroadcastManager instance;
     private final int broadcastDistance = 200;
     private final Plugin plugin;
     private final CooldownManager repairBroadcastCooldown = new CooldownManager(5);
     private final CooldownManager kitroomBroadcastCooldown = new CooldownManager(15);
     private final BukkitAudiences audience;
-    private final Component prefix;
 
     public BroadcastManager(Plugin plugin) {
         this.plugin = plugin;
         audience = BukkitAudiences.create(plugin);
-        prefix = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("prefix", "<gray>[<aqua>Kits</aqua>]</gray> "));
         instance = this;
     }
 
@@ -70,42 +69,42 @@ public class BroadcastManager {
 
     private boolean isKitLoadingMessage(MessageKey key) {
         return key == MessageKey.PLAYER_LOADED_PRIVATE_KIT ||
-               key == MessageKey.PLAYER_LOADED_PUBLIC_KIT ||
-               key == MessageKey.PLAYER_LOADED_ENDER_CHEST;
+                key == MessageKey.PLAYER_LOADED_PUBLIC_KIT ||
+                key == MessageKey.PLAYER_LOADED_ENDER_CHEST;
     }
 
     private void broadcastMessage(Player player, String message, String permission) {
         World world = player.getWorld();
 
-        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
 
+        Component prefix = Lang.get().prefix();
+        Component body = MiniMessage.miniMessage().deserialize(message);
         for (Player broadcastPlayer : world.getPlayers()) {
             if (broadcastPlayer.getLocation().distance(player.getLocation()) < broadcastDistance) {
-                // Check if the broadcast player has permission to see this message
                 if (broadcastPlayer.hasPermission(permission)) {
-                    audience.player(broadcastPlayer).sendMessage(prefix.append(MiniMessage.miniMessage().deserialize(message)));
+                    audience.player(broadcastPlayer).sendMessage(prefix.append(body));
                 }
             }
         }
     }
 
-    private void broadcastMessage(Player player, BroadcastManager.MessageKey key, CooldownManager cooldownManager) {
+    private void broadcastMessage(Player player, MessageKey key, CooldownManager cooldownManager) {
         broadcastMessage(player, key, cooldownManager, null);
     }
 
-    private void broadcastMessage(Player player, BroadcastManager.MessageKey key, CooldownManager cooldownManager, String kitName) {
+    private void broadcastMessage(Player player, MessageKey key, CooldownManager cooldownManager, String kitName) {
 
-        if(!plugin.getConfig().getBoolean("feature.broadcast-on-player-action",true)){
+        if (!plugin.getConfig().getBoolean("feature.broadcast-on-player-action", true)) {
             return;
         }
 
-        if(plugin.getConfig().getBoolean("messages.disable-kit-messages", false)){
+        if (plugin.getConfig().getBoolean("messages.disable-kit-messages", false)) {
             return;
         }
 
-        // Check if this is a kit loading message and if kit message broadcasts are disabled
         if (isKitLoadingMessage(key) && !plugin.getConfig().getBoolean("feature.broadcast-kit-messages", true)) {
             return;
         }
@@ -114,18 +113,14 @@ public class BroadcastManager {
             return;
         }
 
-        String messageConfigPath = key.getKey();
-        String enabledPath = messageConfigPath + ".enabled";
-        String messagePath = messageConfigPath + ".message";
-        String permissionPath = messageConfigPath + ".permission";
+        String configBase = key.getConfigKey();
+        String enabledPath = configBase + ".enabled";
+        String permissionPath = configBase + ".permission";
 
-        // Check if message is enabled
         if (!plugin.getConfig().getBoolean(enabledPath, true)) {
             return;
         }
 
-        String message = plugin.getConfig().getString(messagePath, "<gray><aqua>%player%</aqua> " +
-                "performed an action.</gray>");
         String permission = plugin.getConfig().getString(permissionPath, "perplayerkit.kitnotify");
 
         String playerName;
@@ -135,11 +130,10 @@ public class BroadcastManager {
             playerName = player.getName();
         }
 
-        message = message.replace("%player%", playerName);
-
-        if (kitName != null) {
-            message = message.replace("%kitname%", kitName);
-        }
+        String message = Lang.get().raw(key.getLangKey(), Map.of(
+                "player", playerName,
+                "kitname", kitName == null ? "" : kitName
+        ));
 
         broadcastMessage(player, message, permission);
 
@@ -183,13 +177,14 @@ public class BroadcastManager {
     public void broadcastPlayerRegeared(Player player) {
         broadcastMessage(player, MessageKey.PLAYER_REGEARED, null);
     }
+
     public void startScheduledBroadcast() {
         List<Component> messages = new ArrayList<>();
-        plugin.getConfig().getStringList("scheduled-broadcast.messages").forEach(message -> messages.add(generateBroadcastComponent(message)));
+        Lang.get().rawList("scheduled-broadcast.messages").forEach(message -> messages.add(generateBroadcastComponent(message)));
 
         int[] index = {0};
 
-        if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled")) {
+        if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled") && !messages.isEmpty()) {
             Bukkit.getScheduler().runTaskTimer(plugin, () -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     audience.player(player).sendMessage(messages.get(index[0]));
@@ -204,16 +199,30 @@ public class BroadcastManager {
     }
 
     public enum MessageKey {
-        PLAYER_REPAIRED("messages.player-repaired"), PLAYER_HEALED("messages.player-healed"), PLAYER_OPENED_KIT_ROOM("messages.player-opened-kit-room"), PLAYER_LOADED_PRIVATE_KIT("messages.player-loaded-private-kit"), PLAYER_LOADED_PUBLIC_KIT("messages.player-loaded-public-kit"), PLAYER_LOADED_ENDER_CHEST("messages.player-loaded-enderchest"), PLAYER_COPIED_KIT("messages.player-copied-kit"),PLAYER_COPIED_EC("messages.player-copied-ec"), PLAYER_REGEARED("messages.player-regeared");
+        PLAYER_REPAIRED("messages.player-repaired", "broadcast-messages.player-repaired"),
+        PLAYER_HEALED("messages.player-healed", "broadcast-messages.player-healed"),
+        PLAYER_OPENED_KIT_ROOM("messages.player-opened-kit-room", "broadcast-messages.player-opened-kit-room"),
+        PLAYER_LOADED_PRIVATE_KIT("messages.player-loaded-private-kit", "broadcast-messages.player-loaded-private-kit"),
+        PLAYER_LOADED_PUBLIC_KIT("messages.player-loaded-public-kit", "broadcast-messages.player-loaded-public-kit"),
+        PLAYER_LOADED_ENDER_CHEST("messages.player-loaded-enderchest", "broadcast-messages.player-loaded-enderchest"),
+        PLAYER_COPIED_KIT("messages.player-copied-kit", "broadcast-messages.player-copied-kit"),
+        PLAYER_COPIED_EC("messages.player-copied-ec", "broadcast-messages.player-copied-ec"),
+        PLAYER_REGEARED("messages.player-regeared", "broadcast-messages.player-regeared");
 
-        private final String key;
+        private final String configKey;
+        private final String langKey;
 
-        MessageKey(String key) {
-            this.key = key;
+        MessageKey(String configKey, String langKey) {
+            this.configKey = configKey;
+            this.langKey = langKey;
         }
 
-        public String getKey() {
-            return key;
+        public String getConfigKey() {
+            return configKey;
+        }
+
+        public String getLangKey() {
+            return langKey;
         }
     }
 }
