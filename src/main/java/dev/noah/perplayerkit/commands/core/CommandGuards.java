@@ -19,18 +19,22 @@
 package dev.noah.perplayerkit.commands.core;
 
 import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 public final class CommandGuards {
-    private static final String DEFAULT_ONLY_PLAYERS_MESSAGE = "Only players can use this command";
 
     private CommandGuards() {
     }
 
     public static @Nullable Player requirePlayer(CommandSender sender) {
-        return requirePlayer(sender, DEFAULT_ONLY_PLAYERS_MESSAGE);
+        if (sender instanceof Player player) {
+            return player;
+        }
+        Lang.get().sendNoPrefix(sender, "error.players-only");
+        return null;
     }
 
     public static @Nullable Player requirePlayer(CommandSender sender, String onlyPlayersMessage) {
@@ -42,7 +46,14 @@ public final class CommandGuards {
     }
 
     public static @Nullable Player requirePlayerInEnabledWorld(CommandSender sender) {
-        return requirePlayerInEnabledWorld(sender, DEFAULT_ONLY_PLAYERS_MESSAGE);
+        Player player = requirePlayer(sender);
+        if (player == null) {
+            return null;
+        }
+        if (DisabledCommand.isBlockedInWorld(player)) {
+            return null;
+        }
+        return player;
     }
 
     public static @Nullable Player requirePlayerInEnabledWorld(CommandSender sender, String onlyPlayersMessage) {

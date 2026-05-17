@@ -46,8 +46,8 @@ public class InspectKitCommand extends AbstractInspectCommand {
     }
 
     @Override
-    protected String missingDataMessage(String targetName, int slot) {
-        return "<red>" + targetName + " does not have a kit in slot " + slot + "</red>";
+    protected String missingDataKey() {
+        return "error.inspect-kit-missing";
     }
 
     @Override
@@ -56,7 +56,7 @@ public class InspectKitCommand extends AbstractInspectCommand {
     }
 
     @Override
-    protected String loadErrorUserMessage() {
-        return "<red>An error occurred while loading kit data. See console for details.</red>";
+    protected String loadErrorUserKey() {
+        return "error.inspect-kit-load-error";
     }
 }

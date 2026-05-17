@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.commands.admin;
 
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,14 +51,14 @@ public class AboutCommandListener implements Listener {
         String pluginVersion = buildProperties.getProperty("plugin.version", "Unknown");
 
 
-        sender.sendMessage("==========[About]==========");
-        sender.sendMessage("PerPlayerKit");
-        sender.sendMessage("Author: " + author);
-        sender.sendMessage("License: " + license);
-        sender.sendMessage("Source Code: " + source);
-        sender.sendMessage("Version: " + pluginVersion);
-        sender.sendMessage("Build Time: " + buildTimestamp);
-        sender.sendMessage("===========================");
+        Lang.get().sendNoPrefix(sender, "about.header-start");
+        Lang.get().sendNoPrefix(sender, "about.title");
+        Lang.get().sendNoPrefix(sender, "about.author", "author", author);
+        Lang.get().sendNoPrefix(sender, "about.license", "license", license);
+        Lang.get().sendNoPrefix(sender, "about.source-code", "source", source);
+        Lang.get().sendNoPrefix(sender, "about.version", "version", pluginVersion);
+        Lang.get().sendNoPrefix(sender, "about.build-time", "time", buildTimestamp);
+        Lang.get().sendNoPrefix(sender, "about.header-end");
     }
 
     @EventHandler

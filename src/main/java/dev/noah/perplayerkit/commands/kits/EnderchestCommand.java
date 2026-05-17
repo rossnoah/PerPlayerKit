@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.commands.kits;
 
 import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.gui.ItemUtil;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.StyleManager;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.command.Command;
@@ -47,7 +48,7 @@ public class EnderchestCommand implements CommandExecutor {
 
         ItemStack fill = ItemUtil.createGlassPane();
 
-        Menu menu = ChestMenu.builder(5).title(StyleManager.get().getPrimaryColor() + "View Only Enderchest").build();
+        Menu menu = ChestMenu.builder(5).title(StyleManager.get().getPrimaryColor() + Lang.get().legacy("gui.enderchest-view-title")).build();
 
 
         for (int i = 0; i < 9; i++) {

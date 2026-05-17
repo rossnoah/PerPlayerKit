@@ -23,6 +23,6 @@ import dev.noah.perplayerkit.KitShareManager;
 public class ShareECKitCommand extends AbstractShareSlotCommand {
 
     public ShareECKitCommand() {
-        super("Error, you must select an EC slot to share", (player, slot) -> KitShareManager.get().shareEC(player, slot));
+        super("error.missing-ec-slot-share", (player, slot) -> KitShareManager.get().shareEC(player, slot));
     }
 }

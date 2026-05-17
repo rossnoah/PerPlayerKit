@@ -21,7 +21,7 @@ package dev.noah.perplayerkit.commands.admin;
 import dev.noah.perplayerkit.ItemFilter;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
-import org.bukkit.ChatColor;
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,16 +44,16 @@ public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 1) {
-            player.sendMessage(ChatColor.RED + "You need to specify a kit id");
-            player.sendMessage(ChatColor.RED + "Usage: /" + label + " <kitid>");
+            Lang.get().send(player, "error.missing-kit-id");
+            Lang.get().send(player, "command.savepublickit-usage", "command", label);
             return true;
         }
 
         String kitId = args[0];
 
         if (KitManager.get().getPublicKitList().stream().noneMatch(kit -> kit.id.equals(kitId))) {
-            player.sendMessage(ChatColor.RED + "Public kit " + kitId + " does not exist");
-            player.sendMessage(ChatColor.RED + "You may need to add a public kit in the config");
+            Lang.get().send(player, "error.public-kit-not-found", "kitid", kitId);
+            Lang.get().send(player, "error.add-public-kit-config");
             return true;
         }
 
@@ -76,10 +76,10 @@ public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
         boolean success = kitManager.savePublicKit(kitId, data);
         if (success) {
             kitManager.savePublicKitToDB(kitId);
-            player.sendMessage("Saved kit " + kitId);
+            Lang.get().send(player, "success.public-kit-saved-admin", "kitid", kitId);
             SoundManager.playSuccess(player);
         } else {
-            player.sendMessage("Error saving kit " + kitId);
+            Lang.get().send(player, "error.public-kit-save-failed", "kitid", kitId);
             SoundManager.playFailure(player);
         }
 

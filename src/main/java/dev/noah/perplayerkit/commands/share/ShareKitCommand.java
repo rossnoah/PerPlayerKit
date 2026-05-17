@@ -23,6 +23,6 @@ import dev.noah.perplayerkit.KitShareManager;
 public class ShareKitCommand extends AbstractShareSlotCommand {
 
     public ShareKitCommand() {
-        super("Error, you must select a kit slot to share", (player, slot) -> KitShareManager.get().shareKit(player, slot));
+        super("error.missing-kit-slot-share", (player, slot) -> KitShareManager.get().shareKit(player, slot));
     }
 }

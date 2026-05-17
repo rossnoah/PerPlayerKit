@@ -21,7 +21,7 @@ package dev.noah.perplayerkit.commands.kits;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
-import org.bukkit.ChatColor;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,13 +35,13 @@ import java.util.UUID;
 public class SwapKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender, ChatColor.RED + "Only Players can use this!");
+        Player player = CommandGuards.requirePlayer(sender);
         if (player == null) {
             return true;
         }
 
         if (args.length != 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");
+            Lang.get().send(player, "command.swapkit-usage");
             SoundManager.playFailure(player);
             return true;
         }
@@ -50,8 +50,8 @@ public class SwapKitCommand implements CommandExecutor {
         Integer slot2 = SlotArgumentParser.parseSlotInRange(args[1], 1, 9);
 
         if (slot1 == null || slot2 == null) {
-            player.sendMessage(ChatColor.RED + "Usage: /swapkit <slot1> <slot2>");
-            player.sendMessage(ChatColor.RED + "Select real numbers");
+            Lang.get().send(player, "command.swapkit-usage");
+            Lang.get().send(player, "error.invalid-numbers");
             SoundManager.playFailure(player);
             return true;
         }
@@ -60,13 +60,13 @@ public class SwapKitCommand implements CommandExecutor {
         UUID uuid = player.getUniqueId();
 
         if (!kitManager.hasKit(uuid, slot1)) {
-            player.sendMessage(ChatColor.RED + "Kit " + slot1 + " doesn't exist!");
+            Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot1));
             SoundManager.playFailure(player);
             return true;
         }
 
         if (!kitManager.hasKit(uuid, slot2)) {
-            player.sendMessage(ChatColor.RED + "Kit " + slot2 + " doesn't exist!");
+            Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot2));
             SoundManager.playFailure(player);
             return true;
         }
@@ -77,7 +77,7 @@ public class SwapKitCommand implements CommandExecutor {
         kitManager.saveEnderchestToDB(uuid, slot1);
         kitManager.saveEnderchestToDB(uuid, slot2);
 
-        player.sendMessage(ChatColor.GREEN + "Kits " + slot1 + " and " + slot2 + " have been swapped!");
+        Lang.get().send(player, "success.kits-swapped", "slot1", String.valueOf(slot1), "slot2", String.valueOf(slot2));
         SoundManager.playSuccess(player);
         return true;
     }

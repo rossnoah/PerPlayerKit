@@ -2,18 +2,32 @@ package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.commands.shortcuts.AbstractShortSlotCommand;
 import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 
 class AbstractShortSlotCommandTest {
+
+    @BeforeAll
+    static void setupLang() {
+        Lang.installForTesting();
+    }
+
+    @AfterAll
+    static void tearDownLang() {
+        Lang.resetForTesting();
+    }
 
     @Test
     void executesForShortPrefixLabel() {
@@ -68,7 +82,7 @@ class AbstractShortSlotCommandTest {
             command.onCommand(player, null, "k0", new String[0]);
         }
 
-        verify(player).sendMessage("Invalid command label.");
+        verify(player).sendMessage(contains("Invalid command label"));
         assertNull(command.executedSlot);
     }
 
@@ -79,7 +93,7 @@ class AbstractShortSlotCommandTest {
 
         command.onCommand(sender, null, "k1", new String[0]);
 
-        verify(sender).sendMessage("Only players can use this command.");
+        verify(sender).sendMessage(contains("Only players can use this command"));
         assertNull(command.executedSlot);
     }
 

@@ -21,8 +21,8 @@ package dev.noah.perplayerkit.commands.share;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
 import dev.noah.perplayerkit.util.CooldownManager;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,11 +35,11 @@ public abstract class AbstractShareSlotCommand implements CommandExecutor {
 
     private static final int COOLDOWN_SECONDS = 5;
     private final CooldownManager cooldownManager = new CooldownManager(COOLDOWN_SECONDS);
-    private final String missingSlotMessage;
+    private final String missingSlotMessageKey;
     private final BiConsumer<Player, Integer> shareAction;
 
-    protected AbstractShareSlotCommand(String missingSlotMessage, BiConsumer<Player, Integer> shareAction) {
-        this.missingSlotMessage = missingSlotMessage;
+    protected AbstractShareSlotCommand(String missingSlotMessageKey, BiConsumer<Player, Integer> shareAction) {
+        this.missingSlotMessageKey = missingSlotMessageKey;
         this.shareAction = shareAction;
     }
 
@@ -51,20 +51,20 @@ public abstract class AbstractShareSlotCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            player.sendMessage(ChatColor.RED + missingSlotMessage);
+            Lang.get().send(player, missingSlotMessageKey);
             SoundManager.playFailure(player);
             return true;
         }
 
         if (cooldownManager.isOnCooldown(player)) {
-            player.sendMessage(ChatColor.RED + "Please don't spam the command (5 second cooldown)");
+            Lang.get().send(player, "error.command-cooldown");
             SoundManager.playFailure(player);
             return true;
         }
 
         Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
         if (slot == null) {
-            player.sendMessage(ChatColor.RED + "Select a valid kit slot");
+            Lang.get().send(player, "error.invalid-kit-slot");
             SoundManager.playFailure(player);
             return true;
         }

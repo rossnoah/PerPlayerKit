@@ -1,5 +1,16 @@
 
-config-version: 1 #do not change this value
+config-version: 2 #do not change this value
+
+# Language file selection.
+# Built-in choices:
+#   en - English             zh - Chinese (中文)        es - Spanish (Español)
+#   pt - Portuguese          fr - French (Français)    uk - Ukrainian (Українська)
+#   de - German (Deutsch)    sv - Swedish (Svenska)    da - Danish (Dansk)
+#   fi - Finnish (Suomi)     it - Italian (Italiano)   pl - Polish (Polski)
+#   ro - Romanian (Română)   nl - Dutch (Nederlands)
+# Lang files live in plugins/PerPlayerKit/lang/<code>.yml — copy & edit any file to translate further.
+# Set to a custom code to use plugins/PerPlayerKit/lang/<your-code>.yml.
+language: "en"
 
 
 #Database credentials are only required if you are using MySQL or Redis
@@ -28,7 +39,7 @@ backup:
   enabled: true # Enable automatic backups for file-based storage methods
   # Retention policy:
   # - 1 backup per hour for the last 24 hours
-  # - 1 backup per day for the last 7 days  
+  # - 1 backup per day for the last 7 days
   # - 1 backup per week for the last 30 days
   # - 1 backup per month for the last 365 days
   # Backups are stored in the plugins/PerPlayerKit/backups/ directory
@@ -36,22 +47,12 @@ backup:
 motd:
   enabled: true
   delay: 5
-  message: #join messages using mini message format
-    - ""
-    - "<gray>   <st>                </st> <aqua><b>Per Player Kits</b><gray> <st>                </st>"
-    - ""
-    - "         <white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
-    - ""
-    - "<gray>   <st>                                                         "
-    - ""
+  # MOTD message text lives in the active lang file under motd.message
 
-scheduled-broadcast: #uses mini message format
+scheduled-broadcast:
   enabled: true
   period: 90 #in seconds
-  messages:
-    - "<white>Check out public kits with the <aqua>/pk<white> command!"
-    - "<white>Want to share a kit? Use the <aqua>/sharekit <slot><white> command!"
-    - "<white>Type <aqua>/kit<white>, <aqua>/k <white>or <aqua>/pk<white> to get started!"
+  # Broadcast message text lives in the active lang file under scheduled-broadcast.messages
 
 interface:
   glass-material: BLUE_STAINED_GLASS_PANE
@@ -77,8 +78,8 @@ kitroom:
 
 disabled-command-worlds:
   - "example_world"
-
-disabled-command-message: "<red>Kits are disabled here!</red>"
+# Message shown when a player tries to use a kit command in a disabled world
+# lives in the active lang file under error.disabled-in-world
 
 
 publickits:
@@ -86,47 +87,40 @@ publickits:
     name: "Kit 1"
     icon: "DIAMOND_SWORD"
 
-prefix: "<gray>[<aqua>Kits</aqua>]</gray> "
+# Plugin message prefix lives in the active lang file under `prefix`
 
 use-display-name: false #For example, set to true if you want to display nicknames set by other plugins.
 
 messages:
   disable-kit-messages: false # Set to true to disable all kit action messages (e.g. player loaded a kit, player repaired gear, etc.)
+  # Each broadcast below has an enabled flag and a permission required to see it.
+  # The actual message text lives in the active lang file under broadcast-messages.*
   player-repaired:
     enabled: true
-    message: "<gray>%player% repaired their gear</gray>"
     permission: "perplayerkit.kitnotify"
   player-healed:
     enabled: true
-    message: "<gray>%player% healed themselves</gray>"
     permission: "perplayerkit.kitnotify"
   player-opened-kit-room:
     enabled: true
-    message: "<gray>%player% opened the Kit Room</gray>"
     permission: "perplayerkit.kitnotify"
   player-loaded-private-kit:
     enabled: true
-    message: "<gray>%player% loaded a kit</gray>"
     permission: "perplayerkit.kitnotify"
   player-loaded-public-kit:
     enabled: true
-    message: "<gray>%player% loaded a public kit</gray>"
     permission: "perplayerkit.kitnotify"
   player-loaded-enderchest:
     enabled: true
-    message: "<gray>%player% loaded an ender chest.</gray>"
     permission: "perplayerkit.kitnotify"
   player-copied-kit:
     enabled: true
-    message: "<gray>%player% copied a kit</gray>"
     permission: "perplayerkit.kitnotify"
   player-copied-ec:
     enabled: true
-    message: "<gray>%player% copied an ender chest</gray>"
     permission: "perplayerkit.kitnotify"
   player-regeared:
     enabled: true
-    message: "<gray>%player% regeared</gray>"
     permission: "perplayerkit.kitnotify"
 
 

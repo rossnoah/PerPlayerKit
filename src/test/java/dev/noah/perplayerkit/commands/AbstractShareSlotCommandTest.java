@@ -1,9 +1,12 @@
 package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.commands.share.AbstractShareSlotCommand;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
@@ -18,6 +21,16 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 class AbstractShareSlotCommandTest {
+
+    @BeforeAll
+    static void setupLang() {
+        Lang.installForTesting();
+    }
+
+    @AfterAll
+    static void tearDownLang() {
+        Lang.resetForTesting();
+    }
 
     @Test
     void executesActionForValidSlot() {
@@ -40,7 +53,7 @@ class AbstractShareSlotCommandTest {
 
         command.onCommand(sender, null, "sharekit", new String[]{"2"});
 
-        verify(sender).sendMessage("Only players can use this command");
+        verify(sender).sendMessage(contains("Only players can use this command"));
         assertNull(recorder.lastSharedSlot);
         assertEquals(0, recorder.executionCount);
     }
@@ -85,7 +98,7 @@ class AbstractShareSlotCommandTest {
 
     private static class TestShareSlotCommand extends AbstractShareSlotCommand {
         private TestShareSlotCommand(ShareRecorder recorder) {
-            super("Error, missing slot", (player, slot) -> {
+            super("error.missing-kit-slot-share", (player, slot) -> {
                 recorder.lastSharedSlot = slot;
                 recorder.executionCount++;
             });

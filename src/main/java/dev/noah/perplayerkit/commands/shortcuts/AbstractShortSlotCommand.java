@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.commands.shortcuts;
 
 import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,7 @@ public abstract class AbstractShortSlotCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command.");
+            Lang.get().sendNoPrefix(sender, "error.players-only");
             return true;
         }
 
@@ -50,7 +51,7 @@ public abstract class AbstractShortSlotCommand implements CommandExecutor {
 
         Integer slot = parseSlot(label);
         if (slot == null) {
-            player.sendMessage("Invalid command label.");
+            Lang.get().send(player, "error.invalid-command-label");
             return true;
         }
 

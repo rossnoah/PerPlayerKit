@@ -20,8 +20,10 @@ package dev.noah.perplayerkit.listeners;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.gui.GUI;
+import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.StyleManager;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,190 +36,206 @@ import java.util.UUID;
 
 public class KitMenuCloseListener implements Listener {
 
+    /**
+     * Parse a rendered inventory title back into placeholder values, using the
+     * localized template. Returns the placeholder values in order, or null if
+     * the title doesn't match the template.
+     *
+     * If {@code second} is null, the template is treated as containing only one
+     * placeholder and the returned array has length 1.
+     */
+    private static String[] parseTitle(String title, String key, String first, String second) {
+        String template = Lang.get().raw(key);
+        String firstToken = "{" + first + "}";
+        int firstIdx = template.indexOf(firstToken);
+        if (firstIdx < 0) {
+            return null;
+        }
+
+        String fullPrefix = StyleManager.get().getPrimaryColor() + legacyConvert(template.substring(0, firstIdx));
+        if (!title.startsWith(fullPrefix)) {
+            return null;
+        }
+        String remainder = title.substring(fullPrefix.length());
+
+        if (second == null) {
+            String suffix = legacyConvert(template.substring(firstIdx + firstToken.length()));
+            if (!remainder.endsWith(suffix)) {
+                return null;
+            }
+            return new String[]{remainder.substring(0, remainder.length() - suffix.length())};
+        }
+
+        String secondToken = "{" + second + "}";
+        int secondIdx = template.indexOf(secondToken);
+        if (secondIdx < firstIdx + firstToken.length()) {
+            return null;
+        }
+        String infix = legacyConvert(template.substring(firstIdx + firstToken.length(), secondIdx));
+        String suffix = legacyConvert(template.substring(secondIdx + secondToken.length()));
+
+        if (!remainder.endsWith(suffix)) {
+            return null;
+        }
+        String body = remainder.substring(0, remainder.length() - suffix.length());
+        int infixIdx = body.lastIndexOf(infix);
+        if (infixIdx < 0) {
+            return null;
+        }
+        return new String[]{body.substring(0, infixIdx), body.substring(infixIdx + infix.length())};
+    }
+
+    private static String legacyConvert(String miniMessage) {
+        return LegacyComponentSerializer.legacySection().serialize(MiniMessage.miniMessage().deserialize(miniMessage));
+    }
+
     @EventHandler
     public void onKitEditorClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
-        if (inv.getSize() == 54) {
-            if (inv.getLocation() == null) {
-                InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Kit: ")) {
-                    Player p = (Player) e.getPlayer();
-                    UUID uuid = p.getUniqueId();
-                    int slot = Integer.parseInt(view.getTitle().replace(StyleManager.get().getPrimaryColor() + "Kit: ", ""));
-                    ItemStack[] kit = new ItemStack[41];
-                    ItemStack[] chestitems = e.getInventory().getContents();
-
-                    for (int i = 0; i < 41; i++) {
-                        if (chestitems[i] == null) {
-                            kit[i] = null;
-                        } else {
-                            kit[i] = chestitems[i].clone();
-                        }
-                    }
-                    KitManager.get().savekit(uuid, slot, kit);
-                }
-            }
+        if (inv.getSize() != 54 || inv.getLocation() != null) {
+            return;
         }
+        InventoryView view = e.getView();
+        Integer slot = parseSingleSlot(view.getTitle(), "gui.kit-editor-title", "slot");
+        if (slot == null) {
+            return;
+        }
+        Player p = (Player) e.getPlayer();
+        ItemStack[] kit = copyContents(e.getInventory().getContents(), 41);
+        KitManager.get().savekit(p.getUniqueId(), slot, kit);
     }
 
     @EventHandler
     public void onPublicKitEditorClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
-        if (inv.getSize() == 54) {
-            if (inv.getLocation() == null) {
-                InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Public Kit: ")) {
-                    Player player = (Player) e.getPlayer();
-                    String publickit = view.getTitle().replace(StyleManager.get().getPrimaryColor() + "Public Kit: ", "");
-                    ItemStack[] kit = new ItemStack[41];
-                    ItemStack[] chestitems = e.getInventory().getContents();
-
-                    for (int i = 0; i < 41; i++) {
-                        if (chestitems[i] == null) {
-                            kit[i] = null;
-                        } else {
-                            kit[i] = chestitems[i].clone();
-                        }
-                    }
-                    KitManager.get().savePublicKit(player, publickit, kit);
-                }
-            }
+        if (inv.getSize() != 54 || inv.getLocation() != null) {
+            return;
         }
+        InventoryView view = e.getView();
+        String[] parsed = parseTitle(view.getTitle(), "gui.public-kit-editor-title", "id", null);
+        if (parsed == null || parsed.length != 1 || parsed[0].isEmpty()) {
+            return;
+        }
+        Player player = (Player) e.getPlayer();
+        ItemStack[] kit = copyContents(e.getInventory().getContents(), 41);
+        KitManager.get().savePublicKit(player, parsed[0], kit);
     }
 
     @EventHandler
     public void onEnderchestEditorClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
-        if (inv.getSize() == 54) {
-            if (inv.getLocation() == null) {
-                InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Enderchest: ")) {
-                    Player p = (Player) e.getPlayer();
-                    UUID uuid = p.getUniqueId();
-                    int slot = Integer.parseInt(view.getTitle().replace(StyleManager.get().getPrimaryColor() + "Enderchest: ", ""));
-                    ItemStack[] kit = new ItemStack[27];
-                    ItemStack[] chestitems = e.getInventory().getContents();
-
-                    for (int i = 0; i < 27; i++) {
-                        if (chestitems[i + 9] == null) {
-                            kit[i] = null;
-                        } else {
-                            kit[i] = chestitems[i + 9].clone();
-                        }
-                    }
-                    KitManager.get().saveEC(uuid, slot, kit);
-                }
-            }
+        if (inv.getSize() != 54 || inv.getLocation() != null) {
+            return;
         }
+        InventoryView view = e.getView();
+        Integer slot = parseSingleSlot(view.getTitle(), "gui.enderchest-editor-title", "slot");
+        if (slot == null) {
+            return;
+        }
+        Player p = (Player) e.getPlayer();
+        ItemStack[] ec = copyContentsFromOffset(e.getInventory().getContents(), 9, 27);
+        KitManager.get().saveEC(p.getUniqueId(), slot, ec);
     }
 
     @EventHandler
     public void onInspectKitEditorClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
-        if (inv.getSize() == 54) {
-            if (inv.getLocation() == null) {
-                InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Inspecting ") && view.getTitle().contains("'s kit ")) {
-                    Player p = (Player) e.getPlayer();
-                    if (!p.hasPermission("perplayerkit.admin")) {
-                        return;
-                    }
-
-                    UUID targetUuid = GUI.getAndRemoveInspectTarget(p.getUniqueId());
-                    if (targetUuid == null) {
-                        return;
-                    }
-
-                    String title = view.getTitle();
-                    String[] parts = title.replace(StyleManager.get().getPrimaryColor() + "Inspecting ", "").split("'s kit ");
-                    if (parts.length != 2) {
-                        return;
-                    }
-                    String playerName = parts[0];
-                    int slot;
-                    try {
-                        slot = Integer.parseInt(parts[1]);
-                    } catch (NumberFormatException ex) {
-                        return;
-                    }
-
-                    if (GUI.removeKitDeletionFlag(p)) {
-                        return;
-                    }
-
-                    ItemStack[] kit = new ItemStack[41];
-                    ItemStack[] chestitems = e.getInventory().getContents();
-
-                    for (int i = 0; i < 41; i++) {
-                        if (chestitems[i] == null) {
-                            kit[i] = null;
-                        } else {
-                            kit[i] = chestitems[i].clone();
-                        }
-                    }
-
-                    if (KitManager.get().savekit(targetUuid, slot, kit, true)) {
-                        p.sendMessage(ChatColor.GREEN + "Kit " + slot + " updated for player " + playerName + "!");
-                    } else {
-                        p.sendMessage(ChatColor.RED + "Failed to update kit for player " + playerName + "!");
-                    }
-                }
-            }
+        if (inv.getSize() != 54 || inv.getLocation() != null) {
+            return;
+        }
+        InventoryView view = e.getView();
+        String[] parsed = parseTitle(view.getTitle(), "gui.inspect-kit-title", "player", "slot");
+        if (parsed == null) {
+            return;
+        }
+        Player p = (Player) e.getPlayer();
+        if (!p.hasPermission("perplayerkit.admin")) {
+            return;
+        }
+        UUID targetUuid = GUI.getAndRemoveInspectTarget(p.getUniqueId());
+        if (targetUuid == null) {
+            return;
+        }
+        String playerName = parsed[0];
+        int slot;
+        try {
+            slot = Integer.parseInt(parsed[1]);
+        } catch (NumberFormatException ex) {
+            return;
+        }
+        if (GUI.removeKitDeletionFlag(p)) {
+            return;
+        }
+        ItemStack[] kit = copyContents(e.getInventory().getContents(), 41);
+        if (KitManager.get().savekit(targetUuid, slot, kit, true)) {
+            Lang.get().send(p, "success.admin-kit-updated", "slot", String.valueOf(slot), "player", playerName);
+        } else {
+            Lang.get().send(p, "error.failed-to-update-kit", "player", playerName);
         }
     }
 
     @EventHandler
     public void onInspectEnderchestEditorClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
-        if (inv.getSize() == 54) {
-            if (inv.getLocation() == null) {
-                InventoryView view = e.getView();
-                if (view.getTitle().contains(StyleManager.get().getPrimaryColor() + "Inspecting ") && view.getTitle().contains("'s enderchest ")) {
-                    Player p = (Player) e.getPlayer();
-                    if (!p.hasPermission("perplayerkit.admin")) {
-                        return;
-                    }
-
-                    UUID targetUuid = GUI.getAndRemoveInspectTarget(p.getUniqueId());
-                    if (targetUuid == null) {
-                        return;
-                    }
-
-                    String title = view.getTitle();
-                    String[] parts = title.replace(StyleManager.get().getPrimaryColor() + "Inspecting ", "").split("'s enderchest ");
-                    if (parts.length != 2) {
-                        return;
-                    }
-                    String playerName = parts[0];
-                    int slot;
-                    try {
-                        slot = Integer.parseInt(parts[1]);
-                    } catch (NumberFormatException ex) {
-                        return;
-                    }
-
-                    if (GUI.removeKitDeletionFlag(p)) {
-                        return;
-                    }
-
-                    ItemStack[] kit = new ItemStack[27];
-                    ItemStack[] chestitems = e.getInventory().getContents();
-
-                    for (int i = 0; i < 27; i++) {
-                        if (chestitems[i + 9] == null) {
-                            kit[i] = null;
-                        } else {
-                            kit[i] = chestitems[i + 9].clone();
-                        }
-                    }
-
-                    if (KitManager.get().saveECSilent(targetUuid, slot, kit)) {
-                        p.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " updated for player " + playerName + "!");
-                    } else {
-                        p.sendMessage(ChatColor.RED + "Failed to update enderchest for player " + playerName + "!");
-                    }
-                }
-            }
+        if (inv.getSize() != 54 || inv.getLocation() != null) {
+            return;
         }
+        InventoryView view = e.getView();
+        String[] parsed = parseTitle(view.getTitle(), "gui.inspect-ec-title", "player", "slot");
+        if (parsed == null) {
+            return;
+        }
+        Player p = (Player) e.getPlayer();
+        if (!p.hasPermission("perplayerkit.admin")) {
+            return;
+        }
+        UUID targetUuid = GUI.getAndRemoveInspectTarget(p.getUniqueId());
+        if (targetUuid == null) {
+            return;
+        }
+        String playerName = parsed[0];
+        int slot;
+        try {
+            slot = Integer.parseInt(parsed[1]);
+        } catch (NumberFormatException ex) {
+            return;
+        }
+        if (GUI.removeKitDeletionFlag(p)) {
+            return;
+        }
+        ItemStack[] ec = copyContentsFromOffset(e.getInventory().getContents(), 9, 27);
+        if (KitManager.get().saveECSilent(targetUuid, slot, ec)) {
+            Lang.get().send(p, "success.admin-ec-updated", "slot", String.valueOf(slot), "player", playerName);
+        } else {
+            Lang.get().send(p, "error.failed-to-update-ec", "player", playerName);
+        }
+    }
+
+    private static Integer parseSingleSlot(String title, String key, String placeholder) {
+        String[] parsed = parseTitle(title, key, placeholder, null);
+        if (parsed == null || parsed.length != 1) {
+            return null;
+        }
+        try {
+            return Integer.parseInt(parsed[0].trim());
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private static ItemStack[] copyContents(ItemStack[] source, int count) {
+        ItemStack[] out = new ItemStack[count];
+        for (int i = 0; i < count; i++) {
+            out[i] = source[i] == null ? null : source[i].clone();
+        }
+        return out;
+    }
+
+    private static ItemStack[] copyContentsFromOffset(ItemStack[] source, int offset, int count) {
+        ItemStack[] out = new ItemStack[count];
+        for (int i = 0; i < count; i++) {
+            out[i] = source[i + offset] == null ? null : source[i + offset].clone();
+        }
+        return out;
     }
 }

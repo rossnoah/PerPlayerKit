@@ -21,7 +21,7 @@ package dev.noah.perplayerkit.commands.kits;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
-import org.bukkit.ChatColor;
+import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,14 +34,14 @@ import java.util.UUID;
 public class DeleteKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender, ChatColor.RED + "Only Players can use this!");
+        Player player = CommandGuards.requirePlayer(sender);
         if (player == null) {
             return true;
         }
 
         UUID uuid = player.getUniqueId();
         if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + "Usage: /deletekit <slot>");
+            Lang.get().send(player, "command.deletekit-usage");
             SoundManager.playFailure(player);
             return true;
         }
@@ -49,23 +49,23 @@ public class DeleteKitCommand implements CommandExecutor {
         Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
         KitManager kitManager = KitManager.get();
         if (slot == null) {
-            player.sendMessage(ChatColor.RED + "Usage: /deletekit <slot>");
-            player.sendMessage(ChatColor.RED + "Select a real number");
+            Lang.get().send(player, "command.deletekit-usage");
+            Lang.get().send(player, "error.invalid-number");
             SoundManager.playFailure(player);
             return true;
         }
 
         if (!kitManager.hasKit(uuid, slot)) {
-            player.sendMessage(ChatColor.RED + "Kit " + slot + " doesnt exist!");
+            Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot));
             SoundManager.playFailure(player);
             return true;
         }
 
         if (kitManager.deleteKit(uuid, slot)) {
-            player.sendMessage(ChatColor.GREEN + "Kit " + slot + " deleted!");
+            Lang.get().send(player, "success.kit-deleted", "slot", String.valueOf(slot));
             SoundManager.playSuccess(player);
         } else {
-            player.sendMessage(ChatColor.RED + "Kit deletion failed!");
+            Lang.get().send(player, "error.kit-deletion-failed");
             SoundManager.playFailure(player);
         }
 

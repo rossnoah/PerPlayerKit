@@ -25,8 +25,20 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
 
 public class ConfigManager {
+
+    /**
+     * Keys that were moved out of config.yml into lang files in v2. ConfigManager must not
+     * re-add them when merging missing keys, or migrated installs would gain stale duplicates.
+     */
+    private static final Set<String> LANG_KEYS = Set.of(
+            "prefix",
+            "disabled-command-message",
+            "motd.message",
+            "scheduled-broadcast.messages"
+    );
     private final File configFile;
     private final FileConfiguration config;
     private final Plugin plugin;
@@ -68,6 +80,11 @@ public class ConfigManager {
                 }
                 continue;
             }else if(key.startsWith("publickits")){
+                continue;
+            }
+
+            // Strings that live in lang files no longer belong in config.yml
+            if (LANG_KEYS.contains(key) || key.endsWith(".message") && key.startsWith("messages.")) {
                 continue;
             }
 

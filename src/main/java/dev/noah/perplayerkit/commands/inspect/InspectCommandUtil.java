@@ -22,6 +22,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -40,10 +41,13 @@ public class InspectCommandUtil {
     public static final int MIN_SLOT = 1;
     public static final int MAX_SLOT = 9;
     public static final MiniMessage mm = MiniMessage.miniMessage();
-    public static final Component ERROR_PREFIX = mm.deserialize("<red>Error:</red> ");
 
     private InspectCommandUtil() {
         // Utility class
+    }
+
+    public static Component errorPrefix() {
+        return Lang.get().component("error.prefix-tag");
     }
 
     /**
@@ -85,8 +89,7 @@ public class InspectCommandUtil {
      */
     public static void showUsage(@NotNull Player player, @NotNull String commandName) {
         BroadcastManager.get().sendComponentMessage(player,
-                ERROR_PREFIX.append(
-                        mm.deserialize("<red>Usage: /" + commandName + " <player|uuid> <slot></red>")));
+                errorPrefix().append(Lang.get().component("command.inspect-usage", "command", commandName)));
     }
 
     private static @Nullable UUID findCachedOfflinePlayerUuid(@NotNull String identifier) {

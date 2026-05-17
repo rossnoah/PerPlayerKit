@@ -21,7 +21,6 @@ package dev.noah.perplayerkit.util;
 import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -49,7 +48,7 @@ public class PlayerUtil {
         for (ItemStack i : p.getInventory().getContents()) {
             repairItem(i);
         }
-        p.sendMessage(ChatColor.GREEN + "All items repaired!");
+        Lang.get().send(p, "success.all-repaired");
     }
 
     public static void healPlayer(Player p) {
@@ -62,7 +61,7 @@ public class PlayerUtil {
             p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
         }
 
-        p.sendMessage(ChatColor.GREEN + "You have been healed!");
+        Lang.get().send(p, "success.healed");
     }
 
     public static void healPlayerSilent(Player p) {

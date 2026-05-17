@@ -76,6 +76,14 @@ public class GUI {
         return kitDeletionFlag.remove(player.getUniqueId());
     }
 
+    private static String lang(String key) {
+        return Lang.get().raw(key);
+    }
+
+    private static String lang(String key, String... pairs) {
+        return Lang.get().raw(key, pairs);
+    }
+
     public void OpenKitMenu(Player p, int slot) {
         Menu menu = GuiMenuFactory.createKitMenu(slot);
 
@@ -89,9 +97,9 @@ public class GUI {
         setGlassPaneRange(menu, KIT_CONTENT_END, MENU_SIZE);
         setArmorAndOffhandIndicators(menu);
 
-        menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.CHEST, 1, "<green><b>IMPORT</b></green>", "<gray>● Import from inventory</gray>"));
-        menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, "<red><b>CLEAR KIT</b></red>", "<gray>● Shift click to clear</gray>"));
-        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>BACK</b></red>"));
+        menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.CHEST, 1, lang("gui.import-button"), lang("gui.lore-import-inventory")));
+        menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, lang("gui.clear-kit-button"), lang("gui.lore-shift-clear")));
+        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
         addMainButton(menu.getSlot(BACK_SLOT));
         addClear(menu.getSlot(CLEAR_SLOT));
         addImport(menu.getSlot(IMPORT_SLOT));
@@ -113,9 +121,9 @@ public class GUI {
         setGlassPaneRange(menu, KIT_CONTENT_END, MENU_SIZE);
         setArmorAndOffhandIndicators(menu);
 
-        menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.CHEST, 1, "<green><b>IMPORT</b></green>", "<gray>● Import from inventory</gray>"));
-        menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, "<red><b>CLEAR KIT</b></red>", "<gray>● Shift click to clear</gray>"));
-        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>BACK</b></red>"));
+        menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.CHEST, 1, lang("gui.import-button"), lang("gui.lore-import-inventory")));
+        menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, lang("gui.clear-kit-button"), lang("gui.lore-shift-clear")));
+        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
         addMainButton(menu.getSlot(BACK_SLOT));
         addClear(menu.getSlot(CLEAR_SLOT));
         addImport(menu.getSlot(IMPORT_SLOT));
@@ -137,9 +145,9 @@ public class GUI {
             }
         }
         allowModificationRange(menu, EC_CONTENT_START, EC_CONTENT_END);
-        menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.ENDER_CHEST, 1, "<green><b>IMPORT</b></green>", "<gray>● Import from enderchest</gray>"));
-        menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, "<red><b>CLEAR KIT</b></red>", "<gray>● Shift click to clear</gray>"));
-        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>BACK</b></red>"));
+        menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.ENDER_CHEST, 1, lang("gui.import-button"), lang("gui.lore-import-ec")));
+        menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, lang("gui.clear-kit-button"), lang("gui.lore-shift-clear")));
+        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
         addMainButton(menu.getSlot(BACK_SLOT));
         addClear(menu.getSlot(CLEAR_SLOT), EC_CONTENT_START, EC_CONTENT_END);
         addImportEC(menu.getSlot(IMPORT_SLOT));
@@ -161,7 +169,7 @@ public class GUI {
         setGlassPaneRange(menu, KIT_CONTENT_END, MENU_SIZE);
         setArmorAndOffhandIndicators(menu);
 
-        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>CLOSE</b></red>"));
+        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.close-button")));
         menu.getSlot(BACK_SLOT).setClickHandler((player, info) -> {
             SoundManager.playClick(player);
             info.getClickedMenu().close();
@@ -170,7 +178,7 @@ public class GUI {
 
         if (p.hasPermission("perplayerkit.admin")) {
             allowModificationRange(menu, 0, KIT_CONTENT_END);
-            menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, "<red><b>CLEAR KIT</b></red>", "<gray>● Shift click to delete kit</gray>"));
+            menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, lang("gui.clear-kit-button"), lang("gui.lore-shift-delete-kit")));
             addClearKit(menu.getSlot(CLEAR_SLOT), target, slot);
         }
 
@@ -197,7 +205,7 @@ public class GUI {
             }
         }
 
-        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>CLOSE</b></red>"));
+        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.close-button")));
         menu.getSlot(BACK_SLOT).setClickHandler((player, info) -> {
             SoundManager.playClick(player);
             info.getClickedMenu().close();
@@ -206,7 +214,7 @@ public class GUI {
 
         if (p.hasPermission("perplayerkit.admin")) {
             allowModificationRange(menu, EC_CONTENT_START, EC_CONTENT_END);
-            menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, "<red><b>CLEAR ENDERCHEST</b></red>", "<gray>● Shift click to delete enderchest</gray>"));
+            menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, lang("gui.clear-ec-button"), lang("gui.lore-shift-delete-ec")));
             addClearEnderchest(menu.getSlot(CLEAR_SLOT), target, slot);
         }
 
@@ -221,23 +229,31 @@ public class GUI {
             menu.getSlot(i).setItem(createGlassPane());
         }
         for (int i = 9; i < 18; i++) {
-            menu.getSlot(i).setItem(createItem(Material.CHEST, 1, "<dark_aqua><b>Kit " + (i - 8) + "</b></dark_aqua>", "<gray>● Left click to load kit</gray>", "<gray>● Right click to edit kit</gray>"));
-            addEditLoad(menu.getSlot(i), i - 8);
+            int slotNum = i - 8;
+            menu.getSlot(i).setItem(createItem(Material.CHEST, 1,
+                    lang("gui.kit-slot-name", "slot", String.valueOf(slotNum)),
+                    lang("gui.lore-left-load"), lang("gui.lore-right-edit")));
+            addEditLoad(menu.getSlot(i), slotNum);
         }
         for (int i = 18; i < 27; i++) {
-            if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + (i - 17)) != null) {
-                menu.getSlot(i).setItem(createItem(Material.ENDER_CHEST, 1, "<dark_aqua><b>Enderchest " + (i - 17) + "</b></dark_aqua>", "<gray>● Left click to load kit</gray>", "<gray>● Right click to edit kit</gray>"));
-                addEditLoadEC(menu.getSlot(i), i - 17);
+            int slotNum = i - 17;
+            if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slotNum) != null) {
+                menu.getSlot(i).setItem(createItem(Material.ENDER_CHEST, 1,
+                        lang("gui.enderchest-slot-name", "slot", String.valueOf(slotNum)),
+                        lang("gui.lore-left-load"), lang("gui.lore-right-edit")));
+                addEditLoadEC(menu.getSlot(i), slotNum);
             } else {
-                menu.getSlot(i).setItem(createItem(Material.ENDER_EYE, 1, "<dark_aqua><b>Enderchest " + (i - 17) + "</b></dark_aqua>", "<gray>● Click to create</gray>"));
-                addEditEC(menu.getSlot(i), i - 17);
+                menu.getSlot(i).setItem(createItem(Material.ENDER_EYE, 1,
+                        lang("gui.enderchest-slot-name", "slot", String.valueOf(slotNum)),
+                        lang("gui.lore-click-create")));
+                addEditEC(menu.getSlot(i), slotNum);
             }
         }
         for (int i = 27; i < 36; i++) {
             if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + (i - 26)) != null) {
-                menu.getSlot(i).setItem(createItem(Material.KNOWLEDGE_BOOK, 1, "<green><b>KIT EXISTS</b></green>", "<gray>● Click to edit</gray>"));
+                menu.getSlot(i).setItem(createItem(Material.KNOWLEDGE_BOOK, 1, lang("gui.kit-exists"), lang("gui.lore-click-edit")));
             } else {
-                menu.getSlot(i).setItem(createItem(Material.BOOK, 1, "<red><b>KIT NOT FOUND</b></red>", "<gray>● Click to create</gray>"));
+                menu.getSlot(i).setItem(createItem(Material.BOOK, 1, lang("gui.kit-not-found"), lang("gui.lore-click-create")));
             }
             addEdit(menu.getSlot(i), i - 26);
         }
@@ -246,12 +262,13 @@ public class GUI {
             menu.getSlot(i).setItem(createGlassPane());
         }
 
-        menu.getSlot(37).setItem(createItem(Material.NETHER_STAR, 1, "<green><b>KIT ROOM</b></green>"));
-        menu.getSlot(38).setItem(createItem(Material.BOOKSHELF, 1, "<yellow><b>PREMADE KITS</b></yellow>"));
-        menu.getSlot(39).setItem(createItem(Material.OAK_SIGN, 1, "<green><b>INFO</b></green>", "<gray>● Click a kit slot to load your kit</gray>", "<gray>● Right click or click the book to edit</gray>", "<gray>● Share kits with /sharekit <slot></gray>"));
-        menu.getSlot(41).setItem(createItem(Material.REDSTONE_BLOCK, 1, "<red><b>CLEAR INVENTORY</b></red>", "<gray>● Shift click</gray>"));
-        menu.getSlot(42).setItem(createItem(Material.COMPASS, 1, "<green><b>SHARE KITS</b></green>", "<gray>● /sharekit <slot></gray>"));
-        menu.getSlot(43).setItem(createItem(Material.EXPERIENCE_BOTTLE, 1, "<green><b>REPAIR ITEMS</b></green>"));
+        menu.getSlot(37).setItem(createItem(Material.NETHER_STAR, 1, lang("gui.kit-room-button")));
+        menu.getSlot(38).setItem(createItem(Material.BOOKSHELF, 1, lang("gui.premade-kits-button")));
+        menu.getSlot(39).setItem(createItem(Material.OAK_SIGN, 1, lang("gui.info-button"),
+                lang("gui.lore-info-load"), lang("gui.lore-info-edit"), lang("gui.lore-info-share")));
+        menu.getSlot(41).setItem(createItem(Material.REDSTONE_BLOCK, 1, lang("gui.clear-inventory-button"), lang("gui.lore-shift-click")));
+        menu.getSlot(42).setItem(createItem(Material.COMPASS, 1, lang("gui.share-kits-button"), lang("gui.lore-share-kits")));
+        menu.getSlot(43).setItem(createItem(Material.EXPERIENCE_BOTTLE, 1, lang("gui.repair-items-button")));
         addRepairButton(menu.getSlot(43));
         addKitRoom(menu.getSlot(37));
         addPublicKitMenu(menu.getSlot(38));
@@ -275,14 +292,14 @@ public class GUI {
             }
         }
 
-        menu.getSlot(45).setItem(createItem(Material.BEACON, 1, "<dark_aqua><b>REFILL</b></dark_aqua>"));
+        menu.getSlot(45).setItem(createItem(Material.BEACON, 1, lang("gui.refill-button")));
         addKitRoom(menu.getSlot(45), page);
 
         if (!p.hasPermission("perplayerkit.editkitroom")) {
-            menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>BACK</b></red>"));
+            menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
             addMainButton(menu.getSlot(53));
         } else {
-            menu.getSlot(53).setItem(createItem(Material.BARRIER, page + 1, "<red><b>EDIT MENU</b></red>", "<red>SHIFT RIGHT CLICK TO SAVE</red>"));
+            menu.getSlot(53).setItem(createItem(Material.BARRIER, page + 1, lang("gui.edit-menu-button"), lang("gui.edit-menu-lore")));
         }
         addKitRoom(menu.getSlot(47), 0);
         addKitRoom(menu.getSlot(48), 1);
@@ -304,9 +321,9 @@ public class GUI {
         ItemStack[] kit = KitManager.get().getPublicKit(id);
 
         if (kit == null) {
-            p.sendMessage(ChatColor.RED + "Kit not found");
+            Lang.get().send(p, "error.kit-not-found-display");
             if (p.hasPermission("perplayerkit.admin")) {
-                p.sendMessage(ChatColor.RED + "To assign a kit to this publickit use /savepublickit <id>");
+                Lang.get().send(p, "info.assign-publickit-instruction");
             }
             return null;
         }
@@ -327,8 +344,8 @@ public class GUI {
         }
 
         setArmorAndOffhandIndicators(menu);
-        menu.getSlot(LOAD_PUBLIC_KIT_SLOT).setItem(createItem(Material.APPLE, 1, "<green><b>LOAD KIT</b></green>"));
-        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>BACK</b></red>"));
+        menu.getSlot(LOAD_PUBLIC_KIT_SLOT).setItem(createItem(Material.APPLE, 1, lang("gui.load-kit-button")));
+        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
         addPublicKitMenu(menu.getSlot(BACK_SLOT));
         addLoadPublicKit(menu.getSlot(LOAD_PUBLIC_KIT_SLOT), id);
 
@@ -344,34 +361,37 @@ public class GUI {
         }
 
         for (int i = 18; i < 36; i++) {
-            menu.getSlot(i).setItem(ItemUtil.createItem(Material.BOOK, 1, "<gray><b>MORE KITS COMING SOON</b></gray>"));
+            menu.getSlot(i).setItem(ItemUtil.createItem(Material.BOOK, 1, lang("gui.more-kits-coming")));
         }
 
         List<PublicKit> publicKitList = KitManager.get().getPublicKitList();
 
         for (int i = 0; i < publicKitList.size(); i++) {
-            if (KitManager.get().hasPublicKit(publicKitList.get(i).id)) {
+            PublicKit kit = publicKitList.get(i);
+            if (KitManager.get().hasPublicKit(kit.id)) {
                 if (player.hasPermission("perplayerkit.admin")) {
-                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET + publicKitList.get(i).name, "<gray>● [ADMIN] Shift click to edit</gray>"));
+                    menu.getSlot(i + 18).setItem(createItem(kit.icon, 1, ChatColor.RESET + kit.name, lang("gui.lore-admin-shift-edit")));
                 } else {
-                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET + publicKitList.get(i).name));
+                    menu.getSlot(i + 18).setItem(createItem(kit.icon, 1, ChatColor.RESET + kit.name));
                 }
-                addPublicKitButton(menu.getSlot(i + 18), publicKitList.get(i).id);
+                addPublicKitButton(menu.getSlot(i + 18), kit.id);
             } else {
+                String unassignedName = ChatColor.RESET + kit.name + " " + lang("gui.unassigned-tag");
                 if (player.hasPermission("perplayerkit.admin")) {
-                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET + publicKitList.get(i).name + " <red><b>[UNASSIGNED]</b></red>", "<gray>● Admins have not yet setup this kit yet</gray>", "<gray>● [ADMIN] Shift click to edit</gray>"));
+                    menu.getSlot(i + 18).setItem(createItem(kit.icon, 1, unassignedName,
+                            lang("gui.lore-unassigned-info"), lang("gui.lore-admin-shift-edit")));
                 } else {
-                    menu.getSlot(i + 18).setItem(createItem(publicKitList.get(i).icon, 1, ChatColor.RESET + publicKitList.get(i).name + " <red><b>[UNASSIGNED]</b></red>", "<gray>● Admins have not yet setup this kit yet</gray>"));
+                    menu.getSlot(i + 18).setItem(createItem(kit.icon, 1, unassignedName, lang("gui.lore-unassigned-info")));
                 }
             }
 
             if (player.hasPermission("perplayerkit.admin")) {
-                addAdminPublicKitButton(menu.getSlot(i + 18), publicKitList.get(i).id);
+                addAdminPublicKitButton(menu.getSlot(i + 18), kit.id);
             }
         }
 
         addMainButton(menu.getSlot(BACK_SLOT));
-        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, "<red><b>BACK</b></red>"));
+        menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
         menu.open(player);
     }
 
@@ -404,7 +424,7 @@ public class GUI {
             SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 KitManager.get().deleteKit(target, slotNum);
-                player.sendMessage(ChatColor.GREEN + "Kit " + slotNum + " deleted for player!");
+                Lang.get().send(player, "success.admin-kit-deleted", "slot", String.valueOf(slotNum));
                 SoundManager.playSuccess(player);
                 kitDeletionFlag.add(player.getUniqueId());
                 info.getClickedMenu().close();
@@ -418,7 +438,7 @@ public class GUI {
             SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 KitManager.get().deleteEnderchest(target, slotNum);
-                player.sendMessage(ChatColor.GREEN + "Enderchest " + slotNum + " deleted for player!");
+                Lang.get().send(player, "success.admin-ec-deleted", "slot", String.valueOf(slotNum));
                 SoundManager.playSuccess(player);
                 kitDeletionFlag.add(player.getUniqueId());
                 info.getClickedMenu().close();
@@ -498,7 +518,7 @@ public class GUI {
                     data[i] = player.getInventory().getContents()[i];
                 }
                 KitRoomDataManager.get().setKitRoom(page, data);
-                player.sendMessage("saved menu");
+                Lang.get().send(player, "success.kitroom-menu-saved");
                 SoundManager.playSuccess(player);
             }
         });
@@ -519,7 +539,7 @@ public class GUI {
             SoundManager.playClick(player);
             if (info.getClickType().isShiftClick()) {
                 player.getInventory().clear();
-                player.sendMessage(ChatColor.GREEN + "Inventory cleared");
+                Lang.get().send(player, "success.inventory-cleared");
                 SoundManager.playSuccess(player);
             }
         });
