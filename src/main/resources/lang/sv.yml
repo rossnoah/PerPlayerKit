@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Kolla in publika kit med kommandot <aqua>/pk<white>!"
-    - "<white>Vill du dela ett kit? Använd <aqua>/sharekit <slot><white>."
+    - "<white>Vill du dela ett kit? Använd <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Skriv <aqua>/kit<white>, <aqua>/k <white>eller <aqua>/pk<white> för att börja!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>Kit är inaktiverade här!</red>"
-  unexpected: "<red>Ett oväntat fel inträffade, försök igen."
+  unexpected: "<red>Ett oväntat fel inträffade, försök igen.</red>"
   kit-not-found: "<red>Fel, det kitet existerar inte"
   kit-expired: "<red>Fel, kitet existerar inte eller har gått ut"
   ec-not-found: "<red>Fel, den enderkistan existerar inte"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Du kan spara en anpassad version av detta kit genom att importera till kit-redigeraren"
-  assign-publickit-instruction: "<red>För att tilldela ett kit till denna publickit använd /savepublickit <id>"
+  assign-publickit-instruction: "<red>För att tilldela ett kit till denna publickit använd /savepublickit \\<id>"
   share-kit-code: "<green>Använd /copykit {code} för att kopiera detta kit"
   share-ec-code: "<green>Använd /copyEC {code} för att kopiera denna enderkista"
   share-code-expiry: "<green>Koden går ut om 15 minuter"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit är ett plugin som låter spelare ha sina egna kit."
-  deletekit-usage: "<red>Användning: /deletekit <slot>"
-  swapkit-usage: "<red>Användning: /swapkit <slot1> <slot2>"
-  savepublickit-usage: "<red>Användning: /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Användning: /perplayerkit migrate <källa> <destination>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Användning: /{command} <spelare|uuid> <slot></red>"
+  deletekit-usage: "<red>Användning: /deletekit \\<slot>"
+  swapkit-usage: "<red>Användning: /swapkit \\<slot1> \\<slot2>"
+  savepublickit-usage: "<red>Användning: /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Användning: /perplayerkit migrate \\<källa> \\<destination>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Användning: /{command} \\<spelare|uuid> \\<slot></red>"
 
 update:
   new-version-available: "En ny version av PerPlayerKit är tillgänglig! Du kör version {current} och den senaste versionen är {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Importera från enderkista</gray>"
   lore-left-load: "<gray>● Vänsterklicka för att ladda kit</gray>"
   lore-right-edit: "<gray>● Högerklicka för att redigera kit</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Klicka på en kit-slot för att ladda ditt kit</gray>"
   lore-info-edit: "<gray>● Högerklicka eller klicka på boken för att redigera</gray>"
-  lore-info-share: "<gray>● Dela kit med /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Dela kit med /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [ADMIN] Shift-klick för att redigera</gray>"
   lore-unassigned-info: "<gray>● Admins har inte ställt in detta kit ännu</gray>"
   lore-regear-restocks: "<gray>● Fyller på ditt kit</gray>"

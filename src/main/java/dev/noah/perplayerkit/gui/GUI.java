@@ -49,14 +49,25 @@ public class GUI {
     private final Plugin plugin;
     private final boolean filterItemsOnImport;
     private static final Set<UUID> kitDeletionFlag = new HashSet<>();
-    private static final Map<UUID, UUID> inspectTargets = new HashMap<>();
+    private static final Map<UUID, EditorContext> editorContexts = new HashMap<>();
 
-    public static void setInspectTarget(UUID inspector, UUID target) {
-        inspectTargets.put(inspector, target);
+    public enum EditorType {
+        KIT,
+        PUBLIC_KIT,
+        ENDERCHEST,
+        INSPECT_KIT,
+        INSPECT_ENDERCHEST
     }
 
-    public static UUID getAndRemoveInspectTarget(UUID inspector) {
-        return inspectTargets.remove(inspector);
+    public record EditorContext(EditorType type, int slot, String id, UUID target, String playerName) {
+    }
+
+    public static EditorContext getAndRemoveEditorContext(UUID viewer) {
+        return editorContexts.remove(viewer);
+    }
+
+    private static void setEditorContext(Player viewer, EditorContext context) {
+        editorContexts.put(viewer.getUniqueId(), context);
     }
 
     public GUI(Plugin plugin) {
@@ -106,6 +117,7 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
+        setEditorContext(p, new EditorContext(EditorType.KIT, slot, null, null, null));
     }
 
     public void OpenPublicKitEditor(Player p, String kitId) {
@@ -130,6 +142,7 @@ public class GUI {
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
         menu.open(p);
+        setEditorContext(p, new EditorContext(EditorType.PUBLIC_KIT, 0, kitId, null, null));
     }
 
     public void OpenECKitKenu(Player p, int slot) {
@@ -153,11 +166,14 @@ public class GUI {
         addImportEC(menu.getSlot(IMPORT_SLOT));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        setEditorContext(p, new EditorContext(EditorType.ENDERCHEST, slot, null, null, null));
     }
 
     public void InspectKit(Player p, UUID target, int slot) {
-        setInspectTarget(p.getUniqueId(), target);
         String playerName = getPlayerName(target);
+        if (playerName == null) {
+            playerName = target.toString();
+        }
         Menu menu = GuiMenuFactory.createInspectMenu(slot, playerName);
 
         if (KitManager.get().hasKit(target, slot)) {
@@ -184,11 +200,11 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        setEditorContext(p, new EditorContext(EditorType.INSPECT_KIT, slot, null, target, playerName));
         SoundManager.playOpenGui(p);
     }
 
     public void InspectEc(Player p, UUID target, int slot) {
-        setInspectTarget(p.getUniqueId(), target);
         String playerName = getPlayerName(target);
         if (playerName == null) {
             playerName = target.toString();
@@ -220,6 +236,7 @@ public class GUI {
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
+        setEditorContext(p, new EditorContext(EditorType.INSPECT_ENDERCHEST, slot, null, target, playerName));
         SoundManager.playOpenGui(p);
     }
 

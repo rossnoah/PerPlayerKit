@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Controlla i kit pubblici con il comando <aqua>/pk<white>!"
-    - "<white>Vuoi condividere un kit? Usa <aqua>/sharekit <slot><white>."
+    - "<white>Vuoi condividere un kit? Usa <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Digita <aqua>/kit<white>, <aqua>/k <white>o <aqua>/pk<white> per iniziare!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>I kit sono disabilitati qui!</red>"
-  unexpected: "<red>Si è verificato un errore inaspettato, riprova."
+  unexpected: "<red>Si è verificato un errore inaspettato, riprova.</red>"
   kit-not-found: "<red>Errore, quel kit non esiste"
   kit-expired: "<red>Errore, il kit non esiste o è scaduto"
   ec-not-found: "<red>Errore, quel baule di Ender non esiste"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Puoi salvare una versione personalizzata di questo kit importandola nell'editor"
-  assign-publickit-instruction: "<red>Per assegnare un kit a questo publickit usa /savepublickit <id>"
+  assign-publickit-instruction: "<red>Per assegnare un kit a questo publickit usa /savepublickit \\<id>"
   share-kit-code: "<green>Usa /copykit {code} per copiare questo kit"
   share-ec-code: "<green>Usa /copyEC {code} per copiare questo baule di Ender"
   share-code-expiry: "<green>Il codice scade tra 15 minuti"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit è un plugin che permette ai giocatori di avere i propri kit."
-  deletekit-usage: "<red>Utilizzo: /deletekit <slot>"
-  swapkit-usage: "<red>Utilizzo: /swapkit <slot1> <slot2>"
-  savepublickit-usage: "<red>Utilizzo: /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Utilizzo: /perplayerkit migrate <origine> <destinazione>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Utilizzo: /{command} <giocatore|uuid> <slot></red>"
+  deletekit-usage: "<red>Utilizzo: /deletekit \\<slot>"
+  swapkit-usage: "<red>Utilizzo: /swapkit \\<slot1> \\<slot2>"
+  savepublickit-usage: "<red>Utilizzo: /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Utilizzo: /perplayerkit migrate \\<origine> \\<destinazione>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Utilizzo: /{command} \\<giocatore|uuid> \\<slot></red>"
 
 update:
   new-version-available: "È disponibile una nuova versione di PerPlayerKit! Stai usando la versione {current} e la più recente è {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Importa dal baule di Ender</gray>"
   lore-left-load: "<gray>● Click sinistro per caricare il kit</gray>"
   lore-right-edit: "<gray>● Click destro per modificare il kit</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Clicca uno slot kit per caricare il tuo kit</gray>"
   lore-info-edit: "<gray>● Click destro o clicca sul libro per modificare</gray>"
-  lore-info-share: "<gray>● Condividi kit con /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Condividi kit con /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [ADMIN] Shift+click per modificare</gray>"
   lore-unassigned-info: "<gray>● Gli amministratori non hanno ancora configurato questo kit</gray>"
   lore-regear-restocks: "<gray>● Rifornisce il tuo kit</gray>"

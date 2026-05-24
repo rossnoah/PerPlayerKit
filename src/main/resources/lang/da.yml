@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Tjek offentlige kits med <aqua>/pk<white>-kommandoen!"
-    - "<white>Vil du dele et kit? Brug <aqua>/sharekit <slot><white>."
+    - "<white>Vil du dele et kit? Brug <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Skriv <aqua>/kit<white>, <aqua>/k <white>eller <aqua>/pk<white> for at komme i gang!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>Kits er deaktiveret her!</red>"
-  unexpected: "<red>Der opstod en uventet fejl, prøv igen."
+  unexpected: "<red>Der opstod en uventet fejl, prøv igen.</red>"
   kit-not-found: "<red>Fejl, det kit findes ikke"
   kit-expired: "<red>Fejl, kit findes ikke eller er udløbet"
   ec-not-found: "<red>Fejl, den enderkiste findes ikke"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Du kan gemme en brugerdefineret version af dette kit ved at importere til kit-editoren"
-  assign-publickit-instruction: "<red>For at tildele et kit til denne publickit brug /savepublickit <id>"
+  assign-publickit-instruction: "<red>For at tildele et kit til denne publickit brug /savepublickit \\<id>"
   share-kit-code: "<green>Brug /copykit {code} for at kopiere dette kit"
   share-ec-code: "<green>Brug /copyEC {code} for at kopiere denne enderkiste"
   share-code-expiry: "<green>Koden udløber om 15 minutter"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit er et plugin, der lader spillere have deres egne kits."
-  deletekit-usage: "<red>Brug: /deletekit <slot>"
-  swapkit-usage: "<red>Brug: /swapkit <slot1> <slot2>"
-  savepublickit-usage: "<red>Brug: /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Brug: /perplayerkit migrate <kilde> <destination>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Brug: /{command} <spiller|uuid> <slot></red>"
+  deletekit-usage: "<red>Brug: /deletekit \\<slot>"
+  swapkit-usage: "<red>Brug: /swapkit \\<slot1> \\<slot2>"
+  savepublickit-usage: "<red>Brug: /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Brug: /perplayerkit migrate \\<kilde> \\<destination>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Brug: /{command} \\<spiller|uuid> \\<slot></red>"
 
 update:
   new-version-available: "En ny version af PerPlayerKit er tilgængelig! Du kører version {current} og den nyeste version er {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Importer fra enderkiste</gray>"
   lore-left-load: "<gray>● Venstreklik for at indlæse kit</gray>"
   lore-right-edit: "<gray>● Højreklik for at redigere kit</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Klik på en kit-slot for at indlæse dit kit</gray>"
   lore-info-edit: "<gray>● Højreklik eller klik på bogen for at redigere</gray>"
-  lore-info-share: "<gray>● Del kits med /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Del kits med /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [ADMIN] Shift-klik for at redigere</gray>"
   lore-unassigned-info: "<gray>● Admins har ikke konfigureret dette kit endnu</gray>"
   lore-regear-restocks: "<gray>● Genopfylder dit kit</gray>"

@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Перегляньте публічні набори командою <aqua>/pk<white>!"
-    - "<white>Хочете поділитися набором? Використайте <aqua>/sharekit <slot><white>."
+    - "<white>Хочете поділитися набором? Використайте <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Введіть <aqua>/kit<white>, <aqua>/k <white>або <aqua>/pk<white> щоб почати!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>Набори тут вимкнено!</red>"
-  unexpected: "<red>Сталася непередбачена помилка, спробуйте ще раз."
+  unexpected: "<red>Сталася непередбачена помилка, спробуйте ще раз.</red>"
   kit-not-found: "<red>Помилка, такого набору не існує"
   kit-expired: "<red>Помилка, набір не існує або термін його дії минув"
   ec-not-found: "<red>Помилка, такої ендер-скрині не існує"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Ви можете зберегти свою версію цього набору, імпортувавши його до редактора"
-  assign-publickit-instruction: "<red>Щоб призначити набір для цього publickit використовуйте /savepublickit <id>"
+  assign-publickit-instruction: "<red>Щоб призначити набір для цього publickit використовуйте /savepublickit \\<id>"
   share-kit-code: "<green>Використовуйте /copykit {code} щоб скопіювати цей набір"
   share-ec-code: "<green>Використовуйте /copyEC {code} щоб скопіювати цю ендер-скриню"
   share-code-expiry: "<green>Код діє 15 хвилин"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit — це плагін, що дозволяє гравцям мати власні набори."
-  deletekit-usage: "<red>Використання: /deletekit <слот>"
-  swapkit-usage: "<red>Використання: /swapkit <слот1> <слот2>"
-  savepublickit-usage: "<red>Використання: /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Використання: /perplayerkit migrate <джерело> <призначення>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Використання: /{command} <гравець|uuid> <слот></red>"
+  deletekit-usage: "<red>Використання: /deletekit \\<слот>"
+  swapkit-usage: "<red>Використання: /swapkit \\<слот1> \\<слот2>"
+  savepublickit-usage: "<red>Використання: /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Використання: /perplayerkit migrate \\<джерело> \\<призначення>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Використання: /{command} \\<гравець|uuid> \\<слот></red>"
 
 update:
   new-version-available: "Доступна нова версія PerPlayerKit! Ви використовуєте версію {current}, а остання версія — {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Імпорт з ендер-скрині</gray>"
   lore-left-load: "<gray>● ЛКМ щоб завантажити набір</gray>"
   lore-right-edit: "<gray>● ПКМ щоб редагувати набір</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Натисніть на слот набору, щоб завантажити ваш набір</gray>"
   lore-info-edit: "<gray>● ПКМ або клік по книзі для редагування</gray>"
-  lore-info-share: "<gray>● Діліться наборами командою /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Діліться наборами командою /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [АДМІН] Shift клік для редагування</gray>"
   lore-unassigned-info: "<gray>● Адміністратори ще не налаштували цей набір</gray>"
   lore-regear-restocks: "<gray>● Поповнює ваш набір</gray>"

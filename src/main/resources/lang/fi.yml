@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Katso julkiset kitit komennolla <aqua>/pk<white>!"
-    - "<white>Haluatko jakaa kitin? Käytä <aqua>/sharekit <slot><white>."
+    - "<white>Haluatko jakaa kitin? Käytä <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Kirjoita <aqua>/kit<white>, <aqua>/k <white>tai <aqua>/pk<white> aloittaaksesi!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>Kitit on poistettu käytöstä täällä!</red>"
-  unexpected: "<red>Tapahtui odottamaton virhe, yritä uudelleen."
+  unexpected: "<red>Tapahtui odottamaton virhe, yritä uudelleen.</red>"
   kit-not-found: "<red>Virhe, kittiä ei ole olemassa"
   kit-expired: "<red>Virhe, kittiä ei ole olemassa tai se on vanhentunut"
   ec-not-found: "<red>Virhe, ender-arkkua ei ole olemassa"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Voit tallentaa oman version tästä kitistä tuomalla sen kittieditoriin"
-  assign-publickit-instruction: "<red>Asettaaksesi kitin tälle publickitille käytä /savepublickit <id>"
+  assign-publickit-instruction: "<red>Asettaaksesi kitin tälle publickitille käytä /savepublickit \\<id>"
   share-kit-code: "<green>Käytä /copykit {code} kopioidaksesi tämän kitin"
   share-ec-code: "<green>Käytä /copyEC {code} kopioidaksesi tämän ender-arkun"
   share-code-expiry: "<green>Koodi vanhenee 15 minuutissa"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit on lisäosa, joka antaa pelaajille omat kitit."
-  deletekit-usage: "<red>Käyttö: /deletekit <paikka>"
-  swapkit-usage: "<red>Käyttö: /swapkit <paikka1> <paikka2>"
-  savepublickit-usage: "<red>Käyttö: /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Käyttö: /perplayerkit migrate <lähde> <kohde>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Käyttö: /{command} <pelaaja|uuid> <paikka></red>"
+  deletekit-usage: "<red>Käyttö: /deletekit \\<paikka>"
+  swapkit-usage: "<red>Käyttö: /swapkit \\<paikka1> \\<paikka2>"
+  savepublickit-usage: "<red>Käyttö: /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Käyttö: /perplayerkit migrate \\<lähde> \\<kohde>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Käyttö: /{command} \\<pelaaja|uuid> \\<paikka></red>"
 
 update:
   new-version-available: "PerPlayerKitistä on saatavilla uusi versio! Käytät versiota {current} ja uusin versio on {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Tuo ender-arkusta</gray>"
   lore-left-load: "<gray>● Vasen klikkaus ladataksesi kitin</gray>"
   lore-right-edit: "<gray>● Oikea klikkaus muokataksesi kittiä</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Klikkaa kitin paikkaa ladataksesi kittisi</gray>"
   lore-info-edit: "<gray>● Oikea klikkaus tai kirjan klikkaus muokataksesi</gray>"
-  lore-info-share: "<gray>● Jaa kittejä komennolla /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Jaa kittejä komennolla /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [ADMIN] Shift-klikkaus muokataksesi</gray>"
   lore-unassigned-info: "<gray>● Ylläpitäjät eivät ole vielä asettaneet tätä kittiä</gray>"
   lore-regear-restocks: "<gray>● Täydentää kittisi</gray>"
