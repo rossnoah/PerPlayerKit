@@ -126,7 +126,7 @@ public class ConfigMigrator {
 
         if (userConfig.contains("disabled-command-message")) {
             String current = userConfig.getString("disabled-command-message");
-            String defaultValue = "<red>Kits are disabled here!</red>";
+            String defaultValue = defaults.getString("error.disabled-in-world");
             if (current != null && !current.equals(defaultValue)) {
                 diffs.put("error.disabled-in-world", current);
             }
@@ -151,7 +151,7 @@ public class ConfigMigrator {
                 continue;
             }
             String current = userConfig.getString(oldPath);
-            String defaultValue = defaults.getString(oldPath);
+            String defaultValue = defaults.getString(newKey);
             if (current != null && !current.equals(defaultValue)) {
                 diffs.put(newKey, current);
             }

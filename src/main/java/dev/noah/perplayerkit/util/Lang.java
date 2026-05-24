@@ -184,11 +184,10 @@ public class Lang {
     }
 
     public List<String> rawList(String key) {
-        List<String> value = lang.getStringList(key);
-        if (value == null || value.isEmpty()) {
-            value = fallback.getStringList(key);
+        if (lang.contains(key)) {
+            return lang.getStringList(key);
         }
-        return value;
+        return fallback.getStringList(key);
     }
 
     public Component component(String key) {

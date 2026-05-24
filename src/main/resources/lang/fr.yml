@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Découvrez les kits publics avec la commande <aqua>/pk<white> !"
-    - "<white>Vous voulez partager un kit ? Utilisez <aqua>/sharekit <slot><white>."
+    - "<white>Vous voulez partager un kit ? Utilisez <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Tapez <aqua>/kit<white>, <aqua>/k <white>ou <aqua>/pk<white> pour commencer !"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>Les kits sont désactivés ici !</red>"
-  unexpected: "<red>Une erreur inattendue s'est produite, veuillez réessayer."
+  unexpected: "<red>Une erreur inattendue s'est produite, veuillez réessayer.</red>"
   kit-not-found: "<red>Erreur, ce kit n'existe pas"
   kit-expired: "<red>Erreur, le kit n'existe pas ou a expiré"
   ec-not-found: "<red>Erreur, cet ender chest n'existe pas"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Vous pouvez sauvegarder une version personnalisée de ce kit en l'important dans l'éditeur"
-  assign-publickit-instruction: "<red>Pour assigner un kit à ce publickit utilisez /savepublickit <id>"
+  assign-publickit-instruction: "<red>Pour assigner un kit à ce publickit utilisez /savepublickit \\<id>"
   share-kit-code: "<green>Utilisez /copykit {code} pour copier ce kit"
   share-ec-code: "<green>Utilisez /copyEC {code} pour copier cet ender chest"
   share-code-expiry: "<green>Le code expire dans 15 minutes"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit est un plugin qui permet aux joueurs d'avoir leurs propres kits."
-  deletekit-usage: "<red>Utilisation : /deletekit <slot>"
-  swapkit-usage: "<red>Utilisation : /swapkit <slot1> <slot2>"
-  savepublickit-usage: "<red>Utilisation : /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Utilisation : /perplayerkit migrate <source> <destination>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Utilisation : /{command} <joueur|uuid> <slot></red>"
+  deletekit-usage: "<red>Utilisation : /deletekit \\<slot>"
+  swapkit-usage: "<red>Utilisation : /swapkit \\<slot1> \\<slot2>"
+  savepublickit-usage: "<red>Utilisation : /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Utilisation : /perplayerkit migrate \\<source> \\<destination>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Utilisation : /{command} \\<joueur|uuid> \\<slot></red>"
 
 update:
   new-version-available: "Une nouvelle version de PerPlayerKit est disponible ! Vous utilisez la version {current} et la dernière est {latest}"
@@ -150,17 +150,17 @@ gui:
   main-menu-title: "Kits de {player}"
   kit-editor-title: "Kit : {slot}"
   public-kit-editor-title: "Kit Public : {id}"
-  enderchest-editor-title: "Ender Chest : {slot}"
+  enderchest-editor-title: "ender chest : {slot}"
   inspect-kit-title: "Inspection du kit {slot} de {player}"
   inspect-ec-title: "Inspection de l'ender chest {slot} de {player}"
   kit-room-title: "Salle des Kits"
   public-kit-room-title: "Salle des Kits Publics"
   view-public-kit-title: "Voir le Kit Public : {id}"
-  enderchest-view-title: "Ender Chest (Lecture Seule)"
+  enderchest-view-title: "ender chest (Lecture Seule)"
   regear-shulker-title: "Shulker de Rééquipement"
 
   kit-slot-name: "<dark_aqua><b>Kit {slot}</b></dark_aqua>"
-  enderchest-slot-name: "<dark_aqua><b>Ender Chest {slot}</b></dark_aqua>"
+  enderchest-slot-name: "<dark_aqua><b>ender chest {slot}</b></dark_aqua>"
   kit-exists: "<green><b>KIT EXISTE</b></green>"
   kit-not-found: "<red><b>KIT INTROUVABLE</b></red>"
   more-kits-coming: "<gray><b>PLUS DE KITS À VENIR</b></gray>"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Importer depuis l'ender chest</gray>"
   lore-left-load: "<gray>● Clic gauche pour charger le kit</gray>"
   lore-right-edit: "<gray>● Clic droit pour éditer le kit</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Cliquez sur un emplacement pour charger votre kit</gray>"
   lore-info-edit: "<gray>● Clic droit ou sur le livre pour éditer</gray>"
-  lore-info-share: "<gray>● Partagez les kits avec /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Partagez les kits avec /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [ADMIN] Shift clic pour éditer</gray>"
   lore-unassigned-info: "<gray>● Les admins n'ont pas encore configuré ce kit</gray>"
   lore-regear-restocks: "<gray>● Réapprovisionne votre kit</gray>"

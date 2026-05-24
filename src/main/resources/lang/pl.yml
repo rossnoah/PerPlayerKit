@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Sprawdź zestawy publiczne komendą <aqua>/pk<white>!"
-    - "<white>Chcesz udostępnić zestaw? Użyj <aqua>/sharekit <slot><white>."
+    - "<white>Chcesz udostępnić zestaw? Użyj <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Wpisz <aqua>/kit<white>, <aqua>/k <white>lub <aqua>/pk<white>, aby zacząć!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>Zestawy są tutaj wyłączone!</red>"
-  unexpected: "<red>Wystąpił nieoczekiwany błąd, spróbuj ponownie."
+  unexpected: "<red>Wystąpił nieoczekiwany błąd, spróbuj ponownie.</red>"
   kit-not-found: "<red>Błąd, ten zestaw nie istnieje"
   kit-expired: "<red>Błąd, zestaw nie istnieje lub wygasł"
   ec-not-found: "<red>Błąd, ta skrzynia Endera nie istnieje"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Możesz zapisać własną wersję tego zestawu, importując ją do edytora"
-  assign-publickit-instruction: "<red>Aby przypisać zestaw do tego publickit, użyj /savepublickit <id>"
+  assign-publickit-instruction: "<red>Aby przypisać zestaw do tego publickit, użyj /savepublickit \\<id>"
   share-kit-code: "<green>Użyj /copykit {code}, aby skopiować ten zestaw"
   share-ec-code: "<green>Użyj /copyEC {code}, aby skopiować tę skrzynię Endera"
   share-code-expiry: "<green>Kod wygaśnie za 15 minut"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit to plugin pozwalający graczom mieć własne zestawy."
-  deletekit-usage: "<red>Użycie: /deletekit <slot>"
-  swapkit-usage: "<red>Użycie: /swapkit <slot1> <slot2>"
-  savepublickit-usage: "<red>Użycie: /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Użycie: /perplayerkit migrate <źródło> <cel>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Użycie: /{command} <gracz|uuid> <slot></red>"
+  deletekit-usage: "<red>Użycie: /deletekit \\<slot>"
+  swapkit-usage: "<red>Użycie: /swapkit \\<slot1> \\<slot2>"
+  savepublickit-usage: "<red>Użycie: /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Użycie: /perplayerkit migrate \\<źródło> \\<cel>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Użycie: /{command} \\<gracz|uuid> \\<slot></red>"
 
 update:
   new-version-available: "Dostępna jest nowa wersja PerPlayerKit! Używasz wersji {current}, a najnowsza to {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Importuj ze skrzyni Endera</gray>"
   lore-left-load: "<gray>● Lewy klik, aby załadować zestaw</gray>"
   lore-right-edit: "<gray>● Prawy klik, aby edytować zestaw</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Kliknij slot zestawu, aby załadować swój zestaw</gray>"
   lore-info-edit: "<gray>● Prawy klik lub klik księgi, aby edytować</gray>"
-  lore-info-share: "<gray>● Udostępniaj zestawy komendą /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Udostępniaj zestawy komendą /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [ADMIN] Shift+klik, aby edytować</gray>"
   lore-unassigned-info: "<gray>● Administratorzy jeszcze nie skonfigurowali tego zestawu</gray>"
   lore-regear-restocks: "<gray>● Uzupełnia twój zestaw</gray>"

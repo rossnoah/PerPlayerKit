@@ -248,19 +248,30 @@ public class RegearCommand implements CommandExecutor, Listener {
         Inventory inventory = Bukkit.createInventory(holder, 27,
                 StyleManager.get().getPrimaryColor() + Lang.get().legacy("gui.regear-shulker-title"));
         inventory.setItem(13, regearShellItem);
+        holder.setInventory(inventory);
         return inventory;
     }
 
 
-    public record RegearInventoryHolder(
-            Player player) implements InventoryHolder {
+    public static class RegearInventoryHolder implements InventoryHolder {
+        private final Player player;
+        private Inventory inventory;
+
+        public RegearInventoryHolder(Player player) {
+            this.player = player;
+        }
+
+        public Player player() {
+            return player;
+        }
+
+        private void setInventory(Inventory inventory) {
+            this.inventory = inventory;
+        }
 
         @Override
         public @NotNull Inventory getInventory() {
-            // Inventory is created externally via RegearCommand#createRegearInventory.
-            // This method is required by InventoryHolder but not used at runtime — the
-            // inventory is opened through createRegearInventory which assigns the holder.
-            throw new UnsupportedOperationException("Use RegearCommand#createRegearInventory");
+            return inventory;
         }
     }
 }

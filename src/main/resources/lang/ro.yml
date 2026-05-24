@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>Verifică kiturile publice cu comanda <aqua>/pk<white>!"
-    - "<white>Vrei să partajezi un kit? Folosește <aqua>/sharekit <slot><white>."
+    - "<white>Vrei să partajezi un kit? Folosește <aqua>/sharekit \\<slot></aqua><white>."
     - "<white>Scrie <aqua>/kit<white>, <aqua>/k <white>sau <aqua>/pk<white> pentru a începe!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>Kiturile sunt dezactivate aici!</red>"
-  unexpected: "<red>A apărut o eroare neașteptată, încearcă din nou."
+  unexpected: "<red>A apărut o eroare neașteptată, încearcă din nou.</red>"
   kit-not-found: "<red>Eroare, acel kit nu există"
   kit-expired: "<red>Eroare, kitul nu există sau a expirat"
   ec-not-found: "<red>Eroare, acel cufăr Ender nu există"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>Poți salva o versiune personalizată a acestui kit importând-o în editor"
-  assign-publickit-instruction: "<red>Pentru a atribui un kit acestui publickit folosește /savepublickit <id>"
+  assign-publickit-instruction: "<red>Pentru a atribui un kit acestui publickit folosește /savepublickit \\<id>"
   share-kit-code: "<green>Folosește /copykit {code} pentru a copia acest kit"
   share-ec-code: "<green>Folosește /copyEC {code} pentru a copia acest cufăr Ender"
   share-code-expiry: "<green>Codul expiră în 15 minute"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit este un plugin care permite jucătorilor să aibă propriile kituri."
-  deletekit-usage: "<red>Utilizare: /deletekit <slot>"
-  swapkit-usage: "<red>Utilizare: /swapkit <slot1> <slot2>"
-  savepublickit-usage: "<red>Utilizare: /{command} <kitid>"
-  perplayerkit-migrate-usage: "<red>Utilizare: /perplayerkit migrate <sursă> <destinație>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>Utilizare: /{command} <jucător|uuid> <slot></red>"
+  deletekit-usage: "<red>Utilizare: /deletekit \\<slot>"
+  swapkit-usage: "<red>Utilizare: /swapkit \\<slot1> \\<slot2>"
+  savepublickit-usage: "<red>Utilizare: /{command} \\<kitid>"
+  perplayerkit-migrate-usage: "<red>Utilizare: /perplayerkit migrate \\<sursă> \\<destinație>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>Utilizare: /{command} \\<jucător|uuid> \\<slot></red>"
 
 update:
   new-version-available: "Este disponibilă o nouă versiune de PerPlayerKit! Folosești versiunea {current}, iar cea mai recentă este {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● Importă din cufăr Ender</gray>"
   lore-left-load: "<gray>● Click stânga pentru încărcare kit</gray>"
   lore-right-edit: "<gray>● Click dreapta pentru editare kit</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● Click pe un slot pentru a încărca kitul tău</gray>"
   lore-info-edit: "<gray>● Click dreapta sau pe carte pentru editare</gray>"
-  lore-info-share: "<gray>● Partajează kituri cu /sharekit <slot></gray>"
+  lore-info-share: "<gray>● Partajează kituri cu /sharekit \\<slot></gray>"
   lore-admin-shift-edit: "<gray>● [ADMIN] Shift+click pentru editare</gray>"
   lore-unassigned-info: "<gray>● Administratorii încă nu au configurat acest kit</gray>"
   lore-regear-restocks: "<gray>● Reumple kitul tău</gray>"

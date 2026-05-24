@@ -18,7 +18,7 @@ motd:
 scheduled-broadcast:
   messages:
     - "<white>使用 <aqua>/pk<white> 命令查看公共套件!"
-    - "<white>想要分享套件? 使用 <aqua>/sharekit <slot><white> 命令。"
+    - "<white>想要分享套件? 使用 <aqua>/sharekit \\<slot></aqua><white> 命令。"
     - "<white>输入 <aqua>/kit<white>、<aqua>/k <white>或 <aqua>/pk<white> 开始使用!"
 
 broadcast-messages:
@@ -35,7 +35,7 @@ broadcast-messages:
 
 error:
   disabled-in-world: "<red>此处禁用套件!</red>"
-  unexpected: "<red>发生意外错误,请重试。"
+  unexpected: "<red>发生意外错误,请重试。</red>"
   kit-not-found: "<red>错误,该套件不存在"
   kit-expired: "<red>错误,套件不存在或已过期"
   ec-not-found: "<red>错误,该末影箱不存在"
@@ -112,7 +112,7 @@ success:
 
 info:
   custom-version-available: "<gray>你可以通过将此套件导入到编辑器来保存自定义版本"
-  assign-publickit-instruction: "<red>使用 /savepublickit <id> 为此 publickit 分配套件"
+  assign-publickit-instruction: "<red>使用 /savepublickit \\<id> 为此 publickit 分配套件"
   share-kit-code: "<green>使用 /copykit {code} 复制此套件"
   share-ec-code: "<green>使用 /copyEC {code} 复制此末影箱"
   share-code-expiry: "<green>代码将在 15 分钟后过期"
@@ -126,12 +126,12 @@ info:
 
 command:
   perplayerkit-about: "<green>PerPlayerKit 是一个允许玩家拥有自己套件的插件。"
-  deletekit-usage: "<red>用法: /deletekit <槽位>"
-  swapkit-usage: "<red>用法: /swapkit <槽位1> <槽位2>"
-  savepublickit-usage: "<red>用法: /{command} <套件id>"
-  perplayerkit-migrate-usage: "<red>用法: /perplayerkit migrate <源> <目标>"
-  kitroom-usage-hint: "/kitroom <load/save>"
-  inspect-usage: "<red>用法: /{command} <玩家|uuid> <槽位></red>"
+  deletekit-usage: "<red>用法: /deletekit \\<槽位>"
+  swapkit-usage: "<red>用法: /swapkit \\<槽位1> \\<槽位2>"
+  savepublickit-usage: "<red>用法: /{command} \\<套件id>"
+  perplayerkit-migrate-usage: "<red>用法: /perplayerkit migrate \\<源> \\<目标>"
+  kitroom-usage-hint: "/kitroom \\<load/save>"
+  inspect-usage: "<red>用法: /{command} \\<玩家|uuid> \\<槽位></red>"
 
 update:
   new-version-available: "PerPlayerKit 有新版本可用! 你正在运行版本 {current},最新版本是 {latest}"
@@ -193,10 +193,10 @@ gui:
   lore-import-ec: "<gray>● 从末影箱导入</gray>"
   lore-left-load: "<gray>● 左键单击加载套件</gray>"
   lore-right-edit: "<gray>● 右键单击编辑套件</gray>"
-  lore-share-kits: "<gray>● /sharekit <slot></gray>"
+  lore-share-kits: "<gray>● /sharekit \\<slot></gray>"
   lore-info-load: "<gray>● 单击套件槽位加载你的套件</gray>"
   lore-info-edit: "<gray>● 右键单击或单击书本编辑</gray>"
-  lore-info-share: "<gray>● 使用 /sharekit <slot> 分享套件</gray>"
+  lore-info-share: "<gray>● 使用 /sharekit \\<slot> 分享套件</gray>"
   lore-admin-shift-edit: "<gray>● [管理员] Shift 单击编辑</gray>"
   lore-unassigned-info: "<gray>● 管理员尚未设置此套件</gray>"
   lore-regear-restocks: "<gray>● 补充你的套件</gray>"

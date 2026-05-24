@@ -370,6 +370,9 @@ public class KitManager {
     }
 
     public boolean loadKit(Player player, int slot) {
+        if (player == null) {
+            return false;
+        }
         return loadKitInternal(player, IDUtil.getPlayerKitId(player.getUniqueId(), slot),
                 () -> Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot)),
                 false, () -> {
@@ -380,6 +383,9 @@ public class KitManager {
     }
 
     public boolean loadKitSilent(Player player, int slot) {
+        if (player == null) {
+            return false;
+        }
         return loadKitInternal(player, IDUtil.getPlayerKitId(player.getUniqueId(), slot), null, false, null);
     }
 
@@ -403,6 +409,9 @@ public class KitManager {
     }
 
     public boolean loadEnderchest(Player player, int slot) {
+        if (player == null) {
+            return false;
+        }
         return loadKitInternal(player, IDUtil.getECId(player.getUniqueId(), slot),
                 () -> Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot)),
                 true, () -> {
@@ -412,10 +421,16 @@ public class KitManager {
     }
 
     public boolean loadEnderchestSilent(Player player, int slot) {
+        if (player == null) {
+            return false;
+        }
         return loadKitInternal(player, IDUtil.getECId(player.getUniqueId(), slot), null, true, null);
     }
 
     public boolean loadLastKit(Player player) {
+        if (player == null) {
+            return false;
+        }
         if (lastKitUsedByPlayer.containsKey(player.getUniqueId())) {
             return loadKit(player, lastKitUsedByPlayer.get(player.getUniqueId()));
         }
