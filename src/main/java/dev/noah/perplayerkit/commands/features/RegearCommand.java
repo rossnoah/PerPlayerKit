@@ -259,6 +259,7 @@ public class RegearCommand implements CommandExecutor, Listener {
 
         public RegearInventoryHolder(Player player) {
             this.player = player;
+            this.inventory = Bukkit.createInventory(this, 27);
         }
 
         public Player player() {
