@@ -119,7 +119,7 @@ info:
   import-instructions: "<red>Copiază folderul de date din KitsX în folderul PerPlayerKit"
   migration-starting: "<yellow>Pornire migrare din {source} în {destination}..."
   migration-large-dataset: "<gray>Acest lucru poate dura mult pentru seturi mari de date. Verifică consola pentru progres."
-  available-storage-types: "<gray>Tipuri de stocare disponibile: sqlite, mysql, redis, yml"
+  available-storage-types: "<gray>Tipuri de stocare disponibile: sqlite, mysql, postgresql, redis, yml"
   update-config-storage: "<yellow>Nu uita să actualizezi config.yml storage.type la '{type}' și să repornești serverul."
   migration-failed-count: "<yellow>Eșuate: {count} înregistrări"
   migration-progress: "<gray>{message}"

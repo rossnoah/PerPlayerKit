@@ -119,7 +119,7 @@ info:
   import-instructions: "<red>Kopier datamappen fra KitsX til PerPlayerKit-mappen"
   migration-starting: "<yellow>Starter migrering fra {source} til {destination}..."
   migration-large-dataset: "<gray>Dette kan tage et stykke tid for store datasæt. Tjek konsollen for fremgang."
-  available-storage-types: "<gray>Tilgængelige lagertyper: sqlite, mysql, redis, yml"
+  available-storage-types: "<gray>Tilgængelige lagertyper: sqlite, mysql, postgresql, redis, yml"
   update-config-storage: "<yellow>Husk at opdatere din config.yml storage.type til '{type}' og genstart serveren."
   migration-failed-count: "<yellow>Mislykkedes: {count} indtastninger"
   migration-progress: "<gray>{message}"

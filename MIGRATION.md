@@ -10,6 +10,7 @@ PerPlayerKit supports the following storage backends:
 |------|-------------|----------|
 | `sqlite` | Local SQLite database file | Default, good for single-server setups |
 | `mysql` | MySQL/MariaDB database | Multi-server setups, larger deployments |
+| `postgresql` | PostgreSQL database | Multi-server setups, larger deployments |
 | `redis` | Redis key-value store | High-performance, distributed setups |
 | `yml` | YAML flat file | Development/testing only (not recommended for production) |
 
@@ -23,6 +24,7 @@ To migrate data between storage types, use the following command:
 
 **Examples:**
 - `/perplayerkit migrate sqlite mysql` - Migrate from SQLite to MySQL
+- `/perplayerkit migrate sqlite postgresql` - Migrate from SQLite to PostgreSQL
 - `/perplayerkit migrate mysql redis` - Migrate from MySQL to Redis
 - `/perplayerkit migrate redis sqlite` - Migrate from Redis to SQLite
 
@@ -38,6 +40,18 @@ To migrate data between storage types, use the following command:
    mysql:
      host: "localhost"
      port: 3306
+     dbname: "perplayerkit"
+     username: "your_username"
+     password: "your_password"
+     useSSL: false
+     maximumPoolSize: 10
+   ```
+
+   For PostgreSQL:
+   ```yaml
+   postgresql:
+     host: "localhost"
+     port: 5432
      dbname: "perplayerkit"
      username: "your_username"
      password: "your_password"

@@ -119,7 +119,7 @@ info:
   import-instructions: "<red>将 KitsX 的数据文件夹复制到 PerPlayerKit 文件夹"
   migration-starting: "<yellow>开始从 {source} 迁移到 {destination}..."
   migration-large-dataset: "<gray>大型数据集可能需要一些时间。请查看控制台以了解进度。"
-  available-storage-types: "<gray>可用的存储类型: sqlite, mysql, redis, yml"
+  available-storage-types: "<gray>可用的存储类型: sqlite, mysql, postgresql, redis, yml"
   update-config-storage: "<yellow>请记得将 config.yml 中的 storage.type 更新为 '{type}' 并重启服务器。"
   migration-failed-count: "<yellow>失败: {count} 条"
   migration-progress: "<gray>{message}"

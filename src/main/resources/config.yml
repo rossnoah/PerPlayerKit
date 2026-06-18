@@ -13,16 +13,25 @@ config-version: 2 #do not change this value
 language: "en"
 
 
-#Database credentials are only required if you are using MySQL or Redis
-# It is strongly recommended to use MySQL or SQLite
+#Database credentials are only required if you are using MySQL, PostgreSQL or Redis
+# It is strongly recommended to use MySQL, PostgreSQL or SQLite
 # YAML should not be used in any environment
 
-storage: #sqlite, mysql, redis, yml (yaml)
+storage: #sqlite, mysql, postgresql, redis, yml (yaml)
   type: "sqlite"
 
 mysql:
   host: "localhost"
   port: "3306"
+  dbname: "kitdatabase"
+  username: "username"
+  password: "pa55w0rd"
+  useSSL: false
+  maximumPoolSize: 10 #only change this if you know what your doing
+
+postgresql:
+  host: "localhost"
+  port: "5432"
   dbname: "kitdatabase"
   username: "username"
   password: "pa55w0rd"

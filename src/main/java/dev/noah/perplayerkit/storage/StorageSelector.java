@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.storage;
 
 import dev.noah.perplayerkit.storage.sql.MySQL;
+import dev.noah.perplayerkit.storage.sql.PostgreSQL;
 import dev.noah.perplayerkit.storage.sql.SQLDatabase;
 import dev.noah.perplayerkit.storage.sql.SQLite;
 import org.bukkit.plugin.Plugin;
@@ -46,6 +47,11 @@ public class StorageSelector {
                 break;
             case "mysql":
                 SQLDatabase db = new MySQL(plugin);
+                storageManager = new SQLStorage(db);
+                break;
+            case "postgres":
+            case "postgresql":
+                db = new PostgreSQL(plugin);
                 storageManager = new SQLStorage(db);
                 break;
             case "sqlite":

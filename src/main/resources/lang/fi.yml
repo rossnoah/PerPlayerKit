@@ -119,7 +119,7 @@ info:
   import-instructions: "<red>Kopioi datakansio KitsX:stä PerPlayerKit-kansioon"
   migration-starting: "<yellow>Aloitetaan migraatio lähteestä {source} kohteeseen {destination}..."
   migration-large-dataset: "<gray>Tämä voi kestää hetken suurille tietoaineistoille. Tarkista konsolista edistyminen."
-  available-storage-types: "<gray>Käytettävissä olevat tallennustyypit: sqlite, mysql, redis, yml"
+  available-storage-types: "<gray>Käytettävissä olevat tallennustyypit: sqlite, mysql, postgresql, redis, yml"
   update-config-storage: "<yellow>Muista päivittää config.yml storage.type arvoon '{type}' ja käynnistää palvelin uudelleen."
   migration-failed-count: "<yellow>Epäonnistui: {count} merkintää"
   migration-progress: "<gray>{message}"

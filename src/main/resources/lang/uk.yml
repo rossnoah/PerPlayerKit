@@ -119,7 +119,7 @@ info:
   import-instructions: "<red>Скопіюйте папку даних з KitsX у папку PerPlayerKit"
   migration-starting: "<yellow>Починаю міграцію з {source} до {destination}..."
   migration-large-dataset: "<gray>Це може зайняти деякий час для великих наборів даних. Перевіряйте консоль для прогресу."
-  available-storage-types: "<gray>Доступні типи сховищ: sqlite, mysql, redis, yml"
+  available-storage-types: "<gray>Доступні типи сховищ: sqlite, mysql, postgresql, redis, yml"
   update-config-storage: "<yellow>Не забудьте оновити storage.type у config.yml на '{type}' та перезапустити сервер."
   migration-failed-count: "<yellow>Не вдалося: {count} записів"
   migration-progress: "<gray>{message}"

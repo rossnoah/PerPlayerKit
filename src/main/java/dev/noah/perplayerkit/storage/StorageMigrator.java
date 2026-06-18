@@ -36,8 +36,8 @@ public class StorageMigrator {
     /**
      * Migrate all data from source storage to destination storage.
      *
-     * @param sourceType      The source storage type (sqlite, mysql, redis, yml)
-     * @param destinationType The destination storage type (sqlite, mysql, redis, yml)
+     * @param sourceType      The source storage type (sqlite, mysql, postgresql, redis, yml)
+     * @param destinationType The destination storage type (sqlite, mysql, postgresql, redis, yml)
      * @param progressCallback Callback for progress updates (can be null)
      * @return MigrationResult containing success status and statistics
      */

@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> STORAGE_TYPES = Arrays.asList("sqlite", "mysql", "redis", "yml");
+    private static final List<String> STORAGE_TYPES = Arrays.asList("sqlite", "mysql", "postgresql", "redis", "yml");
 
     private final Plugin plugin;
 

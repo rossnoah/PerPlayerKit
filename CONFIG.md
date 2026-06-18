@@ -56,14 +56,14 @@ For a complete reference of all available options, see the [MiniMessage document
 
 ### **Database Credentials**
 
-Select either storage type. SQLite is recommended for small servers, while MySQL is recommended for larger servers or multi-server setups.
+Select either storage type. SQLite is recommended for small servers, while MySQL or PostgreSQL is recommended for larger servers or multi-server setups.
 
 ```yaml
-# It is strongly recommended to use MySQL or SQLite
+# It is strongly recommended to use MySQL, PostgreSQL or SQLite
 # YAML should not be used in any environment
 
 
-storage: #sqlite, mysql, redis, yml (yaml)
+storage: #sqlite, mysql, postgresql, redis, yml (yaml)
   type: "sqlite"
 
 mysql:
@@ -72,6 +72,17 @@ mysql:
   dbname: "kitdatabase"
   username: "username"
   password: "pa55w0rd"
+  useSSL: false
+  maximumPoolSize: 10
+
+postgresql:
+  host: "localhost"
+  port: "5432"
+  dbname: "kitdatabase"
+  username: "username"
+  password: "pa55w0rd"
+  useSSL: false
+  maximumPoolSize: 10
 
 redis:
   host: "localhost"

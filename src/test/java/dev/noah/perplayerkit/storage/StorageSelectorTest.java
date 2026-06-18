@@ -29,6 +29,13 @@ class StorageSelectorTest {
         config.set("mysql.password", "pass");
         config.set("mysql.useSSL", false);
 
+        config.set("postgresql.host", "localhost");
+        config.set("postgresql.port", "5432");
+        config.set("postgresql.dbname", "ppk");
+        config.set("postgresql.username", "user");
+        config.set("postgresql.password", "pass");
+        config.set("postgresql.useSSL", false);
+
         config.set("redis.host", "localhost");
         config.set("redis.port", 6379);
         config.set("redis.password", "");
@@ -58,6 +65,13 @@ class StorageSelectorTest {
     @Test
     void mysqlTypeReturnsSqlStorage() {
         StorageManager manager = new StorageSelector(plugin, "mysql").getDbManager();
+
+        assertInstanceOf(SQLStorage.class, manager);
+    }
+
+    @Test
+    void postgresqlTypeReturnsSqlStorage() {
+        StorageManager manager = new StorageSelector(plugin, "postgresql").getDbManager();
 
         assertInstanceOf(SQLStorage.class, manager);
     }

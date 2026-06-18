@@ -119,7 +119,7 @@ info:
   import-instructions: "<red>Copie a pasta de dados do KitsX para a pasta PerPlayerKit"
   migration-starting: "<yellow>Iniciando migração de {source} para {destination}..."
   migration-large-dataset: "<gray>Isso pode demorar para conjuntos de dados grandes. Veja o console para o progresso."
-  available-storage-types: "<gray>Tipos de armazenamento disponíveis: sqlite, mysql, redis, yml"
+  available-storage-types: "<gray>Tipos de armazenamento disponíveis: sqlite, mysql, postgresql, redis, yml"
   update-config-storage: "<yellow>Lembre-se de atualizar o storage.type do config.yml para '{type}' e reiniciar o servidor."
   migration-failed-count: "<yellow>Falharam: {count} entradas"
   migration-progress: "<gray>{message}"

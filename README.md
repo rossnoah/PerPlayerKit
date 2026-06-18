@@ -26,13 +26,13 @@ PerPlayerKits uses a minecraft GUI library called canvas, it can be found [here]
 
 ## Installation
 
-PerPlayerKits has a minimal configuration just requiring selecting the database type. PerPlayerKit supports both MySQL/MySQL compatible (MariaDB) databases and SQLite databases. If you don't know what you are doing or don't have access to a database, use `sqlite` as the database type.
+PerPlayerKits has a minimal configuration just requiring selecting the database type. PerPlayerKit supports MySQL/MySQL compatible (MariaDB), PostgreSQL, and SQLite databases. If you don't know what you are doing or don't have access to a database, use `sqlite` as the database type.
 
 To use the plugin run the server with the plugin in the "plugins" folder, then stop the server and edit the config.yml file in the "plugins/PerPlayerKits" folder.
 
 More configuration options are available, please refer to the [configuration documentation](./CONFIG.md).
 
-Need to switch storage backends? See the [Storage Migration Guide](./MIGRATION.md) for instructions on migrating data between SQLite, MySQL, Redis, and YAML storage types.
+Need to switch storage backends? See the [Storage Migration Guide](./MIGRATION.md) for instructions on migrating data between SQLite, MySQL, PostgreSQL, Redis, and YAML storage types.
 
 ## Commands and Permissions
 

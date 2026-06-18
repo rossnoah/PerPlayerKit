@@ -39,8 +39,7 @@ public class SQLStorage implements StorageManager {
 
     private void createTable() throws SQLException {
         try (Connection conn = db.getConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                "CREATE TABLE IF NOT EXISTS kits (KITID VARCHAR(100), KITDATA TEXT(15000), PRIMARY KEY (KITID))")) {
+             PreparedStatement ps = conn.prepareStatement(db.getCreateTableStatement())) {
             ps.executeUpdate();
         }
     }
@@ -90,8 +89,7 @@ public class SQLStorage implements StorageManager {
     @Override
     public void saveKitDataByID(String kitID, String data) {
         try (Connection conn = db.getConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                "REPLACE INTO kits (KITID, KITDATA) VALUES (?,?)")) {
+             PreparedStatement ps = conn.prepareStatement(db.getUpsertStatement())) {
             ps.setString(1, kitID);
             ps.setString(2, data);
             ps.executeUpdate();

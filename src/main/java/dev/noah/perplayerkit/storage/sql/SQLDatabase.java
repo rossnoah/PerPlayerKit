@@ -31,4 +31,20 @@ public interface SQLDatabase {
 
     Connection getConnection() throws SQLException;
 
+    /**
+     * SQL used to create the kits table. Defaults to MySQL/SQLite-compatible syntax;
+     * backends with a different dialect (e.g. PostgreSQL) override this.
+     */
+    default String getCreateTableStatement() {
+        return "CREATE TABLE IF NOT EXISTS kits (KITID VARCHAR(100), KITDATA TEXT(15000), PRIMARY KEY (KITID))";
+    }
+
+    /**
+     * SQL used to insert-or-update a kit row. Defaults to MySQL/SQLite {@code REPLACE INTO};
+     * backends with a different dialect (e.g. PostgreSQL) override this.
+     */
+    default String getUpsertStatement() {
+        return "REPLACE INTO kits (KITID, KITDATA) VALUES (?,?)";
+    }
+
 }
