@@ -338,6 +338,8 @@ public class KitManager {
             }
         }
         player.getInventory().setContents(playerInventory);
+        // Resync the client so updated slots (including the offhand) render correctly.
+        player.updateInventory();
         return true;
     }
 
@@ -359,6 +361,10 @@ public class KitManager {
             player.getEnderChest().setContents(kit);
         } else {
             player.getInventory().setContents(kit);
+            // Force a client-side resync of the whole inventory (including the
+            // offhand slot) so the client doesn't keep rendering a stale item,
+            // e.g. a "ghost" totem in the offhand on the death screen.
+            player.updateInventory();
         }
 
         if (afterLoad != null) {
