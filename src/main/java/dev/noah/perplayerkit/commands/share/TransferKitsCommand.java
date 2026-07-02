@@ -18,39 +18,27 @@
  */
 package dev.noah.perplayerkit.commands.share;
 
+import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
-import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
 import dev.noah.perplayerkit.util.CooldownManager;
 import dev.noah.perplayerkit.util.Lang;
+import dev.noah.perplayerkit.util.PlayerUtil;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiConsumer;
+import java.util.List;
 
-public abstract class AbstractShareSlotCommand implements CommandExecutor {
-
-    @FunctionalInterface
-    public interface ShareRequestAction {
-        void share(Player sender, int slot, Player target);
-    }
+public class TransferKitsCommand implements CommandExecutor, TabCompleter {
 
     private static final int COOLDOWN_SECONDS = 5;
     private final CooldownManager cooldownManager = new CooldownManager(COOLDOWN_SECONDS);
-    private final String missingSlotMessageKey;
-    private final BiConsumer<Player, Integer> codeShareAction;
-    private final ShareRequestAction requestShareAction;
-
-    protected AbstractShareSlotCommand(String missingSlotMessageKey, BiConsumer<Player, Integer> codeShareAction,
-                                       ShareRequestAction requestShareAction) {
-        this.missingSlotMessageKey = missingSlotMessageKey;
-        this.codeShareAction = codeShareAction;
-        this.requestShareAction = requestShareAction;
-    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -60,7 +48,7 @@ public abstract class AbstractShareSlotCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            Lang.get().send(player, missingSlotMessageKey);
+            Lang.get().send(player, "error.missing-transfer-target");
             SoundManager.playFailure(player);
             return true;
         }
@@ -71,25 +59,24 @@ public abstract class AbstractShareSlotCommand implements CommandExecutor {
             return true;
         }
 
-        Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
-        if (slot == null) {
-            Lang.get().send(player, "error.invalid-kit-slot");
+        Player target = Bukkit.getPlayerExact(args[0]);
+        if (target == null) {
+            Lang.get().send(player, "error.share-player-not-found");
             SoundManager.playFailure(player);
             return true;
         }
 
-        if (args.length >= 2) {
-            Player target = Bukkit.getPlayerExact(args[1]);
-            if (target == null) {
-                Lang.get().send(player, "error.share-player-not-found");
-                SoundManager.playFailure(player);
-                return true;
-            }
-            requestShareAction.share(player, slot, target);
-        } else {
-            codeShareAction.accept(player, slot);
-        }
+        KitShareManager.get().sendTransferRequest(player, target);
         cooldownManager.setCooldown(player);
         return true;
+    }
+
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player player) || args.length != 1) {
+            return List.of();
+        }
+        return PlayerUtil.completeOnlinePlayerNames(player, args[0]);
     }
 }

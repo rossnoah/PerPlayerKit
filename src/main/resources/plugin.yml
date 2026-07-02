@@ -23,6 +23,7 @@ permissions:
       perplayerkit.copykit: true
       perplayerkit.sharekit: true
       perplayerkit.shareenderchest: true
+      perplayerkit.transferkits: true
       perplayerkit.swapkit: true
       perplayerkit.deletekit: true
       perplayerkit.publickit: true
@@ -63,14 +64,28 @@ commands:
       - copyenderchest
 
   sharekit:
-    usage: /<command>
+    usage: /<command> <slot> [player]
     permission: perplayerkit.sharekit
 
   shareec:
-    usage: /<command>
+    usage: /<command> <slot> [player]
     permission: perplayerkit.shareenderchest
     aliases:
       - shareenderchest
+
+  transferkits:
+    usage: /<command> <player>
+    permission: perplayerkit.transferkits
+    aliases:
+      - transferkit
+
+  shareaccept:
+    usage: /<command> [id]
+    permission: perplayerkit.copykit
+
+  sharedecline:
+    usage: /<command> [id]
+    permission: perplayerkit.copykit
 
   swapkit:
     usage: /<command>

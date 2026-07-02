@@ -35,8 +35,11 @@ import dev.noah.perplayerkit.commands.kits.MainMenuCommand;
 import dev.noah.perplayerkit.commands.kits.PublicKitCommand;
 import dev.noah.perplayerkit.commands.kits.SwapKitCommand;
 import dev.noah.perplayerkit.commands.share.CopyKitCommand;
+import dev.noah.perplayerkit.commands.share.ShareAcceptCommand;
+import dev.noah.perplayerkit.commands.share.ShareDeclineCommand;
 import dev.noah.perplayerkit.commands.share.ShareECKitCommand;
 import dev.noah.perplayerkit.commands.share.ShareKitCommand;
+import dev.noah.perplayerkit.commands.share.TransferKitsCommand;
 import dev.noah.perplayerkit.commands.shortcuts.ShortECCommand;
 import dev.noah.perplayerkit.commands.shortcuts.ShortKitCommand;
 import dev.noah.perplayerkit.listeners.*;
@@ -156,17 +159,28 @@ public final class PerPlayerKit extends JavaPlugin {
 
         // REGISTER THINGS START
         KitSlotTabCompleter kitSlotTabCompleter = new KitSlotTabCompleter();
-        ECSlotTabCompleter ecSlotTabCompleter = new ECSlotTabCompleter();
 
         this.getCommand("kit").setExecutor(new MainMenuCommand(plugin));
 
         this.getCommand("sharekit").setExecutor(new ShareKitCommand());
-        this.getCommand("sharekit").setTabCompleter(kitSlotTabCompleter);
+        this.getCommand("sharekit").setTabCompleter(new KitSlotTabCompleter(true));
 
         this.getCommand("shareec").setExecutor(new ShareECKitCommand());
-        this.getCommand("shareec").setTabCompleter(ecSlotTabCompleter);
+        this.getCommand("shareec").setTabCompleter(new ECSlotTabCompleter(true));
 
         this.getCommand("copykit").setExecutor(new CopyKitCommand());
+
+        TransferKitsCommand transferKitsCommand = new TransferKitsCommand();
+        this.getCommand("transferkits").setExecutor(transferKitsCommand);
+        this.getCommand("transferkits").setTabCompleter(transferKitsCommand);
+
+        ShareAcceptCommand shareAcceptCommand = new ShareAcceptCommand();
+        this.getCommand("shareaccept").setExecutor(shareAcceptCommand);
+        this.getCommand("shareaccept").setTabCompleter(shareAcceptCommand);
+
+        ShareDeclineCommand shareDeclineCommand = new ShareDeclineCommand();
+        this.getCommand("sharedecline").setExecutor(shareDeclineCommand);
+        this.getCommand("sharedecline").setTabCompleter(shareDeclineCommand);
 
         KitRoomCommand kitRoomCommand = new KitRoomCommand();
         this.getCommand("kitroom").setExecutor(kitRoomCommand);

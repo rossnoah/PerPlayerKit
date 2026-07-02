@@ -17,6 +17,9 @@ The following table outlines each command, its usage, aliases, and permissions r
 | `copykit`           | `copyec, copyenderchest` | `perplayerkit.copykit`         |
 | `sharekit`          | `N/A`                    | `perplayerkit.sharekit`        |
 | `shareec`           | `shareenderchest`        | `perplayerkit.shareenderchest` |
+| `transferkits`      | `transferkit`            | `perplayerkit.transferkits`    |
+| `shareaccept`       | `N/A`                    | `perplayerkit.copykit`         |
+| `sharedecline`      | `N/A`                    | `perplayerkit.copykit`         |
 | `swapkit`           | `N/A`                    | `perplayerkit.swapkit`         |
 | `deletekit`         | `N/A`                    | `perplayerkit.deletekit`       |
 | `inspectkit`        | `N/A`                    | `perplayerkit.staff`           |
@@ -45,6 +48,20 @@ The following table outlines each command, its usage, aliases, and permissions r
 | `regear`            | `rg`                     | `perplayerkit.regear`          |
 | `heal`              | `N/A`                    | `perplayerkit.heal`            |
 | `repair`            | `N/A`                    | `perplayerkit.repair`          |
+
+## Kit Sharing and Transfers
+
+### Sharing with a player directly
+
+`/sharekit <slot> <player>` (or `/shareec <slot> <player>` for ender chests) sends the target player a request in chat with clickable **[ACCEPT]** and **[DECLINE]** buttons. If they accept, a snapshot of the shared kit is applied to their current inventory (or ender chest), exactly like redeeming a share code. Requests expire after 120 seconds, and a newer request to the same player replaces the previous one. The buttons run `/shareaccept <id>` and `/sharedecline <id>` under the hood; with only one pending request, `/shareaccept` and `/sharedecline` also work without an id.
+
+### Sharing with a code
+
+`/sharekit <slot>` (or `/shareec <slot>`) without a player still generates a share code, which is useful when sharing with multiple people at once. Anyone can redeem it with `/copykit <code>` while it is valid. Codes expire after 15 minutes.
+
+### Transferring kits between accounts
+
+`/transferkits <player>` sends the target player a request to receive **all** of your kits and ender chests. If they accept, a snapshot of every kit and ender chest slot you have is saved into their corresponding slots, overwriting whatever they had in those slots (slots you don't have are left untouched). Your own kits are not modified. This is useful when moving to a new account: log in with both accounts, run `/transferkits <new account>` from the old one, and accept on the new one.
 
 ## Regear Command Details
 
@@ -76,7 +93,7 @@ The following table outlines each top-level permission and the sub-permissions i
 | `kit.admin`        | `perplayerkit.admin`                                                                                                                                                                                                                                                                                                                                                                         |
 | `kit.staff`        | `perplayerkit.staff`                                                                                                                                                                                                                                                                                                                                                                         |
 | `kit.use`          | `perplayerkit.use`                                                                                                                                                                                                                                                                                                                                                                           |
-| `perplayerkit.use` | `perplayerkit.menu`, `perplayerkit.copykit`, `perplayerkit.sharekit`, `perplayerkit.shareenderchest`, `perplayerkit.swapkit`, `perplayerkit.deletekit`, `perplayerkit.publickit`, `perplayerkit.kit`, `perplayerkit.enderchest`, `perplayerkit.viewenderchest`, `perplayerkit.regear`, `perplayerkit.heal`, `perplayerkit.repair`, `perplayerkit.rekitonrespawn`, `perplayerkit.rekitonkill` |
+| `perplayerkit.use` | `perplayerkit.menu`, `perplayerkit.copykit`, `perplayerkit.sharekit`, `perplayerkit.shareenderchest`, `perplayerkit.transferkits`, `perplayerkit.swapkit`, `perplayerkit.deletekit`, `perplayerkit.publickit`, `perplayerkit.kit`, `perplayerkit.enderchest`, `perplayerkit.viewenderchest`, `perplayerkit.regear`, `perplayerkit.heal`, `perplayerkit.repair`, `perplayerkit.rekitonrespawn`, `perplayerkit.rekitonkill` |
 
 ## Message Notifications
 

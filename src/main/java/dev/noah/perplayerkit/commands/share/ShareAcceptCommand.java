@@ -18,13 +18,9 @@
  */
 package dev.noah.perplayerkit.commands.share;
 
-import dev.noah.perplayerkit.KitShareManager;
+public class ShareAcceptCommand extends AbstractShareResponseCommand {
 
-public class ShareECKitCommand extends AbstractShareSlotCommand {
-
-    public ShareECKitCommand() {
-        super("error.missing-ec-slot-share",
-                (player, slot) -> KitShareManager.get().shareEC(player, slot),
-                (player, slot, target) -> KitShareManager.get().sendECShareRequest(player, slot, target));
+    public ShareAcceptCommand() {
+        super(true);
     }
 }

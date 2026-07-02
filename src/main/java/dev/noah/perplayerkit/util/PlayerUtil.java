@@ -27,6 +27,8 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerUtil {
@@ -82,6 +84,20 @@ public class PlayerUtil {
 
     static @NotNull String fallbackPlayerName(String playerName, @NotNull UUID uuid) {
         return playerName != null ? playerName : uuid.toString();
+    }
+
+    public static @NotNull List<String> completeOnlinePlayerNames(@NotNull Player self, @NotNull String prefix) {
+        String lowered = prefix.toLowerCase();
+        List<String> names = new ArrayList<>();
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            if (online.getUniqueId().equals(self.getUniqueId())) {
+                continue;
+            }
+            if (online.getName().toLowerCase().startsWith(lowered)) {
+                names.add(online.getName());
+            }
+        }
+        return names;
     }
 
 }

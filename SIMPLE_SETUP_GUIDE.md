@@ -94,6 +94,12 @@ Share this with your players:
 - **`/kit`** or **`/k`** - Open the main kit menu
 - **`/k1`** through **`/k9`** - Quickly load kit 1-9
 
+### Sharing Kits:
+
+- **`/sharekit <slot> <player>`** - Send a kit to another player; they click **[ACCEPT]** in chat to receive it (**`/shareec`** does the same for ender chests)
+- **`/sharekit <slot>`** - Get a share code instead, great for sharing with multiple people; they redeem it with **`/copykit <code>`**
+- **`/transferkits <player>`** - Send ALL your kits and ender chests to another account; once they accept, your kits are copied into their kit slots. Perfect for moving to a new account!
+
 ### How to Make a Kit:
 
 1. Type `/kit` to open the menu
