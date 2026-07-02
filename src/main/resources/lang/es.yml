@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "Kits de {player}"
+  main-menu-title-paged: "Kits de {player} ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"
   public-kit-editor-title: "Kit Público: {id}"
   enderchest-editor-title: "Cofre de Ender: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>LIMPIAR KIT</b></red>"
   clear-ec-button: "<red><b>LIMPIAR COFRE ENDER</b></red>"
   back-button: "<red><b>ATRÁS</b></red>"
+  previous-page-button: "<yellow><b>PÁGINA ANTERIOR</b></yellow>"
+  next-page-button: "<yellow><b>PÁGINA SIGUIENTE</b></yellow>"
   close-button: "<red><b>CERRAR</b></red>"
   load-kit-button: "<green><b>CARGAR KIT</b></green>"
   refill-button: "<dark_aqua><b>RELLENAR</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Clic para editar</gray>"
   lore-click-create: "<gray>● Clic para crear</gray>"
+  lore-page-indicator: "<gray>● Página {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift clic para limpiar</gray>"
   lore-shift-delete-kit: "<gray>● Shift clic para eliminar kit</gray>"
   lore-shift-delete-ec: "<gray>● Shift clic para eliminar cofre de ender</gray>"

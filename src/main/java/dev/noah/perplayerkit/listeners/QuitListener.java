@@ -19,14 +19,13 @@
 package dev.noah.perplayerkit.listeners;
 
 import dev.noah.perplayerkit.KitManager;
-import dev.noah.perplayerkit.PerPlayerKit;
+import dev.noah.perplayerkit.gui.GUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
@@ -44,20 +43,11 @@ public class QuitListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                KitManager.get().savePlayerKitsToDB(uuid);
-            }
-
-        }.runTaskAsynchronously(plugin);
+        GUI.forgetMainMenuPage(uuid);
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             KitManager.get().savePlayerKitsToDB(uuid);
         });
-
-
     }
 
 

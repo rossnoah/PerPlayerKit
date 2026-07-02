@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "{player} 的套件"
+  main-menu-title-paged: "{player} 的套件 ({page}/{pages})"
   kit-editor-title: "套件: {slot}"
   public-kit-editor-title: "公共套件: {id}"
   enderchest-editor-title: "末影箱: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>清除套件</b></red>"
   clear-ec-button: "<red><b>清除末影箱</b></red>"
   back-button: "<red><b>返回</b></red>"
+  previous-page-button: "<yellow><b>上一页</b></yellow>"
+  next-page-button: "<yellow><b>下一页</b></yellow>"
   close-button: "<red><b>关闭</b></red>"
   load-kit-button: "<green><b>加载套件</b></green>"
   refill-button: "<dark_aqua><b>补充</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● 单击以编辑</gray>"
   lore-click-create: "<gray>● 单击以创建</gray>"
+  lore-page-indicator: "<gray>● 第 {page}/{pages} 页</gray>"
   lore-shift-clear: "<gray>● Shift 单击以清除</gray>"
   lore-shift-delete-kit: "<gray>● Shift 单击以删除套件</gray>"
   lore-shift-delete-ec: "<gray>● Shift 单击以删除末影箱</gray>"

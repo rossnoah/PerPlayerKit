@@ -21,6 +21,7 @@ package dev.noah.perplayerkit.commands.share;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
 import dev.noah.perplayerkit.util.CooldownManager;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.Bukkit;
@@ -71,7 +72,7 @@ public abstract class AbstractShareSlotCommand implements CommandExecutor {
             return true;
         }
 
-        Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
+        Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, KitSlots.maxKits());
         if (slot == null) {
             Lang.get().send(player, "error.invalid-kit-slot");
             SoundManager.playFailure(player);

@@ -21,6 +21,7 @@ package dev.noah.perplayerkit.commands.kits;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -46,7 +47,7 @@ public class DeleteKitCommand implements CommandExecutor {
             return true;
         }
 
-        Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
+        Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, KitSlots.maxKits());
         KitManager kitManager = KitManager.get();
         if (slot == null) {
             Lang.get().send(player, "command.deletekit-usage");

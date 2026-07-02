@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "Kits van {player}"
+  main-menu-title-paged: "Kits van {player} ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"
   public-kit-editor-title: "Openbare Kit: {id}"
   enderchest-editor-title: "Enderkist: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>KIT LEEGMAKEN</b></red>"
   clear-ec-button: "<red><b>ENDERKIST LEEGMAKEN</b></red>"
   back-button: "<red><b>TERUG</b></red>"
+  previous-page-button: "<yellow><b>VORIGE PAGINA</b></yellow>"
+  next-page-button: "<yellow><b>VOLGENDE PAGINA</b></yellow>"
   close-button: "<red><b>SLUITEN</b></red>"
   load-kit-button: "<green><b>KIT LADEN</b></green>"
   refill-button: "<dark_aqua><b>BIJVULLEN</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Klik om te bewerken</gray>"
   lore-click-create: "<gray>● Klik om te maken</gray>"
+  lore-page-indicator: "<gray>● Pagina {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift-klik om leeg te maken</gray>"
   lore-shift-delete-kit: "<gray>● Shift-klik om kit te verwijderen</gray>"
   lore-shift-delete-ec: "<gray>● Shift-klik om Enderkist te verwijderen</gray>"

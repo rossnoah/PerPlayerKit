@@ -46,6 +46,11 @@ public class InspectEcCommand extends AbstractInspectCommand {
     }
 
     @Override
+    protected void loadSlotFromDB(UUID targetUuid, int slot) {
+        KitManager.get().loadPlayerEnderchestFromDB(targetUuid, slot);
+    }
+
+    @Override
     protected String missingDataKey() {
         return "error.inspect-ec-missing";
     }

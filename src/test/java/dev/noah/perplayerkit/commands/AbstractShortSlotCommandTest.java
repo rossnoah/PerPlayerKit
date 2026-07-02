@@ -2,10 +2,12 @@ package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.commands.shortcuts.AbstractShortSlotCommand;
 import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -27,6 +29,11 @@ class AbstractShortSlotCommandTest {
     @AfterAll
     static void tearDownLang() {
         Lang.resetForTesting();
+    }
+
+    @AfterEach
+    void resetKitSlots() {
+        KitSlots.resetForTesting();
     }
 
     @Test
@@ -83,6 +90,68 @@ class AbstractShortSlotCommandTest {
         }
 
         verify(player).sendMessage(contains("Invalid command label"));
+        assertNull(command.executedSlot);
+    }
+
+    @Test
+    void executesForMultiDigitLabelWithinConfiguredMax() {
+        KitSlots.setForTesting(20);
+        TestShortSlotCommand command = new TestShortSlotCommand();
+        Player player = mock(Player.class);
+
+        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
+            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+
+            command.onCommand(player, null, "k12", new String[0]);
+        }
+
+        assertEquals(12, command.executedSlot);
+    }
+
+    @Test
+    void executesForNamespacedLabel() {
+        KitSlots.setForTesting(20);
+        TestShortSlotCommand command = new TestShortSlotCommand();
+        Player player = mock(Player.class);
+
+        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
+            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+
+            command.onCommand(player, null, "perplayerkit:k10", new String[0]);
+        }
+
+        assertEquals(10, command.executedSlot);
+    }
+
+    @Test
+    void rejectsSlotAboveConfiguredMaxWithRangeError() {
+        TestShortSlotCommand command = new TestShortSlotCommand();
+        Player player = mock(Player.class);
+
+        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
+            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+
+            command.onCommand(player, null, "k10", new String[0]);
+        }
+
+        verify(player).sendMessage(contains("between 1 and 9"));
+        assertNull(command.executedSlot);
+    }
+
+    @Test
+    void rejectsLeadingZeroAndOversizedSuffixes() {
+        KitSlots.setForTesting(99);
+        TestShortSlotCommand command = new TestShortSlotCommand();
+        Player player = mock(Player.class);
+
+        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
+            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+
+            command.onCommand(player, null, "k012", new String[0]);
+            command.onCommand(player, null, "k05", new String[0]);
+            command.onCommand(player, null, "k100", new String[0]);
+        }
+
         assertNull(command.executedSlot);
     }
 

@@ -38,13 +38,18 @@ class ItemPurgeServiceTest {
     void isPlayerDataIdMatchesKitAndEnderchestIdsOnly() {
         assertTrue(ItemPurgeService.isPlayerDataId(IDUtil.getPlayerKitId(PLAYER, 1)));
         assertTrue(ItemPurgeService.isPlayerDataId(IDUtil.getPlayerKitId(PLAYER, 9)));
+        assertTrue(ItemPurgeService.isPlayerDataId(IDUtil.getPlayerKitId(PLAYER, 10)));
+        assertTrue(ItemPurgeService.isPlayerDataId(IDUtil.getPlayerKitId(PLAYER, 99)));
         assertTrue(ItemPurgeService.isPlayerDataId(IDUtil.getECId(PLAYER, 5)));
+        assertTrue(ItemPurgeService.isPlayerDataId(IDUtil.getECId(PLAYER, 42)));
 
         assertFalse(ItemPurgeService.isPlayerDataId(null));
         assertFalse(ItemPurgeService.isPlayerDataId(PLAYER.toString()));
         assertFalse(ItemPurgeService.isPlayerDataId(PLAYER + "0"));
-        assertFalse(ItemPurgeService.isPlayerDataId(PLAYER + "10"));
+        assertFalse(ItemPurgeService.isPlayerDataId(PLAYER + "05"));
+        assertFalse(ItemPurgeService.isPlayerDataId(PLAYER + "100"));
         assertFalse(ItemPurgeService.isPlayerDataId(PLAYER + "ec0"));
+        assertFalse(ItemPurgeService.isPlayerDataId(PLAYER + "ec100"));
         assertFalse(ItemPurgeService.isPlayerDataId(IDUtil.getPublicKitId("warrior")));
         assertFalse(ItemPurgeService.isPlayerDataId(IDUtil.getKitRoomId(1)));
         assertFalse(ItemPurgeService.isPlayerDataId("not-a-uuid-aaaa-bbbb-cccc-ddddeeeeffff1"));
@@ -137,35 +142,44 @@ class ItemPurgeServiceTest {
     }
 
     @Test
-    void purgePlayersChecksAllSlotsAndSkipsMissingEntries() {
+    void purgePlayersOnlyTouchesEntriesOfTheGivenPlayers() {
         StorageManager storage = mock(StorageManager.class);
         KitManager kitManager = mock(KitManager.class);
+        UUID otherPlayer = UUID.fromString("99999999-8888-7777-6666-555555555555");
         String presentId = IDUtil.getECId(PLAYER, 4);
+        // slot 42 exists even though it is above the default max-kits of 9:
+        // orphaned slots from a lowered limit must still be purged
+        String orphanedId = IDUtil.getPlayerKitId(PLAYER, 42);
 
-        // every entry is missing except one ender chest
-        when(storage.getKitDataByID(any())).thenReturn("Error");
-        when(storage.getKitDataByID(presentId)).thenReturn("blob");
+        when(storage.getAllKitIDs()).thenReturn(Set.of(
+                presentId, orphanedId,
+                IDUtil.getPlayerKitId(otherPlayer, 1),
+                IDUtil.getPublicKitId("warrior"),
+                IDUtil.getKitRoomId(1)));
+        when(storage.getKitDataByID(presentId)).thenReturn("blob1");
+        when(storage.getKitDataByID(orphanedId)).thenReturn("blob2");
 
-        ItemStack[] contents = {mockItem(Material.TNT, 1), mockItem(Material.APPLE, 1)};
+        ItemStack[] contents1 = {mockItem(Material.TNT, 1), mockItem(Material.APPLE, 1)};
+        ItemStack[] contents2 = {mockItem(Material.TNT, 1), mockItem(Material.APPLE, 1)};
 
         try (MockedStatic<Serializer> serializer = mockStatic(Serializer.class)) {
-            serializer.when(() -> Serializer.itemStackArrayFromBase64("blob")).thenReturn(contents);
-            serializer.when(() -> Serializer.itemStackArrayToBase64(contents)).thenReturn("newblob");
+            serializer.when(() -> Serializer.itemStackArrayFromBase64("blob1")).thenReturn(contents1);
+            serializer.when(() -> Serializer.itemStackArrayFromBase64("blob2")).thenReturn(contents2);
+            serializer.when(() -> Serializer.itemStackArrayToBase64(contents1)).thenReturn("newblob1");
+            serializer.when(() -> Serializer.itemStackArrayToBase64(contents2)).thenReturn("newblob2");
 
             ItemPurgeService service = new ItemPurgeService(storage, kitManager);
             ItemPurgeService.PurgeResult result = service.purgePlayers(Material.TNT, List.of(PLAYER), null);
 
-            assertEquals(1, result.scanned());
-            assertEquals(1, result.modified());
-            assertEquals(1, result.itemsRemoved());
+            assertEquals(2, result.scanned());
+            assertEquals(2, result.modified());
+            assertEquals(2, result.itemsRemoved());
         }
 
-        // 9 kit slots + 9 ender chest slots
-        for (int slot = 1; slot <= 9; slot++) {
-            verify(storage).getKitDataByID(IDUtil.getPlayerKitId(PLAYER, slot));
-            verify(storage).getKitDataByID(IDUtil.getECId(PLAYER, slot));
-        }
-        verify(storage).saveKitDataByID(presentId, "newblob");
+        verify(storage).saveKitDataByID(presentId, "newblob1");
+        verify(storage).saveKitDataByID(orphanedId, "newblob2");
+        verify(storage, never()).getKitDataByID(IDUtil.getPlayerKitId(otherPlayer, 1));
+        verify(storage, never()).getKitDataByID(IDUtil.getPublicKitId("warrior"));
     }
 
     @Test

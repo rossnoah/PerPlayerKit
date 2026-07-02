@@ -180,6 +180,7 @@ about:
 gui:
   # Inventory titles
   main-menu-title: "{player}'s Kits"
+  main-menu-title-paged: "{player}'s Kits ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"
   public-kit-editor-title: "Public Kit: {id}"
   enderchest-editor-title: "Enderchest: {slot}"
@@ -202,6 +203,8 @@ gui:
   clear-kit-button: "<red><b>CLEAR KIT</b></red>"
   clear-ec-button: "<red><b>CLEAR ENDERCHEST</b></red>"
   back-button: "<red><b>BACK</b></red>"
+  previous-page-button: "<yellow><b>PREVIOUS PAGE</b></yellow>"
+  next-page-button: "<yellow><b>NEXT PAGE</b></yellow>"
   close-button: "<red><b>CLOSE</b></red>"
   load-kit-button: "<green><b>LOAD KIT</b></green>"
   refill-button: "<dark_aqua><b>REFILL</b></dark_aqua>"
@@ -219,6 +222,7 @@ gui:
   # Lores (item tooltip lines)
   lore-click-edit: "<gray>● Click to edit</gray>"
   lore-click-create: "<gray>● Click to create</gray>"
+  lore-page-indicator: "<gray>● Page {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift click to clear</gray>"
   lore-shift-delete-kit: "<gray>● Shift click to delete kit</gray>"
   lore-shift-delete-ec: "<gray>● Shift click to delete ender chest</gray>"

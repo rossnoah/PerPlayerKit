@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "{player}s Kits"
+  main-menu-title-paged: "{player}s Kits ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"
   public-kit-editor-title: "Öffentliches Kit: {id}"
   enderchest-editor-title: "Endertruhe: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>KIT LEEREN</b></red>"
   clear-ec-button: "<red><b>ENDERTRUHE LEEREN</b></red>"
   back-button: "<red><b>ZURÜCK</b></red>"
+  previous-page-button: "<yellow><b>VORHERIGE SEITE</b></yellow>"
+  next-page-button: "<yellow><b>NÄCHSTE SEITE</b></yellow>"
   close-button: "<red><b>SCHLIESSEN</b></red>"
   load-kit-button: "<green><b>KIT LADEN</b></green>"
   refill-button: "<dark_aqua><b>AUFFÜLLEN</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Klicken zum Bearbeiten</gray>"
   lore-click-create: "<gray>● Klicken zum Erstellen</gray>"
+  lore-page-indicator: "<gray>● Seite {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift-Klick zum Leeren</gray>"
   lore-shift-delete-kit: "<gray>● Shift-Klick zum Löschen des Kits</gray>"
   lore-shift-delete-ec: "<gray>● Shift-Klick zum Löschen der Endertruhe</gray>"

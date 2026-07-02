@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "Zestawy {player}"
+  main-menu-title-paged: "Zestawy {player} ({page}/{pages})"
   kit-editor-title: "Zestaw: {slot}"
   public-kit-editor-title: "Publiczny Zestaw: {id}"
   enderchest-editor-title: "Skrzynia Endera: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>WYCZYŚĆ ZESTAW</b></red>"
   clear-ec-button: "<red><b>WYCZYŚĆ SKRZYNIĘ ENDERA</b></red>"
   back-button: "<red><b>WSTECZ</b></red>"
+  previous-page-button: "<yellow><b>POPRZEDNIA STRONA</b></yellow>"
+  next-page-button: "<yellow><b>NASTĘPNA STRONA</b></yellow>"
   close-button: "<red><b>ZAMKNIJ</b></red>"
   load-kit-button: "<green><b>ZAŁADUJ ZESTAW</b></green>"
   refill-button: "<dark_aqua><b>UZUPEŁNIJ</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Kliknij, aby edytować</gray>"
   lore-click-create: "<gray>● Kliknij, aby utworzyć</gray>"
+  lore-page-indicator: "<gray>● Strona {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift+klik, aby wyczyścić</gray>"
   lore-shift-delete-kit: "<gray>● Shift+klik, aby usunąć zestaw</gray>"
   lore-shift-delete-ec: "<gray>● Shift+klik, aby usunąć skrzynię Endera</gray>"

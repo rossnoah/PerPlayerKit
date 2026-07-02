@@ -126,6 +126,22 @@ scheduled-broadcast:
 
 ---
 
+### **Kit Slots**
+
+Controls how many kit slots each player has. The limit applies equally to kits and enderchest kits.
+
+```yaml
+max-kits: 9 # Number of kit slots per player. Range: 1-99 (values outside are clamped).
+```
+
+- The default of 9 keeps the classic single-page kit menu. Raising the limit adds pages to the `/kit` menu (9 kits per page) with previous/next buttons in the bottom corners.
+- Shortcut commands `/k10`..`/k<max>` and `/ec10`..`/ec<max>` are registered automatically at startup when the limit is above 9.
+- Changing the value requires a server restart.
+- Lowering the limit later hides kits stored in higher slots but does not delete them; raising it again makes them accessible. `/purgeitem` always covers all 99 possible slots regardless of this setting.
+- If multiple servers share one database, use the same `max-kits` value everywhere.
+
+---
+
 ### **Kit Room**
 
 Defines kits and their visual representation in the UI. Kit names are displayed in their default color.

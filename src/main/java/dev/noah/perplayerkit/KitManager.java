@@ -20,6 +20,7 @@ package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.IDUtil;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Bukkit;
@@ -482,32 +483,35 @@ public class KitManager {
     }
 
     public void loadPlayerDataFromDB(UUID uuid) {
-        for (int slot = 1; slot < 10; slot++) {
-            String data = PerPlayerKit.storageManager.getKitDataByID(IDUtil.getPlayerKitId(uuid, slot));
-            if (!data.equalsIgnoreCase("error")) {
-                try {
-                    ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                    cacheKit(IDUtil.getPlayerKitId(uuid, slot),
-                            ItemFilter.get().filterItemStack(kit));
-                } catch (IOException ignored) {
-                }
-            }
+        for (int slot = 1; slot <= KitSlots.maxKits(); slot++) {
+            loadPlayerKitFromDB(uuid, slot);
         }
-        for (int slot = 1; slot < 10; slot++) {
-            String data = PerPlayerKit.storageManager.getKitDataByID(IDUtil.getECId(uuid, slot));
-            if (!data.equalsIgnoreCase("error")) {
-                try {
-                    ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
-                    cacheKit(IDUtil.getECId(uuid, slot),
-                            ItemFilter.get().filterItemStack(kit));
-                } catch (IOException ignored) {
-                }
+        for (int slot = 1; slot <= KitSlots.maxKits(); slot++) {
+            loadPlayerEnderchestFromDB(uuid, slot);
+        }
+    }
+
+    public void loadPlayerKitFromDB(UUID uuid, int slot) {
+        loadKitEntryFromDB(IDUtil.getPlayerKitId(uuid, slot));
+    }
+
+    public void loadPlayerEnderchestFromDB(UUID uuid, int slot) {
+        loadKitEntryFromDB(IDUtil.getECId(uuid, slot));
+    }
+
+    private void loadKitEntryFromDB(String id) {
+        String data = PerPlayerKit.storageManager.getKitDataByID(id);
+        if (!data.equalsIgnoreCase("error")) {
+            try {
+                ItemStack[] kit = Serializer.itemStackArrayFromBase64(data);
+                cacheKit(id, ItemFilter.get().filterItemStack(kit));
+            } catch (IOException ignored) {
             }
         }
     }
 
     public void savePlayerKitsToDB(UUID uuid) {
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i <= KitSlots.maxKits(); i++) {
             saveKitToDB(IDUtil.getPlayerKitId(uuid, i), true);
             saveKitToDB(IDUtil.getECId(uuid, i), true);
         }

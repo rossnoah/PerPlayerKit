@@ -46,6 +46,11 @@ public class InspectKitCommand extends AbstractInspectCommand {
     }
 
     @Override
+    protected void loadSlotFromDB(UUID targetUuid, int slot) {
+        KitManager.get().loadPlayerKitFromDB(targetUuid, slot);
+    }
+
+    @Override
     protected String missingDataKey() {
         return "error.inspect-kit-missing";
     }

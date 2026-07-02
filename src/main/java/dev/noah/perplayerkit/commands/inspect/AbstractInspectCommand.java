@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.commands.inspect;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.Bukkit;
@@ -39,8 +40,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.MAX_SLOT;
-import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.MIN_SLOT;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.errorPrefix;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.resolvePlayerIdentifierAsync;
 import static dev.noah.perplayerkit.commands.inspect.InspectCommandUtil.showUsage;
@@ -58,6 +57,8 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
     protected abstract boolean hasData(UUID targetUuid, int slot);
 
     protected abstract void openInspectGui(Player inspector, UUID targetUuid, int slot);
+
+    protected abstract void loadSlotFromDB(UUID targetUuid, int slot);
 
     protected abstract String missingDataKey();
 
@@ -104,7 +105,7 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
                     return targetOnlineFuture.thenCompose(targetOnline -> {
                         CompletableFuture<Void> loadFuture = targetOnline
                                 ? CompletableFuture.completedFuture(null)
-                                : CompletableFuture.runAsync(() -> KitManager.get().loadPlayerDataFromDB(targetUuid));
+                                : CompletableFuture.runAsync(() -> loadSlotFromDB(targetUuid, slot));
 
                         return loadFuture.thenRun(() -> Bukkit.getScheduler().runTask(plugin, () -> {
                             Player currentSender = Bukkit.getPlayer(senderUuid);
@@ -162,7 +163,7 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
         }
 
         if (args.length == 2) {
-            return IntStream.rangeClosed(MIN_SLOT, MAX_SLOT)
+            return IntStream.rangeClosed(KitSlots.MIN_LIMIT, KitSlots.maxKits())
                     .mapToObj(String::valueOf)
                     .filter(slot -> slot.startsWith(args[1]))
                     .collect(Collectors.toList());
@@ -174,14 +175,16 @@ public abstract class AbstractInspectCommand implements CommandExecutor, TabComp
     private int parseSlot(String slotArg, Player player) {
         try {
             int slot = Integer.parseInt(slotArg);
-            if (slot < MIN_SLOT || slot > MAX_SLOT) {
+            // Staff can inspect the absolute slot range, not just the configured
+            // max-kits: the database may hold kits above a lowered limit.
+            if (slot < KitSlots.MIN_LIMIT || slot > KitSlots.MAX_LIMIT) {
                 throw new NumberFormatException();
             }
             return slot;
         } catch (NumberFormatException e) {
             BroadcastManager.get().sendComponentMessage(player,
                     errorPrefix().append(Lang.get().component("error.invalid-slot-range",
-                            "min", String.valueOf(MIN_SLOT), "max", String.valueOf(MAX_SLOT))));
+                            "min", String.valueOf(KitSlots.MIN_LIMIT), "max", String.valueOf(KitSlots.MAX_LIMIT))));
             SoundManager.playFailure(player);
             return -1;
         }

@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.PlayerUtil;
 import dev.noah.perplayerkit.util.SoundManager;
@@ -63,7 +64,7 @@ public class KitShareManager {
 
     public List<String> getKitSlots(Player p) {
         ArrayList<String> slots = new ArrayList<>();
-        for (int i = 1; i <= 9; i++) {
+        for (int i = 1; i <= KitSlots.maxKits(); i++) {
             if (KitManager.get().hasKit(p.getUniqueId(), i)) {
                 slots.add(String.valueOf(i));
             }
@@ -73,7 +74,7 @@ public class KitShareManager {
 
     public List<String> getECSlots(Player p) {
         ArrayList<String> slots = new ArrayList<>();
-        for (int i = 1; i <= 9; i++) {
+        for (int i = 1; i <= KitSlots.maxKits(); i++) {
             if (KitManager.get().hasEC(p.getUniqueId(), i)) {
                 slots.add(String.valueOf(i));
             }
@@ -213,7 +214,7 @@ public class KitShareManager {
         KitManager kitManager = KitManager.get();
         Map<Integer, ItemStack[]> kits = new LinkedHashMap<>();
         Map<Integer, ItemStack[]> enderchests = new LinkedHashMap<>();
-        for (int slot = 1; slot <= 9; slot++) {
+        for (int slot = 1; slot <= KitSlots.maxKits(); slot++) {
             if (kitManager.hasKit(sender.getUniqueId(), slot)) {
                 kits.put(slot, kitManager.getPlayerKit(sender.getUniqueId(), slot).clone());
             }

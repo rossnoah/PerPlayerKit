@@ -21,6 +21,7 @@ package dev.noah.perplayerkit.commands.kits;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.command.Command;
@@ -46,8 +47,8 @@ public class SwapKitCommand implements CommandExecutor {
             return true;
         }
 
-        Integer slot1 = SlotArgumentParser.parseSlotInRange(args[0], 1, 9);
-        Integer slot2 = SlotArgumentParser.parseSlotInRange(args[1], 1, 9);
+        Integer slot1 = SlotArgumentParser.parseSlotInRange(args[0], 1, KitSlots.maxKits());
+        Integer slot2 = SlotArgumentParser.parseSlotInRange(args[1], 1, KitSlots.maxKits());
 
         if (slot1 == null || slot2 == null) {
             Lang.get().send(player, "command.swapkit-usage");

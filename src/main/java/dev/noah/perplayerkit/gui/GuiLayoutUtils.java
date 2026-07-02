@@ -37,6 +37,8 @@ public final class GuiLayoutUtils {
     public static final int LOAD_PUBLIC_KIT_SLOT = 52;
     public static final int CLEAR_SLOT = 52;
     public static final int BACK_SLOT = 53;
+    public static final int MAIN_PREV_PAGE_SLOT = 45;
+    public static final int MAIN_NEXT_PAGE_SLOT = 53;
 
     private GuiLayoutUtils() {
     }

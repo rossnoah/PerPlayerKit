@@ -41,8 +41,7 @@ import dev.noah.perplayerkit.commands.share.ShareDeclineCommand;
 import dev.noah.perplayerkit.commands.share.ShareECKitCommand;
 import dev.noah.perplayerkit.commands.share.ShareKitCommand;
 import dev.noah.perplayerkit.commands.share.TransferKitsCommand;
-import dev.noah.perplayerkit.commands.shortcuts.ShortECCommand;
-import dev.noah.perplayerkit.commands.shortcuts.ShortKitCommand;
+import dev.noah.perplayerkit.commands.shortcuts.ShortcutCommandRegistrar;
 import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
 import dev.noah.perplayerkit.listeners.antiexploit.ShulkerDropItemsListener;
@@ -53,15 +52,20 @@ import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import dev.noah.perplayerkit.util.BackupManager;
 import dev.noah.perplayerkit.util.BroadcastManager;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.StyleManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
+
+import java.util.List;
+import java.util.UUID;
 
 public final class PerPlayerKit extends JavaPlugin {
 
@@ -85,6 +89,8 @@ public final class PerPlayerKit extends JavaPlugin {
         ConfigManager configManager = new ConfigManager(this);
         configManager.loadConfig();
         reloadConfig();
+
+        KitSlots.init(this);
 
         new Lang(this);
         new StyleManager(this);
@@ -209,13 +215,7 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("publickit").setExecutor(publicKitCommand);
         this.getCommand("publickit").setTabCompleter(publicKitCommand);
 
-        for (int i = 1; i <= 9; i++) {
-            this.getCommand("k" + i).setExecutor(new ShortKitCommand());
-        }
-
-        for (int i = 1; i <= 9; i++) {
-            this.getCommand("ec" + i).setExecutor(new ShortECCommand());
-        }
+        ShortcutCommandRegistrar.registerAll(this);
 
         RegearCommand regearCommand = new RegearCommand(this);
         this.getCommand("regear").setExecutor(regearCommand);
@@ -299,8 +299,14 @@ public final class PerPlayerKit extends JavaPlugin {
     private void loadDatabaseData() {
         KitRoomDataManager.get().loadFromDB();
         KitManager.get().getPublicKitList().forEach(kit -> KitManager.get().loadPublicKitFromDB(kit.id));
-        Bukkit.getOnlinePlayers().forEach(player -> KitManager.get().loadPlayerDataFromDB(player.getUniqueId()));
-
+        // Only relevant when the plugin is (re-)enabled with players online.
+        // Load off the main thread like JoinListener does — with a large
+        // max-kits this is many storage queries per player.
+        List<UUID> onlineUuids = Bukkit.getOnlinePlayers().stream().map(Player::getUniqueId).toList();
+        if (!onlineUuids.isEmpty()) {
+            Bukkit.getScheduler().runTaskAsynchronously(this,
+                    () -> onlineUuids.forEach(uuid -> KitManager.get().loadPlayerDataFromDB(uuid)));
+        }
     }
 
     private void attemptDatabaseConnection(boolean disableOnFail) {

@@ -64,8 +64,14 @@ public final class GuiMenuFactory {
         return ChestMenu.builder(6).title(title("gui.inspect-ec-title", "player", playerName, "slot", String.valueOf(slot))).build();
     }
 
-    public static Menu createMainMenu(Player player) {
-        return ChestMenu.builder(6).title(title("gui.main-menu-title", "player", player.getName())).build();
+    public static Menu createMainMenu(Player player, int page, int pages) {
+        if (pages <= 1) {
+            return ChestMenu.builder(6).title(title("gui.main-menu-title", "player", player.getName())).build();
+        }
+        return ChestMenu.builder(6).title(title("gui.main-menu-title-paged",
+                "player", player.getName(),
+                "page", String.valueOf(page + 1),
+                "pages", String.valueOf(pages))).build();
     }
 
     public static Menu createKitRoomMenu() {

@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.commands.shortcuts;
 
 import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -55,6 +56,14 @@ public abstract class AbstractShortSlotCommand implements CommandExecutor {
             return true;
         }
 
+        if (slot > KitSlots.maxKits()) {
+            // Statically registered commands like /k9 stay available even when
+            // max-kits is lowered below 9, so give a range error, not a label error.
+            Lang.get().send(player, "error.invalid-slot-range",
+                    "min", String.valueOf(KitSlots.MIN_LIMIT), "max", String.valueOf(KitSlots.maxKits()));
+            return true;
+        }
+
         executeForSlot(player, slot);
         return true;
     }
@@ -62,24 +71,19 @@ public abstract class AbstractShortSlotCommand implements CommandExecutor {
     protected abstract void executeForSlot(Player player, int slot);
 
     private Integer parseSlot(String label) {
-        String normalizedLabel = label.toLowerCase(Locale.ROOT);
-        Integer fromShort = parseSingleDigitSuffix(normalizedLabel, shortPrefix);
+        // Strip the plugin namespace so /perplayerkit:k10 works
+        String normalizedLabel = label.substring(label.indexOf(':') + 1).toLowerCase(Locale.ROOT);
+        Integer fromShort = parseSlotSuffix(normalizedLabel, shortPrefix);
         if (fromShort != null) {
             return fromShort;
         }
-        return parseSingleDigitSuffix(normalizedLabel, longPrefix);
+        return parseSlotSuffix(normalizedLabel, longPrefix);
     }
 
-    private Integer parseSingleDigitSuffix(String label, String prefix) {
-        if (!label.startsWith(prefix) || label.length() != prefix.length() + 1) {
+    private Integer parseSlotSuffix(String label, String prefix) {
+        if (!label.startsWith(prefix)) {
             return null;
         }
-
-        char slot = label.charAt(prefix.length());
-        if (slot < '1' || slot > '9') {
-            return null;
-        }
-
-        return slot - '0';
+        return KitSlots.parseSlotSuffix(label.substring(prefix.length()));
     }
 }

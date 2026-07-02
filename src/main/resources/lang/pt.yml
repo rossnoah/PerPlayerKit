@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "Kits de {player}"
+  main-menu-title-paged: "Kits de {player} ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"
   public-kit-editor-title: "Kit Público: {id}"
   enderchest-editor-title: "Baú do End: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>LIMPAR KIT</b></red>"
   clear-ec-button: "<red><b>LIMPAR ENDER CHEST</b></red>"
   back-button: "<red><b>VOLTAR</b></red>"
+  previous-page-button: "<yellow><b>PÁGINA ANTERIOR</b></yellow>"
+  next-page-button: "<yellow><b>PRÓXIMA PÁGINA</b></yellow>"
   close-button: "<red><b>FECHAR</b></red>"
   load-kit-button: "<green><b>CARREGAR KIT</b></green>"
   refill-button: "<dark_aqua><b>REABASTECER</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Clique para editar</gray>"
   lore-click-create: "<gray>● Clique para criar</gray>"
+  lore-page-indicator: "<gray>● Página {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift clique para limpar</gray>"
   lore-shift-delete-kit: "<gray>● Shift clique para excluir kit</gray>"
   lore-shift-delete-ec: "<gray>● Shift clique para excluir baú do End</gray>"

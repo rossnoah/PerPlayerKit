@@ -67,6 +67,13 @@ interface:
   glass-material: BLUE_STAINED_GLASS_PANE
   main-color: "<blue>" # Plugin main color (MiniMessage format: <blue>, <red>, <green>, etc.)
 
+# Number of kit slots each player has. Applies to both kits and enderchest kits.
+# Valid range: 1-99 (values outside are clamped). Slots above 9 appear on extra
+# pages in the /kit menu, and /k10../k<max> and /ec10../ec<max> commands are
+# registered automatically. Changing this requires a server restart. If multiple
+# servers share one database, use the same value everywhere.
+max-kits: 9
+
 kitroom:
   items:
     1:

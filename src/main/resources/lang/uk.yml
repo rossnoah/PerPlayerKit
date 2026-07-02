@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "Набори {player}"
+  main-menu-title-paged: "Набори {player} ({page}/{pages})"
   kit-editor-title: "Набір: {slot}"
   public-kit-editor-title: "Публічний набір: {id}"
   enderchest-editor-title: "Ендер-скриня: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>ОЧИСТИТИ НАБІР</b></red>"
   clear-ec-button: "<red><b>ОЧИСТИТИ ЕНДЕР-СКРИНЮ</b></red>"
   back-button: "<red><b>НАЗАД</b></red>"
+  previous-page-button: "<yellow><b>ПОПЕРЕДНЯ СТОРІНКА</b></yellow>"
+  next-page-button: "<yellow><b>НАСТУПНА СТОРІНКА</b></yellow>"
   close-button: "<red><b>ЗАКРИТИ</b></red>"
   load-kit-button: "<green><b>ЗАВАНТАЖИТИ НАБІР</b></green>"
   refill-button: "<dark_aqua><b>ПОПОВНИТИ</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Натисніть для редагування</gray>"
   lore-click-create: "<gray>● Натисніть для створення</gray>"
+  lore-page-indicator: "<gray>● Сторінка {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift клік для очищення</gray>"
   lore-shift-delete-kit: "<gray>● Shift клік для видалення набору</gray>"
   lore-shift-delete-ec: "<gray>● Shift клік для видалення ендер-скрині</gray>"

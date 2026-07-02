@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "{player}s Kits"
+  main-menu-title-paged: "{player}s Kits ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"
   public-kit-editor-title: "Offentligt Kit: {id}"
   enderchest-editor-title: "Enderkiste: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>RYD KIT</b></red>"
   clear-ec-button: "<red><b>RYD ENDERKISTE</b></red>"
   back-button: "<red><b>TILBAGE</b></red>"
+  previous-page-button: "<yellow><b>FORRIGE SIDE</b></yellow>"
+  next-page-button: "<yellow><b>NÆSTE SIDE</b></yellow>"
   close-button: "<red><b>LUK</b></red>"
   load-kit-button: "<green><b>INDLÆS KIT</b></green>"
   refill-button: "<dark_aqua><b>GENOPFYLD</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Klik for at redigere</gray>"
   lore-click-create: "<gray>● Klik for at oprette</gray>"
+  lore-page-indicator: "<gray>● Side {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift-klik for at rydde</gray>"
   lore-shift-delete-kit: "<gray>● Shift-klik for at slette kit</gray>"
   lore-shift-delete-ec: "<gray>● Shift-klik for at slette enderkiste</gray>"

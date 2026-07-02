@@ -92,7 +92,7 @@ Share this with your players:
 ### Basic Commands:
 
 - **`/kit`** or **`/k`** - Open the main kit menu
-- **`/k1`** through **`/k9`** - Quickly load kit 1-9
+- **`/k1`** through **`/k9`** - Quickly load kit 1-9 (more slots available if the server raises `max-kits` in the config, up to `/k99`)
 
 ### Sharing Kits:
 

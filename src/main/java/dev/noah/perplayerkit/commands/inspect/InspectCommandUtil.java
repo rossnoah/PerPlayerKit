@@ -38,8 +38,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 public class InspectCommandUtil {
-    public static final int MIN_SLOT = 1;
-    public static final int MAX_SLOT = 9;
     public static final MiniMessage mm = MiniMessage.miniMessage();
 
     private InspectCommandUtil() {

@@ -178,6 +178,7 @@ about:
 
 gui:
   main-menu-title: "Pelaajan {player} Kitit"
+  main-menu-title-paged: "Pelaajan {player} Kitit ({page}/{pages})"
   kit-editor-title: "Kitti: {slot}"
   public-kit-editor-title: "Julkinen Kitti: {id}"
   enderchest-editor-title: "Ender-arkku: {slot}"
@@ -199,6 +200,8 @@ gui:
   clear-kit-button: "<red><b>TYHJENNÄ KITTI</b></red>"
   clear-ec-button: "<red><b>TYHJENNÄ ENDER-ARKKU</b></red>"
   back-button: "<red><b>TAKAISIN</b></red>"
+  previous-page-button: "<yellow><b>EDELLINEN SIVU</b></yellow>"
+  next-page-button: "<yellow><b>SEURAAVA SIVU</b></yellow>"
   close-button: "<red><b>SULJE</b></red>"
   load-kit-button: "<green><b>LATAA KITTI</b></green>"
   refill-button: "<dark_aqua><b>TÄYTÄ UUDELLEEN</b></dark_aqua>"
@@ -215,6 +218,7 @@ gui:
 
   lore-click-edit: "<gray>● Klikkaa muokataksesi</gray>"
   lore-click-create: "<gray>● Klikkaa luodaksesi</gray>"
+  lore-page-indicator: "<gray>● Sivu {page}/{pages}</gray>"
   lore-shift-clear: "<gray>● Shift-klikkaus tyhjentääksesi</gray>"
   lore-shift-delete-kit: "<gray>● Shift-klikkaus poistaaksesi kitin</gray>"
   lore-shift-delete-ec: "<gray>● Shift-klikkaus poistaaksesi ender-arkun</gray>"

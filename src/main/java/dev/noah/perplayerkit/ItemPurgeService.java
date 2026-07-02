@@ -19,17 +19,18 @@
 package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.storage.StorageManager;
-import dev.noah.perplayerkit.util.IDUtil;
+import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Deletes a specific item type from stored kits and ender chests.
@@ -42,9 +43,6 @@ import java.util.regex.Pattern;
  * are deleted, and cached copies for online players are refreshed.
  */
 public class ItemPurgeService {
-
-    public static final int MIN_SLOT = 1;
-    public static final int MAX_SLOT = 9;
 
     private static final Pattern UUID_PATTERN =
             Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
@@ -74,13 +72,12 @@ public class ItemPurgeService {
      * Purges the material from all kit and ender chest slots of the given players.
      */
     public PurgeResult purgePlayers(Material target, Collection<UUID> players, Consumer<String> progress) {
-        List<String> ids = new ArrayList<>();
-        for (UUID uuid : players) {
-            for (int slot = MIN_SLOT; slot <= MAX_SLOT; slot++) {
-                ids.add(IDUtil.getPlayerKitId(uuid, slot));
-                ids.add(IDUtil.getECId(uuid, slot));
-            }
-        }
+        Set<String> uuids = players.stream().map(UUID::toString).collect(Collectors.toSet());
+        List<String> ids = storage.getAllKitIDs().stream()
+                .filter(ItemPurgeService::isPlayerDataId)
+                .filter(id -> uuids.contains(id.substring(0, UUID_LENGTH)))
+                .sorted()
+                .toList();
         return purgeEntries(ids, target, progress);
     }
 
@@ -152,9 +149,10 @@ public class ItemPurgeService {
         if (suffix.startsWith("ec")) {
             suffix = suffix.substring(2);
         }
-        return suffix.length() == 1
-                && suffix.charAt(0) >= '0' + MIN_SLOT
-                && suffix.charAt(0) <= '0' + MAX_SLOT;
+        // Bounded by the absolute KitSlots.MAX_LIMIT, deliberately not the
+        // configured max-kits: the database may hold kits above a lowered
+        // limit and purging must still reach them.
+        return KitSlots.parseSlotSuffix(suffix) != null;
     }
 
     /**

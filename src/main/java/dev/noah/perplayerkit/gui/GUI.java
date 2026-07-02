@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.gui;
 
+import com.google.common.primitives.Ints;
 import dev.noah.perplayerkit.ItemFilter;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.KitRoomDataManager;
@@ -50,6 +51,9 @@ public class GUI {
     private final boolean filterItemsOnImport;
     private static final Set<UUID> kitDeletionFlag = new HashSet<>();
     private static final Map<UUID, EditorContext> editorContexts = new HashMap<>();
+    // Last main-menu page each player viewed, so back buttons from submenus
+    // (kit room, public kits) return to it instead of resetting to page 1.
+    private static final Map<UUID, Integer> lastMainMenuPage = new HashMap<>();
 
     public enum EditorType {
         KIT,
@@ -64,6 +68,10 @@ public class GUI {
 
     public static EditorContext getAndRemoveEditorContext(UUID viewer) {
         return editorContexts.remove(viewer);
+    }
+
+    public static void forgetMainMenuPage(UUID player) {
+        lastMainMenuPage.remove(player);
     }
 
     private static void setEditorContext(Player viewer, EditorContext context) {
@@ -111,7 +119,7 @@ public class GUI {
         menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.CHEST, 1, lang("gui.import-button"), lang("gui.lore-import-inventory")));
         menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, lang("gui.clear-kit-button"), lang("gui.lore-shift-clear")));
         menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
-        addMainButton(menu.getSlot(BACK_SLOT));
+        addMainButton(menu.getSlot(BACK_SLOT), KitSlots.pageOf(slot));
         addClear(menu.getSlot(CLEAR_SLOT));
         addImport(menu.getSlot(IMPORT_SLOT));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
@@ -161,7 +169,7 @@ public class GUI {
         menu.getSlot(IMPORT_SLOT).setItem(createItem(Material.ENDER_CHEST, 1, lang("gui.import-button"), lang("gui.lore-import-ec")));
         menu.getSlot(CLEAR_SLOT).setItem(createItem(Material.BARRIER, 1, lang("gui.clear-kit-button"), lang("gui.lore-shift-clear")));
         menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
-        addMainButton(menu.getSlot(BACK_SLOT));
+        addMainButton(menu.getSlot(BACK_SLOT), KitSlots.pageOf(slot));
         addClear(menu.getSlot(CLEAR_SLOT), EC_CONTENT_START, EC_CONTENT_END);
         addImportEC(menu.getSlot(IMPORT_SLOT));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
@@ -241,38 +249,53 @@ public class GUI {
     }
 
     public void OpenMainMenu(Player p) {
-        Menu menu = GuiMenuFactory.createMainMenu(p);
+        OpenMainMenu(p, 0);
+    }
+
+    public void OpenMainMenu(Player p, int page) {
+        int maxKits = KitSlots.maxKits();
+        int pages = KitSlots.pageCount();
+        page = Ints.constrainToRange(page, 0, pages - 1);
+        int base = page * KitSlots.SLOTS_PER_PAGE;
+        if (pages > 1) {
+            lastMainMenuPage.put(p.getUniqueId(), page);
+        }
+
+        Menu menu = GuiMenuFactory.createMainMenu(p, page, pages);
         for (int i = 0; i < MENU_SIZE; i++) {
             menu.getSlot(i).setItem(createGlassPane());
         }
-        for (int i = 9; i < 18; i++) {
-            int slotNum = i - 8;
-            menu.getSlot(i).setItem(createItem(Material.CHEST, 1,
+        // Three rows per kit slot: load/edit chest (row 1), enderchest (row 2),
+        // status book (row 3). Columns past maxKits stay glass.
+        for (int col = 0; col < KitSlots.SLOTS_PER_PAGE; col++) {
+            int slotNum = base + col + 1;
+            if (slotNum > maxKits) {
+                break;
+            }
+
+            menu.getSlot(9 + col).setItem(createItem(Material.CHEST, 1,
                     lang("gui.kit-slot-name", "slot", String.valueOf(slotNum)),
                     lang("gui.lore-left-load"), lang("gui.lore-right-edit")));
-            addEditLoad(menu.getSlot(i), slotNum);
-        }
-        for (int i = 18; i < 27; i++) {
-            int slotNum = i - 17;
+            addEditLoad(menu.getSlot(9 + col), slotNum);
+
             if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slotNum) != null) {
-                menu.getSlot(i).setItem(createItem(Material.ENDER_CHEST, 1,
+                menu.getSlot(18 + col).setItem(createItem(Material.ENDER_CHEST, 1,
                         lang("gui.enderchest-slot-name", "slot", String.valueOf(slotNum)),
                         lang("gui.lore-left-load"), lang("gui.lore-right-edit")));
-                addEditLoadEC(menu.getSlot(i), slotNum);
+                addEditLoadEC(menu.getSlot(18 + col), slotNum);
             } else {
-                menu.getSlot(i).setItem(createItem(Material.ENDER_EYE, 1,
+                menu.getSlot(18 + col).setItem(createItem(Material.ENDER_EYE, 1,
                         lang("gui.enderchest-slot-name", "slot", String.valueOf(slotNum)),
                         lang("gui.lore-click-create")));
-                addEditEC(menu.getSlot(i), slotNum);
+                addEditEC(menu.getSlot(18 + col), slotNum);
             }
-        }
-        for (int i = 27; i < 36; i++) {
-            if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + (i - 26)) != null) {
-                menu.getSlot(i).setItem(createItem(Material.KNOWLEDGE_BOOK, 1, lang("gui.kit-exists"), lang("gui.lore-click-edit")));
+
+            if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slotNum) != null) {
+                menu.getSlot(27 + col).setItem(createItem(Material.KNOWLEDGE_BOOK, 1, lang("gui.kit-exists"), lang("gui.lore-click-edit")));
             } else {
-                menu.getSlot(i).setItem(createItem(Material.BOOK, 1, lang("gui.kit-not-found"), lang("gui.lore-click-create")));
+                menu.getSlot(27 + col).setItem(createItem(Material.BOOK, 1, lang("gui.kit-not-found"), lang("gui.lore-click-create")));
             }
-            addEdit(menu.getSlot(i), i - 26);
+            addEdit(menu.getSlot(27 + col), slotNum);
         }
 
         for (int i = 37; i < 44; i++) {
@@ -290,6 +313,13 @@ public class GUI {
         addKitRoom(menu.getSlot(37));
         addPublicKitMenu(menu.getSlot(38));
         addClearButton(menu.getSlot(41));
+
+        if (page > 0) {
+            addPageArrow(menu, MAIN_PREV_PAGE_SLOT, "gui.previous-page-button", page - 1, pages);
+        }
+        if (page < pages - 1) {
+            addPageArrow(menu, MAIN_NEXT_PAGE_SLOT, "gui.next-page-button", page + 1, pages);
+        }
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
@@ -500,8 +530,21 @@ public class GUI {
     public void addMainButton(Slot slot) {
         slot.setClickHandler((player, info) -> {
             SoundManager.playClick(player);
-            OpenMainMenu(player);
+            OpenMainMenu(player, lastMainMenuPage.getOrDefault(player.getUniqueId(), 0));
         });
+    }
+
+    public void addMainButton(Slot slot, int page) {
+        slot.setClickHandler((player, info) -> {
+            SoundManager.playClick(player);
+            OpenMainMenu(player, page);
+        });
+    }
+
+    private void addPageArrow(Menu menu, int guiSlot, String nameKey, int targetPage, int pages) {
+        menu.getSlot(guiSlot).setItem(createItem(Material.ARROW, 1, lang(nameKey),
+                lang("gui.lore-page-indicator", "page", String.valueOf(targetPage + 1), "pages", String.valueOf(pages))));
+        addMainButton(menu.getSlot(guiSlot), targetPage);
     }
 
     public void addKitRoom(Slot slot) {
