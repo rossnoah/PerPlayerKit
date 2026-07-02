@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Не вдалося оновити ендер-скриню гравця {player}!"
   invalid-command-label: "<red>Невірна мітка команди."
   prefix-tag: "<red>Помилка:</red> "
+  purge-invalid-item: "<red>Невідомий тип предмета: {item}"
+  purge-in-progress: "<red>Очищення предметів вже виконується, зачекайте його завершення"
+  purge-player-not-found: "<red>Не вдалося знайти гравця {player}, очищення скасовано"
 
 success:
   kit-saved: "<green>Набір {slot} збережено!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} прийняв ваш запит!"
   transfer-received: "<green>Передано {kits} наборів і {ecs} ендер-скринь від гравця {player}!"
   transfer-sent: "<green>Ваші набори та ендер-скрині передано гравцю {player}!"
+  purge-completed: "<green>Очищення завершено! Видалено {items} {item} з {modified} наборів та ендер-скринь."
 
 info:
   custom-version-available: "<gray>Ви можете зберегти свою версію цього набору, імпортувавши його до редактора"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Не забудьте оновити storage.type у config.yml на '{type}' та перезапустити сервер."
   migration-failed-count: "<yellow>Не вдалося: {count} записів"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Це видалить {item} з усіх збережених наборів та ендер-скринь усіх гравців. Виконайте <white>/purgeitem {item} all confirm</white>, щоб продовжити."
+  purge-starting-all: "<yellow>Очищення {item} з усіх збережених наборів та ендер-скринь..."
+  purge-starting-players: "<yellow>Очищення {item} зі збережених наборів та ендер-скринь {count} гравця(-ів)..."
+  purge-summary: "<gray>Проскановано {scanned} записів; {deleted} спорожнілих записів видалено."
+  purge-failed-entries: "<yellow>Не вдалося обробити {count} записів, перевірте консоль для деталей."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit — це плагін, що дозволяє гравцям мати власні набори."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Використання: /perplayerkit migrate \\<джерело> \\<призначення>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Використання: /{command} \\<гравець|uuid> \\<слот></red>"
+  purgeitem-usage: "<red>Використання: /purgeitem \\<предмет> \\<all confirm|гравець ...>"
 
 update:
   new-version-available: "Доступна нова версія PerPlayerKit! Ви використовуєте версію {current}, а остання версія — {latest}"

@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Nu s-a putut actualiza cufărul Ender pentru jucătorul {player}!"
   invalid-command-label: "<red>Etichetă de comandă invalidă."
   prefix-tag: "<red>Eroare:</red> "
+  purge-invalid-item: "<red>Tip de obiect necunoscut: {item}"
+  purge-in-progress: "<red>O curățare de obiecte este deja în curs, așteaptă să se termine"
+  purge-player-not-found: "<red>Nu s-a putut găsi jucătorul {player}, curățarea a fost anulată"
 
 success:
   kit-saved: "<green>Kitul {slot} a fost salvat!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} ți-a acceptat cererea!"
   transfer-received: "<green>S-au transferat {kits} kituri și {ecs} cufere Ender de la {player}!"
   transfer-sent: "<green>Kiturile și cuferele tale Ender au fost transferate lui {player}!"
+  purge-completed: "<green>Curățare finalizată! S-au eliminat {items} {item} din {modified} kituri și cufere Ender."
 
 info:
   custom-version-available: "<gray>Poți salva o versiune personalizată a acestui kit importând-o în editor"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Nu uita să actualizezi config.yml storage.type la '{type}' și să repornești serverul."
   migration-failed-count: "<yellow>Eșuate: {count} înregistrări"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Aceasta va elimina {item} din toate kiturile și cuferele Ender salvate ale tuturor jucătorilor. Rulează <white>/purgeitem {item} all confirm</white> pentru a continua."
+  purge-starting-all: "<yellow>Se curăță {item} din toate kiturile și cuferele Ender salvate..."
+  purge-starting-players: "<yellow>Se curăță {item} din kiturile și cuferele Ender salvate a {count} jucător(i)..."
+  purge-summary: "<gray>S-au scanat {scanned} intrări; {deleted} intrări golite au fost șterse."
+  purge-failed-entries: "<yellow>Nu s-au putut procesa {count} intrări, verifică consola pentru detalii."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit este un plugin care permite jucătorilor să aibă propriile kituri."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Utilizare: /perplayerkit migrate \\<sursă> \\<destinație>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Utilizare: /{command} \\<jucător|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Utilizare: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "Este disponibilă o nouă versiune de PerPlayerKit! Folosești versiunea {current}, iar cea mai recentă este {latest}"

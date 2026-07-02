@@ -72,6 +72,20 @@ public class KitManager {
         return publicKitList;
     }
 
+    /**
+     * Refreshes a cached kit after its stored data was rewritten externally
+     * (e.g. by an admin item purge). Passing null removes the cached entry;
+     * a non-null kit only replaces an existing entry, so kits of offline
+     * players are not pulled into the cache.
+     */
+    public void updateCachedKit(String id, ItemStack[] kit) {
+        if (kit == null) {
+            kitByKitIDMap.remove(id);
+        } else {
+            kitByKitIDMap.computeIfPresent(id, (key, oldKit) -> kit);
+        }
+    }
+
     public int getLastKitLoaded(UUID uuid) {
         if (lastKitUsedByPlayer.containsKey(uuid)) {
             return lastKitUsedByPlayer.get(uuid);

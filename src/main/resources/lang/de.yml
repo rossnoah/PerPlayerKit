@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Aktualisierung der Endertruhe für Spieler {player} fehlgeschlagen!"
   invalid-command-label: "<red>Ungültiges Befehls-Label."
   prefix-tag: "<red>Fehler:</red> "
+  purge-invalid-item: "<red>Unbekannter Gegenstandstyp: {item}"
+  purge-in-progress: "<red>Es läuft bereits eine Gegenstandsbereinigung, warte bis sie abgeschlossen ist"
+  purge-player-not-found: "<red>Spieler {player} wurde nicht gefunden, Bereinigung abgebrochen"
 
 success:
   kit-saved: "<green>Kit {slot} gespeichert!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} hat deine Anfrage angenommen!"
   transfer-received: "<green>{kits} Kits und {ecs} Endertruhen von {player} übertragen!"
   transfer-sent: "<green>Deine Kits und Endertruhen wurden an {player} übertragen!"
+  purge-completed: "<green>Bereinigung abgeschlossen! {items} {item} wurden aus {modified} Kits und Endertruhen entfernt."
 
 info:
   custom-version-available: "<gray>Du kannst eine eigene Version dieses Kits speichern, indem du es in den Kit-Editor importierst"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Denke daran, deine config.yml storage.type auf '{type}' zu aktualisieren und den Server neu zu starten."
   migration-failed-count: "<yellow>Fehlgeschlagen: {count} Einträge"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Dies entfernt {item} aus allen gespeicherten Kits und Endertruhen aller Spieler. Führe <white>/purgeitem {item} all confirm</white> aus, um fortzufahren."
+  purge-starting-all: "<yellow>Entferne {item} aus allen gespeicherten Kits und Endertruhen..."
+  purge-starting-players: "<yellow>Entferne {item} aus den gespeicherten Kits und Endertruhen von {count} Spieler(n)..."
+  purge-summary: "<gray>{scanned} Einträge durchsucht; {deleted} geleerte Einträge wurden gelöscht."
+  purge-failed-entries: "<yellow>{count} Einträge konnten nicht verarbeitet werden, Details in der Konsole."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit ist ein Plugin, das Spielern erlaubt, eigene Kits zu haben."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Verwendung: /perplayerkit migrate \\<quelle> \\<ziel>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Verwendung: /{command} \\<spieler|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Verwendung: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "Eine neue Version von PerPlayerKit ist verfügbar! Du verwendest Version {current}, die neueste Version ist {latest}"

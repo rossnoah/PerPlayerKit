@@ -45,6 +45,7 @@ The following table outlines each command, its usage, aliases, and permissions r
 | `ec9`               | `enderchest9`            | `perplayerkit.enderchest`      |
 | `enderchest`        | `ec`                     | `perplayerkit.viewenderchest`  |
 | `savepublickit`     | `N/A`                    | `perplayerkit.admin`           |
+| `purgeitem`         | `purgeitems`             | `perplayerkit.admin`           |
 | `regear`            | `rg`                     | `perplayerkit.regear`          |
 | `heal`              | `N/A`                    | `perplayerkit.heal`            |
 | `repair`            | `N/A`                    | `perplayerkit.repair`          |
@@ -62,6 +63,22 @@ The following table outlines each command, its usage, aliases, and permissions r
 ### Transferring kits between accounts
 
 `/transferkits <player>` sends the target player a request to receive **all** of your kits and ender chests. If they accept, a snapshot of every kit and ender chest slot you have is saved into their corresponding slots, overwriting whatever they had in those slots (slots you don't have are left untouched). Your own kits are not modified. This is useful when moving to a new account: log in with both accounts, run `/transferkits <new account>` from the old one, and accept on the new one.
+
+## Purging Items from Stored Kits
+
+`/purgeitem <item> <all confirm|player ...>` (permission: `perplayerkit.admin`, also usable from the console) deletes every occurrence of a specific item type from stored kits and ender chests:
+
+- `/purgeitem TNT PlayerOne PlayerTwo` — removes the item from all kit and ender chest slots of the listed players. Players can be given by name or UUID and do not need to be online. If any name cannot be resolved, the purge is cancelled so it never silently skips someone.
+- `/purgeitem TNT all confirm` — removes the item from **every** player kit and ender chest entry in the database. Because this touches all stored data, the `confirm` keyword is required; running the command without it only prints a warning.
+
+Details worth knowing:
+
+- **Nested containers are searched too.** The item is also removed from inside shulker boxes of all colors, any other container block stored as an item (chests, barrels, dispensers, etc.), and bundles — including containers nested inside bundles.
+- **Works with every storage backend.** Kits are stored as serialized blobs in all backends (SQLite, MySQL, PostgreSQL, Redis, YAML), so the purge rewrites each affected entry in place and behaves identically everywhere.
+- **Empty entries are deleted.** If removing the item leaves a kit or ender chest completely empty, the entry is deleted instead of being kept as an empty kit.
+- **Online players are covered.** Cached kits of online players are refreshed, so the next `/k1`-style load uses the purged version. The purge does not modify anyone's *live* inventory — only stored kits and ender chests.
+- **Public kits and the kit room are not touched.** Those are admin-managed; edit them with `/savepublickit` and `/kitroom` if needed.
+- The purge runs asynchronously; progress is logged to the console and a summary (items removed, entries modified/deleted/scanned) is sent when it finishes. Only one purge can run at a time.
 
 ## Regear Command Details
 

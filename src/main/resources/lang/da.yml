@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Kunne ikke opdatere enderkiste for spiller {player}!"
   invalid-command-label: "<red>Ugyldig kommandoetiket."
   prefix-tag: "<red>Fejl:</red> "
+  purge-invalid-item: "<red>Ukendt genstandstype: {item}"
+  purge-in-progress: "<red>En genstandsoprydning kører allerede, vent til den er færdig"
+  purge-player-not-found: "<red>Kunne ikke finde spilleren {player}, oprydningen blev annulleret"
 
 success:
   kit-saved: "<green>Kit {slot} gemt!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} accepterede din anmodning!"
   transfer-received: "<green>Overførte {kits} kits og {ecs} enderkister fra {player}!"
   transfer-sent: "<green>Dine kits og enderkister blev overført til {player}!"
+  purge-completed: "<green>Oprydning fuldført! Fjernede {items} {item} fra {modified} kits og enderkister."
 
 info:
   custom-version-available: "<gray>Du kan gemme en brugerdefineret version af dette kit ved at importere til kit-editoren"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Husk at opdatere din config.yml storage.type til '{type}' og genstart serveren."
   migration-failed-count: "<yellow>Mislykkedes: {count} indtastninger"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Dette fjerner {item} fra alle gemte kits og enderkister for alle spillere. Kør <white>/purgeitem {item} all confirm</white> for at fortsætte."
+  purge-starting-all: "<yellow>Fjerner {item} fra alle gemte kits og enderkister..."
+  purge-starting-players: "<yellow>Fjerner {item} fra gemte kits og enderkister for {count} spiller(e)..."
+  purge-summary: "<gray>Skannede {scanned} poster; {deleted} tømte poster blev slettet."
+  purge-failed-entries: "<yellow>{count} poster kunne ikke behandles, se konsollen for detaljer."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit er et plugin, der lader spillere have deres egne kits."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Brug: /perplayerkit migrate \\<kilde> \\<destination>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Brug: /{command} \\<spiller|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Brug: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "En ny version af PerPlayerKit er tilgængelig! Du kører version {current} og den nyeste version er {latest}"

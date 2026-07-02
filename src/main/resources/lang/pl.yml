@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Nie udało się zaktualizować skrzyni Endera gracza {player}!"
   invalid-command-label: "<red>Nieprawidłowa etykieta komendy."
   prefix-tag: "<red>Błąd:</red> "
+  purge-invalid-item: "<red>Nieznany typ przedmiotu: {item}"
+  purge-in-progress: "<red>Czyszczenie przedmiotów już trwa, poczekaj aż się zakończy"
+  purge-player-not-found: "<red>Nie można znaleźć gracza {player}, czyszczenie anulowano"
 
 success:
   kit-saved: "<green>Zestaw {slot} zapisany!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} zaakceptował twoją prośbę!"
   transfer-received: "<green>Przekazano {kits} zestawów i {ecs} skrzyń Endera od gracza {player}!"
   transfer-sent: "<green>Twoje zestawy i skrzynie Endera zostały przekazane graczowi {player}!"
+  purge-completed: "<green>Czyszczenie zakończone! Usunięto {items} {item} z {modified} zestawów i skrzyń Endera."
 
 info:
   custom-version-available: "<gray>Możesz zapisać własną wersję tego zestawu, importując ją do edytora"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Pamiętaj zaktualizować config.yml storage.type na '{type}' i zrestartować serwer."
   migration-failed-count: "<yellow>Nieudane: {count} wpisów"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>To usunie {item} ze wszystkich zapisanych zestawów i skrzyń Endera wszystkich graczy. Wykonaj <white>/purgeitem {item} all confirm</white>, aby kontynuować."
+  purge-starting-all: "<yellow>Czyszczenie {item} ze wszystkich zapisanych zestawów i skrzyń Endera..."
+  purge-starting-players: "<yellow>Czyszczenie {item} z zapisanych zestawów i skrzyń Endera {count} graczy..."
+  purge-summary: "<gray>Przeskanowano {scanned} wpisów; usunięto {deleted} opróżnionych wpisów."
+  purge-failed-entries: "<yellow>Nie udało się przetworzyć {count} wpisów, sprawdź konsolę, aby uzyskać szczegóły."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit to plugin pozwalający graczom mieć własne zestawy."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Użycie: /perplayerkit migrate \\<źródło> \\<cel>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Użycie: /{command} \\<gracz|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Użycie: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "Dostępna jest nowa wersja PerPlayerKit! Używasz wersji {current}, a najnowsza to {latest}"

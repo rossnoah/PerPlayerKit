@@ -193,6 +193,12 @@ commands:
     usage: /<command> <id>
     permission: perplayerkit.admin
 
+  purgeitem:
+    usage: /<command> <item> <all confirm|player ...>
+    permission: perplayerkit.admin
+    aliases:
+      - purgeitems
+
   regear:
     usage: /<command>
     permission: perplayerkit.regear

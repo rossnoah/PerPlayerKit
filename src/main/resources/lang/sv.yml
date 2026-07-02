@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Misslyckades att uppdatera enderkista för spelare {player}!"
   invalid-command-label: "<red>Ogiltig kommandoetikett."
   prefix-tag: "<red>Fel:</red> "
+  purge-invalid-item: "<red>Okänd föremålstyp: {item}"
+  purge-in-progress: "<red>En föremålsrensning pågår redan, vänta tills den är klar"
+  purge-player-not-found: "<red>Kunde inte hitta spelaren {player}, rensningen avbröts"
 
 success:
   kit-saved: "<green>Kit {slot} sparat!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} accepterade din förfrågan!"
   transfer-received: "<green>Överförde {kits} kit och {ecs} enderkistor från {player}!"
   transfer-sent: "<green>Dina kit och enderkistor överfördes till {player}!"
+  purge-completed: "<green>Rensning klar! Tog bort {items} {item} från {modified} kit och enderkistor."
 
 info:
   custom-version-available: "<gray>Du kan spara en anpassad version av detta kit genom att importera till kit-redigeraren"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Kom ihåg att uppdatera din config.yml storage.type till '{type}' och starta om servern."
   migration-failed-count: "<yellow>Misslyckades: {count} poster"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Detta tar bort {item} från alla sparade kit och enderkistor för alla spelare. Kör <white>/purgeitem {item} all confirm</white> för att fortsätta."
+  purge-starting-all: "<yellow>Rensar {item} från alla sparade kit och enderkistor..."
+  purge-starting-players: "<yellow>Rensar {item} från sparade kit och enderkistor för {count} spelare..."
+  purge-summary: "<gray>Skannade {scanned} poster; {deleted} tömda poster togs bort."
+  purge-failed-entries: "<yellow>{count} poster kunde inte bearbetas, se konsolen för detaljer."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit är ett plugin som låter spelare ha sina egna kit."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Användning: /perplayerkit migrate \\<källa> \\<destination>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Användning: /{command} \\<spelare|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Användning: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "En ny version av PerPlayerKit är tillgänglig! Du kör version {current} och den senaste versionen är {latest}"

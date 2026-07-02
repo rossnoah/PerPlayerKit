@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Pelaajan {player} ender-arkun päivitys epäonnistui!"
   invalid-command-label: "<red>Virheellinen komentolappu."
   prefix-tag: "<red>Virhe:</red> "
+  purge-invalid-item: "<red>Tuntematon esinetyyppi: {item}"
+  purge-in-progress: "<red>Esineiden poisto on jo käynnissä, odota sen valmistumista"
+  purge-player-not-found: "<red>Pelaajaa {player} ei löytynyt, poisto peruutettiin"
 
 success:
   kit-saved: "<green>Kitti {slot} tallennettu!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} hyväksyi pyyntösi!"
   transfer-received: "<green>Siirretty {kits} kittiä ja {ecs} ender-arkkua pelaajalta {player}!"
   transfer-sent: "<green>Kittisi ja ender-arkkusi siirrettiin pelaajalle {player}!"
+  purge-completed: "<green>Poisto valmis! Poistettiin {items} {item} {modified} kitistä ja ender-arkusta."
 
 info:
   custom-version-available: "<gray>Voit tallentaa oman version tästä kitistä tuomalla sen kittieditoriin"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Muista päivittää config.yml storage.type arvoon '{type}' ja käynnistää palvelin uudelleen."
   migration-failed-count: "<yellow>Epäonnistui: {count} merkintää"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Tämä poistaa esineen {item} kaikkien pelaajien tallennetuista kiteistä ja ender-arkuista. Suorita <white>/purgeitem {item} all confirm</white> jatkaaksesi."
+  purge-starting-all: "<yellow>Poistetaan {item} kaikista tallennetuista kiteistä ja ender-arkuista..."
+  purge-starting-players: "<yellow>Poistetaan {item} {count} pelaajan tallennetuista kiteistä ja ender-arkuista..."
+  purge-summary: "<gray>Skannattiin {scanned} merkintää; {deleted} tyhjentynyttä merkintää poistettiin."
+  purge-failed-entries: "<yellow>{count} merkintää ei voitu käsitellä, katso lisätiedot konsolista."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit on lisäosa, joka antaa pelaajille omat kitit."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Käyttö: /perplayerkit migrate \\<lähde> \\<kohde>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Käyttö: /{command} \\<pelaaja|uuid> \\<paikka></red>"
+  purgeitem-usage: "<red>Käyttö: /purgeitem \\<esine> \\<all confirm|pelaaja ...>"
 
 update:
   new-version-available: "PerPlayerKitistä on saatavilla uusi versio! Käytät versiota {current} ja uusin versio on {latest}"

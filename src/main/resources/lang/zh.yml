@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>更新玩家 {player} 的末影箱失败!"
   invalid-command-label: "<red>无效的命令标签。"
   prefix-tag: "<red>错误:</red> "
+  purge-invalid-item: "<red>未知的物品类型: {item}"
+  purge-in-progress: "<red>已有物品清除任务正在运行，请等待其完成"
+  purge-player-not-found: "<red>找不到玩家 {player}，清除已取消"
 
 success:
   kit-saved: "<green>套件 {slot} 已保存!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} 接受了你的请求!"
   transfer-received: "<green>已从 {player} 转移 {kits} 个套件和 {ecs} 个末影箱!"
   transfer-sent: "<green>你的套件和末影箱已转移给 {player}!"
+  purge-completed: "<green>清除完成！已从 {modified} 个套件和末影箱中移除 {items} 个 {item}。"
 
 info:
   custom-version-available: "<gray>你可以通过将此套件导入到编辑器来保存自定义版本"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>请记得将 config.yml 中的 storage.type 更新为 '{type}' 并重启服务器。"
   migration-failed-count: "<yellow>失败: {count} 条"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>此操作将从所有玩家已保存的套件和末影箱中移除 {item}。运行 <white>/purgeitem {item} all confirm</white> 以继续。"
+  purge-starting-all: "<yellow>正在从所有已保存的套件和末影箱中清除 {item}..."
+  purge-starting-players: "<yellow>正在从 {count} 名玩家已保存的套件和末影箱中清除 {item}..."
+  purge-summary: "<gray>已扫描 {scanned} 个条目；{deleted} 个被清空的条目已删除。"
+  purge-failed-entries: "<yellow>{count} 个条目无法处理，请查看控制台了解详情。"
 
 command:
   perplayerkit-about: "<green>PerPlayerKit 是一个允许玩家拥有自己套件的插件。"
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>用法: /perplayerkit migrate \\<源> \\<目标>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>用法: /{command} \\<玩家|uuid> \\<槽位></red>"
+  purgeitem-usage: "<red>用法: /purgeitem \\<物品> \\<all confirm|玩家 ...>"
 
 update:
   new-version-available: "PerPlayerKit 有新版本可用! 你正在运行版本 {current},最新版本是 {latest}"

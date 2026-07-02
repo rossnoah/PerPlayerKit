@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Enderkist bijwerken voor speler {player} mislukt!"
   invalid-command-label: "<red>Ongeldig commandolabel."
   prefix-tag: "<red>Fout:</red> "
+  purge-invalid-item: "<red>Onbekend itemtype: {item}"
+  purge-in-progress: "<red>Er loopt al een item-opschoning, wacht tot deze klaar is"
+  purge-player-not-found: "<red>Kon speler {player} niet vinden, opschoning geannuleerd"
 
 success:
   kit-saved: "<green>Kit {slot} opgeslagen!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} heeft je verzoek geaccepteerd!"
   transfer-received: "<green>{kits} kits en {ecs} Enderkisten overgedragen van {player}!"
   transfer-sent: "<green>Je kits en Enderkisten zijn overgedragen aan {player}!"
+  purge-completed: "<green>Opschoning voltooid! {items} {item} verwijderd uit {modified} kits en enderkisten."
 
 info:
   custom-version-available: "<gray>Je kunt een aangepaste versie van deze kit opslaan door deze in de kit-editor te importeren"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Vergeet niet je config.yml storage.type bij te werken naar '{type}' en de server opnieuw te starten."
   migration-failed-count: "<yellow>Mislukt: {count} items"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Dit verwijdert {item} uit elke opgeslagen kit en enderkist van alle spelers. Voer <white>/purgeitem {item} all confirm</white> uit om door te gaan."
+  purge-starting-all: "<yellow>Bezig met verwijderen van {item} uit alle opgeslagen kits en enderkisten..."
+  purge-starting-players: "<yellow>Bezig met verwijderen van {item} uit de opgeslagen kits en enderkisten van {count} speler(s)..."
+  purge-summary: "<gray>{scanned} vermeldingen gescand; {deleted} geleegde vermeldingen zijn verwijderd."
+  purge-failed-entries: "<yellow>{count} vermeldingen konden niet worden verwerkt, bekijk de console voor details."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit is een plugin waarmee spelers hun eigen kits kunnen hebben."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Gebruik: /perplayerkit migrate \\<bron> \\<bestemming>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Gebruik: /{command} \\<speler|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Gebruik: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "Er is een nieuwe versie van PerPlayerKit beschikbaar! Je gebruikt versie {current} en de nieuwste versie is {latest}"

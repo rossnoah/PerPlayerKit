@@ -89,6 +89,9 @@ error:
   failed-to-update-ec: "<red>Impossibile aggiornare il baule di Ender per il giocatore {player}!"
   invalid-command-label: "<red>Etichetta del comando non valida."
   prefix-tag: "<red>Errore:</red> "
+  purge-invalid-item: "<red>Tipo di oggetto sconosciuto: {item}"
+  purge-in-progress: "<red>Una rimozione di oggetti è già in corso, attendi che finisca"
+  purge-player-not-found: "<red>Impossibile trovare il giocatore {player}, rimozione annullata"
 
 success:
   kit-saved: "<green>Kit {slot} salvato!"
@@ -119,6 +122,7 @@ success:
   share-request-accepted: "<green>{player} ha accettato la tua richiesta!"
   transfer-received: "<green>Trasferiti {kits} kit e {ecs} bauli di Ender da {player}!"
   transfer-sent: "<green>I tuoi kit e bauli di Ender sono stati trasferiti a {player}!"
+  purge-completed: "<green>Rimozione completata! Rimossi {items} {item} da {modified} kit e bauli di Ender."
 
 info:
   custom-version-available: "<gray>Puoi salvare una versione personalizzata di questo kit importandola nell'editor"
@@ -143,6 +147,11 @@ info:
   update-config-storage: "<yellow>Ricorda di aggiornare config.yml storage.type a '{type}' e riavvia il server."
   migration-failed-count: "<yellow>Falliti: {count} elementi"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>Questo rimuoverà {item} da tutti i kit e i bauli di Ender salvati di tutti i giocatori. Esegui <white>/purgeitem {item} all confirm</white> per procedere."
+  purge-starting-all: "<yellow>Rimozione di {item} da tutti i kit e bauli di Ender salvati..."
+  purge-starting-players: "<yellow>Rimozione di {item} dai kit e bauli di Ender salvati di {count} giocatore/i..."
+  purge-summary: "<gray>Analizzate {scanned} voci; {deleted} voci svuotate sono state eliminate."
+  purge-failed-entries: "<yellow>Impossibile elaborare {count} voci, controlla la console per i dettagli."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit è un plugin che permette ai giocatori di avere i propri kit."
@@ -152,6 +161,7 @@ command:
   perplayerkit-migrate-usage: "<red>Utilizzo: /perplayerkit migrate \\<origine> \\<destinazione>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Utilizzo: /{command} \\<giocatore|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Utilizzo: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "È disponibile una nuova versione di PerPlayerKit! Stai usando la versione {current} e la più recente è {latest}"

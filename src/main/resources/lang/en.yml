@@ -90,6 +90,9 @@ error:
   failed-to-update-ec: "<red>Failed to update ender chest for player {player}!"
   invalid-command-label: "<red>Invalid command label."
   prefix-tag: "<red>Error:</red> "
+  purge-invalid-item: "<red>Unknown item type: {item}"
+  purge-in-progress: "<red>An item purge is already running, wait for it to finish"
+  purge-player-not-found: "<red>Could not find player {player}, purge cancelled"
 
 success:
   kit-saved: "<green>Kit {slot} saved!"
@@ -120,6 +123,7 @@ success:
   share-request-accepted: "<green>{player} accepted your request!"
   transfer-received: "<green>Transferred {kits} kits and {ecs} ender chests from {player}!"
   transfer-sent: "<green>Your kits and ender chests were transferred to {player}!"
+  purge-completed: "<green>Purge complete! Removed {items} {item} from {modified} kits and ender chests."
 
 info:
   custom-version-available: "<gray>You can save a custom version of this kit by importing into the kit editor"
@@ -144,6 +148,11 @@ info:
   update-config-storage: "<yellow>Remember to update your config.yml storage.type to '{type}' and restart the server."
   migration-failed-count: "<yellow>Failed: {count} entries"
   migration-progress: "<gray>{message}"
+  purge-confirm-required: "<yellow>This will remove {item} from every stored kit and ender chest of every player. Run <white>/purgeitem {item} all confirm</white> to proceed."
+  purge-starting-all: "<yellow>Purging {item} from all stored kits and ender chests..."
+  purge-starting-players: "<yellow>Purging {item} from the stored kits and ender chests of {count} player(s)..."
+  purge-summary: "<gray>Scanned {scanned} entries; {deleted} emptied entries were deleted."
+  purge-failed-entries: "<yellow>{count} entries could not be processed, check the console for details."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit is a plugin that allows players to have their own kits."
@@ -153,6 +162,7 @@ command:
   perplayerkit-migrate-usage: "<red>Usage: /perplayerkit migrate \\<source> \\<destination>"
   kitroom-usage-hint: "/kitroom \\<load/save>"
   inspect-usage: "<red>Usage: /{command} \\<player|uuid> \\<slot></red>"
+  purgeitem-usage: "<red>Usage: /purgeitem \\<item> \\<all confirm|player ...>"
 
 update:
   new-version-available: "A new version of PerPlayerKit is available! You are running version {current} and the latest version is {latest}"

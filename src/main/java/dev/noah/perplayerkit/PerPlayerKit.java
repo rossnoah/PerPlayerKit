@@ -21,6 +21,7 @@ package dev.noah.perplayerkit;
 import dev.noah.perplayerkit.commands.admin.AboutCommandListener;
 import dev.noah.perplayerkit.commands.admin.KitRoomCommand;
 import dev.noah.perplayerkit.commands.admin.PerPlayerKitCommand;
+import dev.noah.perplayerkit.commands.admin.PurgeItemCommand;
 import dev.noah.perplayerkit.commands.admin.SavePublicKitCommand;
 import dev.noah.perplayerkit.commands.completion.ECSlotTabCompleter;
 import dev.noah.perplayerkit.commands.completion.KitSlotTabCompleter;
@@ -222,6 +223,10 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("heal").setExecutor(new HealCommand());
         this.getCommand("repair").setExecutor(new RepairCommand());
         this.getCommand("perplayerkit").setExecutor(new PerPlayerKitCommand(this));
+
+        PurgeItemCommand purgeItemCommand = new PurgeItemCommand(this);
+        this.getCommand("purgeitem").setExecutor(purgeItemCommand);
+        this.getCommand("purgeitem").setTabCompleter(purgeItemCommand);
 
         Bukkit.getPluginManager().registerEvents(regearCommand, this);
         Bukkit.getPluginManager().registerEvents(new JoinListener(this, updateChecker), this);
