@@ -65,7 +65,8 @@ public class SQLite implements SQLDatabase {
             config.setMaximumPoolSize(1); // SQLite is single-writer, use 1 connection
             config.setMinimumIdle(1); // Keep one connection alive
             config.setConnectionTimeout(30000); // 30 seconds connection timeout
-            config.setIdleTimeout(300000); // 5 minutes idle timeout (reduced from 10)
+            // No idleTimeout: with maximumPoolSize == minimumIdle the pool is fixed size,
+            // so idle connections are never retired and HikariCP warns if it is set
             config.setMaxLifetime(1800000); // 30 minutes max connection lifetime
             config.setLeakDetectionThreshold(60000); // 60 seconds leak detection
             config.setKeepaliveTime(30000); // 30 seconds keepalive (HikariCP 4.0+)
