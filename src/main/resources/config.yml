@@ -80,17 +80,17 @@ kitroom:
       name: "Crystal"
       material: "END_CRYSTAL"
     2:
-      name: "Training"
-      material: "WOODEN_SWORD"
+      name: "Armory"
+      material: "NETHERITE_SWORD"
     3:
       name: "Potions"
       material: "SPLASH_POTION"
     4:
-      name: "Armory"
-      material: "NETHERITE_SWORD"
+      name: "Arrows"
+      material: "TIPPED_ARROW"
     5:
-      name: "Axe & UHC"
-      material: "SHIELD"
+      name: "Utility"
+      material: "COBWEB"
 
 disabled-command-worlds:
   - "example_world"
@@ -98,10 +98,42 @@ disabled-command-worlds:
 # lives in the active lang file under error.disabled-in-world
 
 
+# Server-wide kits, listed in /publickit. A kit shows as [Unassigned] until
+# contents are saved for it - either with /perplayerkit autosetup, which fills
+# these from the bundled starter kits, or by hand with /savepublickit or by
+# shift-clicking a kit in /publickit as an admin. Add your own by copying a
+# block below.
+#
+# A kit whose icon does not exist on this server is skipped, which is how the
+# mace kit stays off anything older than 1.21 instead of sitting there empty.
 publickits:
-  kit1:
-    name: "Kit 1"
+  crystal:
+    name: "Crystal"
+    icon: "END_CRYSTAL"
+  mace:
+    name: "Mace"
+    icon: "MACE"
+  netherite:
+    name: "Netherite OP"
+    icon: "NETHERITE_SWORD"
+  pot:
+    name: "Pot"
+    icon: "SPLASH_POTION"
+  uhc:
+    name: "UHC"
+    icon: "GOLDEN_APPLE"
+  sword:
+    name: "Sword"
     icon: "DIAMOND_SWORD"
+  axe:
+    name: "Axe"
+    icon: "DIAMOND_AXE"
+  ffa:
+    name: "FFA"
+    icon: "ENCHANTED_GOLDEN_APPLE"
+  cart:
+    name: "Cart"
+    icon: "TNT_MINECART"
 
 # Plugin message prefix lives in the active lang file under `prefix`
 

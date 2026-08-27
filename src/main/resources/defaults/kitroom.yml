@@ -1,0 +1,313 @@
+# Starter kit room contents shipped inside the PerPlayerKit jar.
+#
+# This file is NOT extracted to plugins/PerPlayerKit/. It is the stock content a
+# brand new server starts with so that /kitroom is useful before an admin has
+# edited anything. Once a page has been saved on a server, PerPlayerKit never
+# touches it again - admins customise in-game via /kitroom, not by editing YAML.
+#
+# Item format:  MATERIAL [xAMOUNT] [{ key=value, ... }]
+#   xAMOUNT   stack size, defaults to 1
+#   potion=   base potion type, e.g. STRONG_HEALING, LONG_FIRE_RESISTANCE
+#   name=     display name in MiniMessage format
+#   anything else is an enchantment id, e.g. protection=4, mending=1
+#
+# A slot may offer alternatives separated by "||". The first one the running
+# server actually has is the one it gets, so the newer PvP gear can be asked
+# for first and older servers quietly fall back:
+#
+#   "MACE { density=5 } || NETHERITE_AXE { sharpness=5 }"
+#
+# Falling back is silent - that is the point of writing a chain - and only a
+# slot where nothing at all resolves is worth a warning.
+#
+# A shulker box is written as a block instead of one line, so it can carry what
+# is inside it:
+#
+#   3:
+#     item: "PINK_SHULKER_BOX"
+#     contents:
+#       0-26: "SPLASH_POTION { potion=STRONG_HEALING }"
+#
+# Slot keys are the 0-44 grid of a kit room page (5 rows of 9); inside a shulker
+# they are its own 0-26. A key may be a single slot ("12") or an inclusive range
+# ("9-11").
+#
+# This layout was built in game and exported with `/perplayerkit export`, so it
+# is what a room actually gets used like rather than a guess. Spears, maces and
+# wind charges carry fallbacks, which is the only reason the same file still
+# fills every page on 1.19.4.
+
+pages:
+
+  # Page 1 - Crystal: armour down the left, what a fight eats through the
+  # middle, what you hold along the bottom.
+  - id: crystal
+    items:
+      0: "NETHERITE_HELMET { mending=1, protection=4, unbreaking=3 }"
+      2-5: "END_CRYSTAL x64"
+      6-8: "TOTEM_OF_UNDYING"
+
+      9: "NETHERITE_CHESTPLATE { mending=1, protection=4, unbreaking=3 }"
+      11-14: "OBSIDIAN x64"
+      15-17: "TOTEM_OF_UNDYING"
+
+      18: "NETHERITE_LEGGINGS { blast_protection=4, mending=1, swift_sneak=3, unbreaking=3 }"
+      20-21: "RESPAWN_ANCHOR x64"
+      22-23: "GLOWSTONE x64"
+      24: "SHULKER_BOX"
+      25: "CROSSBOW { mending=1, multishot=1, quick_charge=3, unbreaking=3 }"
+      26: "TIPPED_ARROW x64 { potion=LONG_SLOW_FALLING }"
+
+      27: "NETHERITE_BOOTS { depth_strider=3, feather_falling=4, mending=1, protection=4, unbreaking=3 }"
+      29: "GOLDEN_APPLE x64"
+      30-31: "EXPERIENCE_BOTTLE x64"
+      32: "NETHERITE_PICKAXE { efficiency=5, mending=1, unbreaking=3 }"
+      33: "SHULKER_BOX"
+      34: "NETHERITE_AXE { efficiency=5, mending=1, sharpness=5, unbreaking=3 }"
+      35: "SHIELD { mending=1, unbreaking=3 }"
+
+      36: "NETHERITE_SWORD { knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      38-40: "ENDER_PEARL x16"
+      41: "ENDER_CHEST x64"
+      42: "SHULKER_BOX"
+      43: "ELYTRA { mending=1, unbreaking=3 }"
+      44: "FIREWORK_ROCKET x64"
+
+  # Page 2 - Armory: every weapon worth carrying, in both tiers - swords in each
+  # Knockback level, with and without Fire Aspect, and the bows by Punch.
+  - id: armory
+    items:
+      0: "NETHERITE_HELMET { mending=1, protection=4, unbreaking=3 }"
+      1: "NETHERITE_SWORD { knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      2: "DIAMOND_HELMET { mending=1, protection=4, unbreaking=3 }"
+      3: "DIAMOND_SWORD { knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      4: "SHIELD { mending=1, unbreaking=3 }"
+      5: "NETHERITE_SWORD { mending=1, sharpness=5, unbreaking=3 }"
+      6: "NETHERITE_SWORD { fire_aspect=2, knockback=2, mending=1, sharpness=5, unbreaking=3 }"
+      7: "DIAMOND_SWORD { mending=1, sharpness=5, unbreaking=3 }"
+      8: "DIAMOND_SWORD { fire_aspect=2, mending=1, sharpness=5, unbreaking=3 }"
+
+      9: "NETHERITE_CHESTPLATE { mending=1, protection=4, unbreaking=3 }"
+      10: "NETHERITE_SPEAR { lunge=3, mending=1, sharpness=5, unbreaking=3 } || TRIDENT { impaling=5, loyalty=3, mending=1, unbreaking=3 }"
+      11: "DIAMOND_CHESTPLATE { mending=1, protection=4, unbreaking=3 }"
+      12: "DIAMOND_SPEAR { lunge=3, mending=1, sharpness=5, unbreaking=3 } || TRIDENT { impaling=5, mending=1, unbreaking=3 }"
+      13: "FISHING_ROD { mending=1, unbreaking=3 }"
+      14: "NETHERITE_SWORD { knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      15: "NETHERITE_SWORD { fire_aspect=2, mending=1, sharpness=5, unbreaking=3 }"
+      16: "DIAMOND_SWORD { knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      17: "DIAMOND_SWORD { fire_aspect=2, knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+
+      18: "NETHERITE_LEGGINGS { blast_protection=4, mending=1, swift_sneak=3, unbreaking=3 }"
+      19: "NETHERITE_AXE { efficiency=5, mending=1, sharpness=5, unbreaking=3 }"
+      20: "DIAMOND_LEGGINGS { blast_protection=4, mending=1, unbreaking=3 }"
+      21: "DIAMOND_AXE { efficiency=5, mending=1, sharpness=5, unbreaking=3 }"
+      22: "TRIDENT { impaling=5, mending=1, riptide=3, unbreaking=3 }"
+      23: "NETHERITE_SWORD { knockback=2, mending=1, sharpness=5, unbreaking=3 }"
+      24: "NETHERITE_SWORD { fire_aspect=2, knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      25: "DIAMOND_SWORD { knockback=2, mending=1, sharpness=5, unbreaking=3 }"
+      26: "DIAMOND_SWORD { fire_aspect=2, knockback=2, mending=1, sharpness=5, unbreaking=3 }"
+
+      27: "NETHERITE_BOOTS { depth_strider=3, feather_falling=4, mending=1, protection=4, unbreaking=3 }"
+      28: "NETHERITE_PICKAXE { efficiency=5, mending=1, unbreaking=3 }"
+      29: "DIAMOND_BOOTS { depth_strider=3, feather_falling=4, mending=1, protection=4, unbreaking=3 }"
+      30: "DIAMOND_PICKAXE { efficiency=5, mending=1, unbreaking=3 }"
+      31: "MACE { density=5, mending=1, unbreaking=3, wind_burst=3 } || NETHERITE_AXE { sharpness=5, mending=1, unbreaking=3 }"
+      32: "BOW { mending=1, power=5, unbreaking=3 }"
+      33: "BOW { mending=1, power=5, punch=1, unbreaking=3 }"
+      34: "BOW { mending=1, power=5, punch=2, unbreaking=3 }"
+      35: "CROSSBOW { mending=1, piercing=4, quick_charge=3, unbreaking=3 }"
+
+      36: "NETHERITE_LEGGINGS { mending=1, protection=4, swift_sneak=3, unbreaking=3 }"
+      37: "NETHERITE_SHOVEL { efficiency=5, mending=1, unbreaking=3 }"
+      38: "DIAMOND_LEGGINGS { mending=1, protection=4, unbreaking=3 }"
+      39: "DIAMOND_SHOVEL { efficiency=5, mending=1, unbreaking=3 }"
+      40: "MACE { breach=4, mending=1, unbreaking=3 } || NETHERITE_AXE { efficiency=5, sharpness=5, mending=1, unbreaking=3 }"
+      41: "BOW { flame=1, infinity=1, power=5, unbreaking=3 }"
+      42: "BOW { flame=1, infinity=1, power=5, punch=1, unbreaking=3 }"
+      43: "BOW { flame=1, infinity=1, power=5, punch=2, unbreaking=3 }"
+      44: "CROSSBOW { mending=1, multishot=1, quick_charge=3, unbreaking=3 }"
+
+  # Page 3 - Potions: three of each to grab, and a full shulker of the same thing in
+  # the fourth slot when three is not enough.
+  - id: potions
+    items:
+      0-2: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      3:
+        item: "LIGHT_BLUE_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      4: "MILK_BUCKET"
+      5-7: "SPLASH_POTION { potion=LONG_SLOWNESS }"
+      8:
+        item: "GRAY_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=LONG_SLOWNESS }"
+
+      9-11: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      12:
+        item: "RED_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      13: "MILK_BUCKET"
+      14-16: "SPLASH_POTION { potion=LONG_WEAKNESS }"
+      17:
+        item: "BROWN_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=LONG_WEAKNESS }"
+
+      18-20: "SPLASH_POTION { potion=STRONG_HEALING }"
+      21:
+        item: "PINK_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=STRONG_HEALING }"
+      22: "MILK_BUCKET"
+      23-25: "SPLASH_POTION { potion=STRONG_HARMING }"
+      26:
+        item: "PURPLE_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=STRONG_HARMING }"
+
+      27-29: "SPLASH_POTION { potion=LONG_FIRE_RESISTANCE }"
+      30:
+        item: "ORANGE_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=LONG_FIRE_RESISTANCE }"
+      31: "MILK_BUCKET"
+      32-34: "SPLASH_POTION { potion=LONG_REGENERATION }"
+      35:
+        item: "MAGENTA_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=LONG_REGENERATION }"
+
+      36-38: "SPLASH_POTION { potion=LONG_INVISIBILITY }"
+      39:
+        item: "LIGHT_GRAY_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=LONG_INVISIBILITY }"
+      40: "MILK_BUCKET"
+      41-43: "SPLASH_POTION { potion=LONG_SLOW_FALLING }"
+      44:
+        item: "WHITE_SHULKER_BOX"
+        contents:
+          0-26: "SPLASH_POTION { potion=LONG_SLOW_FALLING }"
+
+  # Page 4 - Arrows: bows and arrows, with the bulk resupply boxed up on the right.
+  - id: arrows
+    items:
+      0: "BOW { mending=1, power=5, punch=2, unbreaking=3 }"
+      1: "BOW { flame=1, infinity=1, power=5, punch=2, unbreaking=3 }"
+      3: "CROSSBOW { mending=1, multishot=1, quick_charge=3, unbreaking=3 }"
+      4: "CROSSBOW { mending=1, piercing=4, quick_charge=3, unbreaking=3 }"
+      6: "NETHERITE_SPEAR { lunge=3, mending=1, sharpness=5, unbreaking=3 } || TRIDENT { impaling=5, loyalty=3, mending=1, unbreaking=3 }"
+      7: "TRIDENT { impaling=5, loyalty=3, mending=1, unbreaking=3 }"
+      8:
+        item: "YELLOW_SHULKER_BOX"
+        contents:
+          0-26: "TOTEM_OF_UNDYING"
+
+      9-10: "ARROW x64"
+      12-13: "SPECTRAL_ARROW x64"
+      15-16: "WIND_CHARGE x64 || SNOWBALL x16"
+      17:
+        item: "BLUE_SHULKER_BOX"
+        contents:
+          0-26: "ENDER_PEARL x16"
+
+      18-19: "TIPPED_ARROW x64 { potion=LONG_SLOW_FALLING }"
+      21-22: "TIPPED_ARROW x64 { potion=STRONG_HARMING }"
+      24-25: "TIPPED_ARROW x64 { potion=LONG_POISON }"
+      26:
+        item: "PINK_SHULKER_BOX"
+        contents:
+          0-26: "END_CRYSTAL x64"
+
+      27-28: "TIPPED_ARROW x64 { potion=LONG_WEAKNESS }"
+      30-31: "TIPPED_ARROW x64 { potion=LONG_SLOWNESS }"
+      33-34: "TIPPED_ARROW x64 { potion=LONG_FIRE_RESISTANCE }"
+      35:
+        item: "MAGENTA_SHULKER_BOX"
+        contents:
+          0: "RESPAWN_ANCHOR x64"
+          1: "GLOWSTONE x64"
+          2: "RESPAWN_ANCHOR x64"
+          3: "GLOWSTONE x64"
+          4: "RESPAWN_ANCHOR x64"
+          5: "GLOWSTONE x64"
+          6: "RESPAWN_ANCHOR x64"
+          7: "GLOWSTONE x64"
+          8: "RESPAWN_ANCHOR x64"
+          9: "GLOWSTONE x64"
+          10: "RESPAWN_ANCHOR x64"
+          11: "GLOWSTONE x64"
+          12: "RESPAWN_ANCHOR x64"
+          13: "GLOWSTONE x64"
+          14: "RESPAWN_ANCHOR x64"
+          15: "GLOWSTONE x64"
+          16: "RESPAWN_ANCHOR x64"
+          17: "GLOWSTONE x64"
+          18: "RESPAWN_ANCHOR x64"
+          19: "GLOWSTONE x64"
+          20: "RESPAWN_ANCHOR x64"
+          21: "GLOWSTONE x64"
+          22: "RESPAWN_ANCHOR x64"
+          23: "GLOWSTONE x64"
+          24: "RESPAWN_ANCHOR x64"
+          25: "GLOWSTONE x64"
+          26: "RESPAWN_ANCHOR x64"
+
+      36-37: "ARROW x64"
+      39-40: "TIPPED_ARROW x64 { potion=LONG_SLOW_FALLING }"
+      42-43: "TIPPED_ARROW x64 { potion=STRONG_HARMING }"
+      44:
+        item: "BLACK_SHULKER_BOX"
+        contents:
+          0-26: "OBSIDIAN x64"
+
+  # Page 5 - Utility: blocks, buckets, food and the things that go bang.
+  - id: utility
+    items:
+      0: "DIAMOND_HELMET"
+      1-2: "WATER_BUCKET"
+      3: "DIAMOND_SPEAR || TRIDENT"
+      5: "GOLDEN_APPLE x64"
+      6: "COOKED_BEEF x64"
+      7: "TNT x64"
+      8: "ELYTRA { mending=1, unbreaking=3 }"
+
+      9: "DIAMOND_CHESTPLATE"
+      10-11: "LAVA_BUCKET"
+      12: "DIAMOND_SWORD"
+      14: "GOLDEN_CARROT x64"
+      15: "CHORUS_FRUIT x64"
+      16: "ANVIL x64"
+      17: "FIREWORK_ROCKET x64"
+
+      18: "DIAMOND_LEGGINGS"
+      19: "COBBLESTONE x64"
+      20: "OAK_PLANKS x64"
+      21: "DIAMOND_PICKAXE"
+      23: "MILK_BUCKET"
+      24: "EXPERIENCE_BOTTLE x64"
+      25:
+        item: "RED_SHULKER_BOX"
+        contents:
+          0-26: "TNT_MINECART"
+      26: "ENDER_PEARL x16"
+
+      27: "DIAMOND_BOOTS"
+      28: "SHIELD"
+      29: "COBWEB x64"
+      30: "DIAMOND_SHOVEL"
+      32: "FLINT_AND_STEEL"
+      33: "FISHING_ROD"
+      34: "TNT_MINECART"
+      35: "FLINT_AND_STEEL { unbreaking=3 }"
+
+      36: "DIAMOND_SWORD"
+      37: "BOW"
+      38: "CROSSBOW"
+      39: "DIAMOND_AXE"
+      41: "ARROW x64"
+      42: "TOTEM_OF_UNDYING"
+      43: "POWERED_RAIL x64"
+      44: "RAIL x64"

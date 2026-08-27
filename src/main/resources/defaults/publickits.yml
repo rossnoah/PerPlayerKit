@@ -1,0 +1,276 @@
+# Starter public kit contents shipped inside the PerPlayerKit jar.
+#
+# Like defaults/kitroom.yml this file is NOT extracted to plugins/PerPlayerKit/.
+# On a brand new server it fills in the public kits listed under `publickits` in
+# config.yml, so /publickit shows working kits instead of [Unassigned] before an
+# admin has run /savepublickit. A kit is only seeded when config.yml declares
+# that id AND no contents have ever been saved for it, so nothing here can
+# overwrite a server's own kits.
+#
+# Item format is the same as defaults/kitroom.yml:
+#   MATERIAL [xAMOUNT] [{ key=value, ... }]
+#
+# A slot may also list alternatives separated by "||"; the first one the server
+# has is the one it gets, so newer gear degrades quietly on older versions.
+#
+# Slots are the 41-slot kit layout: 0-8 hotbar, 9-35 main inventory, plus the
+# named equipment slots helmet, chestplate, leggings, boots and offhand.
+#
+# A kit whose config.yml icon does not exist on the running server is left out
+# of /publickit entirely - that is what keeps the mace kit off 1.20 and older
+# rather than showing an empty entry nobody can fill.
+#
+# These were built in game and exported with `/perplayerkit export`. They are
+# meant as a starting point a server edits with /savepublickit, not a balance
+# statement. Every item here is also stocked in the kit room, so a player can
+# rebuild any of them by hand.
+
+kits:
+
+  # Crystal PvP: totems and pearls filling the inventory behind the
+  # hotbar, because that is what a fight burns.
+  crystal:
+    items:
+      helmet: "NETHERITE_HELMET { mending=1, protection=4, unbreaking=3 }"
+      chestplate: "NETHERITE_CHESTPLATE { mending=1, protection=4, unbreaking=3 }"
+      leggings: "NETHERITE_LEGGINGS { blast_protection=4, mending=1, swift_sneak=3, unbreaking=3 }"
+      boots: "NETHERITE_BOOTS { depth_strider=3, feather_falling=4, mending=1, protection=4, unbreaking=3 }"
+      offhand: "TOTEM_OF_UNDYING"
+
+      0: "NETHERITE_SWORD { knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      1: "ENDER_PEARL x16"
+      2: "GOLDEN_APPLE x64"
+      3: "OBSIDIAN x64"
+      4: "END_CRYSTAL x64"
+      5: "CROSSBOW { mending=1, multishot=1, quick_charge=3, unbreaking=3 }"
+      6: "RESPAWN_ANCHOR x64"
+      7: "GLOWSTONE x64"
+      8: "TOTEM_OF_UNDYING"
+
+      9-10: "ENDER_PEARL x16"
+      11-12: "EXPERIENCE_BOTTLE x64"
+      13-16: "TOTEM_OF_UNDYING"
+      17: "TIPPED_ARROW x64 { potion=LONG_SLOW_FALLING }"
+
+      18-19: "ENDER_PEARL x16"
+      20: "END_CRYSTAL x64"
+      21: "GLOWSTONE x64"
+      22-25: "TOTEM_OF_UNDYING"
+      26: "NETHERITE_PICKAXE { efficiency=5, mending=1, unbreaking=3 }"
+
+      27-28: "ENDER_PEARL x16"
+      29: "OBSIDIAN x64"
+      30: "RESPAWN_ANCHOR x64"
+      31-33: "TOTEM_OF_UNDYING"
+      34: "NETHERITE_AXE { efficiency=5, mending=1, sharpness=5, unbreaking=3 }"
+      35: "SHIELD { mending=1, unbreaking=3 }"
+
+  # Mace: 1.21 and up only. Two maces - Breach for armour, Density with Wind
+  # Burst for the fall - plus the elytra and wind charges you need to get high
+  # enough for either of them to matter.
+  mace:
+    items:
+      helmet: "NETHERITE_HELMET { protection=4 }"
+      chestplate: "NETHERITE_CHESTPLATE { protection=4 }"
+      leggings: "NETHERITE_LEGGINGS { protection=4 }"
+      boots: "NETHERITE_BOOTS { feather_falling=4, protection=4 }"
+      offhand: "TOTEM_OF_UNDYING"
+
+      0: "NETHERITE_SWORD { sharpness=5, unbreaking=3 }"
+      1: "NETHERITE_AXE { sharpness=5, unbreaking=3 }"
+      2: "ENDER_PEARL x16"
+      3: "GOLDEN_APPLE x64"
+      4: "WIND_CHARGE x64"
+      5: "ELYTRA"
+      6: "MACE { breach=4, unbreaking=3 }"
+      7: "MACE { density=5, unbreaking=3, wind_burst=1 }"
+      8: "SHIELD { mending=1, unbreaking=3 }"
+
+      9: "WIND_CHARGE x64"
+      10-16: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      17:
+        item: "SHULKER_BOX"
+        contents:
+          0-8: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+          9-17: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+          18-21: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+          22-26: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+
+      18: "ENDER_PEARL x16"
+      19-25: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      26: "GOLDEN_APPLE x64"
+
+      27: "ENDER_PEARL x16"
+      28-31: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      32-34: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      35: "TOTEM_OF_UNDYING"
+
+  # Netherite: the everything kit. Full mending netherite, a stack of gapples
+  # in the offhand and healing potions wherever a hand can reach.
+  netherite:
+    items:
+      helmet: "NETHERITE_HELMET { mending=1, protection=4, unbreaking=3 }"
+      chestplate: "NETHERITE_CHESTPLATE { mending=1, protection=4, unbreaking=3 }"
+      leggings: "NETHERITE_LEGGINGS { mending=1, protection=4, unbreaking=3 }"
+      boots: "NETHERITE_BOOTS { mending=1, protection=4, unbreaking=3 }"
+      offhand: "GOLDEN_APPLE x64"
+
+      # Sweeping Edge was called `sweeping` before 1.21.2, so ask for both.
+      0: "NETHERITE_SWORD { sharpness=5, sweeping_edge=3, unbreaking=3 } || NETHERITE_SWORD { sharpness=5, sweeping=3, unbreaking=3 }"
+      1-5: "SPLASH_POTION { potion=STRONG_HEALING }"
+      6: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      7: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      8: "TOTEM_OF_UNDYING"
+
+      9-13: "SPLASH_POTION { potion=STRONG_HEALING }"
+      14-17: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+
+      18-22: "SPLASH_POTION { potion=STRONG_HEALING }"
+      23-26: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+
+      27-33: "SPLASH_POTION { potion=STRONG_HEALING }"
+      34: "EXPERIENCE_BOTTLE x64"
+      35: "TOTEM_OF_UNDYING"
+
+  # Pot: diamond and a wall of Healing II. Strength, Speed and Regeneration
+  # down the right hand column, steak in the offhand.
+  pot:
+    items:
+      helmet: "DIAMOND_HELMET { protection=4, unbreaking=3 }"
+      chestplate: "DIAMOND_CHESTPLATE { protection=4, unbreaking=3 }"
+      leggings: "DIAMOND_LEGGINGS { protection=4, unbreaking=3 }"
+      boots: "DIAMOND_BOOTS { protection=4, unbreaking=3 }"
+      offhand: "COOKED_BEEF x5"
+
+      0: "DIAMOND_SWORD { sharpness=5, sweeping_edge=3, unbreaking=3 } || DIAMOND_SWORD { sharpness=5, sweeping=3, unbreaking=3 }"
+      1-8: "SPLASH_POTION { potion=STRONG_HEALING }"
+
+      9-14: "SPLASH_POTION { potion=STRONG_HEALING }"
+      15: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      16: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      17: "SPLASH_POTION { potion=LONG_REGENERATION }"
+
+      18-23: "SPLASH_POTION { potion=STRONG_HEALING }"
+      24: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      25: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      26: "SPLASH_POTION { potion=LONG_REGENERATION }"
+
+      27-32: "SPLASH_POTION { potion=STRONG_HEALING }"
+      33: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      34: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      35: "SPLASH_POTION { potion=LONG_REGENERATION }"
+
+  # UHC: no natural regen, so gold does the healing and the fight happens in
+  # terrain you have to dig through. Light enchantments only.
+  uhc:
+    items:
+      helmet: "DIAMOND_HELMET { protection=3 }"
+      chestplate: "DIAMOND_CHESTPLATE { protection=2 }"
+      leggings: "DIAMOND_LEGGINGS { protection=2 }"
+      boots: "DIAMOND_BOOTS { protection=3 }"
+      offhand: "SHIELD"
+
+      0: "DIAMOND_SWORD { sharpness=3 }"
+      1: "DIAMOND_AXE { efficiency=3 }"
+      2: "GOLDEN_APPLE x8"
+      3: "COBWEB x8"
+      4: "LAVA_BUCKET"
+      5: "OAK_PLANKS x64"
+      6: "WATER_BUCKET"
+      7: "CROSSBOW { piercing=1 }"
+      8: "ARROW x10"
+
+      12-14: "WATER_BUCKET"
+
+      22: "LAVA_BUCKET"
+      26: "BOW { power=1 }"
+
+      31: "DIAMOND_PICKAXE { efficiency=3 }"
+      35: "OAK_PLANKS x64"
+
+  # Sword: Prot 4 diamond and one sword. No potions, no gapples, no offhand -
+  # whoever clicks better wins.
+  sword:
+    items:
+      helmet: "DIAMOND_HELMET { protection=4, unbreaking=3 }"
+      chestplate: "DIAMOND_CHESTPLATE { protection=4, unbreaking=3 }"
+      leggings: "DIAMOND_LEGGINGS { protection=4, unbreaking=3 }"
+      boots: "DIAMOND_BOOTS { protection=4, unbreaking=3 }"
+
+      0: "DIAMOND_SWORD { unbreaking=3 }"
+
+  # Axe and shield, kept plain - the gear is the point, not the
+  # enchantments on it.
+  axe:
+    items:
+      helmet: "DIAMOND_HELMET"
+      chestplate: "DIAMOND_CHESTPLATE"
+      leggings: "DIAMOND_LEGGINGS"
+      boots: "DIAMOND_BOOTS"
+      offhand: "SHIELD"
+
+      0: "DIAMOND_SWORD"
+      1: "DIAMOND_AXE"
+      2: "BOW"
+      3: "CROSSBOW"
+      8: "ARROW x6"
+
+  # Cart: TNT minecart PvP. Rails and planks to build the track, flint and
+  # steel to light it, and two shulkers of carts for when the first sixteen
+  # are gone.
+  cart:
+    items:
+      helmet: "NETHERITE_HELMET { mending=1, protection=4, unbreaking=3 }"
+      chestplate: "NETHERITE_CHESTPLATE { mending=1, protection=4, unbreaking=3 }"
+      leggings: "NETHERITE_LEGGINGS { blast_protection=4, mending=1, swift_sneak=3, unbreaking=3 }"
+      boots: "NETHERITE_BOOTS { depth_strider=3, feather_falling=4, mending=1, protection=4, unbreaking=3 }"
+      offhand: "TOTEM_OF_UNDYING"
+
+      0: "NETHERITE_SWORD { knockback=1, mending=1, sharpness=5, unbreaking=3 }"
+      1: "CROSSBOW { mending=1, piercing=4, quick_charge=3, unbreaking=3 }"
+      2: "COBWEB x64"
+      3: "ENDER_PEARL x16"
+      4: "GOLDEN_APPLE x64"
+      5: "POWERED_RAIL x64"
+      6: "TNT_MINECART"
+      7: "OAK_PLANKS x64"
+      8: "FLINT_AND_STEEL { unbreaking=3 }"
+
+      9: "TOTEM_OF_UNDYING"
+      10: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      11: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      12-13: "OAK_PLANKS x64"
+      14-15: "TNT_MINECART"
+      16:
+        item: "RED_SHULKER_BOX"
+        contents:
+          0-26: "TNT_MINECART"
+      17: "ENDER_PEARL x16"
+
+      18: "EXPERIENCE_BOTTLE x64"
+      19: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      20: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      21-24: "TNT_MINECART"
+      25:
+        item: "RED_SHULKER_BOX"
+        contents:
+          0-26: "TNT_MINECART"
+      26: "ENDER_PEARL x16"
+
+      27: "BOW { flame=1, infinity=1, power=5, punch=1, unbreaking=3 }"
+      28: "SPLASH_POTION { potion=STRONG_SWIFTNESS }"
+      29: "SPLASH_POTION { potion=STRONG_STRENGTH }"
+      30-33: "TNT_MINECART"
+      34: "ARROW x64"
+      35: "ENDER_PEARL x16"
+
+  # FFA: a sword, a set of diamond and a stack of gapples. Nothing else.
+  ffa:
+    items:
+      helmet: "DIAMOND_HELMET"
+      chestplate: "DIAMOND_CHESTPLATE"
+      leggings: "DIAMOND_LEGGINGS"
+      boots: "DIAMOND_BOOTS"
+      offhand: "GOLDEN_APPLE x64"
+
+      0: "DIAMOND_SWORD"
