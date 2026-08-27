@@ -1,0 +1,135 @@
+name: Integration test
+
+# Boots a real server for every platform and Minecraft version PerPlayerKit
+# supports and drives the plugin through the console. The unit tests cannot
+# catch class loading, shading or API drift - those only appear once a server
+# is actually running, and they are what breaks when a new Minecraft lands.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  paper:
+    name: paper ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: "1.19.4"
+            java: "17"
+          - version: "1.20.6"
+            java: "21"
+          - version: "1.21.4"
+            java: "21"
+          - version: "1.21.8"
+            java: "21"
+          # Minecraft 26.1 and newer refuse to start on anything below Java 25.
+          - version: "26.1.2"
+            java: "25"
+          - version: "26.2"
+            java: "25"
+    steps:
+      - uses: actions/checkout@v4
+
+      # Java 21 builds the plugin; the matrix version runs the server. Both are
+      # on PATH as JAVA_HOME_<major>_<arch>, which run.sh looks for.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            21
+            ${{ matrix.java }}
+          cache: maven
+
+      - name: Build plugin
+        run: mvn -B package -DskipTests
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # The headless client that checks what a real player receives.
+      - name: Install chat probe
+        run: npm install --prefix tools/integration-test
+
+      - name: Cache server jars
+        uses: actions/cache@v4
+        with:
+          path: tools/integration-test/.cache
+          key: paper-${{ matrix.version }}
+
+      - name: Run
+        run: BUILD=0 ./tools/integration-test/run.sh paper ${{ matrix.version }}
+
+      - name: Upload console log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-${{ matrix.version }}-logs
+          path: target/integration-test/**/console.log
+          if-no-files-found: ignore
+
+  spigot:
+    name: spigot ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: "1.19.4"
+            java: "17"
+          - version: "1.20.6"
+            java: "21"
+          - version: "1.21.4"
+            java: "21"
+          - version: "1.21.8"
+            java: "21"
+          # Minecraft 26.1 and newer refuse to start on anything below Java 25.
+          - version: "26.1.2"
+            java: "25"
+          - version: "26.2"
+            java: "25"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            21
+            ${{ matrix.java }}
+          cache: maven
+
+      - name: Build plugin
+        run: mvn -B package -DskipTests
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # The headless client that checks what a real player receives.
+      - name: Install chat probe
+        run: npm install --prefix tools/integration-test
+
+      # Spigot is not redistributable, so BuildTools compiles it here. That is
+      # slow, hence the cache - a hit turns ten minutes into nothing.
+      - name: Cache Spigot build
+        uses: actions/cache@v4
+        with:
+          path: tools/integration-test/.cache
+          key: spigot-${{ matrix.version }}
+
+      - name: Run
+        run: BUILD=0 ./tools/integration-test/run.sh spigot ${{ matrix.version }}
+
+      - name: Upload console log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spigot-${{ matrix.version }}-logs
+          path: target/integration-test/**/console.log
+          if-no-files-found: ignore
