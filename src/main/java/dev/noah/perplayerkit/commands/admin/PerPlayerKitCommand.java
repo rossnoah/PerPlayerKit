@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.commands.admin;
 
+import dev.noah.perplayerkit.starter.StarterExporter;
 import dev.noah.perplayerkit.starter.StarterSetup;
 import dev.noah.perplayerkit.storage.StorageMigrator;
 import dev.noah.perplayerkit.util.Lang;
@@ -63,6 +64,8 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
                 return handleMigrate(sender, args);
             case "autosetup":
                 return handleAutoSetup(sender, args);
+            case "export":
+                return handleExport(sender, args);
             default:
                 Lang.get().send(sender, "error.invalid-subcommand");
                 sendUsage(sender);
@@ -145,6 +148,37 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
             Lang.get().send(sender, "info.autosetup-public-kits", "kits", String.join(", ", result.publicKits()));
         }
         Lang.get().send(sender, "info.autosetup-next-steps");
+        return true;
+    }
+
+    /**
+     * Writes the live kit room out in the notation the bundled defaults use.
+     * A maintainer tool for updating those defaults from a room arranged in
+     * game, so it is console only and stays silent unless the server was
+     * started with -Dperplayerkit.debug=true.
+     */
+    private boolean handleExport(CommandSender sender, String[] args) {
+        if (!StarterExporter.isEnabled() || !(sender instanceof ConsoleCommandSender)) {
+            Lang.get().send(sender, "error.invalid-subcommand");
+            return true;
+        }
+
+        try {
+            // export <player> <slot> pulls one player's own kit out instead, for
+            // promoting a kit somebody built into the bundled public kits.
+            if (args.length >= 3) {
+                java.util.UUID uuid = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
+                int slot = Integer.parseInt(args[2]);
+                sender.sendMessage("Kit " + slot + " written to "
+                        + StarterExporter.exportPlayerKit(plugin, uuid, slot));
+                return true;
+            }
+
+            sender.sendMessage("Kit room written to " + StarterExporter.export(plugin));
+            sender.sendMessage("Public kits written to " + StarterExporter.exportPublicKits(plugin));
+        } catch (java.io.IOException | NumberFormatException e) {
+            sender.sendMessage("Could not write the export: " + e.getMessage());
+        }
         return true;
     }
 
