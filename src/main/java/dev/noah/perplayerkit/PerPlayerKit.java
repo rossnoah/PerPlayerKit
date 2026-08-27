@@ -296,9 +296,21 @@ public final class PerPlayerKit extends JavaPlugin {
 
             publicKitsSection.getKeys(false).forEach(key -> {
                 String name = getConfig().getString("publickits." + key + ".name");
-                Material icon = Material.valueOf(getConfig().getString("publickits." + key + ".icon"));
-                PublicKit kit = new PublicKit(key, name, icon);
-                KitManager.get().getPublicKitList().add(kit);
+                String iconName = getConfig().getString("publickits." + key + ".icon", "");
+                Material icon = Material.matchMaterial(iconName);
+
+                // A kit listed with an item this server does not have has
+                // nothing to show, so it is left out of /publickit rather than
+                // sitting there empty. That is how the bundled mace kit stays
+                // off pre-1.21 servers, and it also catches a typo'd icon
+                // instead of taking the whole plugin down with it.
+                if (icon == null) {
+                    this.getLogger().warning("Public kit '" + key + "' has icon " + iconName
+                            + ", which does not exist on this server - skipping the kit");
+                    return;
+                }
+
+                KitManager.get().getPublicKitList().add(new PublicKit(key, name, icon));
             });
         }
     }
