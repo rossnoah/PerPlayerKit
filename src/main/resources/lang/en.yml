@@ -100,6 +100,7 @@ error:
   kitdata-nothing-to-export: "<red>No {scope} data found to export"
   kitdata-in-progress: "<red>Another kit data export or import is already running, wait for it to finish"
   kitdata-export-failed: "<red>Export failed, check the console for details"
+  autosetup-reset-console-only: "<red>Resetting the kit room can only be done from the server console."
 
 success:
   kit-saved: "<green>Kit {slot} saved!"
@@ -133,6 +134,7 @@ success:
   purge-completed: "<green>Purge complete! Removed {items} {item} from {modified} kits and ender chests."
   kitdata-exported: "<green>Exported {entries} entries to {file}"
   kitdata-imported: "<green>Import from {file} complete!"
+  autosetup-applied: "<green>Autosetup complete! Filled {pages} kit room page(s) and {kits} public kit(s)."
 
 info:
   custom-version-available: "<gray>You can save a custom version of this kit by importing into the kit editor"
@@ -167,6 +169,10 @@ info:
   kitdata-import-starting: "<yellow>Importing kit data from {file}..."
   kitdata-import-overwrites: "<yellow>Importing {file} will overwrite {kitroom} kit room page(s), {publickits} public kit(s) and {playerkits} player kit/ender chest entries. Run <white>{command}</white> to proceed."
   kitdata-import-summary: "<gray>Imported {kitroom} kit room page(s), {publickits} public kit(s) and {playerkits} player kit/ender chest entries."
+  autosetup-nothing-to-do: "<gray>Everything is already set up. Use <white>/perplayerkit autosetup reset confirm</white> to replace the kit room and public kits with the bundled defaults."
+  autosetup-reset-confirm: "<yellow>This will overwrite every kit room page and public kit with the bundled defaults. Player kits are not affected. Run <white>/perplayerkit autosetup reset confirm</white> to proceed."
+  autosetup-public-kits: "<gray>Public kits filled: {kits}"
+  autosetup-next-steps: "<gray>Open <white>/kit</white> to browse the kit room, or <white>/publickit</white> to see the server kits."
 
 command:
   perplayerkit-about: "<green>PerPlayerKit is a plugin that allows players to have their own kits."
@@ -178,6 +184,38 @@ command:
   inspect-usage: "<red>Usage: /{command} \\<player|uuid> \\<slot></red>"
   purgeitem-usage: "<red>Usage: /purgeitem \\<item> \\<all confirm|player ...>"
   kitdata-usage: "<red>Usage: /kitdata export \\<all|kitroom|publickits|playerkits> \\<file> | /kitdata import \\<file>"
+  perplayerkit-autosetup-usage: "<red>Usage: /perplayerkit autosetup [reset confirm]"
+  perplayerkit-usage-header: "<gray>PerPlayerKit admin commands:"
+  perplayerkit-usage-autosetup: "<white>/perplayerkit autosetup <dark_gray>- <gray>fill the kit room and public kits with a ready-made setup"
+  perplayerkit-usage-about: "<white>/perplayerkit about <dark_gray>- <gray>version and licence info"
+  perplayerkit-usage-import: "<white>/perplayerkit import kitsx <dark_gray>- <gray>import kits from a KitsX install"
+  perplayerkit-usage-migrate: "<white>/perplayerkit migrate \\<source> \\<destination> <dark_gray>- <gray>move data between storage types"
+
+# Shown to admins while the kit room has never been saved on this server.
+# The full introduction goes out once; after that it is just the reminder line.
+welcome:
+  first-admin:
+    - "<dark_gray><strikethrough>                                        "
+    - "<aqua><bold>PerPlayerKit</bold> <gray>is installed. Your kit room is empty."
+    - ""
+    - "<gray>Want to get started quickly?"
+    - "<click:run_command:'/perplayerkit autosetup'><hover:show_text:'<gray>Runs <white>/perplayerkit autosetup'><aqua>▸ <underlined>Run /perplayerkit autosetup</underlined></aqua></hover></click>"
+    - "<gray>Fills the kit room and public kits with a ready-made crystal"
+    - "<gray>setup that you can then edit however you like."
+    - ""
+    - "<white>/kit <dark_gray>- <gray>the kit menu, and the way into the kit room"
+    - "<white>/publickit <dark_gray>- <gray>the server kits players can load"
+    - ""
+    - "<gray>Permissions"
+    - "<white>perplayerkit.use <dark_gray>» <gray>give this one to your <white>default<gray> group"
+    - "<white>perplayerkit.staff <dark_gray>» <gray>inspect other players' kits"
+    - "<white>perplayerkit.admin <dark_gray>» <gray>kit room editing and admin commands"
+    - "<dark_gray>Players need perplayerkit.use before /kit works for them."
+    - ""
+    - "<gray>Docs: <click:open_url:'https://perplayerkit.com'><aqua><underlined>perplayerkit.com</underlined></aqua></click>"
+    - "<dark_gray><strikethrough>                                        "
+  setup-reminder:
+    - "<gray>Your kit room is still empty. <click:run_command:'/perplayerkit autosetup'><hover:show_text:'<gray>Runs <white>/perplayerkit autosetup'><aqua><underlined>Run /perplayerkit autosetup</underlined></aqua></hover></click> <gray>to fill it."
 
 update:
   new-version-available: "A new version of PerPlayerKit is available! You are running version {current} and the latest version is {latest}"

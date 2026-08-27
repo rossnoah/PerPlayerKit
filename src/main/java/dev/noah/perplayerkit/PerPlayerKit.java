@@ -47,6 +47,7 @@ import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
 import dev.noah.perplayerkit.listeners.antiexploit.ShulkerDropItemsListener;
 import dev.noah.perplayerkit.listeners.features.OldDeathDropListener;
+import dev.noah.perplayerkit.starter.StarterSetup;
 import dev.noah.perplayerkit.storage.StorageManager;
 import dev.noah.perplayerkit.storage.StorageSelector;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
@@ -162,6 +163,8 @@ public final class PerPlayerKit extends JavaPlugin {
 
         loadDatabaseData();
         getLogger().info("Database data loaded");
+
+        new StarterSetup(this).checkOnStartup();
 
         UpdateChecker updateChecker = new UpdateChecker(this);
 

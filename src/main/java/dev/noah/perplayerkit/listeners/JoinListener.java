@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.listeners;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.UpdateChecker;
+import dev.noah.perplayerkit.starter.StarterSetup;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.Lang;
 import net.kyori.adventure.text.Component;
@@ -53,6 +54,15 @@ public class JoinListener implements Listener {
 
         if(player.hasPermission("perplayerkit.admin") && plugin.getConfig().getBoolean("feature.send-update-message-on-join",true)){
             updateChecker.sendUpdateMessage(player);
+        }
+
+        // While the server has no kit room yet, offer admins the one command that
+        // makes one. Sent after the MOTD so it is the last thing left on screen.
+        if (player.hasPermission("perplayerkit.admin") && StarterSetup.get().needsAutoSetup()) {
+            long motdDelay = plugin.getConfig().getBoolean("motd.enabled")
+                    ? plugin.getConfig().getLong("motd.delay") + 2
+                    : 2;
+            Bukkit.getScheduler().runTaskLater(plugin, () -> StarterSetup.get().offerAutoSetup(player), motdDelay * 20L);
         }
 
         UUID uuid = player.getUniqueId();

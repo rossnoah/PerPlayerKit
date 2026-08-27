@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.commands.admin;
 
+import dev.noah.perplayerkit.starter.StarterSetup;
 import dev.noah.perplayerkit.storage.StorageMigrator;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.importutil.KitsXImporter;
@@ -25,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +49,7 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
-            Lang.get().send(sender, "error.missing-arguments");
+            sendUsage(sender);
             return true;
         }
 
@@ -59,11 +61,23 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
                 return handleImport(sender, args);
             case "migrate":
                 return handleMigrate(sender, args);
+            case "autosetup":
+                return handleAutoSetup(sender, args);
             default:
                 Lang.get().send(sender, "error.invalid-subcommand");
+                sendUsage(sender);
                 return true;
 
         }
+    }
+
+    /** A bare /perplayerkit used to say "Missing arguments!" and leave it there. */
+    private void sendUsage(CommandSender sender) {
+        Lang.get().send(sender, "command.perplayerkit-usage-header");
+        Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-autosetup");
+        Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-about");
+        Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-import");
+        Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-migrate");
     }
 
     private boolean handleImport(CommandSender sender, String[] args) {
@@ -87,6 +101,50 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
 
         importer.importFiles();
         Lang.get().send(sender, "success.import-attempted");
+        return true;
+    }
+
+    /**
+     * {@code /perplayerkit autosetup} fills any kit room page or public kit that
+     * has never been configured. {@code autosetup reset confirm} replaces what is
+     * already there, so it asks first.
+     */
+    private boolean handleAutoSetup(CommandSender sender, String[] args) {
+        boolean reset = args.length >= 2 && args[1].equalsIgnoreCase("reset");
+
+        if (!reset && args.length >= 2) {
+            Lang.get().send(sender, "command.perplayerkit-autosetup-usage");
+            return true;
+        }
+
+        // Reset is the one destructive path here: it replaces every kit room
+        // page and public kit. Console only, so it cannot happen by accident in
+        // game and an admin account alone is not enough to trigger it.
+        if (reset && !(sender instanceof ConsoleCommandSender)) {
+            Lang.get().send(sender, "error.autosetup-reset-console-only");
+            return true;
+        }
+
+        if (reset && (args.length < 3 || !args[2].equalsIgnoreCase("confirm"))) {
+            Lang.get().send(sender, "info.autosetup-reset-confirm");
+            return true;
+        }
+
+        StarterSetup.Result result = StarterSetup.get().apply(reset);
+
+        if (result.isEmpty()) {
+            Lang.get().send(sender, "info.autosetup-nothing-to-do");
+            return true;
+        }
+
+        Lang.get().send(sender, "success.autosetup-applied",
+                "pages", String.valueOf(result.kitRoomPages().size()),
+                "kits", String.valueOf(result.publicKits().size()));
+
+        if (!result.publicKits().isEmpty()) {
+            Lang.get().send(sender, "info.autosetup-public-kits", "kits", String.join(", ", result.publicKits()));
+        }
+        Lang.get().send(sender, "info.autosetup-next-steps");
         return true;
     }
 
@@ -164,11 +222,20 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
-            return List.of("about", "import", "migrate");
+            return List.of("about", "autosetup", "import", "migrate");
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("import")) {
             return List.of("kitsx");
+        }
+
+        // Only the console can reset, so only the console is offered it.
+        if (args.length == 2 && args[0].equalsIgnoreCase("autosetup")) {
+            return (sender instanceof ConsoleCommandSender) ? List.of("reset") : List.of();
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("autosetup") && args[1].equalsIgnoreCase("reset")) {
+            return List.of("confirm");
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("migrate")) {
