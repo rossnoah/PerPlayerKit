@@ -85,7 +85,7 @@ public class BroadcastManager {
         for (Player broadcastPlayer : world.getPlayers()) {
             if (broadcastPlayer.getLocation().distance(player.getLocation()) < broadcastDistance) {
                 if (broadcastPlayer.hasPermission(permission)) {
-                    audience.player(broadcastPlayer).sendMessage(prefix.append(body));
+                    sendComponentMessage(broadcastPlayer, prefix.append(body));
                 }
             }
         }
@@ -187,14 +187,20 @@ public class BroadcastManager {
         if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled") && !messages.isEmpty()) {
             Bukkit.getScheduler().runTaskTimer(plugin, () -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    audience.player(player).sendMessage(messages.get(index[0]));
+                    sendComponentMessage(player, messages.get(index[0]));
                 }
                 index[0] = (index[0] + 1) % messages.size();
             }, 0, plugin.getConfig().getInt("scheduled-broadcast.period") * 20L);
         }
     }
 
+    /** Every component this class sends to a player goes through here. */
     public void sendComponentMessage(Player player, Component message) {
+        // Paper's own chat API first: adventure-platform silently delivers
+        // nothing on servers newer than it knows about. See AudienceCompat.
+        if (AudienceCompat.send(player, message)) {
+            return;
+        }
         audience.player(player).sendMessage(message);
     }
 

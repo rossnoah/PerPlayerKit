@@ -38,7 +38,30 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>dev.noah</shadedPattern>
                         </relocation>
+                        <!--
+                            Keep our Adventure to ourselves. Paper ships its own
+                            (5.x on Paper 26+, 4.x before), and Bukkit plugin
+                            classloaders delegate to each other, so an unrelocated
+                            copy can be handed to another plugin that expects the
+                            server's version. AudienceCompat builds the server's
+                            class names at runtime so this relocation cannot
+                            rewrite them - see the note there before touching it.
+                        -->
+                        <relocation>
+                            <pattern>net.kyori</pattern>
+                            <shadedPattern>dev.noah.perplayerkit.libs.kyori</shadedPattern>
+                        </relocation>
                     </relocations>
+                    <transformers>
+                        <!--
+                            Relocation renames classes but leaves META-INF/services
+                            alone, so the relocated Adventure would look up provider
+                            files that no longer exist under that name. This renames
+                            those files and rewrites what is inside them.
+                        -->
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                    </transformers>
                 </configuration>
                 <executions>
                     <execution>
@@ -135,7 +158,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.4.0</version>
+            <version>4.4.1</version>
         </dependency>
 
         <dependency>

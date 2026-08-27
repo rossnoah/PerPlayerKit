@@ -68,6 +68,15 @@ public class Lang {
 
         instance = this;
         plugin.getLogger().info("Loaded language: " + activeLang);
+
+        // Off unless -Dperplayerkit.debug=true. Which path components take is
+        // invisible from the outside and silent when it breaks, so the
+        // integration test switches this on to assert it, and it stays out of
+        // everyone else's logs.
+        if (Boolean.getBoolean("perplayerkit.debug")) {
+            plugin.getLogger().info("Chat delivery: " + (AudienceCompat.isAvailable()
+                    ? "the server's own chat API" : "bundled adventure-platform"));
+        }
     }
 
     /**
@@ -229,6 +238,11 @@ public class Lang {
     }
 
     private void deliver(CommandSender sender, Component msg) {
+        // Paper's own chat API first: adventure-platform silently delivers
+        // nothing on servers newer than it knows about. See AudienceCompat.
+        if (sender instanceof Player && AudienceCompat.send(sender, msg)) {
+            return;
+        }
         if (audience != null && sender instanceof Player p) {
             audience.player(p).sendMessage(msg);
         } else {
