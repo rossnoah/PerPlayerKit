@@ -108,12 +108,12 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
         LocationAccess.Decision decision = access.check(player, feature);
         Lang.get().send(sender, "info.location-result", "world", player.getWorld().getName(),
                 "feature", feature.key(), "result", decision.allowed() ? "ALLOW" : "DENY",
-                "rule", decision.rule(), "reason", decision.reason());
+                "rule", decision.rule(), "reason", Lang.get().raw(decision.reasonKey()));
         List<String> regions = List.of();
         boolean regionsAvailable = true;
         try {
             regions = access.regions(player);
-            Lang.get().send(sender, "info.location-regions", "regions", regions.isEmpty() ? "None" : String.join(", ", regions));
+            Lang.get().send(sender, "info.location-regions", "regions", regions.isEmpty() ? Lang.get().raw("info.location-no-regions") : String.join(", ", regions));
         } catch (LocationAccess.RegionUnavailableException e) {
             Lang.get().send(sender, "info.location-regions", "regions", e.getMessage());
             regionsAvailable = false;
@@ -126,9 +126,9 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
         if (path != null) {
             var mappings = plugin.getConfig().getConfigurationSection(path);
             String kit = !regionsAvailable && RekitKitResolver.hasRegionEntries(mappings, player.getWorld().getName())
-                    ? "Unavailable until WorldGuard regions can be checked"
+                    ? Lang.get().raw("info.location-kit-unavailable")
                     : RekitKitResolver.resolveKit(mappings, player.getWorld().getName(), regions);
-            Lang.get().send(sender, "info.location-kit", "kit", kit == null ? "Last loaded kit" : kit);
+            Lang.get().send(sender, "info.location-kit", "kit", kit == null ? Lang.get().raw("info.location-last-kit") : kit);
         }
         return true;
     }

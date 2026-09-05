@@ -145,6 +145,13 @@ success:
   autosetup-applied: "<green>Autosetup complete! Filled {pages} kit room page(s) and {kits} public kit(s)."
 
 info:
+  location-rule-allowed: "Global and feature rules allow this location"
+  location-allow-miss: "No allow entry matched"
+  location-deny-match: "A deny entry matched"
+  location-rule-unavailable: "WorldGuard regions could not be checked"
+  location-last-kit: "Last loaded kit"
+  location-kit-unavailable: "Unavailable until WorldGuard regions can be checked"
+  location-no-regions: "None"
   location-result: "<gray>{feature} in {world}: <white>{result}<gray> ({rule}: {reason}). Location rules only; permissions and other feature settings still apply."
   location-regions: "<gray>WorldGuard regions, highest priority first: <white>{regions}"
   location-kit: "<gray>Configured kit choice: <white>{kit}<gray>. Used when the action is allowed and the kit is available."

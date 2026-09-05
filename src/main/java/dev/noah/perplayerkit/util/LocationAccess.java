@@ -22,7 +22,7 @@ public final class LocationAccess {
     }
     public static LocationAccess get() { return instance; }
 
-    public record Decision(boolean allowed, String rule, String reason, boolean unavailable) {}
+    public record Decision(boolean allowed, String rule, String reasonKey, boolean unavailable) {}
 
     public Decision check(Player player, LocationFeature feature) {
         RegionLookup lookup = new RegionLookup(player);
@@ -33,13 +33,13 @@ public final class LocationAccess {
             String path = "locations." + current.key();
             try {
                 if (!rule.permits(player.getWorld().getName(), lookup::get))
-                    return new Decision(false, path, rule.allow() ? "No allow entry matched" : "A deny entry matched", false);
+                    return new Decision(false, path, rule.allow() ? "info.location-allow-miss" : "info.location-deny-match", false);
             } catch (RegionUnavailableException e) {
                 warn(path, player, e);
-                return new Decision(false, path, e.getMessage(), true);
+                return new Decision(false, path, "info.location-rule-unavailable", true);
             }
         }
-        return new Decision(true, "locations." + feature.key(), "Global and feature rules allow this location", false);
+        return new Decision(true, "locations." + feature.key(), "info.location-rule-allowed", false);
     }
 
     public boolean require(Player player, LocationFeature feature) {

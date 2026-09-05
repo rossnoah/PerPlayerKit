@@ -35,11 +35,17 @@ Set the code and restart.
 | `uk` | Ukrainian (Українська) | `sv` | Swedish (Svenska) |
 | `da` | Danish (Dansk) | `fi` | Finnish (Suomi) |
 
+## Existing translations after an update
+
+Your language file takes priority, including empty strings and empty lists. Missing keys use the bundled version of the selected language, then English.
+
+For example, an older `lang/es.yml` automatically gets new Spanish messages from the updated plugin. Your custom text stays unchanged. You do not need to delete your file.
+
 ## Write your own
 
 <Steps>
   <Step title="Copy a file">
-    Copy `lang/en.yml` to `lang/custom.yml`; an update overwrites `en.yml`.
+    Copy `lang/en.yml` to `lang/custom.yml`. Existing language files are preserved during updates.
   </Step>
 
   <Step title="Change the text">
@@ -53,7 +59,7 @@ Set the code and restart.
   </Step>
 
   <Step title="Restart and check the console">
-    Missing keys fall back to English and are logged.
+    Missing keys in custom languages fall back to English. Unknown keys with no English fallback are logged.
   </Step>
 </Steps>
 
@@ -73,6 +79,7 @@ Set the code and restart.
 | `success` | Confirmations for saves, shares, deletes, imports |
 | `info` | Status lines, such as migration progress |
 | `command` | Usage text shown when a command is typed wrong |
+| `welcome` | Initial setup instructions for admins |
 | `update` | The new-version notice for admins |
 | `about` | What `/aboutperplayerkit` prints |
 | `gui` | Menu titles and button labels |

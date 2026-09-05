@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Lang {
@@ -61,7 +62,7 @@ public class Lang {
         if (configured == null || configured.isBlank()) {
             configured = DEFAULT_LANG;
         }
-        this.activeLang = configured.toLowerCase();
+        this.activeLang = configured.toLowerCase(Locale.ROOT);
 
         this.fallback = loadFromJar(DEFAULT_LANG);
         this.lang = loadActive(activeLang);
@@ -152,7 +153,9 @@ public class Lang {
             return loadFromJar(DEFAULT_LANG);
         }
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-        cfg.setDefaults(loadFromJar(DEFAULT_LANG));
+        YamlConfiguration bundled = BUNDLED_LANGS.contains(code) ? loadFromJar(code) : fallback;
+        if (bundled != fallback) bundled.setDefaults(fallback);
+        cfg.setDefaults(bundled);
         return cfg;
     }
 
