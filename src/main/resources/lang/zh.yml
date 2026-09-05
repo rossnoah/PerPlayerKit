@@ -34,6 +34,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> 执行了一个操作。</gray>"
 
 error:
+  item-filter-empty: "<red>此套件中没有过滤器允许的物品。"
   disabled-at-location: "<red>当前位置已禁用此操作。"
   regions-unavailable: "<red>无法检查区域规则，此操作暂不可用。请告知服务器管理员。"
   autosetup-config-save: "<red>无法保存初始套件定义：{error}"

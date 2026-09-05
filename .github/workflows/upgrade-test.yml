@@ -74,6 +74,19 @@ jobs:
           python tools/integration-test/selections/run.py \
             --server-jar tools/integration-test/.cache/paper-1.21.8.jar \
             --paper-cache tools/integration-test/.cache/paperclip/1.21.8
+      - uses: actions/setup-node@v4
+        if: matrix.baseline.version == 2 && matrix.backend == 'sqlite'
+        with:
+          node-version: '20'
+      - name: Install feature probe client
+        if: matrix.baseline.version == 2 && matrix.backend == 'sqlite'
+        run: npm ci --prefix tools/integration-test
+      - name: Check item metadata and kit room navigation
+        if: matrix.baseline.version == 2 && matrix.backend == 'sqlite'
+        run: |
+          python tools/integration-test/features/run.py \
+            --server-jar tools/integration-test/.cache/paper-1.21.8.jar --version 1.21.8 \
+            --paper-cache tools/integration-test/.cache/paperclip/1.21.8
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -83,3 +96,6 @@ jobs:
             target/upgrade-test/*/result.json
             target/selections-*/*/*.log
             target/selections-*/inputs.json
+            target/features-*/*.log
+            target/features-*/client.json
+            target/features-*/inputs.json

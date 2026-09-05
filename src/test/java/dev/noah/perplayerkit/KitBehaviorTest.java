@@ -96,7 +96,9 @@ class KitBehaviorTest {
     void settle() { kits.storageWork().run(() -> {}).join(); }
 
     @Test void filterNeverMutatesInputOrStoredDefinition() {
-        config.set("anti-exploit.only-allow-kitroom-items", true);
+        config.set("item-filter.enabled", true);
+        config.set("item-filter.kit-room-only", true);
+        config.set("item-filter.filter-saves", false);
         ItemFilter filter = new ItemFilter(plugin);
         ItemStack[] original = kit(Material.STONE);
         assertNull(filter.filterItemStack(original)[0]);
@@ -108,7 +110,9 @@ class KitBehaviorTest {
     }
 
     @Test void emptyWhitelistDoesNotReplaceInventory() {
-        config.set("anti-exploit.only-allow-kitroom-items", true);
+        config.set("item-filter.enabled", true);
+        config.set("item-filter.kit-room-only", true);
+        config.set("item-filter.filter-saves", false);
         new ItemFilter(plugin);
         kits.savePublicKit("crystal", kit(Material.STONE));
         assertFalse(kits.loadPublicKit(player, "crystal"));
@@ -386,7 +390,9 @@ class KitBehaviorTest {
     }
 
     @Test void shareCodeFiltersAtDeliveryAndRetainsTheStoredSnapshot() {
-        config.set("anti-exploit.only-allow-kitroom-items", true);
+        config.set("item-filter.enabled", true);
+        config.set("item-filter.kit-room-only", true);
+        config.set("item-filter.filter-saves", false);
         ItemFilter filter = new ItemFilter(plugin);
         ItemStack[] allowed = kit(Material.STONE);
         filter.addToWhitelist(java.util.Collections.singletonList(allowed));
@@ -404,7 +410,9 @@ class KitBehaviorTest {
     }
 
     @Test void shareCodeDoesNotEmptyAnInventoryWhileKitRoomWhitelistIsUnavailable() {
-        config.set("anti-exploit.only-allow-kitroom-items", true);
+        config.set("item-filter.enabled", true);
+        config.set("item-filter.kit-room-only", true);
+        config.set("item-filter.filter-saves", false);
         new ItemFilter(plugin);
         KitShareManager shares = new KitShareManager(plugin);
         KitShareManager.kitShareMap.put("ABC123", kit(Material.DIRT));
@@ -454,7 +462,9 @@ class KitBehaviorTest {
         PlayerInventory inventory = mock(PlayerInventory.class); when(target.getInventory()).thenReturn(inventory);
         shares.sendKitShareRequest(player, 1, target);
         String id = shares.getPendingRequestIds(target).get(0);
-        config.set("anti-exploit.only-allow-kitroom-items", true);
+        config.set("item-filter.enabled", true);
+        config.set("item-filter.kit-room-only", true);
+        config.set("item-filter.filter-saves", false);
         ItemFilter filter = new ItemFilter(plugin);
         shares.acceptRequest(target, id);
         assertEquals(List.of(id), shares.getPendingRequestIds(target));
@@ -628,5 +638,27 @@ class KitBehaviorTest {
             assertEquals(Material.STONE, room.getKitRoomPage(9)[0].getType());
             assertTrue(database.containsKey("kitroom9"));
         }
+    }
+
+    @Test void filteringAllItemsDoesNotReplaceAnInventoryOrRememberABadKit() {
+        kits.savekit(uuid, 1, kit(Material.STONE), true); kits.loadKit(player, 1);
+        kits.savePublicKit("blocked", kit(Material.DIRT));
+        config.set("item-filter.enabled", true); config.set("item-filter.kit-room-only", true);
+        ItemFilter filter = new ItemFilter(plugin); filter.addToWhitelist(java.util.Collections.singletonList(kit(Material.STONE)));
+        clearInvocations(player.getInventory());
+        assertFalse(kits.loadPublicKit(player, "blocked"));
+        assertEquals(new KitManager.KitReference(1, null), kits.getLastKitReference(uuid));
+        verify(player.getInventory(), never()).setContents(any());
+    }
+
+    @Test void saveFilteringAppliesToNewPersonalAndEnderchestEditsWithoutMutatingInputs() {
+        config.set("item-filter.enabled", true); config.set("item-filter.kit-room-only", true);
+        ItemFilter filter = new ItemFilter(plugin); filter.addToWhitelist(java.util.Collections.singletonList(kit(Material.STONE)));
+        ItemStack[] input = kit(Material.STONE); input[1] = new ItemStack(Material.DIRT);
+        assertTrue(kits.savekit(uuid, 1, input, true));
+        assertEquals(Material.DIRT, input[1].getType()); assertNull(kits.getPlayerKit(uuid, 1)[1]);
+        ItemStack[] ender = new ItemStack[27]; ender[0] = new ItemStack(Material.DIRT);
+        assertFalse(kits.saveECSilent(uuid, 2, ender)); assertFalse(kits.hasEC(uuid, 2));
+        assertEquals(Material.DIRT, ender[0].getType());
     }
 }

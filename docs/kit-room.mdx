@@ -120,9 +120,11 @@ kitroom:
 By default a kit can hold any legal item. To restrict kits to kit room items:
 
 ```yaml config.yml
-anti-exploit:
-  only-allow-kitroom-items: true
-  import-filter: true
+item-filter:
+  enabled: true
+  kit-room-only: true
+  filter-imports: true
+  filter-saves: true
 ```
 
 <Warning>

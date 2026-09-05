@@ -123,10 +123,34 @@ publickits:
     name: "Cart"
     icon: "TNT_MINECART"
 
-# These checks filter copies on use. Stored definitions are preserved; use /purgeitem for permanent removal.
+# Existing stored definitions stay intact when filtered on use. /purgeitem removes items permanently.
+item-filter:
+  enabled: false
+  kit-room-only: false # Require each material to appear in an enabled kit room page.
+  filter-imports: true # Filter items copied into personal kit editors.
+  filter-saves: true # Filter new personal and enderchest kit saves too.
+  allow-unbreakable: false
+  allow-custom-attributes: false
+  allow-item-flags: true # Tooltip visibility flags, such as hiding enchantments.
+  enchantments:
+    allow-over-levelled: false # Use vanilla level limits unless max-levels overrides them.
+    allow-incompatible: false # Allow enchantments on invalid items or conflicting combinations.
+    max-levels: {} # Enchantment ID -> maximum level. Example: {protection: 4}. 0 removes the cap.
+  potions: # Base and custom effects on potions and tipped arrows. Levels start at 1.
+    max-level: 0 # 0 means no cap.
+    max-duration-seconds: 0 # 0 means no cap; a positive cap also rejects infinite effects.
+    effects: {} # Effect ID -> max-level and/or max-duration-seconds. Additional caps.
+  overrides: {} # Material -> rule overrides. Omitted rules inherit the settings above.
+  # Example:
+  # overrides:
+  #   NETHERITE_SWORD:
+  #     enchantments:
+  #       max-levels: {sharpness: 5}
+  #   SPLASH_POTION:
+  #     potions:
+  #       max-duration-seconds: 90
+
 anti-exploit:
-  only-allow-kitroom-items: false # Allow only materials present in the kit room.
-  import-filter: false # Also filter editor imports. Requires only-allow-kitroom-items.
   block-spaces-in-commands: false
   prevent-shulkers-dropping-items: false # Remove dropped shulker boxes when they take damage.
 

@@ -34,6 +34,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> realizó una acción.</gray>"
 
 error:
+  item-filter-empty: "<red>Este kit no contiene objetos permitidos por el filtro."
   disabled-at-location: "<red>Esta acción está desactivada en tu ubicación."
   regions-unavailable: "<red>No se pudieron comprobar las reglas de región. Esta acción no está disponible. Avisa a un administrador."
   autosetup-config-save: "<red>No se pudieron guardar las definiciones de los kits iniciales: {error}"

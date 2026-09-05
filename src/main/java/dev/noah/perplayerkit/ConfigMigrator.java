@@ -50,7 +50,7 @@ public class ConfigMigrator {
                 throw new IOException("config-version must be an integer; retain the version supplied by the old plugin");
             int version = original.getInt("config-version", 1);
             if (version < 1 || version > CURRENT_VERSION) throw new IOException("Unsupported config-version " + version);
-            if (version == CURRENT_VERSION && !ConfigSchema.hasLegacyLocations(original)) return true;
+            if (version == CURRENT_VERSION && !ConfigSchema.hasLegacyLocations(original) && !ConfigSchema.hasLegacyItemFilter(original)) return true;
 
             // Build and validate the complete migration before changing any source file.
             YamlConfiguration old = new YamlConfiguration();
@@ -79,8 +79,10 @@ public class ConfigMigrator {
             YamlConfiguration updated;
             if (version == CURRENT_VERSION) {
                 ConfigSchema.upgradeLocations(old);
+                ConfigSchema.upgradeItemFilter(old);
                 updated = old;
             } else updated = ConfigSchema.upgrade(old, bundled("config.yml"));
+            ItemFilterRules.parse(updated);
             dev.noah.perplayerkit.util.LocationRules.parse(updated);
             dev.noah.perplayerkit.util.RekitKitResolver.validate(updated);
             changes.put(configFile, updated);
@@ -165,7 +167,7 @@ public class ConfigMigrator {
     private void logSummary(int version, YamlConfiguration old, YamlConfiguration updated,
                             int messages, Map<Path, Path> backups) {
         plugin.getLogger().info(version == CURRENT_VERSION
-                ? "Development config v3 location rules updated. Saved kit data is unchanged."
+                ? "Development config v3 settings updated. Saved kit data is unchanged."
                 : "Config upgraded from v" + version + " to v3. Saved kit data is unchanged.");
         backups.forEach((file, backup) -> plugin.getLogger().info("Backup for " + file.getFileName() + ": " + backup));
         long moved = ConfigSchema.RENAMED.keySet().stream().filter(old::contains).count();
@@ -177,6 +179,7 @@ public class ConfigMigrator {
         else plugin.getLogger().info("Storage remains " + storage + ".");
         plugin.getLogger().info("Action broadcasts " + (updated.getBoolean("broadcasts.enabled", true) ? "remain enabled" : "remain disabled")
                 + "; notification permissions and custom public kits are preserved.");
+        if (ConfigSchema.hasLegacyItemFilter(old)) plugin.getLogger().info("Item filtering moved to item-filter with existing rules preserved. Enable filter-saves to also filter new saves.");
         plugin.getLogger().info("World lists now use locations.<feature>.mode and entries. A legacy nonempty kill whitelist still takes precedence.");
         plugin.getLogger().info("Review: world names now match without case sensitivity. Region-dependent actions stop when WorldGuard is unavailable.");
         plugin.getLogger().info("Review: menus enforce action permissions; location rules also cover sharing, regear items, healing and automatic rekit.");

@@ -139,6 +139,14 @@ public class KitManager {
         Player player = silent ? null : Bukkit.getPlayer(uuid);
         if (!silent && player == null) return false;
 
+        if (ItemFilter.get().filtersSaves()) {
+            if (!ItemFilter.get().isReady()) {
+                if (player != null) Lang.get().send(player, "error.kitroom-not-ready");
+                return false;
+            }
+            contents = ItemFilter.get().filterKit(contents, player);
+            if (contents == null) return false;
+        }
         ItemStack[] prepared = KitContents.prepare(contents, enderchest);
         if (prepared == null) {
             if (player != null) Lang.get().send(player, enderchest ? "error.empty-ec" : "error.empty-kit");
@@ -185,7 +193,8 @@ public class KitManager {
         boolean invertWhitelist = plugin.getConfig().getBoolean("regear.invert-whitelist", false);
         Set<String> whitelist = new HashSet<>(plugin.getConfig().getStringList("regear.whitelist"));
 
-        ItemStack[] kit = ItemFilter.get().filterItemStack(kitByKitIDMap.get(key));
+        ItemStack[] kit = ItemFilter.get().filterKit(kitByKitIDMap.get(key), player);
+        if (kit == null) return false;
         ItemStack[] playerInventory = player.getInventory().getContents();
         for (int i = 0; i < Math.min(playerInventory.length, kit.length); i++) {
             if (kit[i] == null) {
@@ -247,7 +256,8 @@ public class KitManager {
         }
 
         if (!filterReady(player)) return false;
-        kit = ItemFilter.get().filterItemStack(kit);
+        kit = ItemFilter.get().filterKit(kit, notFoundMessage == null ? null : player);
+        if (kit == null) return false;
         if (isEnderChest) {
             player.getEnderChest().setContents(kit);
         } else {

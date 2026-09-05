@@ -16,7 +16,7 @@ Run `/perplayerkit autosetup` to fill it with the bundled setup. To stock it you
 
 ## Items disappear from player kits
 
-With `only-allow-kitroom-items: true`, the <Tooltip tip="A setting that strips out any item that is not in your kit room.">anti-exploit filter</Tooltip> filters loaded copies against your kit room. Stored definitions remain unchanged unless you save edits or purge them. Add the item, or set the flag to `false`. See [Anti-exploit](/features/anti-exploit).
+With `item-filter.enabled: true` and `kit-room-only: true`, the <Tooltip tip="A setting that strips out any item that is not in your kit room.">anti-exploit filter</Tooltip> filters loaded copies against your kit room. Stored definitions remain unchanged unless you save edits or purge them. Add the material, or set `kit-room-only: false`. Enchantment, potion, and other item rules still apply. See [Anti-exploit](/features/anti-exploit).
 
 ## A player's kits vanished after they switched accounts
 

@@ -34,6 +34,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> wykonał akcję.</gray>"
 
 error:
+  item-filter-empty: "<red>Ten zestaw nie zawiera przedmiotów dozwolonych przez filtr."
   disabled-at-location: "<red>Ta czynność jest wyłączona w tym miejscu."
   regions-unavailable: "<red>Nie udało się sprawdzić reguł regionów. Ta czynność jest niedostępna. Powiadom administratora."
   autosetup-config-save: "<red>Nie udało się zapisać definicji zestawów początkowych: {error}"

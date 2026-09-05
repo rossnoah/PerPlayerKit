@@ -34,6 +34,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> виконав дію.</gray>"
 
 error:
+  item-filter-empty: "<red>Цей набір не містить предметів, дозволених фільтром."
   disabled-at-location: "<red>Цю дію вимкнено в цьому місці."
   regions-unavailable: "<red>Не вдалося перевірити правила регіонів. Ця дія недоступна. Повідомте адміністратора."
   autosetup-config-save: "<red>Не вдалося зберегти визначення початкових наборів: {error}"

@@ -35,6 +35,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> performed an action.</gray>"
 
 error:
+  item-filter-empty: "<red>This kit has no items allowed by the filter."
   disabled-at-location: "<red>This action is disabled at your location."
   regions-unavailable: "<red>This action is unavailable because region rules could not be checked. Tell a server admin."
   autosetup-config-save: "<red>Could not save starter kit definitions: {error}"

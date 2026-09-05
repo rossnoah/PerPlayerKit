@@ -71,6 +71,27 @@ public final class ConfigSchema {
                 || config.contains("rekit.kill.world-blacklist");
     }
 
+    public static boolean hasLegacyItemFilter(FileConfiguration config) {
+        return config.contains("anti-exploit.only-allow-kitroom-items") || config.contains("anti-exploit.import-filter");
+    }
+
+    public static void upgradeItemFilter(FileConfiguration config) {
+        if (!hasLegacyItemFilter(config)) return;
+        if (config.contains("item-filter")) throw new IllegalArgumentException("Both legacy anti-exploit filter settings and item-filter are configured. Remove one before restarting.");
+        boolean enabled = config.getBoolean("anti-exploit.only-allow-kitroom-items", false);
+        config.set("item-filter.enabled", enabled);
+        config.set("item-filter.kit-room-only", enabled);
+        config.set("item-filter.filter-imports", config.getBoolean("anti-exploit.import-filter", false));
+        config.set("item-filter.filter-saves", false); // Existing definitions were filtered on use, not on save.
+        config.set("item-filter.allow-unbreakable", true);
+        config.set("item-filter.allow-custom-attributes", false);
+        config.set("item-filter.allow-item-flags", false);
+        config.set("item-filter.enchantments.allow-over-levelled", false);
+        config.set("item-filter.enchantments.allow-incompatible", true);
+        config.set("anti-exploit.only-allow-kitroom-items", null);
+        config.set("anti-exploit.import-filter", null);
+    }
+
     /** Also upgrades configs written by earlier v3 development builds. */
     public static void upgradeLocations(FileConfiguration config) {
         if (config.contains("restrictions.disabled-worlds")) {
@@ -98,6 +119,7 @@ public final class ConfigSchema {
     public static YamlConfiguration upgrade(FileConfiguration old, YamlConfiguration template) {
         // Location defaults are merged after legacy rules have been converted.
         template.set("locations", null);
+        template.set("item-filter", null);
         // These collections belong to the owner. Never repopulate removed public kits.
         if (old.contains("publickits")) template.set("publickits", old.get("publickits"));
         for (String key : old.getKeys(true)) {
@@ -119,6 +141,7 @@ public final class ConfigSchema {
         // Preserve the backend actually used, rather than connecting to an empty new database.
         template.set("storage.type", legacyStorageType(old.getString("storage.type"), old.getInt("config-version", 1)));
         upgradeLocations(template);
+        upgradeItemFilter(template);
         template.set("config-version", 3);
         return template;
     }

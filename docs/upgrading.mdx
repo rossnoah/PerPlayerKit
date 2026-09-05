@@ -30,6 +30,7 @@ A migration error stops the plugin and retains the original config. Fix the repo
 | Action message switches | `broadcasts.enabled` and `broadcasts.actions` |
 | `disabled-command-worlds` | `locations.global`, using `mode: deny` |
 | Kill world whitelist and blacklist | One rule under `locations.rekit-kill` |
+| Kit room material/import filters | `item-filter` |
 | Timers | Names now include `seconds` or `ticks` |
 
 Values are transferred automatically. Empty message lists and prefixes stay empty. Disabled broadcasts stay disabled, and an old boolean rekit-on-kill setting keeps its value.
@@ -49,6 +50,14 @@ World names now ignore capitalization. Check entries that previously depended on
 Location rules also cover sharing, menu interactions, and regear items. Automatic respawn and kill rekit both support world and region filters and public kit mappings.
 
 When a relevant WorldGuard lookup fails, affected actions stop. Region mappings no longer silently fall back to a world-wide kit. See [Worlds and regions](/settings/locations).
+
+## Check item filtering
+
+Older material and import filter settings move to `item-filter`. Existing switches are retained. Enchanted books and nested items are checked too.
+
+Migrated configs keep filtering on use without automatically filtering saves. Set `filter-saves: true` if new personal and enderchest kit saves should also meet the rules. Existing stored definitions remain unchanged until edited or purged.
+
+See [Item filtering](/features/anti-exploit) for unbreakable items, enchantment caps, potion limits, and material overrides.
 
 ## Check the storage message
 

@@ -34,6 +34,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> a efectuat o acțiune.</gray>"
 
 error:
+  item-filter-empty: "<red>Acest kit nu conține obiecte permise de filtru."
   disabled-at-location: "<red>Această acțiune este dezactivată în locația ta."
   regions-unavailable: "<red>Regulile regiunilor nu au putut fi verificate. Acțiunea nu este disponibilă. Anunță un administrator."
   autosetup-config-save: "<red>Nu s-au putut salva definițiile kiturilor inițiale: {error}"

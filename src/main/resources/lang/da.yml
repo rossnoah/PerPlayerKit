@@ -34,6 +34,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> udførte en handling.</gray>"
 
 error:
+  item-filter-empty: "<red>Dette kit indeholder ingen genstande, som filteret tillader."
   disabled-at-location: "<red>Denne handling er deaktiveret på din placering."
   regions-unavailable: "<red>Regionsreglerne kunne ikke kontrolleres. Handlingen er ikke tilgængelig. Kontakt en administrator."
   autosetup-config-save: "<red>Kunne ikke gemme definitionerne af startkits: {error}"

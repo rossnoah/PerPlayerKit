@@ -59,7 +59,6 @@ public class GUI {
     }
 
     private final Plugin plugin;
-    private final boolean filterItemsOnImport;
     private static final Set<UUID> kitDeletionFlag = new HashSet<>();
     private static final Set<UUID> clearedEditors = new HashSet<>();
     public static boolean takeClearFlag(Player player) { return clearedEditors.remove(player.getUniqueId()); }
@@ -117,7 +116,6 @@ public class GUI {
 
     public GUI(Plugin plugin) {
         this.plugin = plugin;
-        this.filterItemsOnImport = plugin.getConfig().getBoolean("anti-exploit.import-filter", false);
     }
 
     public static void addLoadPublicKit(Slot slot, String id) {
@@ -392,11 +390,13 @@ public class GUI {
         allowModificationRange(menu, 0, FOOTER_START);
         setGlassPaneRange(menu, FOOTER_START, MENU_SIZE);
         ItemStack[] contents = room.getKitRoomPage(current);
+        boolean editing = p.hasPermission("perplayerkit.editkitroom");
+        if (!editing) contents = ItemFilter.get().filterItemStack(contents);
         for (int i = 0; i < FOOTER_START; i++) menu.getSlot(i).setItem(contents[i]);
 
         menu.getSlot(45).setItem(createItem(Material.BEACON, 1, lang("gui.refill-button")));
         addKitRoom(menu.getSlot(45), current);
-        if (!p.hasPermission("perplayerkit.editkitroom")) {
+        if (!editing) {
             menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
             addMainButton(menu.getSlot(53));
         } else {
@@ -422,7 +422,7 @@ public class GUI {
             addKitRoom(menu.getSlot(52), first + KitRoomDataManager.BUTTONS_PER_GROUP);
         }
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-        openMenu(p, titledMenu, "perplayerkit.menu", LocationFeature.KIT_ROOM);
+        openMenu(p, titledMenu, editing ? "perplayerkit.editkitroom" : "perplayerkit.menu", LocationFeature.KIT_ROOM);
     }
 
     private Material kitRoomIcon(int page) {
@@ -436,7 +436,7 @@ public class GUI {
 
     public void ViewPublicKitMenu(Player p, String id) {
         if (!(ActionGuards.allowed(p, "perplayerkit.publickit"))) return;
-        ItemStack[] kit = KitManager.get().getPublicKit(id);
+        ItemStack[] kit = ItemFilter.get().filterItemStack(KitManager.get().getPublicKit(id));
 
         if (kit == null) {
             Lang.get().send(p, "error.kit-not-found-display");
@@ -699,10 +699,12 @@ public class GUI {
             SoundManager.playClick(player);
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
-            if (filterItemsOnImport) {
-                inv = ItemFilter.get().filterItemStack(player.getInventory().getContents());
+            if (ItemFilter.get().filtersImports()) {
+                if (!ItemFilter.get().isReady()) { Lang.get().send(player, "error.kitroom-not-ready"); return; }
+                inv = ItemFilter.get().filterKit(player.getInventory().getContents(), player);
+                if (inv == null) return;
             } else {
-                inv = player.getInventory().getContents();
+                inv = dev.noah.perplayerkit.KitContents.copy(player.getInventory().getContents());
             }
             for (int i = 0; i < 41; i++) {
                 m.getSlot(i).setItem(inv[i]);
@@ -715,10 +717,12 @@ public class GUI {
             SoundManager.playClick(player);
             Menu m = info.getClickedMenu();
             ItemStack[] inv;
-            if (filterItemsOnImport) {
-                inv = ItemFilter.get().filterItemStack(player.getEnderChest().getContents());
+            if (ItemFilter.get().filtersImports()) {
+                if (!ItemFilter.get().isReady()) { Lang.get().send(player, "error.kitroom-not-ready"); return; }
+                inv = ItemFilter.get().filterKit(player.getEnderChest().getContents(), player);
+                if (inv == null) return;
             } else {
-                inv = player.getEnderChest().getContents();
+                inv = dev.noah.perplayerkit.KitContents.copy(player.getEnderChest().getContents());
             }
             for (int i = 0; i < 27; i++) {
                 m.getSlot(i + 9).setItem(inv[i]);

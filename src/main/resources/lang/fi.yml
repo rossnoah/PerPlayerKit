@@ -34,6 +34,7 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> suoritti toiminnon.</gray>"
 
 error:
+  item-filter-empty: "<red>Tässä kitissä ei ole suodattimen sallimia esineitä."
   disabled-at-location: "<red>Tämä toiminto on poistettu käytöstä tässä sijainnissa."
   regions-unavailable: "<red>Aluesääntöjä ei voitu tarkistaa. Toiminto ei ole käytettävissä. Ilmoita ylläpitäjälle."
   autosetup-config-save: "<red>Aloituskittien määrityksiä ei voitu tallentaa: {error}"

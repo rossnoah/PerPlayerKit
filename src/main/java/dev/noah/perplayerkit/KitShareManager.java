@@ -157,7 +157,8 @@ public class KitShareManager {
             Lang.get().send(p, "error.kitroom-not-ready");
             return;
         }
-        ItemStack[] data = ItemFilter.get().filterItemStack(kitShareMap.get(id));
+        ItemStack[] data = ItemFilter.get().filterKit(kitShareMap.get(id), p);
+        if (data == null) return;
 
         if (data.length == 27) {
             p.getEnderChest().setContents(data);
@@ -244,17 +245,19 @@ public class KitShareManager {
             return;
         }
 
-        if (request.getType() != ShareRequest.Type.TRANSFER && !ItemFilter.get().isReady()) {
+        if ((request.getType() != ShareRequest.Type.TRANSFER || ItemFilter.get().filtersSaves()) && !ItemFilter.get().isReady()) {
             Lang.get().send(target, "error.kitroom-not-ready");
             return;
         }
+        ItemStack[] filtered = request.getType() == ShareRequest.Type.TRANSFER ? null : ItemFilter.get().filterKit(request.getContents(), target);
+        if (request.getType() != ShareRequest.Type.TRANSFER && filtered == null) return;
         request.cancelExpiryTask();
         shareRequestsById.remove(request.getId());
 
         Player sender = Bukkit.getPlayer(request.getSenderId());
         switch (request.getType()) {
             case KIT -> {
-                target.getInventory().setContents(ItemFilter.get().filterItemStack(request.getContents()));
+                target.getInventory().setContents(filtered);
                 // Resync the client (including the offhand slot) so it doesn't render stale items.
                 target.updateInventory();
                 BroadcastManager.get().broadcastPlayerCopiedKit(target);
@@ -263,7 +266,7 @@ public class KitShareManager {
                 }
             }
             case ENDERCHEST -> {
-                target.getEnderChest().setContents(ItemFilter.get().filterItemStack(request.getContents()));
+                target.getEnderChest().setContents(filtered);
                 BroadcastManager.get().broadcastPlayerCopiedEC(target);
                 if (sender != null) {
                     Lang.get().send(sender, "success.share-request-accepted", "player", target.getName());
@@ -271,12 +274,20 @@ public class KitShareManager {
             }
             case TRANSFER -> {
                 KitManager kitManager = KitManager.get();
-                request.getKits().forEach((slot, kit) -> kitManager.savekit(target.getUniqueId(), slot, kit, true));
-                request.getEnderchests().forEach((slot, ec) -> kitManager.saveECSilent(target.getUniqueId(), slot, ec));
+                int savedKits = 0, savedEnderchests = 0;
+                for (var entry : request.getKits().entrySet())
+                    if (kitManager.savekit(target.getUniqueId(), entry.getKey(), entry.getValue(), true)) savedKits++;
+                for (var entry : request.getEnderchests().entrySet())
+                    if (kitManager.saveECSilent(target.getUniqueId(), entry.getKey(), entry.getValue())) savedEnderchests++;
+                if (savedKits + savedEnderchests == 0) {
+                    Lang.get().send(target, "error.item-filter-empty");
+                    SoundManager.playFailure(target);
+                    return;
+                }
                 Lang.get().send(target, "success.transfer-received",
                         "player", request.getSenderName(),
-                        "kits", String.valueOf(request.getKits().size()),
-                        "ecs", String.valueOf(request.getEnderchests().size()));
+                        "kits", String.valueOf(savedKits),
+                        "ecs", String.valueOf(savedEnderchests));
                 if (sender != null) {
                     Lang.get().send(sender, "success.transfer-sent", "player", target.getName());
                 }

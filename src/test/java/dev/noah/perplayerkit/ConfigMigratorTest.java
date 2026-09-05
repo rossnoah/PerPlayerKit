@@ -373,4 +373,32 @@ class ConfigMigratorTest {
         assertFalse(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
         assertEquals(original, Files.readString(dir.resolve("config.yml")));
     }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(ints={1,2,3})
+    void itemFilterMigrationRetainsExistingChoicesAndIsIdempotent(int version, @TempDir Path dir) throws Exception {
+        Files.writeString(dir.resolve("config.yml"), "config-version: " + version
+                + "\nanti-exploit:\n  only-allow-kitroom-items: true\n  import-filter: false\n  block-spaces-in-commands: true\n");
+        assertTrue(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
+        var migrated = ConfigFiles.read(dir.resolve("config.yml"));
+        assertTrue(migrated.getBoolean("item-filter.enabled"));
+        assertTrue(migrated.getBoolean("item-filter.kit-room-only"));
+        assertFalse(migrated.getBoolean("item-filter.filter-imports"));
+        assertFalse(migrated.getBoolean("item-filter.filter-saves"));
+        assertTrue(migrated.getBoolean("item-filter.allow-unbreakable"));
+        assertFalse(migrated.getBoolean("item-filter.allow-item-flags"));
+        assertTrue(migrated.getBoolean("item-filter.enchantments.allow-incompatible"));
+        assertTrue(migrated.getBoolean("anti-exploit.block-spaces-in-commands"));
+        assertFalse(migrated.contains("anti-exploit.only-allow-kitroom-items"));
+        String first = Files.readString(dir.resolve("config.yml"));
+        assertTrue(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
+        assertEquals(first, Files.readString(dir.resolve("config.yml")));
+    }
+
+    @Test void conflictingItemFilterSchemasRetainTheOriginalConfig(@TempDir Path dir) throws Exception {
+        String original = "config-version: 3\nanti-exploit: {only-allow-kitroom-items: true}\nitem-filter: {enabled: false}\n";
+        Files.writeString(dir.resolve("config.yml"), original);
+        assertFalse(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
+        assertEquals(original, Files.readString(dir.resolve("config.yml")));
+    }
 }

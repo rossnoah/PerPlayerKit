@@ -62,7 +62,7 @@ related:
 
 <AccordionGroup>
   <Accordion title="Why do items keep disappearing from kits?">
-    `only-allow-kitroom-items: true` filters loaded copies against your kit room. Stored definitions are preserved. See [Anti-exploit](/features/anti-exploit).
+    `item-filter.enabled: true` with `kit-room-only: true` filters loaded copies against your kit room. Stored definitions are preserved. See [Anti-exploit](/features/anti-exploit).
   </Accordion>
 
   <Accordion title="How do I stop the chat spam?">
@@ -74,7 +74,7 @@ related:
   </Accordion>
 
   <Accordion title="How do I ban an item that is already in people's kits?">
-    Take it out of the kit room, turn on `only-allow-kitroom-items`, then run `/purgeitem <item> all confirm`. See [Remove a banned item](/data/purge-items).
+    Take it out of the kit room, enable `item-filter` with `kit-room-only: true`, then run `/purgeitem <item> all confirm`. See [Remove a banned item](/data/purge-items).
   </Accordion>
 
   <Accordion title="Can I disable kits in my lobby?">
