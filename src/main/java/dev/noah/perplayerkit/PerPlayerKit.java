@@ -75,6 +75,7 @@ public final class PerPlayerKit extends JavaPlugin {
     public static StorageManager storageManager;
     private KitManager kitManager;
     private BackupManager backupManager;
+    private UpdateChecker updateChecker;
 
     public static Plugin getPlugin() {
         return plugin;
@@ -166,7 +167,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
         new StarterSetup(this).checkOnStartup();
 
-        UpdateChecker updateChecker = new UpdateChecker(this);
+        updateChecker = new UpdateChecker(this);
 
         // REGISTER THINGS START
         KitSlotTabCompleter kitSlotTabCompleter = new KitSlotTabCompleter();
@@ -268,6 +269,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (updateChecker != null) updateChecker.close();
         if (backupManager != null) backupManager.shutdown();
         if (kitManager != null) kitManager.shutdown();
         closeDatabaseConnection();

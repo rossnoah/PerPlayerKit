@@ -58,3 +58,11 @@ updates:
 | `updates.notify-admins-on-join` | Tells admins when a plugin update exists |
 
 See [Automatic rekit](/features/rekit) and [Messages](/settings/messages) for their settings.
+
+## Update checks
+
+Version checks run in the background. A slow update server does not hold up startup or player joins.
+
+Successful checks are cached for one hour. Failed checks can retry after one minute when another check is requested. Admins joining during a pending check share that request and receive any notification afterward.
+
+`updates.notify-admins-on-join` controls player notifications. Startup checks still run. Notifications are skipped if the admin disconnects, loses permission, or the plugin shuts down before delivery.

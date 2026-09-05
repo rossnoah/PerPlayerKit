@@ -162,7 +162,7 @@ death:
   condensed-drops: false
 
 updates:
-  notify-admins-on-join: true
+  notify-admins-on-join: true # Update checks run in the background.
 
 motd:
   enabled: true
