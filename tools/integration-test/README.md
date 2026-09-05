@@ -31,8 +31,8 @@ server, so they cannot see the failures that actually happen in the wild:
 
 Per target: the plugin enables, prints its startup guide and permission list,
 notices the empty kit room, lists its subcommands, fills five kit room pages and
-three public kits with `autosetup`, refuses to redo the work on a second run, and
-leaves eight rows in storage. It also fails on any exception, `LinkageError`,
+the supported bundled public kits with `autosetup`, refuses to redo the work on a second run, and
+leaves five page rows plus eight or nine public kit rows in storage. It restarts the server and verifies autosetup still finds every saved entry. It also fails on any exception, `LinkageError`,
 `NoClassDefFoundError` or `NoSuchMethodError` attributed to the plugin.
 
 Those console lines go through the same `Lang` path that players do, so if
@@ -110,3 +110,7 @@ ports are waited on between targets, and a server that ignores `stop` is killed
 by its own pid rather than its shell's. If a run still fails oddly, check the
 load first - a target failing here that passed a moment ago is usually the
 machine, not the plugin.
+
+## WorldGuard regions
+
+The [region probe](regions/README.md) tests real geometry, inherited parents, overlapping priorities, unavailable data, and startup without WorldGuard. It uses isolated servers and supplied compatible WorldGuard and WorldEdit jars.

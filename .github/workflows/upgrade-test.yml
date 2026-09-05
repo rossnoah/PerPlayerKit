@@ -1,0 +1,77 @@
+name: Upgrade and rollback
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        baseline:
+          - { version: 1, ref: df1040e }
+          - { version: 2, ref: 12c959b }
+        backend: [sqlite, yaml]
+    name: config v${{ matrix.baseline.version }} / ${{ matrix.backend }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install PyYAML
+      - name: Build current plugin
+        run: mvn -B package
+      - name: Build historical plugin
+        env:
+          BASELINE_REF: ${{ matrix.baseline.ref }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/ppk-old"
+          git archive "$BASELINE_REF" | tar -x -C "$RUNNER_TEMP/ppk-old"
+          mvn -B -f "$RUNNER_TEMP/ppk-old/pom.xml" package -DskipTests
+      - name: Cache Paper and vanilla jar
+        uses: actions/cache@v4
+        with:
+          path: tools/integration-test/.cache
+          key: upgrade-paper-1.21.8
+      - name: Download fixture server
+        run: |
+          python - <<'PY'
+          import json, pathlib, urllib.request
+          cache = pathlib.Path('tools/integration-test/.cache')
+          cache.mkdir(exist_ok=True)
+          jar = cache / 'paper-1.21.8.jar'
+          if not jar.exists():
+              request = urllib.request.Request('https://fill.papermc.io/v3/projects/paper/versions/1.21.8/builds/latest', headers={'User-Agent': 'PerPlayerKit-upgrade-test'})
+              with urllib.request.urlopen(request) as response:
+                  build = json.load(response)
+              urllib.request.urlretrieve(build['downloads']['server:default']['url'], jar)
+          (cache / 'paperclip/1.21.8').mkdir(parents=True, exist_ok=True)
+          PY
+      - name: Upgrade, restart, save, and roll back
+        env:
+          CONFIG_VERSION: ${{ matrix.baseline.version }}
+          BACKEND: ${{ matrix.backend }}
+        run: |
+          python tools/integration-test/upgrade/run.py \
+            --old-jar "$RUNNER_TEMP/ppk-old/target/PerPlayerKit-1.7.1.jar" \
+            --old-config-version "$CONFIG_VERSION" --backend "$BACKEND" \
+            --server-jar tools/integration-test/.cache/paper-1.21.8.jar \
+            --paper-cache tools/integration-test/.cache/paperclip/1.21.8
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: upgrade-v${{ matrix.baseline.version }}-${{ matrix.backend }}
+          path: |
+            target/upgrade-test/*/*.log
+            target/upgrade-test/*/result.json

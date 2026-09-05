@@ -224,6 +224,47 @@ EOF
     sleep 1; waited_port=$((waited_port + 1))
   done
 
+  if [[ $result -eq 0 ]]; then
+    local restart_log="$dir/restart.log"
+    ( cd "$dir" && exec "$java_bin" -Xms1G -Xmx2G -Dperplayerkit.debug=true -jar "$server_jar" nogui ) \
+      < "$pipe" > "$restart_log" 2>&1 &
+    local restart_pid=$!
+    exec 3> "$pipe"
+    local restart_wait=0 restart_ok=0
+    while kill -0 "$restart_pid" 2>/dev/null && (( restart_wait < BOOT_TIMEOUT )); do
+      if grep -q 'Done (' "$restart_log"; then restart_ok=1; break; fi
+      sleep 2; restart_wait=$((restart_wait + 2))
+    done
+    if (( restart_ok )); then
+      echo "perplayerkit autosetup" >&3
+      local settled=0
+      while (( settled < 15 )); do
+        grep -qF "Everything is already set up." "$restart_log" && break
+        sleep 1; settled=$((settled + 1))
+      done
+      if ! grep -qF "Everything is already set up." "$restart_log" \
+          || grep -qF "Your kit room is empty." "$restart_log" \
+          || grep -iE 'PerPlayerKit|perplayerkit' "$restart_log" | grep -qiE 'exception|linkageerror|noclassdeffound|nosuchmethod|failed to'; then
+        restart_ok=0
+      fi
+    fi
+    echo "stop" >&3 2>/dev/null || true
+    local restart_stop=0
+    while kill -0 "$restart_pid" 2>/dev/null && (( restart_stop < STOP_TIMEOUT )); do
+      sleep 2; restart_stop=$((restart_stop + 2))
+    done
+    kill -9 "$restart_pid" 2>/dev/null || true
+    exec 3>&-
+    wait "$restart_pid" 2>/dev/null || true
+    if (( restart_ok )); then
+      ok "saved starter content survives a server restart"
+    else
+      bad "saved starter content survives a server restart"
+      unset "PASSED[$((${#PASSED[@]} - 1))]"
+      FAILED+=("$label: restart"); result=1
+    fi
+  fi
+
   [[ -z "${KEEP_WORK:-}" && $result -eq 0 ]] && rm -rf "$dir"
   return $result
 }
@@ -310,6 +351,11 @@ drive_and_check() {
   local label="$1" dir="$2" log_file="$3" pid="$4" version="$5" port="$6"
   local platform="${label%% *}"
   local failures=()
+  local kit_count=9 kit_names="crystal, mace, netherite, pot, uhc, sword, axe, ffa, cart"
+  if grep -qF "Public kit 'mace' has icon MACE" "$log_file"; then
+    kit_count=8
+    kit_names="crystal, netherite, pot, uhc, sword, axe, ffa, cart"
+  fi
 
   send_and_settle() { echo "$1" >&3; sleep 3; }
 
@@ -332,8 +378,8 @@ drive_and_check() {
   expect "permissions listed"        "perplayerkit.use    - give this one to your default group"
   expect "empty kit room detected"   "Your kit room is empty."
   expect "subcommands listed"        "PerPlayerKit admin commands:"
-  expect "autosetup filled content"  "Autosetup complete! Filled 5 kit room page(s) and 3 public kit(s)."
-  expect "public kits named"         "Public kits filled: crystal, axe, sword"
+  expect "autosetup filled content"  "Autosetup complete! Filled 5 kit room page(s) and $kit_count public kit(s)."
+  expect "public kits named"         "Public kits filled: $kit_names"
   expect "autosetup is idempotent"   "Everything is already set up."
 
   # Which path components take, which is silent when it breaks. Paper has a
@@ -362,10 +408,10 @@ drive_and_check() {
   local db="$dir/plugins/PerPlayerKit/database.db" rows=""
   if command -v sqlite3 >/dev/null && [[ -f "$db" ]]; then
     rows="$(sqlite3 "$db" "SELECT count(*) FROM kits;" 2>/dev/null)"
-    if [[ "$rows" == "8" ]]; then
-      ok "storage holds 5 kit room pages + 3 public kits"
+    if [[ "$rows" == "$((5 + kit_count))" ]]; then
+      ok "storage holds 5 kit room pages + $kit_count public kits"
     else
-      bad "storage holds 5 kit room pages + 3 public kits (found ${rows:-none})"
+      bad "storage holds 5 kit room pages + $kit_count public kits (found ${rows:-none})"
       failures+=("storage rows")
     fi
   else
