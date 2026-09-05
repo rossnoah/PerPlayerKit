@@ -46,7 +46,7 @@ public class AutoRekitListener implements Listener {
         this.plugin = plugin;
         this.worldGuardInstalled = Bukkit.getPluginManager().getPlugin("WorldGuard") != null;
         if (!worldGuardInstalled && RekitKitResolver.hasRegionEntries(getRekitKitsSection())) {
-            plugin.getLogger().warning("feature.rekit-on-kill.kits contains region entries (\"world:region\") "
+            plugin.getLogger().warning("rekit.kill.kits contains region entries (\"world:region\") "
                     + "but WorldGuard is not installed, so those entries will be ignored.");
         }
     }
@@ -54,7 +54,7 @@ public class AutoRekitListener implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
 
-        if (!plugin.getConfig().getBoolean("feature.rekit-on-respawn", true)) {
+        if (!plugin.getConfig().getBoolean("rekit.respawn.enabled", true)) {
             return;
         }
 
@@ -62,7 +62,7 @@ public class AutoRekitListener implements Listener {
             return;
         }
 
-        long delay = plugin.getConfig().getLong("feature.rekit-on-respawn-delay", 0);
+        long delay = plugin.getConfig().getLong("rekit.respawn.delay-ticks", 0);
         Player player = e.getPlayer();
 
         if (delay <= 0) {
@@ -107,7 +107,7 @@ public class AutoRekitListener implements Listener {
     }
 
     private ConfigurationSection getRekitKitsSection() {
-        return plugin.getConfig().getConfigurationSection("feature.rekit-on-kill.kits");
+        return plugin.getConfig().getConfigurationSection("rekit.kill.kits");
     }
 
     /**
@@ -153,19 +153,19 @@ public class AutoRekitListener implements Listener {
      */
     private boolean isRekitOnKillEnabled() {
         // Check if it's a section (new format)
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection("feature.rekit-on-kill");
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("rekit.kill");
         if (section != null) {
             return section.getBoolean("enabled", false);
         }
         // Fall back to old boolean format for backwards compatibility
-        return plugin.getConfig().getBoolean("feature.rekit-on-kill", false);
+        return plugin.getConfig().getBoolean("rekit.kill", false);
     }
 
     /**
      * Checks if a world is allowed for rekit-on-kill based on whitelist/blacklist settings.
      */
     private boolean isWorldAllowedForRekitOnKill(String worldName) {
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection("feature.rekit-on-kill");
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("rekit.kill");
         if (section == null) {
             // Old format - no world filtering, allow all
             return true;

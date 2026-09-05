@@ -69,7 +69,7 @@ public class BackupManager {
     public BackupManager(Plugin plugin, StorageManager storageManager) {
         this.plugin = plugin;
         this.storageManager = storageManager;
-        this.enabled = plugin.getConfig().getBoolean("backup.enabled", true);
+        this.enabled = plugin.getConfig().getBoolean("storage.backup.enabled", true);
         this.backupDir = new File(plugin.getDataFolder(), "backups");
 
         if (enabled) {

@@ -47,14 +47,14 @@ public class SoundManager {
      * Play a GUI open sound to the player.
      */
     public static void playOpenGui(Player player) {
-        play(player, getSound("open_gui", "UI_BUTTON_CLICK"));
+        play(player, getSound("open-gui", "UI_BUTTON_CLICK"));
     }
 
     /**
      * Play a GUI close sound to the player.
      */
     public static void playCloseGui(Player player) {
-        play(player, getSound("close_gui", "UI_BUTTON_CLICK"));
+        play(player, getSound("close-gui", "UI_BUTTON_CLICK"));
     }
 
     private static void play(Player player, Sound sound) {

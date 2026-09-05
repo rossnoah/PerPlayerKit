@@ -18,94 +18,41 @@
  */
 package dev.noah.perplayerkit;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 
 public class ConfigManager {
-
-    /**
-     * Keys that were moved out of config.yml into lang files in v2. ConfigManager must not
-     * re-add them when merging missing keys, or migrated installs would gain stale duplicates.
-     */
-    private static final Set<String> LANG_KEYS = Set.of(
-            "prefix",
-            "disabled-command-message",
-            "motd.message",
-            "scheduled-broadcast.messages"
-    );
-    private final File configFile;
-    private final FileConfiguration config;
     private final Plugin plugin;
+    public ConfigManager(Plugin plugin) { this.plugin = plugin; }
 
-    public ConfigManager(Plugin plugin) {
-        this.plugin = plugin;
-        this.configFile = new File(plugin.getDataFolder(), "config.yml");
-        this.config = YamlConfiguration.loadConfiguration(configFile);
-    }
-
-    public void loadConfig() {
-        if (configFile.exists()) {
-            mergeMissingKeys();
-        }else{
-            plugin.saveDefaultConfig();
-        }
-        plugin.saveConfig();
-    }
-
-    private void mergeMissingKeys() {
-        InputStream defaultConfigStream = plugin.getResource("config.yml");
-        if (defaultConfigStream == null) {
-            return;
-        }
-
-        FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultConfigStream));
-
-        boolean updated = false;
-
-        //loop through keys and add missing ones
-        for (String key : defaultConfig.getKeys(true)) {
-            //special handling for public kits
-            if (key.equals("publickits")) {
-                // add publickits if its missing
-                if (!config.contains(key)) {
-                    config.set(key, defaultConfig.getConfigurationSection(key).getValues(true));
-                    plugin.getLogger().info("Added missing section: publickits");
-                    updated = true;
+    public boolean loadConfig() {
+        Path file = plugin.getDataFolder().toPath().resolve("config.yml");
+        try {
+            if (!Files.exists(file)) plugin.saveDefaultConfig();
+            YamlConfiguration config = ConfigFiles.read(file);
+            try (InputStream in = plugin.getResource("config.yml")) {
+                if (in == null) throw new java.io.IOException("Bundled config.yml is missing");
+                YamlConfiguration defaults = new YamlConfiguration();
+                defaults.load(new InputStreamReader(in, StandardCharsets.UTF_8));
+                boolean changed = false;
+                for (String key : defaults.getKeys(true)) {
+                    if (key.startsWith("publickits.") || defaults.isConfigurationSection(key)) continue;
+                    if (!config.contains(key)) { config.set(key, defaults.get(key)); changed = true; }
                 }
-                continue;
-            }else if(key.startsWith("publickits")){
-                continue;
+                if (!config.contains("publickits")) {
+                    config.set("publickits", defaults.get("publickits")); changed = true;
+                }
+                if (changed) ConfigFiles.write(config, file);
             }
-
-            // Strings that live in lang files no longer belong in config.yml
-            if (LANG_KEYS.contains(key) || key.endsWith(".message") && key.startsWith("messages.")) {
-                continue;
-            }
-
-            // Add missing keys for everything else
-            if (!config.contains(key)) {
-                config.set(key, defaultConfig.get(key));
-                plugin.getLogger().info("Added missing config key: " + key);
-                updated = true;
-            }
-        }
-
-        //save the updated config
-        if (updated) {
-            try {
-                config.save(configFile);
-                plugin.getLogger().info("Configuration updated with missing keys.");
-            } catch (Exception e) {
-                plugin.getLogger().severe("Failed to save updated configuration: " + e.getMessage());
-            }
+            plugin.reloadConfig();
+            return true;
+        } catch (Exception e) {
+            plugin.getLogger().severe("Unable to load config.yml: " + e.getMessage());
+            return false;
         }
     }
-
-
 }

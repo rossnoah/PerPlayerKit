@@ -97,17 +97,7 @@ public class BroadcastManager {
 
     private void broadcastMessage(Player player, MessageKey key, CooldownManager cooldownManager, String kitName) {
 
-        if (!plugin.getConfig().getBoolean("feature.broadcast-on-player-action", true)) {
-            return;
-        }
-
-        if (plugin.getConfig().getBoolean("messages.disable-kit-messages", false)) {
-            return;
-        }
-
-        if (isKitLoadingMessage(key) && !plugin.getConfig().getBoolean("feature.broadcast-kit-messages", true)) {
-            return;
-        }
+        if (!plugin.getConfig().getBoolean("broadcasts.enabled", true)) return;
 
         if (cooldownManager != null && cooldownManager.isOnCooldown(player)) {
             return;
@@ -124,7 +114,7 @@ public class BroadcastManager {
         String permission = plugin.getConfig().getString(permissionPath, "perplayerkit.kitnotify");
 
         String playerName;
-        if (plugin.getConfig().getBoolean("use-display-name", false)) {
+        if (plugin.getConfig().getBoolean("broadcasts.use-display-name", false)) {
             playerName = player.getDisplayName();
         } else {
             playerName = player.getName();
@@ -184,13 +174,13 @@ public class BroadcastManager {
 
         int[] index = {0};
 
-        if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled") && !messages.isEmpty()) {
+        if (plugin.getConfig().getBoolean("broadcasts.scheduled.enabled") && !messages.isEmpty()) {
             Bukkit.getScheduler().runTaskTimer(plugin, () -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     sendComponentMessage(player, messages.get(index[0]));
                 }
                 index[0] = (index[0] + 1) % messages.size();
-            }, 0, plugin.getConfig().getInt("scheduled-broadcast.period") * 20L);
+            }, 0, plugin.getConfig().getInt("broadcasts.scheduled.period-seconds") * 20L);
         }
     }
 
@@ -205,15 +195,15 @@ public class BroadcastManager {
     }
 
     public enum MessageKey {
-        PLAYER_REPAIRED("messages.player-repaired", "broadcast-messages.player-repaired"),
-        PLAYER_HEALED("messages.player-healed", "broadcast-messages.player-healed"),
-        PLAYER_OPENED_KIT_ROOM("messages.player-opened-kit-room", "broadcast-messages.player-opened-kit-room"),
-        PLAYER_LOADED_PRIVATE_KIT("messages.player-loaded-private-kit", "broadcast-messages.player-loaded-private-kit"),
-        PLAYER_LOADED_PUBLIC_KIT("messages.player-loaded-public-kit", "broadcast-messages.player-loaded-public-kit"),
-        PLAYER_LOADED_ENDER_CHEST("messages.player-loaded-enderchest", "broadcast-messages.player-loaded-enderchest"),
-        PLAYER_COPIED_KIT("messages.player-copied-kit", "broadcast-messages.player-copied-kit"),
-        PLAYER_COPIED_EC("messages.player-copied-ec", "broadcast-messages.player-copied-ec"),
-        PLAYER_REGEARED("messages.player-regeared", "broadcast-messages.player-regeared");
+        PLAYER_REPAIRED("broadcasts.actions.player-repaired", "broadcast-messages.player-repaired"),
+        PLAYER_HEALED("broadcasts.actions.player-healed", "broadcast-messages.player-healed"),
+        PLAYER_OPENED_KIT_ROOM("broadcasts.actions.player-opened-kit-room", "broadcast-messages.player-opened-kit-room"),
+        PLAYER_LOADED_PRIVATE_KIT("broadcasts.actions.player-loaded-private-kit", "broadcast-messages.player-loaded-private-kit"),
+        PLAYER_LOADED_PUBLIC_KIT("broadcasts.actions.player-loaded-public-kit", "broadcast-messages.player-loaded-public-kit"),
+        PLAYER_LOADED_ENDER_CHEST("broadcasts.actions.player-loaded-enderchest", "broadcast-messages.player-loaded-enderchest"),
+        PLAYER_COPIED_KIT("broadcasts.actions.player-copied-kit", "broadcast-messages.player-copied-kit"),
+        PLAYER_COPIED_EC("broadcasts.actions.player-copied-ec", "broadcast-messages.player-copied-ec"),
+        PLAYER_REGEARED("broadcasts.actions.player-regeared", "broadcast-messages.player-regeared");
 
         private final String configKey;
         private final String langKey;

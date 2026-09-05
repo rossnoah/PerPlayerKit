@@ -38,12 +38,12 @@ public class MySQL implements SQLDatabase {
 
     public MySQL(Plugin plugin) {
         this.plugin = plugin;
-        host = plugin.getConfig().getString("mysql.host");
-        port = plugin.getConfig().getString("mysql.port");
-        database = plugin.getConfig().getString("mysql.dbname");
-        username = plugin.getConfig().getString("mysql.username");
-        password = plugin.getConfig().getString("mysql.password");
-        useSSL = plugin.getConfig().getBoolean("mysql.useSSL", false);
+        host = plugin.getConfig().getString("storage.mysql.host");
+        port = plugin.getConfig().getString("storage.mysql.port");
+        database = plugin.getConfig().getString("storage.mysql.dbname");
+        username = plugin.getConfig().getString("storage.mysql.username");
+        password = plugin.getConfig().getString("storage.mysql.password");
+        useSSL = plugin.getConfig().getBoolean("storage.mysql.use-ssl", false);
     }
 
     private HikariDataSource dataSource;
@@ -56,7 +56,7 @@ public class MySQL implements SQLDatabase {
     public void connect() {
         if (!isConnected()) {
             HikariConfig config = new HikariConfig();
-            config.setMaximumPoolSize(plugin.getConfig().getInt("mysql.maximumPoolSize",10));
+            config.setMaximumPoolSize(plugin.getConfig().getInt("storage.mysql.maximum-pool-size",10));
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=" + useSSL);
             config.setUsername(username);
             config.setPassword(password);

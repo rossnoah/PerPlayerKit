@@ -36,9 +36,9 @@ public class RedisStorage implements StorageManager {
     private Plugin plugin;
     public RedisStorage(Plugin plugin) {
         this.plugin = plugin;
-        this.host = plugin.getConfig().getString("redis.host");
-        this.port = plugin.getConfig().getInt("redis.port") == 0 ? Integer.parseInt(plugin.getConfig().getString("redis.port","6379")) : plugin.getConfig().getInt("redis.port");
-        this.password = plugin.getConfig().getString("redis.password");
+        this.host = plugin.getConfig().getString("storage.redis.host");
+        this.port = plugin.getConfig().getInt("storage.redis.port") == 0 ? Integer.parseInt(plugin.getConfig().getString("storage.redis.port","6379")) : plugin.getConfig().getInt("storage.redis.port");
+        this.password = plugin.getConfig().getString("storage.redis.password");
     }
 
     @Override

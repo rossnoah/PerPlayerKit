@@ -59,7 +59,7 @@ public class PlayerUtil {
         p.setSaturation(20);
 
         // Remove potion effects if configured to do so
-        if (PerPlayerKit.getPlugin().getConfig().getBoolean("feature.heal-remove-effects", false)) {
+        if (PerPlayerKit.getPlugin().getConfig().getBoolean("heal.clear-effects", false)) {
             p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
         }
 

@@ -39,12 +39,12 @@ public class PostgreSQL implements SQLDatabase {
 
     public PostgreSQL(Plugin plugin) {
         this.plugin = plugin;
-        host = plugin.getConfig().getString("postgresql.host");
-        port = plugin.getConfig().getString("postgresql.port");
-        database = plugin.getConfig().getString("postgresql.dbname");
-        username = plugin.getConfig().getString("postgresql.username");
-        password = plugin.getConfig().getString("postgresql.password");
-        useSSL = plugin.getConfig().getBoolean("postgresql.useSSL", false);
+        host = plugin.getConfig().getString("storage.postgresql.host");
+        port = plugin.getConfig().getString("storage.postgresql.port");
+        database = plugin.getConfig().getString("storage.postgresql.dbname");
+        username = plugin.getConfig().getString("storage.postgresql.username");
+        password = plugin.getConfig().getString("storage.postgresql.password");
+        useSSL = plugin.getConfig().getBoolean("storage.postgresql.use-ssl", false);
     }
 
     public boolean isConnected() {
@@ -54,7 +54,7 @@ public class PostgreSQL implements SQLDatabase {
     public void connect() {
         if (!isConnected()) {
             HikariConfig config = new HikariConfig();
-            config.setMaximumPoolSize(plugin.getConfig().getInt("postgresql.maximumPoolSize", 10));
+            config.setMaximumPoolSize(plugin.getConfig().getInt("storage.postgresql.maximum-pool-size", 10));
             config.setJdbcUrl("jdbc:postgresql://" + host + ":" + port + "/" + database
                     + "?sslmode=" + (useSSL ? "require" : "disable"));
             config.setDriverClassName("org.postgresql.Driver");

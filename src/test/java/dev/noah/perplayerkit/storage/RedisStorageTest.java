@@ -25,9 +25,9 @@ class RedisStorageTest {
     void setUp() {
         plugin = mock(Plugin.class);
         YamlConfiguration config = new YamlConfiguration();
-        config.set("redis.host", "127.0.0.1");
-        config.set("redis.port", 6379);
-        config.set("redis.password", "");
+        config.set("storage.redis.host", "127.0.0.1");
+        config.set("storage.redis.port", 6379);
+        config.set("storage.redis.password", "");
 
         when(plugin.getConfig()).thenReturn(config);
         when(plugin.getDataFolder()).thenReturn(new File("target/test-plugin-data"));

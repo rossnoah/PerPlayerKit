@@ -24,7 +24,7 @@ class KitSlotsTest {
         FileConfiguration config = mock(FileConfiguration.class);
         when(plugin.getConfig()).thenReturn(config);
         when(plugin.getLogger()).thenReturn(Logger.getLogger("KitSlotsTest"));
-        when(config.getInt("max-kits", KitSlots.DEFAULT_LIMIT)).thenReturn(value);
+        when(config.getInt("kits.max-slots", KitSlots.DEFAULT_LIMIT)).thenReturn(value);
         return plugin;
     }
 

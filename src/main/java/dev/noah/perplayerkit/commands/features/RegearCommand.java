@@ -36,8 +36,8 @@ public class RegearCommand implements CommandExecutor, Listener {
 
     public RegearCommand(Plugin plugin) {
         this.plugin = plugin;
-        int commandCooldownInSeconds = plugin.getConfig().getInt("regear.command-cooldown", 5);
-        int damageCooldownInSeconds = plugin.getConfig().getInt("regear.damage-timer", 5);
+        int commandCooldownInSeconds = plugin.getConfig().getInt("regear.command-cooldown-seconds", 5);
+        int damageCooldownInSeconds = plugin.getConfig().getInt("regear.damage-cooldown-seconds", 5);
         this.commandCooldownManager = new CooldownManager(commandCooldownInSeconds);
         this.damageCooldownManager = new CooldownManager(damageCooldownInSeconds);
         this.allowRegearWhileUsingElytra = plugin.getConfig().getBoolean("regear.allow-while-using-elytra", true);
@@ -154,12 +154,12 @@ public class RegearCommand implements CommandExecutor, Listener {
 
     private String getEffectiveMode(String label) {
         if (label.equalsIgnoreCase("rg")) {
-            return plugin.getConfig().getString("regear.rg-mode", "command");
+            return plugin.getConfig().getString("regear.modes.rg", "command");
         }
         if (label.equalsIgnoreCase("regear")) {
-            return plugin.getConfig().getString("regear.regear-mode", "command");
+            return plugin.getConfig().getString("regear.modes.regear", "command");
         }
-        return plugin.getConfig().getString("regear.rg-mode", "command");
+        return plugin.getConfig().getString("regear.modes.rg", "command");
     }
 
     private void handleShulkerMode(Player player) {

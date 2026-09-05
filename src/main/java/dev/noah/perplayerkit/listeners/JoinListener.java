@@ -52,7 +52,7 @@ public class JoinListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        if(player.hasPermission("perplayerkit.admin") && plugin.getConfig().getBoolean("feature.send-update-message-on-join",true)){
+        if(player.hasPermission("perplayerkit.admin") && plugin.getConfig().getBoolean("updates.notify-admins-on-join",true)){
             updateChecker.sendUpdateMessage(player);
         }
 
@@ -60,7 +60,7 @@ public class JoinListener implements Listener {
         // makes one. Sent after the MOTD so it is the last thing left on screen.
         if (player.hasPermission("perplayerkit.admin") && StarterSetup.get().needsAutoSetup()) {
             long motdDelay = plugin.getConfig().getBoolean("motd.enabled")
-                    ? plugin.getConfig().getLong("motd.delay") + 2
+                    ? plugin.getConfig().getLong("motd.delay-seconds") + 2
                     : 2;
             Bukkit.getScheduler().runTaskLater(plugin, () -> StarterSetup.get().offerAutoSetup(player), motdDelay * 20L);
         }
@@ -85,7 +85,7 @@ public class JoinListener implements Listener {
             Lang.get().rawList("motd.message").forEach(message -> motdMessages.add(MiniMessage.miniMessage().deserialize(message)));
 
             // Delay for sending the MOTD
-            Bukkit.getScheduler().runTaskLater(plugin, () -> motdMessages.forEach(message -> BroadcastManager.get().sendComponentMessage(player,message)), plugin.getConfig().getLong("motd.delay") * 20L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> motdMessages.forEach(message -> BroadcastManager.get().sendComponentMessage(player,message)), plugin.getConfig().getLong("motd.delay-seconds") * 20L);
         }
     }
 

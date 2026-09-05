@@ -87,9 +87,11 @@ public final class PerPlayerKit extends JavaPlugin {
         Metrics metrics = new Metrics(this, bstatsId);
 
         plugin = this;
-        new ConfigMigrator(this).migrate();
-        ConfigManager configManager = new ConfigManager(this);
-        configManager.loadConfig();
+        storageManager = null;
+        if (!new ConfigMigrator(this).migrate() || !new ConfigManager(this).loadConfig()) {
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         reloadConfig();
 
         KitSlots.init(this);
@@ -107,24 +109,19 @@ public final class PerPlayerKit extends JavaPlugin {
         loadPublicKitsIdsFromConfig();
         getLogger().info("Public Kit Configuration Loaded");
 
-        String dbType = this.getConfig().getString("storage.type");
-
-        if (dbType == null) {
-            this.getLogger().warning("Database type not found in config, fix your config to continue!");
-            this.getServer().getPluginManager().disablePlugin(this);
+        String dbType;
+        try {
+            dbType = StorageSelector.normalize(getConfig().getString("storage.type"));
+            storageManager = new StorageSelector(this, dbType).getDbManager();
+        } catch (IllegalArgumentException e) {
+            getLogger().severe(e.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
-        storageManager = new StorageSelector(this, dbType).getDbManager();
-        this.getLogger().info("Using storage type: " + storageManager.getClass().getName());
-
-        if (storageManager == null) {
-            this.getLogger().warning("Database error occurred, please check your config!");
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        getLogger().info("Using storage type: " + dbType);
 
         attemptDatabaseConnection(true);
+        if (!isEnabled()) return;
 
         try {
             storageManager.init();
@@ -245,7 +242,7 @@ public final class PerPlayerKit extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new AboutCommandListener(), this);
 
         // features
-        if (getConfig().getBoolean("feature.old-death-drops", false)) {
+        if (getConfig().getBoolean("death.condensed-drops", false)) {
             Bukkit.getPluginManager().registerEvents(new OldDeathDropListener(), this);
         }
 
@@ -346,6 +343,7 @@ public final class PerPlayerKit extends JavaPlugin {
     }
 
     private void closeDatabaseConnection() {
+        if (storageManager == null) return;
         try {
             storageManager.close();
         } catch (StorageConnectionException e) {

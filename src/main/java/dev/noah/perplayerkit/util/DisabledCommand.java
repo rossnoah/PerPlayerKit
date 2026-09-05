@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 public class DisabledCommand {
 
     private static boolean isBlockedInWorld(World world) {
-        return PerPlayerKit.getPlugin().getConfig().getStringList("disabled-command-worlds").contains(world.getName());
+        return PerPlayerKit.getPlugin().getConfig().getStringList("restrictions.disabled-worlds").contains(world.getName());
     }
 
 

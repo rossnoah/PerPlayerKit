@@ -25,6 +25,7 @@ import dev.noah.perplayerkit.storage.sql.SQLite;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.util.Locale;
 
 public class StorageSelector {
 
@@ -35,7 +36,7 @@ public class StorageSelector {
 
         this.plugin = plugin;
 
-        switch (storageType) {
+        switch (normalize(storageType)) {
 
             case "yml":
             case "yaml":
@@ -55,13 +56,23 @@ public class StorageSelector {
                 storageManager = new SQLStorage(db);
                 break;
             case "sqlite":
-            default:
-                // default to sqlite
                 db = new SQLite(plugin);
                 storageManager = new SQLStorage(db);
                 break;
+            default: throw new IllegalStateException("Unreachable storage type");
         }
 
+    }
+
+    public static String normalize(String type) {
+        String normalized = type == null ? "" : type.trim().toLowerCase(Locale.ROOT);
+        return switch (normalized) {
+            case "yml", "yaml" -> "yaml";
+            case "postgres", "postgresql" -> "postgresql";
+            case "sqlite", "mysql", "redis" -> normalized;
+            default -> throw new IllegalArgumentException("Invalid storage.type '" + type
+                    + "'. Choose sqlite, mysql, postgresql, redis, or yaml.");
+        };
     }
 
     public StorageManager getDbManager() {

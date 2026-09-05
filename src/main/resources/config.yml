@@ -1,79 +1,64 @@
+# Settings apply after a server restart. Older configs are backed up and migrated automatically.
+config-version: 3
+language: "en" # Files live in lang/. Custom language files are supported.
 
-config-version: 2 #do not change this value
+storage:
+  type: "sqlite" # sqlite, mysql, postgresql, redis, yaml
+  backup:
+    enabled: true # SQLite and YAML only. Stored in backups/.
+  mysql:
+    host: "localhost"
+    port: "3306"
+    dbname: "kitdatabase"
+    username: "username"
+    password: "pa55w0rd"
+    use-ssl: false
+    maximum-pool-size: 10 #only change this if you know what your doing
+  postgresql:
+    host: "localhost"
+    port: "5432"
+    dbname: "kitdatabase"
+    username: "username"
+    password: "pa55w0rd"
+    use-ssl: false
+    maximum-pool-size: 10 #only change this if you know what your doing
+  redis:
+    host: "localhost"
+    port: 6379
+    password: "pa55w0rd"
 
-# Language file selection.
-# Built-in choices:
-#   en - English             zh - Chinese (中文)        es - Spanish (Español)
-#   pt - Portuguese          fr - French (Français)    uk - Ukrainian (Українська)
-#   de - German (Deutsch)    sv - Swedish (Svenska)    da - Danish (Dansk)
-#   fi - Finnish (Suomi)     it - Italian (Italiano)   pl - Polish (Polski)
-#   ro - Romanian (Română)   nl - Dutch (Nederlands)
-# Lang files live in plugins/PerPlayerKit/lang/<code>.yml — copy & edit any file to translate further.
-# Set to a custom code to use plugins/PerPlayerKit/lang/<your-code>.yml.
-language: "en"
+# Shared by commands, menus, regear items, and automatic rekit. Admin data tools remain available.
+restrictions:
+  disabled-worlds:
+    - "example_world"
 
+kits:
+  max-slots: 9 # 1-99. Applies to personal kits and enderchest kits.
+  load:
+    heal: false
+    feed: false
+    saturate: false
+    clear-effects: false
 
-#Database credentials are only required if you are using MySQL, PostgreSQL or Redis
-# It is strongly recommended to use MySQL, PostgreSQL or SQLite
-# YAML should not be used in any environment
+enderchests:
+  load:
+    heal: false
+    feed: false
+    saturate: false
+    clear-effects: false
 
-storage: #sqlite, mysql, postgresql, redis, yml (yaml)
-  type: "sqlite"
+# The last loaded private or public inventory kit is remembered until disconnect.
+rekit:
+  respawn:
+    enabled: true
+    delay-ticks: 0 # 20 ticks = 1 second.
+  kill:
+    enabled: false
+    world-whitelist: [] # When nonempty, takes precedence over the blacklist.
+    world-blacklist: []
+    kits: {} # Optional world or "world:WorldGuard-region" -> public kit ID.
 
-mysql:
-  host: "localhost"
-  port: "3306"
-  dbname: "kitdatabase"
-  username: "username"
-  password: "pa55w0rd"
-  useSSL: false
-  maximumPoolSize: 10 #only change this if you know what your doing
-
-postgresql:
-  host: "localhost"
-  port: "5432"
-  dbname: "kitdatabase"
-  username: "username"
-  password: "pa55w0rd"
-  useSSL: false
-  maximumPoolSize: 10 #only change this if you know what your doing
-
-redis:
-  host: "localhost"
-  port: 6379
-  password: "pa55w0rd"
-
-# Automatic backup settings for file-based storage (SQLite, YAML)
-backup:
-  enabled: true # Enable automatic backups for file-based storage methods
-  # Retention policy:
-  # - 1 backup per hour for the last 24 hours
-  # - 1 backup per day for the last 7 days
-  # - 1 backup per week for the last 30 days
-  # - 1 backup per month for the last 365 days
-  # Backups are stored in the plugins/PerPlayerKit/backups/ directory
-
-motd:
-  enabled: true
-  delay: 5
-  # MOTD message text lives in the active lang file under motd.message
-
-scheduled-broadcast:
-  enabled: true
-  period: 90 #in seconds
-  # Broadcast message text lives in the active lang file under scheduled-broadcast.messages
-
-interface:
-  glass-material: BLUE_STAINED_GLASS_PANE
-  main-color: "<blue>" # Plugin main color (MiniMessage format: <blue>, <red>, <green>, etc.)
-
-# Number of kit slots each player has. Applies to both kits and enderchest kits.
-# Valid range: 1-99 (values outside are clamped). Slots above 9 appear on extra
-# pages in the /kit menu, and /k10../k<max> and /ec10../ec<max> commands are
-# registered automatically. Changing this requires a server restart. If multiple
-# servers share one database, use the same value everywhere.
-max-kits: 9
-
+# Five pages. /perplayerkit autosetup fills pages that have never been saved.
 kitroom:
   items:
     1:
@@ -92,20 +77,7 @@ kitroom:
       name: "Utility"
       material: "COBWEB"
 
-disabled-command-worlds:
-  - "example_world"
-# Message shown when a player tries to use a kit command in a disabled world
-# lives in the active lang file under error.disabled-in-world
-
-
-# Server-wide kits, listed in /publickit. A kit shows as [Unassigned] until
-# contents are saved for it - either with /perplayerkit autosetup, which fills
-# these from the bundled starter kits, or by hand with /savepublickit or by
-# shift-clicking a kit in /publickit as an admin. Add your own by copying a
-# block below.
-#
-# A kit whose icon does not exist on this server is skipped, which is how the
-# mace kit stays off anything older than 1.21 instead of sitting there empty.
+# Public kits have separate definitions and contents. Autosetup fills declared starter IDs.
 publickits:
   crystal:
     name: "Crystal"
@@ -135,55 +107,19 @@ publickits:
     name: "Cart"
     icon: "TNT_MINECART"
 
-# Plugin message prefix lives in the active lang file under `prefix`
-
-use-display-name: false #For example, set to true if you want to display nicknames set by other plugins.
-
-messages:
-  disable-kit-messages: false # Set to true to disable all kit action messages (e.g. player loaded a kit, player repaired gear, etc.)
-  # Each broadcast below has an enabled flag and a permission required to see it.
-  # The actual message text lives in the active lang file under broadcast-messages.*
-  player-repaired:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-healed:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-opened-kit-room:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-loaded-private-kit:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-loaded-public-kit:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-loaded-enderchest:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-copied-kit:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-copied-ec:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-  player-regeared:
-    enabled: true
-    permission: "perplayerkit.kitnotify"
-
-
+# These checks filter copies on use. Stored definitions are preserved; use /purgeitem for permanent removal.
 anti-exploit:
   only-allow-kitroom-items: false #requires that items be in the kitroom before they can be used in a kit.
   import-filter: false #requires only-allow-kitroom-items to be true. prevents the duplications of items not in the kitroom by using the kit import button.
   block-spaces-in-commands: false #prevents bypassing command filters.
   prevent-shulkers-dropping-items: false #prevents shulkers from dropping items when broken. Anti-lag feature.
 
-
 regear:
-  rg-mode: "command" #OPTIONS: command, shulker
-  regear-mode: "command" #OPTIONS: command, shulker
-  command-cooldown: 5 #command cooldown in seconds. recommended to be low or 0 if using shulker mode.
-  damage-timer: 5 #time in seconds to wait after taking damage before players can regear
+  modes: # command or shulker; each alias can use a different mode.
+    rg: "command"
+    regear: "command"
+  command-cooldown-seconds: 5 #command cooldown in seconds. recommended to be low or 0 if using shulker mode.
+  damage-cooldown-seconds: 5 #time in seconds to wait after taking damage before players can regear
   allow-while-using-elytra: true #set false to block regearing command while using elytra
   prevent-putting-items-in-regear-inventory: false # set true to prevent putting items inside the regear shulker inventory
   #
@@ -210,61 +146,62 @@ regear:
     - CROSSBOW
     - BOW
 
+heal:
+  clear-effects: false
 
-# Various feature flags for the plugin
-feature:
-  set-health-on-kit-load: false
-  set-hunger-on-kit-load: false
-  set-saturation-on-kit-load: false
-  remove-potion-effects-on-kit-load: false
+death:
+  condensed-drops: false
 
-  heal-on-enderchest-load: false
-  feed-on-enderchest-load: false
-  set-saturation-on-enderchest-load: false
-  remove-potion-effects-on-enderchest-load: false
+updates:
+  notify-admins-on-join: true
 
-  heal-remove-effects: false #makes the /heal command remove potion effects in addition to healing
+motd:
+  enabled: true
+  delay-seconds: 5
 
-  rekit-on-respawn: true
-  rekit-on-respawn-delay: 0 #delay in ticks before re-applying kit on respawn (20 ticks = 1 second). useful if another plugin gives items on respawn.
-  rekit-on-kill:
-    enabled: false
-    # World filtering based on killer's current world
-    # If world-whitelist is not empty, rekit-on-kill only works in those worlds
-    # If world-whitelist is empty and world-blacklist is not empty, rekit-on-kill works everywhere except those worlds
-    # If both are empty, rekit-on-kill works in all worlds
-    world-whitelist: []
-    world-blacklist: []
-    # Optionally give the killer a specific public kit instead of their last used kit.
-    # Keys are "<world>" for a whole world, or "<world>:<region>" for a WorldGuard
-    # region inside that world (region entries require WorldGuard to be installed).
-    # Region entries win over world entries; overlapping regions are resolved by
-    # WorldGuard region priority. If nothing matches, the killer's last used kit
-    # is loaded as usual. The kit name is the public kit's id from the publickits
-    # section, and the kit needs contents saved with /savepublickit.
-    #kits:
-    #  "ffa": "kit1"          # every kill in world "ffa" gives public kit "kit1"
-    #  "ffa:sword_arena":     # kills inside WorldGuard region "sword_arena" in "ffa" give "sword"
-    #    kit: "sword"
+broadcasts:
+  enabled: true # Master switch for action messages. Scheduled announcements are separate.
+  use-display-name: false
+  scheduled:
+    enabled: true
+    period-seconds: 90
+  actions:
+    player-repaired:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-healed:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-opened-kit-room:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-loaded-private-kit:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-loaded-public-kit:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-loaded-enderchest:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-copied-kit:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-copied-ec:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
+    player-regeared:
+      enabled: true
+      permission: "perplayerkit.kitnotify"
 
-  broadcast-kit-messages: true #broadcasts when a player loads a kit (applies to both kits and enderchesets)
+interface:
+  glass-material: BLUE_STAINED_GLASS_PANE
+  main-color: "<blue>"
 
-  broadcast-on-player-action: true #broadcasts when a player uses a kit, copies a kit, etc.
-
-  send-update-message-on-join: true #sends a message to players with perplayerkit.admin when they join the server if a new version is available
-
-  old-death-drops: false #makes it so players drop items in a condensed area rather than spreading out when they die
-
-# Sound settings for plugin feedback
 sounds:
   enabled: true
-  # Sound played on successful actions (e.g. saving a kit)
   success: ENTITY_PLAYER_LEVELUP
-  # Sound played on failed actions (e.g. attempting to use a disabled command)
   failure: ENTITY_ITEM_BREAK
-  # Sound played when a button is clicked in a GUI
   click: UI_BUTTON_CLICK
-  # Sound played when a GUI is opened
-  open_gui: UI_BUTTON_CLICK
-  # Sound played when a GUI is closed
-  close_gui: UI_BUTTON_CLICK
+  open-gui: UI_BUTTON_CLICK
+  close-gui: UI_BUTTON_CLICK

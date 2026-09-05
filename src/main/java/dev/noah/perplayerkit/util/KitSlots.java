@@ -40,7 +40,7 @@ public final class KitSlots {
     }
 
     public static void init(Plugin plugin) {
-        int configured = plugin.getConfig().getInt("max-kits", DEFAULT_LIMIT);
+        int configured = plugin.getConfig().getInt("kits.max-slots", DEFAULT_LIMIT);
         int clamped = Ints.constrainToRange(configured, MIN_LIMIT, MAX_LIMIT);
         if (clamped != configured) {
             plugin.getLogger().warning("max-kits is set to " + configured + " but must be between "

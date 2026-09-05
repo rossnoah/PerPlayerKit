@@ -22,23 +22,23 @@ class StorageSelectorTest {
 
         when(plugin.getDataFolder()).thenReturn(new File("target/test-plugin-data"));
         when(plugin.getConfig()).thenReturn(config);
-        config.set("mysql.host", "localhost");
-        config.set("mysql.port", "3306");
-        config.set("mysql.dbname", "ppk");
-        config.set("mysql.username", "user");
-        config.set("mysql.password", "pass");
-        config.set("mysql.useSSL", false);
+        config.set("storage.mysql.host", "localhost");
+        config.set("storage.mysql.port", "3306");
+        config.set("storage.mysql.dbname", "ppk");
+        config.set("storage.mysql.username", "user");
+        config.set("storage.mysql.password", "pass");
+        config.set("storage.mysql.use-ssl", false);
 
-        config.set("postgresql.host", "localhost");
-        config.set("postgresql.port", "5432");
-        config.set("postgresql.dbname", "ppk");
-        config.set("postgresql.username", "user");
-        config.set("postgresql.password", "pass");
-        config.set("postgresql.useSSL", false);
+        config.set("storage.postgresql.host", "localhost");
+        config.set("storage.postgresql.port", "5432");
+        config.set("storage.postgresql.dbname", "ppk");
+        config.set("storage.postgresql.username", "user");
+        config.set("storage.postgresql.password", "pass");
+        config.set("storage.postgresql.use-ssl", false);
 
-        config.set("redis.host", "localhost");
-        config.set("redis.port", 6379);
-        config.set("redis.password", "");
+        config.set("storage.redis.host", "localhost");
+        config.set("storage.redis.port", 6379);
+        config.set("storage.redis.password", "");
     }
 
     @Test
@@ -84,9 +84,16 @@ class StorageSelectorTest {
     }
 
     @Test
-    void unknownTypeDefaultsToSqliteStorage() {
-        StorageManager manager = new StorageSelector(plugin, "something-else").getDbManager();
+    void unknownTypeIsRejected() {
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+                () -> new StorageSelector(plugin, "something-else"));
+    }
 
-        assertInstanceOf(SQLStorage.class, manager);
+    @Test
+    void namesAreNormalizedWithoutChangingBackend() {
+        org.junit.jupiter.api.Assertions.assertEquals("mysql", StorageSelector.normalize(" MySQL "));
+        org.junit.jupiter.api.Assertions.assertEquals("yaml", StorageSelector.normalize("YAML"));
+        org.junit.jupiter.api.Assertions.assertEquals("postgresql", StorageSelector.normalize("Postgres"));
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> StorageSelector.normalize(null));
     }
 }
