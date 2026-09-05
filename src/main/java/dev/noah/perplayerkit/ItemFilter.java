@@ -18,10 +18,7 @@
  */
 package dev.noah.perplayerkit;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Container;
-import org.bukkit.block.ShulkerBox;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -41,12 +38,10 @@ public class ItemFilter {
     public static Set<String> whitelist;
     private static ItemFilter instance;
 
-    private Plugin plugin;
-    private boolean isEnabled;
+    private final boolean isEnabled;
 
     public ItemFilter(Plugin plugin) {
         whitelist = new HashSet<>();
-        this.plugin = plugin;
         instance = this;
         isEnabled = plugin.getConfig().getBoolean("anti-exploit.only-allow-kitroom-items",false);
     }
@@ -59,17 +54,15 @@ public class ItemFilter {
     }
 
 
+    /** Retained for callers of the existing utility method. */
     public static ItemStack[] copy(ItemStack[] input) {
-        if (input == null) return null;
-        ItemStack[] output = new ItemStack[input.length];
-        for (int i = 0; i < input.length; i++) output[i] = input[i] == null ? null : input[i].clone();
-        return output;
+        return KitContents.copy(input);
     }
 
     public boolean isReady() { return !isEnabled || !whitelist.isEmpty(); }
 
     public ItemStack[] filterItemStack(ItemStack[] input) {
-        ItemStack[] output = copy(input);
+        ItemStack[] output = KitContents.copy(input);
         if (output == null || !isEnabled) return output;
         for (int i = 0; i < output.length; i++) {
             ItemStack item = output[i];
@@ -97,11 +90,7 @@ public class ItemFilter {
             if (!(whitelist.contains(i.getType().toString()))) {
                 return false;
             }
-            {
-                if (i.getAmount() < 1 || i.getAmount() > i.getMaxStackSize()) {
-                    return false;
-                }
-            }
+            if (i.getAmount() < 1 || i.getAmount() > i.getMaxStackSize()) return false;
             for (Enchantment e : i.getEnchantments().keySet()) {
                 if (i.getEnchantmentLevel(e) > e.getMaxLevel()) {
                     return false;

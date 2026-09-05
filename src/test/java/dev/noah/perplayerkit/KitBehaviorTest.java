@@ -10,6 +10,9 @@ import org.bukkit.inventory.*;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.ipvp.canvas.slot.Slot;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.*;
 import java.nio.file.Path;
@@ -57,6 +60,7 @@ class KitBehaviorTest {
         doAnswer(i -> { mainTasks.add(i.getArgument(1)); return null; })
                 .when(scheduler).runTask(eq(plugin), any(Runnable.class));
         ItemFactory factory = mock(ItemFactory.class);
+        when(factory.equals(any(), any())).thenAnswer(i -> Objects.equals(i.getArgument(0), i.getArgument(1)));
         bukkit = mockStatic(Bukkit.class);
         bukkit.when(Bukkit::getItemFactory).thenReturn(factory);
         bukkit.when(Bukkit::getScheduler).thenReturn(scheduler);
@@ -240,4 +244,193 @@ class KitBehaviorTest {
         }
     }
 
+    enum SaveRoute {
+        PRIVATE, PRIVATE_SILENT, PRIVATE_FLAG_FALSE, PUBLIC, PUBLIC_WITH_PLAYER, ENDERCHEST, ENDERCHEST_SILENT;
+        int size() { return name().startsWith("ENDERCHEST") ? 27 : 41; }
+    }
+
+    private boolean save(SaveRoute route, ItemStack[] items) {
+        return switch (route) {
+            case PRIVATE -> kits.savekit(uuid, 1, items);
+            case PRIVATE_SILENT -> kits.savekit(uuid, 1, items, true);
+            case PRIVATE_FLAG_FALSE -> kits.savekit(uuid, 1, items, false);
+            case PUBLIC -> kits.savePublicKit("custom", items);
+            case PUBLIC_WITH_PLAYER -> kits.savePublicKit(player, "custom", items);
+            case ENDERCHEST -> kits.saveEC(uuid, 1, items);
+            case ENDERCHEST_SILENT -> kits.saveECSilent(uuid, 1, items);
+        };
+    }
+
+    private ItemStack[] saved(SaveRoute route) {
+        return switch (route) {
+            case PUBLIC, PUBLIC_WITH_PLAYER -> kits.getPublicKit("custom");
+            case ENDERCHEST, ENDERCHEST_SILENT -> kits.getPlayerEC(uuid, 1);
+            default -> kits.getPlayerKit(uuid, 1);
+        };
+    }
+
+    @ParameterizedTest @EnumSource(SaveRoute.class)
+    void malformedSaveLeavesTheExistingKitIntact(SaveRoute route) {
+        ItemStack[] original = new ItemStack[route.size()]; original[0] = new ItemStack(Material.STONE);
+        assertTrue(save(route, original));
+        for (ItemStack[] invalid : new ItemStack[][] {null, new ItemStack[1], new ItemStack[route.size() + 1]}) {
+            if (invalid != null) invalid[0] = new ItemStack(Material.DIRT);
+            assertFalse(assertDoesNotThrow(() -> save(route, invalid)));
+            assertEquals(Material.STONE, saved(route)[0].getType());
+        }
+    }
+
+    @ParameterizedTest @EnumSource(SaveRoute.class)
+    void airOnlySaveCannotEraseAnExistingKit(SaveRoute route) {
+        ItemStack[] original = new ItemStack[route.size()]; original[0] = new ItemStack(Material.STONE);
+        assertTrue(save(route, original));
+        ItemStack[] empty = new ItemStack[route.size()]; empty[0] = new ItemStack(Material.AIR);
+        assertFalse(save(route, empty));
+        assertEquals(Material.STONE, saved(route)[0].getType());
+    }
+
+    @ParameterizedTest @EnumSource(value=SaveRoute.class, names={"PRIVATE", "PRIVATE_SILENT", "PRIVATE_FLAG_FALSE", "PUBLIC", "PUBLIC_WITH_PLAYER"})
+    void invalidArmorIsRemovedFromTheSaveWithoutMutatingTheCaller(SaveRoute route) {
+        ItemStack[] items = kit(Material.STONE);
+        items[36] = new ItemStack(Material.DIRT);
+        items[37] = new ItemStack(Material.DIAMOND_LEGGINGS);
+        items[38] = new ItemStack(Material.ELYTRA);
+        items[39] = new ItemStack(Material.STONE);
+        assertTrue(save(route, items));
+        assertEquals(Material.DIRT, items[36].getType());
+        assertEquals(Material.STONE, items[39].getType());
+        ItemStack[] saved = saved(route);
+        assertNull(saved[36]);
+        assertNull(saved[39]);
+        assertEquals(Material.DIAMOND_LEGGINGS, saved[37].getType());
+        assertEquals(Material.ELYTRA, saved[38].getType());
+    }
+
+    @Test void malformedStoredLayoutKeepsEditingBlocked() throws Exception {
+        database.put(IDUtil.getPlayerKitId(uuid, 1), Serializer.itemStackArrayToBase64(new ItemStack[1]));
+        kits.loadPlayerDataAsync(uuid);
+        settle();
+        new ArrayList<>(mainTasks).forEach(Runnable::run);
+        assertTrue(kits.isLoading(uuid));
+        assertFalse(kits.hasKit(uuid, 1));
+        assertFalse(kits.savekit(uuid, 1, kit(Material.STONE), true));
+    }
+
+    @Test void storageReadFailureKeepsEditingBlocked() {
+        when(storage.getKitDataByID(anyString())).thenThrow(new IllegalStateException("test read failure"));
+        kits.loadPlayerDataAsync(uuid);
+        settle();
+        new ArrayList<>(mainTasks).forEach(Runnable::run);
+        assertTrue(kits.isLoading(uuid));
+        assertFalse(kits.saveECSilent(uuid, 1, new ItemStack[27]));
+    }
+
+    @Test void invalidRoomLayoutCannotReplaceTheCurrentPage() {
+        KitRoomDataManager room = new KitRoomDataManager(plugin);
+        ItemStack[] page = new ItemStack[45]; page[0] = new ItemStack(Material.STONE);
+        room.setKitRoom(0, page);
+        database.put("kitroom0", Serializer.itemStackArrayToBase64(new ItemStack[1]));
+        room.loadFromDB();
+        assertEquals(45, room.getKitRoomPage(0).length);
+        assertEquals(Material.STONE, room.getKitRoomPage(0)[0].getType());
+        assertTrue(KitRoomDataManager.hasStoredPage(0), "autosetup must not overwrite unreadable stored data");
+    }
+
+    @ParameterizedTest @EnumSource(value=SaveRoute.class, names={"PRIVATE", "PRIVATE_SILENT", "PRIVATE_FLAG_FALSE", "PUBLIC", "PUBLIC_WITH_PLAYER"})
+    void aSaveWithOnlyInvalidArmorIsEmptyAfterValidation(SaveRoute route) {
+        ItemStack[] items = new ItemStack[41];
+        items[36] = new ItemStack(Material.STONE);
+        assertFalse(save(route, items));
+        assertNull(saved(route));
+        assertEquals(Material.STONE, items[36].getType());
+    }
+
+    @ParameterizedTest @ValueSource(booleans={false, true})
+    void loadEffectsOnlyApplyToTheirConfiguredKitType(boolean enderchest) {
+        String prefix = enderchest ? "enderchests.load." : "kits.load.";
+        for (String effect : List.of("heal", "feed", "saturate", "clear-effects")) config.set(prefix + effect, true);
+        when(player.getMaxHealth()).thenReturn(40.0);
+        org.bukkit.potion.PotionEffect potion = mock(org.bukkit.potion.PotionEffect.class);
+        org.bukkit.potion.PotionEffectType type = mock(org.bukkit.potion.PotionEffectType.class);
+        when(potion.getType()).thenReturn(type);
+        when(player.getActivePotionEffects()).thenReturn(List.of(potion));
+        kits.savekit(uuid, 1, kit(Material.STONE), true);
+        ItemStack[] ec = new ItemStack[27]; ec[0] = new ItemStack(Material.DIRT);
+        kits.saveECSilent(uuid, 1, ec);
+        if (enderchest) kits.loadKitSilent(player, 1);
+        else kits.loadEnderchestSilent(player, 1);
+        verify(player, never()).setHealth(anyDouble());
+        verify(player, never()).setFoodLevel(anyInt());
+        verify(player, never()).setSaturation(anyFloat());
+        verify(player, never()).removePotionEffect(any());
+        if (enderchest) kits.loadEnderchestSilent(player, 1);
+        else kits.loadKitSilent(player, 1);
+        verify(player).setHealth(40.0);
+        verify(player).setFoodLevel(20);
+        verify(player).setSaturation(20);
+        verify(player).removePotionEffect(type);
+    }
+
+    @Test void offlineUpdatesKeepSupportedHiddenSlotsButRejectInvalidIdentities() {
+        bukkit.when(() -> Bukkit.getPlayer(uuid)).thenReturn(null);
+        assertFalse(kits.savekit(uuid, 1, kit(Material.STONE)));
+        assertTrue(kits.savekit(uuid, KitSlots.MAX_LIMIT, kit(Material.STONE), true));
+        assertNotNull(kits.getPlayerKit(uuid, KitSlots.MAX_LIMIT));
+        assertFalse(kits.savekit(null, 1, kit(Material.STONE), true));
+        assertFalse(kits.savekit(uuid, 0, kit(Material.STONE), true));
+        assertFalse(kits.savekit(uuid, KitSlots.MAX_LIMIT + 1, kit(Material.STONE), true));
+        assertFalse(kits.savePublicKit(null, kit(Material.STONE)));
+        assertFalse(kits.savePublicKit("", kit(Material.STONE)));
+        assertFalse(kits.savePublicKit(null, "custom", kit(Material.STONE)));
+        assertFalse(kits.hasPublicKit("custom"));
+    }
+    @Test void shareCodeFiltersAtDeliveryAndRetainsTheStoredSnapshot() {
+        config.set("anti-exploit.only-allow-kitroom-items", true);
+        ItemFilter filter = new ItemFilter(plugin);
+        ItemStack[] allowed = kit(Material.STONE);
+        filter.addToWhitelist(java.util.Collections.singletonList(allowed));
+        KitShareManager shares = new KitShareManager(plugin);
+        ItemStack[] original = kit(Material.DIRT); original[1] = new ItemStack(Material.STONE);
+        KitShareManager.kitShareMap.put("ABC123", original);
+        shares.copyKit(player, "abc123");
+        var applied = ArgumentCaptor.forClass(ItemStack[].class);
+        verify(player.getInventory()).setContents(applied.capture());
+        assertNull(applied.getValue()[0]);
+        assertEquals(Material.STONE, applied.getValue()[1].getType());
+        assertEquals(Material.DIRT, original[0].getType());
+        applied.getValue()[1].setType(Material.GRAVEL);
+        assertEquals(Material.STONE, original[1].getType());
+    }
+    @Test void shareCodeDoesNotEmptyAnInventoryWhileKitRoomWhitelistIsUnavailable() {
+        config.set("anti-exploit.only-allow-kitroom-items", true);
+        new ItemFilter(plugin);
+        KitShareManager shares = new KitShareManager(plugin);
+        KitShareManager.kitShareMap.put("ABC123", kit(Material.DIRT));
+        shares.copyKit(player, "ABC123");
+        verify(player.getInventory(), never()).setContents(any());
+        assertNotNull(KitShareManager.kitShareMap.get("ABC123"));
+    }
+    @Test void directShareIsFilteredOnAcceptanceAndUnavailableFilterKeepsRequestPending() {
+        ItemStack[] original = kit(Material.DIRT); original[1] = new ItemStack(Material.STONE);
+        kits.savekit(uuid, 1, original, true);
+        KitShareManager shares = new KitShareManager(plugin);
+        Player target = mock(Player.class);
+        when(target.getUniqueId()).thenReturn(UUID.randomUUID());
+        PlayerInventory inventory = mock(PlayerInventory.class); when(target.getInventory()).thenReturn(inventory);
+        shares.sendKitShareRequest(player, 1, target);
+        String id = shares.getPendingRequestIds(target).get(0);
+        config.set("anti-exploit.only-allow-kitroom-items", true);
+        ItemFilter filter = new ItemFilter(plugin);
+        shares.acceptRequest(target, id);
+        assertEquals(List.of(id), shares.getPendingRequestIds(target));
+        verify(inventory, never()).setContents(any());
+        filter.addToWhitelist(java.util.Collections.singletonList(kit(Material.STONE)));
+        shares.acceptRequest(target, id);
+        var applied = ArgumentCaptor.forClass(ItemStack[].class);
+        verify(inventory).setContents(applied.capture());
+        assertNull(applied.getValue()[0]);
+        assertEquals(Material.STONE, applied.getValue()[1].getType());
+        assertTrue(shares.getPendingRequestIds(target).isEmpty());
+        assertEquals(Material.DIRT, kits.getPlayerKit(uuid, 1)[0].getType());
+    }
 }

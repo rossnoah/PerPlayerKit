@@ -47,7 +47,7 @@ public class KitRoomDataManager {
         kitroomData = new ArrayList<>();
 
         for (int i = 0; i < PAGE_COUNT; i++) {
-            ItemStack[] defaultPage = new ItemStack[45];
+            ItemStack[] defaultPage = new ItemStack[KitContents.ROOM_SIZE];
             // An unsaved page is empty. Placeholders must never become whitelisted kit content.
             kitroomData.add(defaultPage);
         }
@@ -65,7 +65,7 @@ public class KitRoomDataManager {
     }
 
     public void setKitRoom(int page, ItemStack[] data) {
-        kitroomData.set(page, ItemFilter.copy(data));
+        kitroomData.set(page, KitContents.copy(data));
 
         ItemFilter.get().clearWhitelist();
 
@@ -74,7 +74,7 @@ public class KitRoomDataManager {
     }
 
     public ItemStack[] getKitRoomPage(int page) {
-        return ItemFilter.copy(kitroomData.get(page));
+        return KitContents.copy(kitroomData.get(page));
     }
 
     public void saveToDBAsync() {
@@ -97,7 +97,7 @@ public class KitRoomDataManager {
             StarterSetup.notifyKitRoomSaved();
         }
         for (int page : targets) {
-            String output = Serializer.itemStackArrayToBase64(ItemFilter.copy(kitroomData.get(page)));
+            String output = Serializer.itemStackArrayToBase64(KitContents.copy(kitroomData.get(page)));
             KitManager.get().queueWrite(IDUtil.getKitRoomId(page), output);
         }
     }
@@ -122,15 +122,16 @@ public class KitRoomDataManager {
         storedPages.clear();
         for (int i = 0; i < PAGE_COUNT; i++) {
             String input = PerPlayerKit.storageManager.getKitDataByID(IDUtil.getKitRoomId(i));
-            if (!input.equalsIgnoreCase("error")) {
+            if (input != null && !input.equalsIgnoreCase("error")) {
                 loadedAnyPage = true;
                 storedPages.add(i);
                 try {
                     ItemStack[] pagedata = Serializer.itemStackArrayFromBase64(input);
+                    if (!KitContents.hasSize(pagedata, KitContents.ROOM_SIZE)) throw new IOException("Expected " + KitContents.ROOM_SIZE + " kit room slots");
                     kitroomData.set(i, pagedata);
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    plugin.getLogger().warning("Cannot load kit room page " + (i + 1) + ": " + e.getMessage());
                 }
             }
         }

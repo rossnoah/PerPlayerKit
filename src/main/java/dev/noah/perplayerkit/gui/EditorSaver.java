@@ -18,127 +18,86 @@
  */
 package dev.noah.perplayerkit.gui;
 
-import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.ItemFilter;
+import dev.noah.perplayerkit.KitContents;
+import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.ActionGuards;
-import java.util.Arrays;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.UUID;
 
-/**
- * Persists the contents of a kit/enderchest editor menu. Invoked both when the
- * inventory actually closes (KitMenuCloseListener) and when the player
- * navigates to another menu that reuses the open inventory, where no
- * InventoryCloseEvent ever fires (GUI redraw navigation).
- */
+/** Saves editors on close and on canvas redraw navigation, which does not fire a close event. */
 public final class EditorSaver {
+    private EditorSaver() {}
 
-    private EditorSaver() {
-    }
-
-    public static void save(Player player, GUI.EditorContext context, Inventory inv) {
+    public static void save(Player player, GUI.EditorContext context, Inventory inventory) {
+        boolean cleared = GUI.takeClearFlag(player);
+        boolean inspection = context.type() == GUI.EditorType.INSPECT_KIT || context.type() == GUI.EditorType.INSPECT_ENDERCHEST;
+        if (inspection) {
+            boolean deleted = GUI.removeKitDeletionFlag(player);
+            // Staff inspection is read-only; closing it is not an attempted admin action.
+            if (deleted || context.target() == null || !player.hasPermission("perplayerkit.admin")) return;
+        }
         String permission = switch (context.type()) {
             case KIT -> "perplayerkit.kit";
             case ENDERCHEST -> "perplayerkit.enderchest";
             default -> "perplayerkit.admin";
         };
-        if (!ActionGuards.allowed(player, permission)) { GUI.takeClearFlag(player); return; }
+        if (!ActionGuards.allowed(player, permission)) return;
+        ItemStack[] view = inventory.getContents();
+        if (view == null || view.length != GuiLayoutUtils.MENU_SIZE) return;
+
         switch (context.type()) {
-            case KIT -> saveKit(player, context.slot(), inv);
-            case PUBLIC_KIT -> savePublicKit(player, context.id(), inv);
-            case ENDERCHEST -> saveEnderchest(player, context.slot(), inv);
-            case INSPECT_KIT -> saveInspectedKit(player, context, inv);
-            case INSPECT_ENDERCHEST -> saveInspectedEnderchest(player, context, inv);
+            case KIT, ENDERCHEST -> savePersonal(player, context.slot(), view, context.type() == GUI.EditorType.ENDERCHEST, cleared);
+            case PUBLIC_KIT -> savePublicKit(player, context.id(), view);
+            case INSPECT_KIT, INSPECT_ENDERCHEST -> saveInspection(player, context, view);
         }
     }
 
-    private static void saveKit(Player player, int slot, Inventory inv) {
-        ItemStack[] kit = copyContents(inv.getContents(), 41);
-        boolean cleared = GUI.takeClearFlag(player);
-        ItemStack[] stored = KitManager.get().getPlayerKit(player.getUniqueId(), slot);
-        if (!cleared && Arrays.equals(kit, ItemFilter.get().filterItemStack(stored))) return;
-        if (isEmpty(kit)) {
-            if (stored != null && ActionGuards.allowed(player, "perplayerkit.deletekit")) {
-                KitManager.get().deleteKit(player.getUniqueId(), slot);
-                Lang.get().send(player, "success.kit-deleted", "slot", String.valueOf(slot));
+    private static ItemStack[] editableContents(ItemStack[] view, boolean enderchest) {
+        return KitContents.copyRange(view, enderchest ? GuiLayoutUtils.EC_CONTENT_START : 0,
+                enderchest ? KitContents.ENDERCHEST_SIZE : KitContents.INVENTORY_SIZE);
+    }
+
+    private static void savePersonal(Player player, int slot, ItemStack[] view, boolean enderchest, boolean cleared) {
+        KitManager kits = KitManager.get();
+        UUID uuid = player.getUniqueId();
+        ItemStack[] items = editableContents(view, enderchest);
+        ItemStack[] stored = enderchest ? kits.getPlayerEC(uuid, slot) : kits.getPlayerKit(uuid, slot);
+        if (!cleared && Arrays.equals(items, ItemFilter.get().filterItemStack(stored))) return;
+        if (KitContents.isEmpty(items)) {
+            String permission = enderchest ? "perplayerkit.deleteenderchest" : "perplayerkit.deletekit";
+            if (stored != null && ActionGuards.allowed(player, permission)) {
+                if (enderchest) kits.deleteEnderchest(uuid, slot);
+                else kits.deleteKit(uuid, slot);
+                Lang.get().send(player, enderchest ? "success.ec-deleted" : "success.kit-deleted", "slot", String.valueOf(slot));
             }
-        } else KitManager.get().savekit(player.getUniqueId(), slot, kit);
+        } else if (enderchest) kits.saveEC(uuid, slot, items);
+        else kits.savekit(uuid, slot, items);
     }
 
-    private static void savePublicKit(Player player, String id, Inventory inv) {
-        if (id == null || id.isEmpty()) {
-            return;
-        }
-        ItemStack[] kit = copyContents(inv.getContents(), 41);
-        GUI.takeClearFlag(player);
-        if (isEmpty(kit)) KitManager.get().deletePublicKit(id);
-        else if (!Arrays.equals(kit, KitManager.get().getPublicKit(id))) KitManager.get().savePublicKit(player, id, kit);
+    private static void savePublicKit(Player player, String id, ItemStack[] view) {
+        if (id == null || id.isEmpty()) return;
+        KitManager kits = KitManager.get();
+        ItemStack[] items = editableContents(view, false);
+        if (KitContents.isEmpty(items)) kits.deletePublicKit(id);
+        else if (!Arrays.equals(items, kits.getPublicKit(id))) kits.savePublicKit(player, id, items);
     }
 
-    private static void saveEnderchest(Player player, int slot, Inventory inv) {
-        ItemStack[] ec = copyContentsFromOffset(inv.getContents(), 9, 27);
-        boolean cleared = GUI.takeClearFlag(player);
-        ItemStack[] stored = KitManager.get().getPlayerEC(player.getUniqueId(), slot);
-        if (!cleared && Arrays.equals(ec, ItemFilter.get().filterItemStack(stored))) return;
-        if (isEmpty(ec)) {
-            if (stored != null && ActionGuards.allowed(player, "perplayerkit.deleteenderchest")) {
-                KitManager.get().deleteEnderchest(player.getUniqueId(), slot);
-                Lang.get().send(player, "success.ec-deleted", "slot", String.valueOf(slot));
-            }
-        } else KitManager.get().saveEC(player.getUniqueId(), slot, ec);
-    }
-
-    private static void saveInspectedKit(Player player, GUI.EditorContext context, Inventory inv) {
-        if (!player.hasPermission("perplayerkit.admin") || context.target() == null || GUI.removeKitDeletionFlag(player)) {
-            return;
-        }
-        UUID targetUuid = context.target();
-        int slot = context.slot();
-        String playerName = context.playerName();
-        ItemStack[] kit = copyContents(inv.getContents(), 41);
-        if (KitManager.get().savekit(targetUuid, slot, kit, true)) {
-            Lang.get().send(player, "success.admin-kit-updated", "slot", String.valueOf(slot), "player", playerName);
-        } else {
-            Lang.get().send(player, "error.failed-to-update-kit", "player", playerName);
-        }
-    }
-
-    private static void saveInspectedEnderchest(Player player, GUI.EditorContext context, Inventory inv) {
-        if (!player.hasPermission("perplayerkit.admin") || context.target() == null || GUI.removeKitDeletionFlag(player)) {
-            return;
-        }
-        UUID targetUuid = context.target();
-        int slot = context.slot();
-        String playerName = context.playerName();
-        ItemStack[] ec = copyContentsFromOffset(inv.getContents(), 9, 27);
-        if (KitManager.get().saveECSilent(targetUuid, slot, ec)) {
-            Lang.get().send(player, "success.admin-ec-updated", "slot", String.valueOf(slot), "player", playerName);
-        } else {
-            Lang.get().send(player, "error.failed-to-update-ec", "player", playerName);
-        }
-    }
-
-    private static boolean isEmpty(ItemStack[] items) {
-        return Arrays.stream(items).allMatch(item -> item == null || item.getType().isAir());
-    }
-
-    private static ItemStack[] copyContents(ItemStack[] source, int count) {
-        ItemStack[] out = new ItemStack[count];
-        for (int i = 0; i < count; i++) {
-            out[i] = source[i] == null ? null : source[i].clone();
-        }
-        return out;
-    }
-
-    private static ItemStack[] copyContentsFromOffset(ItemStack[] source, int offset, int count) {
-        ItemStack[] out = new ItemStack[count];
-        for (int i = 0; i < count; i++) {
-            out[i] = source[i + offset] == null ? null : source[i + offset].clone();
-        }
-        return out;
+    private static void saveInspection(Player player, GUI.EditorContext context, ItemStack[] view) {
+        boolean enderchest = context.type() == GUI.EditorType.INSPECT_ENDERCHEST;
+        ItemStack[] items = editableContents(view, enderchest);
+        KitManager kits = KitManager.get();
+        ItemStack[] stored = enderchest ? kits.getPlayerEC(context.target(), context.slot()) : kits.getPlayerKit(context.target(), context.slot());
+        if (Arrays.equals(items, stored)) return;
+        boolean saved = enderchest ? kits.saveECSilent(context.target(), context.slot(), items)
+                : kits.savekit(context.target(), context.slot(), items, true);
+        String success = enderchest ? "success.admin-ec-updated" : "success.admin-kit-updated";
+        String failure = enderchest ? "error.failed-to-update-ec" : "error.failed-to-update-kit";
+        Lang.get().send(player, saved ? success : failure, "slot", String.valueOf(context.slot()), "player", context.playerName());
     }
 }

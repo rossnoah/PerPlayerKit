@@ -23,9 +23,15 @@ public final class ConfigFiles {
     }
 
     public static Path backup(Path path) throws IOException {
-        Path backup = Files.createTempFile(path.getParent(), path.getFileName() + ".backup-", ".yml");
-        Files.copy(path, backup, StandardCopyOption.REPLACE_EXISTING);
-        return backup;
+        Path backup = Files.createTempFile(path.toAbsolutePath().getParent(), path.getFileName() + ".backup-", ".yml");
+        try {
+            Files.copy(path, backup, StandardCopyOption.REPLACE_EXISTING);
+            return backup;
+        } catch (IOException failure) {
+            try { Files.deleteIfExists(backup); }
+            catch (IOException cleanupFailure) { failure.addSuppressed(cleanupFailure); }
+            throw failure;
+        }
     }
 
     public static void write(FileConfiguration config, Path path) throws IOException {
@@ -34,11 +40,7 @@ public final class ConfigFiles {
         try {
             Files.writeString(temporary, config.saveToString(), StandardCharsets.UTF_8);
             read(temporary);
-            try {
-                Files.move(temporary, path, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temporary, path, StandardCopyOption.REPLACE_EXISTING);
-            }
+            replace(temporary, path);
         } finally {
             Files.deleteIfExists(temporary);
         }
@@ -49,13 +51,17 @@ public final class ConfigFiles {
         Path temporary = Files.createTempFile(path.toAbsolutePath().getParent(), ".ppk-restore-", ".tmp");
         try {
             Files.copy(backup, temporary, StandardCopyOption.REPLACE_EXISTING);
-            try {
-                Files.move(temporary, path, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temporary, path, StandardCopyOption.REPLACE_EXISTING);
-            }
+            replace(temporary, path);
         } finally {
             Files.deleteIfExists(temporary);
+        }
+    }
+
+    private static void replace(Path source, Path destination) throws IOException {
+        try {
+            Files.move(source, destination, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(source, destination, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 }

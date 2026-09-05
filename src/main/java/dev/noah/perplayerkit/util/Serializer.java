@@ -38,26 +38,16 @@ public class Serializer {
      * @return Base64 string of the items.
      */
     public static String itemStackArrayToBase64(ItemStack[] items) throws IllegalStateException {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
-
-            // Write the size of the inventory
-            dataOutput.writeInt(items.length);
-
-            // Save every element in the list
-            for (ItemStack item : items) {
-                dataOutput.writeObject(item);
-            }
-
-            // Serialize that array
-            dataOutput.close();
-            return Base64.getMimeEncoder().encodeToString(outputStream.toByteArray());
+        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+             BukkitObjectOutputStream output = new BukkitObjectOutputStream(bytes)) {
+            output.writeInt(items.length);
+            for (ItemStack item : items) output.writeObject(item);
+            output.flush();
+            return Base64.getMimeEncoder().encodeToString(bytes.toByteArray());
         } catch (Exception e) {
             throw new IllegalStateException("Unable to save item stacks.", e);
         }
     }
-
 
     /**
      * Gets an array of ItemStacks from Base64 string.
@@ -68,20 +58,23 @@ public class Serializer {
      * @return ItemStack array created from the Base64 string.
      */
     public static ItemStack[] itemStackArrayFromBase64(String data) throws IOException {
+        if (data == null) throw new IOException("Kit data is missing");
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getMimeDecoder().decode(data));
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            ItemStack[] items = new ItemStack[dataInput.readInt()];
-
-            // Read the serialized inventory
-            for (int i = 0; i < items.length; i++) {
-                items[i] = (ItemStack) dataInput.readObject();
+            byte[] bytes = Base64.getMimeDecoder().decode(data);
+            try (BukkitObjectInputStream input = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
+                int count = input.readInt();
+                // Even a null slot needs one byte. A tiny corrupt header must not trigger a huge allocation.
+                if (count < 0 || count > bytes.length) throw new IOException("Invalid inventory length: " + count);
+                ItemStack[] items = new ItemStack[count];
+                for (int i = 0; i < count; i++) {
+                    Object item = input.readObject();
+                    if (item != null && !(item instanceof ItemStack)) throw new IOException("Invalid item in slot " + i);
+                    items[i] = (ItemStack) item;
+                }
+                return items;
             }
-
-            dataInput.close();
-            return items;
-        } catch (ClassNotFoundException e) {
-            throw new IOException("Unable to decode class type.", e);
+        } catch (ClassNotFoundException | RuntimeException e) {
+            throw new IOException("Unable to decode item stacks.", e);
         }
     }
 }

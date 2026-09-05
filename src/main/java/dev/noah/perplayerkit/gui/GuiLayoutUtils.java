@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.gui;
 
 import org.bukkit.Material;
+import dev.noah.perplayerkit.KitContents;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.slot.ClickOptions;
 
@@ -27,10 +28,10 @@ import static dev.noah.perplayerkit.gui.ItemUtil.createItem;
 
 public final class GuiLayoutUtils {
     public static final int MENU_SIZE = 54;
-    public static final int KIT_CONTENT_END = 41;
+    public static final int KIT_CONTENT_END = KitContents.INVENTORY_SIZE;
     public static final int EC_CONTENT_START = 9;
-    public static final int EC_CONTENT_END = 36;
-    public static final int FOOTER_START = 45;
+    public static final int EC_CONTENT_END = EC_CONTENT_START + KitContents.ENDERCHEST_SIZE;
+    public static final int FOOTER_START = KitContents.ROOM_SIZE;
     public static final int ARMOR_INDICATOR_START = 45;
     public static final int OFFHAND_INDICATOR_SLOT = 49;
     public static final int IMPORT_SLOT = 51;

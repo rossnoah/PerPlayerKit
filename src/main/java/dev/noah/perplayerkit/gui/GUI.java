@@ -139,8 +139,8 @@ public class GUI {
         GuiMenuFactory.TitledMenu titledMenu = GuiMenuFactory.createKitMenu(slot);
         Menu menu = titledMenu.menu();
 
-        if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot) != null) {
-            ItemStack[] kit = ItemFilter.get().filterItemStack(KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot));
+        ItemStack[] kit = ItemFilter.get().filterItemStack(KitManager.get().getPlayerKit(p.getUniqueId(), slot));
+        if (kit != null) {
             for (int i = 0; i < KIT_CONTENT_END; i++) {
                 menu.getSlot(i).setItem(kit[i]);
             }
@@ -166,8 +166,8 @@ public class GUI {
         GuiMenuFactory.TitledMenu titledMenu = GuiMenuFactory.createPublicKitMenu(kitId);
         Menu menu = titledMenu.menu();
 
-        if (KitManager.get().getItemStackArrayById(IDUtil.getPublicKitId(kitId)) != null) {
-            ItemStack[] kit = KitManager.get().getItemStackArrayById(IDUtil.getPublicKitId(kitId));
+        ItemStack[] kit = KitManager.get().getPublicKit(kitId);
+        if (kit != null) {
             for (int i = 0; i < KIT_CONTENT_END; i++) {
                 menu.getSlot(i).setItem(kit[i]);
             }
@@ -196,9 +196,8 @@ public class GUI {
 
         setGlassPaneRange(menu, 0, EC_CONTENT_START);
         setGlassPaneRange(menu, EC_CONTENT_END, MENU_SIZE);
-        if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot) != null) {
-
-            ItemStack[] kit = ItemFilter.get().filterItemStack(KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slot));
+        ItemStack[] kit = ItemFilter.get().filterItemStack(KitManager.get().getPlayerEC(p.getUniqueId(), slot));
+        if (kit != null) {
             for (int i = EC_CONTENT_START; i < EC_CONTENT_END; i++) {
                 menu.getSlot(i).setItem(kit[i - EC_CONTENT_START]);
             }
@@ -261,9 +260,8 @@ public class GUI {
 
         setGlassPaneRange(menu, 0, EC_CONTENT_START);
         setGlassPaneRange(menu, EC_CONTENT_END, MENU_SIZE);
-        if (KitManager.get().getItemStackArrayById(target + "ec" + slot) != null) {
-
-            ItemStack[] kit = KitManager.get().getItemStackArrayById(target + "ec" + slot);
+        ItemStack[] kit = KitManager.get().getPlayerEC(target, slot);
+        if (kit != null) {
             for (int i = EC_CONTENT_START; i < EC_CONTENT_END; i++) {
                 menu.getSlot(i).setItem(kit[i - EC_CONTENT_START]);
             }
@@ -323,7 +321,7 @@ public class GUI {
                     lang("gui.lore-left-load"), lang("gui.lore-right-edit")));
             addEditLoad(menu.getSlot(9 + col), slotNum);
 
-            if (KitManager.get().getItemStackArrayById(p.getUniqueId() + "ec" + slotNum) != null) {
+            if (KitManager.get().hasEC(p.getUniqueId(), slotNum)) {
                 menu.getSlot(18 + col).setItem(createItem(Material.ENDER_CHEST, 1,
                         lang("gui.enderchest-slot-name", "slot", String.valueOf(slotNum)),
                         lang("gui.lore-left-load"), lang("gui.lore-right-edit")));
@@ -335,7 +333,7 @@ public class GUI {
                 addEditEC(menu.getSlot(18 + col), slotNum);
             }
 
-            if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slotNum) != null) {
+            if (KitManager.get().hasKit(p.getUniqueId(), slotNum)) {
                 menu.getSlot(27 + col).setItem(createItem(Material.KNOWLEDGE_BOOK, 1, lang("gui.kit-exists"), lang("gui.lore-click-edit")));
             } else {
                 menu.getSlot(27 + col).setItem(createItem(Material.BOOK, 1, lang("gui.kit-not-found"), lang("gui.lore-click-create")));
@@ -380,9 +378,10 @@ public class GUI {
         Menu menu = titledMenu.menu();
         allowModificationRange(menu, 0, FOOTER_START);
         setGlassPaneRange(menu, FOOTER_START, MENU_SIZE);
-        if (KitRoomDataManager.get().getKitRoomPage(page) != null) {
+        ItemStack[] contents = KitRoomDataManager.get().getKitRoomPage(page);
+        if (contents != null) {
             for (int i = 0; i < FOOTER_START; i++) {
-                menu.getSlot(i).setItem(KitRoomDataManager.get().getKitRoomPage(page)[i]);
+                menu.getSlot(i).setItem(contents[i]);
             }
         }
 
