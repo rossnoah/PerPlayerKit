@@ -71,9 +71,10 @@ rekit:
     restore-enderchest: false
     kits: {} # Same format and fallback as respawn.kits.
 
-# Five pages. /perplayerkit autosetup fills pages that have never been saved.
+# Autosetup fills unsaved pages 1-5. Extra pages start empty.
 kitroom:
-  items:
+  pages: 5 # 1-99. Five page buttons are shown at a time; arrows show the next group.
+  items: # Optional names/icons by page number. Extra pages default to a chest icon.
     1:
       name: "Crystal"
       material: "END_CRYSTAL"

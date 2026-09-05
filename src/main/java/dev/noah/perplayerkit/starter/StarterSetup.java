@@ -175,12 +175,12 @@ public final class StarterSetup {
         List<ItemStack[]> defaults = StarterDefaults.loadKitRoomPages(plugin);
         List<Integer> filled = new ArrayList<>();
 
-        int pages = Math.min(defaults.size(), KitRoomDataManager.PAGE_COUNT);
+        int pages = overwrite ? KitRoomDataManager.get().getPageCount() : Math.min(defaults.size(), KitRoomDataManager.get().getPageCount());
         for (int page = 0; page < pages; page++) {
             if (!overwrite && KitRoomDataManager.hasStoredPage(page)) {
                 continue;
             }
-            KitRoomDataManager.get().setKitRoom(page, defaults.get(page));
+            KitRoomDataManager.get().setKitRoom(page, page < defaults.size() ? defaults.get(page) : new ItemStack[dev.noah.perplayerkit.KitContents.ROOM_SIZE]);
             filled.add(page);
         }
 

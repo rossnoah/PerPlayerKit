@@ -103,3 +103,5 @@ Kit room, public kits, and the kits of affected online players reload immediatel
 | [Automatic backups](/data/backups) | Timed local snapshots | SQLite and YAML only | Recover from corruption or a mistake |
 
 Kit data exports contain kit definitions and contents. Remembered kit selections are included in full database backups and [storage migrations](/data/storage-migration).
+
+Exports include saved kit room pages even when `kitroom.pages` hides them. Increase that setting to show imported extra pages. Files containing pages beyond the first five require PerPlayerKit 1.8 or newer.

@@ -68,7 +68,8 @@ public final class KitDataFile {
     static final byte SECTION_PUBLIC_KITS = 2;
     static final byte SECTION_PLAYER_KITS = 3;
 
-    public static final int KIT_ROOM_PAGES = 5;
+    /** Format limit, independent of the configured number of visible pages. */
+    public static final int KIT_ROOM_PAGES = dev.noah.perplayerkit.KitRoomDataManager.MAX_PAGE_COUNT;
     static final int MAX_PUBLIC_KITS = 5_000;
     static final int MAX_PLAYER_KITS = 1_000_000;
     static final int MAX_BLOB_BYTES = 8 * 1024 * 1024;

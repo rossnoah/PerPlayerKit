@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Konfigurerat kit: <white>{kit}<gray>. Används när åtgärden är tillåten och kitet är tillgängligt."
   autosetup-definitions-added: "<green>Lade till {count} definitioner för offentliga startkit."
   autosetup-nothing-to-do: "<gray>Allt är redan konfigurerat. Använd <white>/perplayerkit autosetup reset confirm</white> för att ersätta kitrummet och de offentliga kiten med de medföljande mallarna."
-  autosetup-reset-confirm: "<yellow>Detta ersätter alla kitrumssidor och offentliga kit med de medföljande mallarna. Personliga kit påverkas inte. Kör <white>/perplayerkit autosetup reset confirm</white> för att fortsätta."
+  autosetup-reset-confirm: "<yellow>Detta ersätter alla aktiva kitrumssidor och offentliga kit med de medföljande mallarna. Personliga kit påverkas inte. Kör <white>/perplayerkit autosetup reset confirm</white> för att fortsätta."
   autosetup-public-kits: "<gray>Offentliga kit fyllda: {kits}"
   autosetup-next-steps: "<gray>Öppna <white>/kit</white> för att se kitrummet eller <white>/publickit</white> för att se serverns kit."
   custom-version-available: "<gray>Du kan spara en anpassad version av detta kit genom att importera till kit-redigeraren"
@@ -226,6 +226,7 @@ about:
   header-end: "========================"
 
 gui:
+  kit-room-page-name: "Sida {page}"
   main-menu-title: "{player}s Kit"
   main-menu-title-paged: "{player}s Kit ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"

@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Skonfigurowany zestaw: <white>{kit}<gray>. Używany, gdy czynność jest dozwolona, a zestaw dostępny."
   autosetup-definitions-added: "<green>Dodano {count} definicji publicznych zestawów początkowych."
   autosetup-nothing-to-do: "<gray>Wszystko jest już skonfigurowane. Użyj <white>/perplayerkit autosetup reset confirm</white>, aby zastąpić pokój zestawów i zestawy publiczne dołączonymi wzorcami."
-  autosetup-reset-confirm: "<yellow>To zastąpi wszystkie strony pokoju zestawów i zestawy publiczne dołączonymi wzorcami. Osobiste zestawy graczy nie zostaną zmienione. Uruchom <white>/perplayerkit autosetup reset confirm</white>, aby kontynuować."
+  autosetup-reset-confirm: "<yellow>To zastąpi wszystkie włączone strony pokoju zestawów i zestawy publiczne dołączonymi wzorcami. Osobiste zestawy graczy nie zostaną zmienione. Uruchom <white>/perplayerkit autosetup reset confirm</white>, aby kontynuować."
   autosetup-public-kits: "<gray>Wypełnione zestawy publiczne: {kits}"
   autosetup-next-steps: "<gray>Otwórz <white>/kit</white>, aby przeglądać pokój zestawów, lub <white>/publickit</white>, aby zobaczyć zestawy serwera."
   custom-version-available: "<gray>Możesz zapisać własną wersję tego zestawu, importując ją do edytora"
@@ -226,6 +226,7 @@ about:
   header-end: "================================"
 
 gui:
+  kit-room-page-name: "Strona {page}"
   main-menu-title: "Zestawy {player}"
   main-menu-title-paged: "Zestawy {player} ({page}/{pages})"
   kit-editor-title: "Zestaw: {slot}"

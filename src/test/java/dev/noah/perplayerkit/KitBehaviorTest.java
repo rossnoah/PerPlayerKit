@@ -548,4 +548,85 @@ class KitBehaviorTest {
         kits.loadKit(player, 2); kits.retryFailedWrites(); settle();
         assertEquals("kit:2", database.get(key));
     }
+
+    @Test void extraKitRoomPagesSurviveHidingAndExport() {
+        config.set("kitroom.pages", 8);
+        KitRoomDataManager room = new KitRoomDataManager(plugin);
+        ItemStack[] extra = new ItemStack[45]; extra[0] = new ItemStack(Material.DIRT);
+        room.setKitRoom(7, extra); room.savePagesToDBAsync(List.of(7)); settle();
+        config.set("kitroom.pages", 5);
+        room = new KitRoomDataManager(plugin); room.loadFromDB(); room.saveToDBAsync(); settle();
+        assertTrue(database.containsKey("kitroom7"));
+        var exported = new dev.noah.perplayerkit.kitdata.KitDataService(storage, kits)
+                .buildSnapshot(dev.noah.perplayerkit.kitdata.KitDataService.Scope.KITROOM);
+        assertTrue(exported.getKitRoomPages().containsKey(7));
+        config.set("kitroom.pages", 8);
+        room = new KitRoomDataManager(plugin); room.loadFromDB();
+        assertEquals(Material.DIRT, room.getKitRoomPage(7)[0].getType());
+    }
+
+    @Test void onlyVisibleKitRoomPagesContributeToTheWhitelist() {
+        config.set("kitroom.pages", 5);
+        KitRoomDataManager room = new KitRoomDataManager(plugin);
+        ItemStack[] visible = new ItemStack[45]; visible[0] = new ItemStack(Material.STONE);
+        ItemStack[] hidden = new ItemStack[45]; hidden[0] = new ItemStack(Material.DIRT);
+        room.setKitRoom(0, visible); room.setKitRoom(7, hidden);
+        assertTrue(ItemFilter.whitelist.contains("STONE"));
+        assertFalse(ItemFilter.whitelist.contains("DIRT"));
+    }
+
+    @Test void kitRoomArrowsNavigateTheTwoFormerSpacerSlots() throws Exception {
+        when(player.hasPermission(anyString())).thenReturn(true);
+        config.set("kitroom.pages", 11);
+        KitRoomDataManager room = new KitRoomDataManager(plugin);
+        for (int index : new int[]{0,5,10}) {
+            ItemStack[] contents = new ItemStack[45]; contents[0] = new ItemStack(Material.STONE, index + 1);
+            room.setKitRoom(index, contents);
+        }
+        org.ipvp.canvas.Menu menu = mock(org.ipvp.canvas.Menu.class);
+        Map<Integer, Slot> slots = new HashMap<>();
+        Map<Integer, Slot.ClickHandler> handlers = new HashMap<>();
+        Map<Integer, ItemStack> shown = new HashMap<>();
+        when(menu.getSlot(anyInt())).thenAnswer(invocation -> {
+            int index = invocation.getArgument(0); assertTrue(index >= 0 && index < 54);
+            return slots.computeIfAbsent(index, key -> {
+                Slot slot = mock(Slot.class);
+                doAnswer(call -> { handlers.put(key, call.getArgument(0)); return null; }).when(slot).setClickHandler(any());
+                doAnswer(call -> { shown.put(key, call.getArgument(0)); return null; }).when(slot).setItem(org.mockito.ArgumentMatchers.nullable(ItemStack.class));
+                return slot;
+            });
+        });
+        try (var factory = mockStatic(dev.noah.perplayerkit.gui.GuiMenuFactory.class);
+             var items = mockStatic(dev.noah.perplayerkit.gui.ItemUtil.class);
+             var compat = mockStatic(Class.forName("dev.noah.perplayerkit.gui.GuiCompat"))) {
+            factory.when(() -> dev.noah.perplayerkit.gui.GuiMenuFactory.createKitRoomMenu(anyInt(), anyInt()))
+                    .thenAnswer(call -> { handlers.clear(); return new dev.noah.perplayerkit.gui.GuiMenuFactory.TitledMenu(menu, "Kit room"); });
+            new GUI(plugin).OpenKitRoom(player, 0);
+            assertEquals(1, shown.get(0).getAmount()); assertFalse(handlers.containsKey(46));
+            handlers.get(52).click(player, null);
+            assertEquals(6, shown.get(0).getAmount()); assertNotNull(handlers.get(46));
+            handlers.get(52).click(player, null);
+            assertEquals(11, shown.get(0).getAmount()); assertFalse(handlers.containsKey(52));
+            handlers.get(46).click(player, null);
+            // Previous from the last group opens page 10, whose unconfigured contents are empty.
+            assertNull(shown.get(0));
+        }
+    }
+
+    @Test void starterResetClearsExtraEnabledPagesAndKeepsHiddenPages() {
+        config.set("kitroom.pages", 8);
+        KitRoomDataManager room = new KitRoomDataManager(plugin);
+        ItemStack[] contents = new ItemStack[45]; contents[0] = new ItemStack(Material.STONE);
+        room.setKitRoom(7, contents); room.setKitRoom(9, contents); room.savePagesToDBAsync(List.of(7,9));
+        try (var defaults = mockStatic(dev.noah.perplayerkit.starter.StarterDefaults.class)) {
+            defaults.when(() -> dev.noah.perplayerkit.starter.StarterDefaults.loadKitRoomPages(plugin))
+                    .thenReturn(java.util.Collections.nCopies(5, contents));
+            var result = new dev.noah.perplayerkit.starter.StarterSetup(plugin).apply(true);
+            settle();
+            assertEquals(8, result.kitRoomPages().size());
+            assertTrue(KitContents.isEmpty(room.getKitRoomPage(7)));
+            assertEquals(Material.STONE, room.getKitRoomPage(9)[0].getType());
+            assertTrue(database.containsKey("kitroom9"));
+        }
+    }
 }

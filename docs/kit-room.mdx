@@ -10,7 +10,7 @@ related:
   - Kit and kit room problems: /help/kits
 ---
 
-The kit room supplies items for players to build kits. It has five inventory pages.
+The kit room supplies items for players to build kits. It has five inventory pages by default and supports up to 99.
 
 ## Fill it with one command
 
@@ -18,7 +18,7 @@ The kit room supplies items for players to build kits. It has five inventory pag
 /perplayerkit autosetup
 ```
 
-Fills all five pages and the bundled public kits with a ready-made crystal setup. Edit it afterwards like anything else.
+Fills the first five enabled pages and the bundled public kits with a ready-made crystal setup. Edit it afterwards like anything else.
 
 Autosetup skips any page you have already saved, so it is safe to run on a server that is part way set up. Admins joining a server with an empty kit room are offered it in chat.
 
@@ -61,6 +61,25 @@ The rest of this page is for stocking it yourself.
 <Warning>
   Close the menu without shift-right-clicking the barrier and the page's items are lost.
 </Warning>
+
+## Add more pages
+
+Set `kitroom.pages`, then restart. The two arrow buttons show the previous or next group of five pages.
+
+```yaml config.yml
+kitroom:
+  pages: 8
+  items:
+    6:
+      name: Building
+      material: BRICKS
+```
+
+Extra pages start empty. Names and icons are optional; an unnamed page uses its number and a chest icon. The numbers under `items` match the page numbers.
+
+Save each page before navigating away. Reducing `pages` hides extra pages without deleting their saved contents. Hidden pages do not contribute to the kit room item filter.
+
+Autosetup fills only bundled pages. `autosetup reset confirm` resets all enabled pages, leaving extra enabled pages empty. Hidden pages remain saved.
 
 ## Ideas for each page
 

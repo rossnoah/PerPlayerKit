@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Налаштований набір: <white>{kit}<gray>. Використовується, коли дію дозволено й набір доступний."
   autosetup-definitions-added: "<green>Додано {count} визначень початкових публічних наборів."
   autosetup-nothing-to-do: "<gray>Усе вже налаштовано. Використайте <white>/perplayerkit autosetup reset confirm</white>, щоб замінити кімнату наборів і публічні набори вбудованими зразками."
-  autosetup-reset-confirm: "<yellow>Це замінить усі сторінки кімнати наборів і публічні набори вбудованими зразками. Особисті набори гравців не зміняться. Виконайте <white>/perplayerkit autosetup reset confirm</white>, щоб продовжити."
+  autosetup-reset-confirm: "<yellow>Це замінить усі увімкнені сторінки кімнати наборів і публічні набори вбудованими зразками. Особисті набори гравців не зміняться. Виконайте <white>/perplayerkit autosetup reset confirm</white>, щоб продовжити."
   autosetup-public-kits: "<gray>Заповнені публічні набори: {kits}"
   autosetup-next-steps: "<gray>Відкрийте <white>/kit</white>, щоб переглянути кімнату наборів, або <white>/publickit</white>, щоб переглянути набори сервера."
   custom-version-available: "<gray>Ви можете зберегти свою версію цього набору, імпортувавши його до редактора"
@@ -226,6 +226,7 @@ about:
   header-end: "================================"
 
 gui:
+  kit-room-page-name: "Сторінка {page}"
   main-menu-title: "Набори {player}"
   main-menu-title-paged: "Набори {player} ({page}/{pages})"
   kit-editor-title: "Набір: {slot}"

@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Kit configurado: <white>{kit}<gray>. Se usa cuando la acción está permitida y el kit está disponible."
   autosetup-definitions-added: "<green>Se añadieron {count} definiciones de kits públicos iniciales."
   autosetup-nothing-to-do: "<gray>Todo está configurado. Usa <white>/perplayerkit autosetup reset confirm</white> para reemplazar la sala de kits y los kits públicos con los modelos incluidos."
-  autosetup-reset-confirm: "<yellow>Esto reemplazará todas las páginas de la sala de kits y todos los kits públicos con los modelos incluidos. Los kits personales no cambiarán. Ejecuta <white>/perplayerkit autosetup reset confirm</white> para continuar."
+  autosetup-reset-confirm: "<yellow>Esto reemplazará todas las páginas habilitadas de la sala de kits y todos los kits públicos con los modelos incluidos. Los kits personales no cambiarán. Ejecuta <white>/perplayerkit autosetup reset confirm</white> para continuar."
   autosetup-public-kits: "<gray>Kits públicos llenados: {kits}"
   autosetup-next-steps: "<gray>Abre <white>/kit</white> para ver la sala de kits, o <white>/publickit</white> para ver los kits del servidor."
   custom-version-available: "<gray>Puedes guardar una versión personalizada de este kit importándolo en el editor"
@@ -226,6 +226,7 @@ about:
   header-end: "==============================="
 
 gui:
+  kit-room-page-name: "Página {page}"
   main-menu-title: "Kits de {player}"
   main-menu-title-paged: "Kits de {player} ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"

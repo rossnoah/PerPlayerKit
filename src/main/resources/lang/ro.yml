@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Kit configurat: <white>{kit}<gray>. Folosit când acțiunea este permisă și kitul este disponibil."
   autosetup-definitions-added: "<green>Au fost adăugate {count} definiții de kituri publice inițiale."
   autosetup-nothing-to-do: "<gray>Totul este deja configurat. Folosește <white>/perplayerkit autosetup reset confirm</white> pentru a înlocui camera kiturilor și kiturile publice cu modelele incluse."
-  autosetup-reset-confirm: "<yellow>Aceasta va înlocui toate paginile camerei kiturilor și kiturile publice cu modelele incluse. Kiturile personale nu vor fi modificate. Rulează <white>/perplayerkit autosetup reset confirm</white> pentru a continua."
+  autosetup-reset-confirm: "<yellow>Aceasta va înlocui toate paginile active ale camerei kiturilor și kiturile publice cu modelele incluse. Kiturile personale nu vor fi modificate. Rulează <white>/perplayerkit autosetup reset confirm</white> pentru a continua."
   autosetup-public-kits: "<gray>Kituri publice completate: {kits}"
   autosetup-next-steps: "<gray>Deschide <white>/kit</white> pentru a vedea camera kiturilor sau <white>/publickit</white> pentru kiturile serverului."
   custom-version-available: "<gray>Poți salva o versiune personalizată a acestui kit importând-o în editor"
@@ -226,6 +226,7 @@ about:
   header-end: "============================"
 
 gui:
+  kit-room-page-name: "Pagina {page}"
   main-menu-title: "Kiturile lui {player}"
   main-menu-title-paged: "Kiturile lui {player} ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"

@@ -34,6 +34,7 @@ public class ConfigManager {
         try {
             if (!Files.exists(file)) plugin.saveDefaultConfig();
             YamlConfiguration config = ConfigFiles.read(file);
+            KitRoomDataManager.configuredPages(config);
             dev.noah.perplayerkit.util.LocationRules.parse(config);
             dev.noah.perplayerkit.util.RekitKitResolver.validate(config);
             try (InputStream in = plugin.getResource("config.yml")) {

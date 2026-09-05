@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Konfigureret kit: <white>{kit}<gray>. Bruges, når handlingen er tilladt, og kittet er tilgængeligt."
   autosetup-definitions-added: "<green>Tilføjede {count} definitioner af offentlige startkits."
   autosetup-nothing-to-do: "<gray>Alt er allerede sat op. Brug <white>/perplayerkit autosetup reset confirm</white> for at erstatte kitrummet og de offentlige kits med de medfølgende skabeloner."
-  autosetup-reset-confirm: "<yellow>Dette erstatter alle kitrumssider og offentlige kits med de medfølgende skabeloner. Personlige kits påvirkes ikke. Kør <white>/perplayerkit autosetup reset confirm</white> for at fortsætte."
+  autosetup-reset-confirm: "<yellow>Dette erstatter alle aktive kitrumssider og offentlige kits med de medfølgende skabeloner. Personlige kits påvirkes ikke. Kør <white>/perplayerkit autosetup reset confirm</white> for at fortsætte."
   autosetup-public-kits: "<gray>Offentlige kits udfyldt: {kits}"
   autosetup-next-steps: "<gray>Åbn <white>/kit</white> for at se kitrummet eller <white>/publickit</white> for at se serverens kits."
   custom-version-available: "<gray>Du kan gemme en brugerdefineret version af dette kit ved at importere til kit-editoren"
@@ -226,6 +226,7 @@ about:
   header-end: "========================"
 
 gui:
+  kit-room-page-name: "Side {page}"
   main-menu-title: "{player}s Kits"
   main-menu-title-paged: "{player}s Kits ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"

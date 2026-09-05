@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>配置的套件：<white>{kit}<gray>。操作被允许且套件可用时使用。"
   autosetup-definitions-added: "<green>已添加 {count} 个初始公共套件定义。"
   autosetup-nothing-to-do: "<gray>所有内容都已设置。使用 <white>/perplayerkit autosetup reset confirm</white> 将套件房间和公共套件替换为内置模板。"
-  autosetup-reset-confirm: "<yellow>这将用内置模板覆盖所有套件房间页面和公共套件。玩家的个人套件不受影响。执行 <white>/perplayerkit autosetup reset confirm</white> 以继续。"
+  autosetup-reset-confirm: "<yellow>这将用内置模板覆盖所有已启用的套件房间页面和公共套件。玩家的个人套件不受影响。执行 <white>/perplayerkit autosetup reset confirm</white> 以继续。"
   autosetup-public-kits: "<gray>已填充的公共套件：{kits}"
   autosetup-next-steps: "<gray>打开 <white>/kit</white> 浏览套件房间，或打开 <white>/publickit</white> 查看服务器套件。"
   custom-version-available: "<gray>你可以通过将此套件导入到编辑器来保存自定义版本"
@@ -226,6 +226,7 @@ about:
   header-end: "=========================="
 
 gui:
+  kit-room-page-name: "第 {page} 页"
   main-menu-title: "{player} 的套件"
   main-menu-title-paged: "{player} 的套件 ({page}/{pages})"
   kit-editor-title: "套件: {slot}"

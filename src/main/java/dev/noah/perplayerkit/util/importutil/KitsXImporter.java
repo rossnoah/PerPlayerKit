@@ -80,12 +80,12 @@ public class KitsXImporter {
         // Load the YAML file
         YamlConfiguration yamlConfig = YamlConfiguration.loadConfiguration(kitroomFile);
 
-        // Parse the categories, limiting to 5 categories
+        // Import categories into the configured pages.
         if (yamlConfig.contains("categories")) {
             List<String> categoryKeys = new ArrayList<>(yamlConfig.getConfigurationSection("categories").getKeys(false));
 
-            // Only process up to 5 categories
-            for (int categoryIndex = 0; categoryIndex < Math.min(5, categoryKeys.size()); categoryIndex++) {
+            // Respect the configured page count.
+            for (int categoryIndex = 0; categoryIndex < Math.min(KitRoomDataManager.get().getPageCount(), categoryKeys.size()); categoryIndex++) {
                 String category = categoryKeys.get(categoryIndex);
 
                 sender.sendMessage(ChatColor.BLUE + "Processing category: " + category);
@@ -104,7 +104,7 @@ public class KitsXImporter {
                         int slot = Integer.parseInt(key);
                         ItemStack itemStack = yamlConfig.getItemStack("categories." + category + "." + key);
 
-                        if (itemStack != null && slot < 45) {
+                        if (itemStack != null && slot >= 0 && slot < 45) {
                             categoryItems[slot] = itemStack;
                             itemIndex++;
                         }
@@ -115,7 +115,7 @@ public class KitsXImporter {
 
                 // Save the data using setKitRoom
                 KitRoomDataManager.get().setKitRoom(categoryIndex, categoryItems);
-                KitRoomDataManager.get().saveToDBAsync();
+                KitRoomDataManager.get().savePagesToDBAsync(List.of(categoryIndex));
 
                 // Log the number of items imported in this category
                 sender.sendMessage(ChatColor.GREEN + "Imported " + itemIndex + " items in category: " + category);

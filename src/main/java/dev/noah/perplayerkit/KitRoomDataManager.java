@@ -33,8 +33,21 @@ import java.util.List;
 
 public class KitRoomDataManager {
 
-    /** Pages in the kit room. Fixed by the five category buttons in the menu. */
-    public static final int PAGE_COUNT = 5;
+    public static final int DEFAULT_PAGE_COUNT = 5;
+    public static final int MAX_PAGE_COUNT = 99;
+    public static final int BUTTONS_PER_GROUP = 5;
+    /** Retained for integrations compiled against the original default. */
+    @Deprecated public static final int PAGE_COUNT = DEFAULT_PAGE_COUNT;
+    private final int pageCount;
+
+    public static int configuredPages(org.bukkit.configuration.ConfigurationSection config) {
+        if (!config.contains("kitroom.pages")) return DEFAULT_PAGE_COUNT;
+        if (!config.isInt("kitroom.pages") || config.getInt("kitroom.pages") < 1 || config.getInt("kitroom.pages") > MAX_PAGE_COUNT)
+            throw new IllegalArgumentException("kitroom.pages must be a whole number from 1 to " + MAX_PAGE_COUNT);
+        return config.getInt("kitroom.pages");
+    }
+
+    public int getPageCount() { return pageCount; }
 
     private final ArrayList<ItemStack[]> kitroomData;
     private final Plugin plugin;
@@ -44,15 +57,16 @@ public class KitRoomDataManager {
 
     public KitRoomDataManager(Plugin plugin) {
         this.plugin = plugin;
+        this.pageCount = configuredPages(plugin.getConfig());
         kitroomData = new ArrayList<>();
 
-        for (int i = 0; i < PAGE_COUNT; i++) {
+        for (int i = 0; i < MAX_PAGE_COUNT; i++) {
             ItemStack[] defaultPage = new ItemStack[KitContents.ROOM_SIZE];
             // An unsaved page is empty. Placeholders must never become whitelisted kit content.
             kitroomData.add(defaultPage);
         }
 
-        ItemFilter.get().addToWhitelist(kitroomData);
+        ItemFilter.get().addToWhitelist(kitroomData.subList(0, pageCount));
 
         instance = this;
     }
@@ -65,11 +79,13 @@ public class KitRoomDataManager {
     }
 
     public void setKitRoom(int page, ItemStack[] data) {
+        if (page < 0 || page >= MAX_PAGE_COUNT || !KitContents.hasSize(data, KitContents.ROOM_SIZE))
+            throw new IllegalArgumentException("Expected a kit room page from 0 to 98 with 45 slots");
         kitroomData.set(page, KitContents.copy(data));
 
         ItemFilter.get().clearWhitelist();
 
-        ItemFilter.get().addToWhitelist(kitroomData);
+        ItemFilter.get().addToWhitelist(kitroomData.subList(0, pageCount));
 
     }
 
@@ -78,8 +94,8 @@ public class KitRoomDataManager {
     }
 
     public void saveToDBAsync() {
-        List<Integer> allPages = new ArrayList<>(PAGE_COUNT);
-        for (int i = 0; i < PAGE_COUNT; i++) {
+        List<Integer> allPages = new ArrayList<>(pageCount);
+        for (int i = 0; i < pageCount; i++) {
             allPages.add(i);
         }
         savePagesToDBAsync(allPages);
@@ -91,8 +107,11 @@ public class KitRoomDataManager {
      */
     public void savePagesToDBAsync(List<Integer> pages) {
         List<Integer> targets = List.copyOf(pages);
+        if (targets.stream().anyMatch(page -> page < 0 || page >= MAX_PAGE_COUNT))
+            throw new IllegalArgumentException("Invalid kit room page");
         storedPages.addAll(targets);
-        if (!targets.isEmpty()) {
+        if (targets.stream().anyMatch(page -> page < pageCount)) {
+            loadedAnyPage = true;
             // This server has a kit room now, so stop offering to make one.
             StarterSetup.notifyKitRoomSaved();
         }
@@ -120,7 +139,7 @@ public class KitRoomDataManager {
         ItemFilter.get().clearWhitelist();
         loadedAnyPage = false;
         storedPages.clear();
-        for (int i = 0; i < PAGE_COUNT; i++) {
+        for (int i = 0; i < pageCount; i++) {
             String input = PerPlayerKit.storageManager.getKitDataByID(IDUtil.getKitRoomId(i));
             if (input != null && !input.equalsIgnoreCase("error")) {
                 loadedAnyPage = true;
@@ -135,7 +154,7 @@ public class KitRoomDataManager {
                 }
             }
         }
-        ItemFilter.get().addToWhitelist(kitroomData);
+        ItemFilter.get().addToWhitelist(kitroomData.subList(0, pageCount));
     }
 
 }

@@ -72,7 +72,7 @@ public final class StarterExporter {
         out.append("# Exported from a live kit room. Slot keys are the 0-44 grid of a page.\n");
         out.append("pages:\n");
 
-        for (int page = 0; page < KitRoomDataManager.PAGE_COUNT; page++) {
+        for (int page = 0; page < KitRoomDataManager.get().getPageCount(); page++) {
             out.append("\n  - id: page").append(page + 1).append('\n');
             out.append("    items:\n");
             writePage(out, KitRoomDataManager.get().getKitRoomPage(page));

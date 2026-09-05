@@ -189,7 +189,7 @@ info:
   kitdata-import-overwrites: "<yellow>Importing {file} will overwrite {kitroom} kit room page(s), {publickits} public kit(s) and {playerkits} player kit/ender chest entries. Run <white>{command}</white> to proceed."
   kitdata-import-summary: "<gray>Imported {kitroom} kit room page(s), {publickits} public kit(s) and {playerkits} player kit/ender chest entries."
   autosetup-nothing-to-do: "<gray>Everything is already set up. Use <white>/perplayerkit autosetup reset confirm</white> to replace the kit room and public kits with the bundled defaults."
-  autosetup-reset-confirm: "<yellow>This will overwrite every kit room page and public kit with the bundled defaults. Player kits are not affected. Run <white>/perplayerkit autosetup reset confirm</white> to proceed."
+  autosetup-reset-confirm: "<yellow>This will overwrite every enabled kit room page and public kit with the bundled defaults. Player kits are not affected. Run <white>/perplayerkit autosetup reset confirm</white> to proceed."
   autosetup-public-kits: "<gray>Public kits filled: {kits}"
   autosetup-next-steps: "<gray>Open <white>/kit</white> to browse the kit room, or <white>/publickit</white> to see the server kits."
 
@@ -253,6 +253,7 @@ about:
   header-end: "==========================="
 
 gui:
+  kit-room-page-name: "Page {page}"
   # Inventory titles
   main-menu-title: "{player}'s Kits"
   main-menu-title-paged: "{player}'s Kits ({page}/{pages})"

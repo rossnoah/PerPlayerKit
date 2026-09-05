@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Ingestelde kit: <white>{kit}<gray>. Wordt gebruikt als de actie is toegestaan en de kit beschikbaar is."
   autosetup-definitions-added: "<green>{count} definities van openbare starterkits toegevoegd."
   autosetup-nothing-to-do: "<gray>Alles is al ingericht. Gebruik <white>/perplayerkit autosetup reset confirm</white> om de kitkamer en openbare kits te vervangen door de meegeleverde voorbeelden."
-  autosetup-reset-confirm: "<yellow>Dit vervangt alle kitkamerpagina's en openbare kits door de meegeleverde voorbeelden. Persoonlijke kits blijven ongewijzigd. Voer <white>/perplayerkit autosetup reset confirm</white> uit om door te gaan."
+  autosetup-reset-confirm: "<yellow>Dit vervangt alle ingeschakelde kitkamerpagina's en openbare kits door de meegeleverde voorbeelden. Persoonlijke kits blijven ongewijzigd. Voer <white>/perplayerkit autosetup reset confirm</white> uit om door te gaan."
   autosetup-public-kits: "<gray>Openbare kits gevuld: {kits}"
   autosetup-next-steps: "<gray>Open <white>/kit</white> om de kitkamer te bekijken, of <white>/publickit</white> voor de serverkits."
   custom-version-available: "<gray>Je kunt een aangepaste versie van deze kit opslaan door deze in de kit-editor te importeren"
@@ -226,6 +226,7 @@ about:
   header-end: "=========================="
 
 gui:
+  kit-room-page-name: "Pagina {page}"
   main-menu-title: "Kits van {player}"
   main-menu-title-paged: "Kits van {player} ({page}/{pages})"
   kit-editor-title: "Kit: {slot}"

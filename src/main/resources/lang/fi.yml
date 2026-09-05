@@ -156,7 +156,7 @@ info:
   location-kit: "<gray>Määritetty kitti: <white>{kit}<gray>. Käytetään, kun toiminto on sallittu ja kitti saatavilla."
   autosetup-definitions-added: "<green>Lisättiin {count} julkisen aloituskitin määritystä."
   autosetup-nothing-to-do: "<gray>Kaikki on jo määritetty. Korvaa kittihuone ja julkiset kitit mukana tulevilla malleilla komennolla <white>/perplayerkit autosetup reset confirm</white>."
-  autosetup-reset-confirm: "<yellow>Tämä korvaa kaikki kittihuoneen sivut ja julkiset kitit mukana tulevilla malleilla. Pelaajien omia kittejä ei muuteta. Jatka komennolla <white>/perplayerkit autosetup reset confirm</white>."
+  autosetup-reset-confirm: "<yellow>Tämä korvaa kaikki käytössä olevat kittihuoneen sivut ja julkiset kitit mukana tulevilla malleilla. Pelaajien omia kittejä ei muuteta. Jatka komennolla <white>/perplayerkit autosetup reset confirm</white>."
   autosetup-public-kits: "<gray>Täytetyt julkiset kitit: {kits}"
   autosetup-next-steps: "<gray>Avaa <white>/kit</white> selataksesi kittihuonetta tai <white>/publickit</white> nähdäksesi palvelimen kitit."
   custom-version-available: "<gray>Voit tallentaa oman version tästä kitistä tuomalla sen kittieditoriin"
@@ -226,6 +226,7 @@ about:
   header-end: "============================="
 
 gui:
+  kit-room-page-name: "Sivu {page}"
   main-menu-title: "Pelaajan {player} Kitit"
   main-menu-title-paged: "Pelaajan {player} Kitit ({page}/{pages})"
   kit-editor-title: "Kitti: {slot}"

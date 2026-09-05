@@ -124,7 +124,7 @@ class KitDataFileTest {
     @Test
     void writeRejectsInvalidKitRoomPage() {
         KitDataSnapshot snapshot = new KitDataSnapshot();
-        snapshot.getKitRoomPages().put(7, "blob");
+        snapshot.getKitRoomPages().put(99, "blob");
         assertThrows(InvalidKitDataException.class, () -> write(snapshot));
     }
 
@@ -242,5 +242,15 @@ class KitDataFileTest {
 
         InvalidKitDataException e = assertThrows(InvalidKitDataException.class, () -> read(raw.toByteArray()));
         assertTrue(e.getMessage().contains("invalid player kit ID"));
+    }
+
+    @Test
+    void allNinetyNineKitRoomPagesRoundTrip() throws Exception {
+        KitDataSnapshot snapshot = new KitDataSnapshot();
+        for (int page = 0; page < 99; page++) snapshot.getKitRoomPages().put(page, "page-" + page);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        KitDataFile.write(bytes, snapshot, "1.8.0", 1);
+        var restored = KitDataFile.read(new ByteArrayInputStream(bytes.toByteArray())).snapshot();
+        assertEquals(snapshot.getKitRoomPages(), restored.getKitRoomPages());
     }
 }

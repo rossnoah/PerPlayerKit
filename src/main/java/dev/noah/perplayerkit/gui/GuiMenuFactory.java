@@ -91,6 +91,10 @@ public final class GuiMenuFactory {
         return chestMenu(title("gui.kit-room-title"));
     }
 
+    public static TitledMenu createKitRoomMenu(int page, int pages) {
+        return chestMenu(title("gui.kit-room-title") + " (" + page + "/" + pages + ")");
+    }
+
     public static TitledMenu createViewPublicKitMenu(String id) {
         return chestMenu(title("gui.view-public-kit-title", "id", id));
     }

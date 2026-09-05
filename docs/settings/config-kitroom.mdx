@@ -14,10 +14,11 @@ Neither block holds items; contents are saved in game.
 
 ## kitroom
 
-Names and icons for the five kit room pages.
+Choose 1 to 99 pages. Five page buttons are visible at a time, with arrows for the other groups.
 
 ```yaml config.yml
 kitroom:
+  pages: 5
   items:
     1:
       name: Crystal
@@ -36,7 +37,7 @@ kitroom:
       material: COBWEB
 ```
 
-See [Set up your kit room](/kit-room).
+Add optional names and icons under `items` using page numbers such as `6`. Extra pages start empty and default to a chest icon. See [Add more pages](/kit-room#add-more-pages).
 
 ## publickits
 

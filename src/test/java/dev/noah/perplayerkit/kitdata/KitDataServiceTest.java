@@ -67,7 +67,10 @@ class KitDataServiceTest {
 
     @Test
     void buildSnapshotRespectsScope() {
-        when(storage.getKitDataByID(anyString())).thenReturn("blob");
+        when(storage.getKitDataByID(anyString())).thenReturn("error");
+        for (int page = 0; page < 5; page++) when(storage.getKitDataByID(IDUtil.getKitRoomId(page))).thenReturn("blob");
+        when(storage.getKitDataByID(IDUtil.getPublicKitId("warrior"))).thenReturn("blob");
+        when(storage.getKitDataByID(IDUtil.getPlayerKitId(PLAYER, 1))).thenReturn("blob");
         when(storage.getAllKitIDs()).thenReturn(Set.of(IDUtil.getPlayerKitId(PLAYER, 1)));
         when(kitManager.getPublicKitList()).thenReturn(List.of(
                 new PublicKit("warrior", "Warrior", Material.DIAMOND_SWORD)));
