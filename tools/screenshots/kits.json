@@ -1,0 +1,31 @@
+{
+  "_comment": "Demo content for documentation screenshots. capture.js fills these in game; patch_config.py declares the public kits in config.yml. Keep both driven from this one file so they cannot drift apart.",
+  "publicKits": {
+    "crystal": { "name": "<light_purple>Crystal", "icon": "END_CRYSTAL",
+      "items": ["netherite_helmet","netherite_chestplate","netherite_leggings","netherite_boots","end_crystal","obsidian","totem_of_undying","glowstone","ender_pearl","golden_apple"] },
+    "sword":   { "name": "<aqua>Sword", "icon": "NETHERITE_SWORD",
+      "items": ["netherite_sword","shield","netherite_helmet","netherite_chestplate","netherite_leggings","netherite_boots","golden_apple","cooked_beef"] },
+    "axe":     { "name": "<red>Axe", "icon": "NETHERITE_AXE",
+      "items": ["netherite_axe","shield","diamond_helmet","diamond_chestplate","ender_pearl","golden_apple"] },
+    "nethpot": { "name": "<green>Neth Pot", "icon": "SPLASH_POTION",
+      "items": ["splash_potion","splash_potion","netherite_sword","ender_pearl","golden_apple","obsidian"] },
+    "uhc":     { "name": "<gold>UHC", "icon": "GOLDEN_APPLE",
+      "items": ["golden_apple","bow","arrow","iron_sword","iron_helmet","iron_chestplate","cooked_beef"] },
+    "diamond": { "name": "<aqua>Diamond", "icon": "DIAMOND_SWORD",
+      "items": ["diamond_sword","diamond_helmet","diamond_chestplate","diamond_leggings","diamond_boots","golden_apple"] },
+    "archer":  { "name": "<yellow>Archer", "icon": "BOW",
+      "items": ["bow","crossbow","arrow","tipped_arrow","leather_helmet","leather_chestplate","cooked_beef"] },
+    "builder": { "name": "<white>Builder", "icon": "COBBLESTONE",
+      "items": ["cobblestone","oak_planks","ladder","water_bucket","lava_bucket","flint_and_steel"] },
+    "starter": { "name": "<gray>Starter", "icon": "IRON_SWORD",
+      "items": ["iron_sword","iron_helmet","iron_chestplate","iron_leggings","iron_boots","bread"] }
+  },
+  "kitRoomPages": [
+    ["end_crystal","obsidian","glowstone","respawn_anchor","totem_of_undying","ender_pearl","netherite_helmet","netherite_chestplate","netherite_leggings","netherite_boots","netherite_sword","netherite_pickaxe","netherite_axe","shield","golden_apple","enchanted_golden_apple","experience_bottle","arrow"],
+    ["wooden_sword","leather_helmet","leather_chestplate","leather_leggings","leather_boots","stone_sword","iron_sword","bread","cooked_beef","oak_planks","cobblestone","bow"],
+    ["splash_potion","lingering_potion","potion","glass_bottle","glowstone_dust","redstone","blaze_powder","nether_wart","gunpowder","fermented_spider_eye","magma_cream","sugar"],
+    ["diamond_helmet","diamond_chestplate","diamond_leggings","diamond_boots","diamond_sword","iron_helmet","iron_chestplate","iron_leggings","iron_boots","iron_axe","crossbow","tipped_arrow"],
+    ["netherite_axe","shield","golden_apple","cooked_beef","ender_pearl","fishing_rod","flint_and_steel","tnt","water_bucket","lava_bucket","cobweb","ladder"]
+  ],
+  "playerKits": ["crystal", "sword", "axe", "nethpot"]
+}

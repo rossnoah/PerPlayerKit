@@ -1,0 +1,16 @@
+{
+  "name": "screenshots",
+  "version": "1.0.0",
+  "description": "Boots a throwaway Paper server that is set up for taking PerPlayerKit screenshots.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "mineflayer": "^4.37.1"
+  }
+}

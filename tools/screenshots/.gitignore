@@ -1,0 +1,5 @@
+.server/
+.cache/
+captures/
+node_modules/
+__pycache__/
