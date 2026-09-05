@@ -95,6 +95,16 @@ class SQLStorageTest {
         assertThrows(StorageConnectionException.class, storage::close);
     }
 
+    @Test
+    void failedStorageOperationsAreNotReportedAsMissingKitsOrSuccessfulWrites() {
+        SQLStorage storage = new SQLStorage(new ThrowingGetConnectionDatabase());
+        assertThrows(IllegalStateException.class, () -> storage.saveKitDataByID("kit", "data"));
+        assertThrows(IllegalStateException.class, () -> storage.getKitDataByID("kit"));
+        assertThrows(IllegalStateException.class, () -> storage.doesKitExistByID("kit"));
+        assertThrows(IllegalStateException.class, () -> storage.deleteKitByID("kit"));
+        assertThrows(IllegalStateException.class, storage::getAllKitIDs);
+    }
+
     private static class InMemorySQLiteDatabase implements SQLDatabase {
         private final String jdbcUrl = "jdbc:sqlite:file:" + UUID.randomUUID() + "?mode=memory&cache=shared";
         private Connection keepAliveConnection;

@@ -111,6 +111,15 @@ class StorageMigratorTest {
         verify(destination).close();
     }
 
+    @Test
+    void storageReadFailureIsReportedAndClosesBothBackends() {
+        StorageManager source = mock(StorageManager.class), destination = mock(StorageManager.class);
+        when(source.getAllKitIDs()).thenThrow(new IllegalStateException("database unavailable"));
+        var result = new TestableStorageMigrator(plugin, source, destination).migrate("sqlite", "redis", null);
+        assertFalse(result.isSuccess());
+        assertTrue(result.getErrorMessage().contains("database unavailable"));
+    }
+
     private static class TestableStorageMigrator extends StorageMigrator {
         private final StorageManager source;
         private final StorageManager destination;

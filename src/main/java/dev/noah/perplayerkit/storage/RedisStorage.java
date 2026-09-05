@@ -92,7 +92,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             jedis.set(kitID, data);
         } catch (Exception e) {
-            logRedisFailure("save operation for kit ID " + kitID, e);
+            throw new IllegalStateException("Could not save kit " + kitID, e);
         }
     }
 
@@ -102,8 +102,7 @@ public class RedisStorage implements StorageManager {
             String data = jedis.get(kitID);
             return data == null ? "Error" : data;
         } catch (Exception e) {
-            logRedisFailure("read operation for kit ID " + kitID, e);
-            return "Error";
+            throw new IllegalStateException("Could not read kit " + kitID, e);
         }
     }
 
@@ -112,8 +111,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             return jedis.exists(kitID);
         } catch (Exception e) {
-            logRedisFailure("existence check for kit ID " + kitID, e);
-            return false;
+            throw new IllegalStateException("Could not check kit " + kitID, e);
         }
     }
 
@@ -122,7 +120,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             jedis.del(kitID);
         } catch (Exception e) {
-            logRedisFailure("delete operation for kit ID " + kitID, e);
+            throw new IllegalStateException("Could not delete kit " + kitID, e);
         }
     }
 
@@ -139,7 +137,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             kitIDs.addAll(jedis.keys("*"));
         } catch (Exception e) {
-            logRedisFailure("list operation", e);
+            throw new IllegalStateException("Could not list kits", e);
         }
         return kitIDs;
     }

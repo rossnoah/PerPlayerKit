@@ -109,7 +109,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
             ps.setString(2, data);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Kit storage operation failed", e);
         }
     }
 
@@ -125,7 +125,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Kit storage operation failed", e);
         }
         return "Error";
     }
@@ -140,9 +140,8 @@ public class SQLStorage implements StorageManager, BackupCapable {
                 return rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Kit storage operation failed", e);
         }
-        return false;
     }
 
     @Override
@@ -153,7 +152,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
             ps.setString(1, kitID);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Kit storage operation failed", e);
         }
     }
 
@@ -167,7 +166,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
                 kitIDs.add(rs.getString("KITID"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Kit storage operation failed", e);
         }
         return kitIDs;
     }

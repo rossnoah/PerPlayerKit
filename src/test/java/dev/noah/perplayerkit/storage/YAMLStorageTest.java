@@ -30,7 +30,7 @@ class YAMLStorageTest {
     }
 
     @Test
-    void initCreatesStorageFileWhenMissing(@TempDir Path tempDir) {
+    void initCreatesStorageFileWhenMissing(@TempDir Path tempDir) throws Exception {
         Path filePath = tempDir.resolve("storage.yml");
         YAMLStorage storage = new YAMLStorage(plugin, filePath.toString());
 
@@ -41,7 +41,7 @@ class YAMLStorageTest {
     }
 
     @Test
-    void saveLoadDeleteAndListWork(@TempDir Path tempDir) {
+    void saveLoadDeleteAndListWork(@TempDir Path tempDir) throws Exception {
         Path filePath = tempDir.resolve("storage.yml");
         YAMLStorage storage = new YAMLStorage(plugin, filePath.toString());
         storage.init();
@@ -63,7 +63,7 @@ class YAMLStorageTest {
     }
 
     @Test
-    void closePersistsCurrentState(@TempDir Path tempDir) {
+    void closePersistsCurrentState(@TempDir Path tempDir) throws Exception {
         Path filePath = tempDir.resolve("storage.yml");
         YAMLStorage storage = new YAMLStorage(plugin, filePath.toString());
         storage.init();
@@ -74,5 +74,34 @@ class YAMLStorageTest {
         YAMLStorage reloaded = new YAMLStorage(plugin, filePath.toString());
         reloaded.init();
         assertEquals("payload-3", reloaded.getKitDataByID("kit-3"));
+    }
+
+    @Test
+    void failedReplacementIsReportedAndLeavesThePreviousFileRecoverable(@TempDir Path tempDir) throws Exception {
+        Path file = tempDir.resolve("failure.yml");
+        YAMLStorage storage = new YAMLStorage(plugin, file.toString()); storage.init();
+        storage.saveKitDataByID("kit-1", "old-data");
+        String original = java.nio.file.Files.readString(file);
+        Path backup = tempDir.resolve("before.yml"); java.nio.file.Files.move(file, backup);
+        java.nio.file.Files.createDirectory(file); java.nio.file.Files.writeString(file.resolve("blocker"), "keep");
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class, () -> storage.saveKitDataByID("kit-1", "new-data"));
+        org.junit.jupiter.api.Assertions.assertEquals(original, java.nio.file.Files.readString(backup));
+        try (var files = java.nio.file.Files.list(tempDir)) {
+            org.junit.jupiter.api.Assertions.assertFalse(files.anyMatch(path -> path.getFileName().toString().startsWith(".ppk-storage-")));
+        }
+        java.nio.file.Files.delete(file.resolve("blocker")); java.nio.file.Files.delete(file); java.nio.file.Files.move(backup, file);
+        storage.saveKitDataByID("kit-1", "new-data"); storage.close();
+        YAMLStorage reloaded = new YAMLStorage(plugin, file.toString()); reloaded.init();
+        org.junit.jupiter.api.Assertions.assertEquals("new-data", reloaded.getKitDataByID("kit-1"));
+    }
+
+    @Test
+    void invalidFileIsNotOverwrittenWhenFailedInitializationIsClosed(@TempDir Path tempDir) throws Exception {
+        Path file = tempDir.resolve("invalid.yml"); String original = "wrong: [not, kit, data]\n";
+        java.nio.file.Files.writeString(file, original);
+        YAMLStorage storage = new YAMLStorage(plugin, file.toString());
+        org.junit.jupiter.api.Assertions.assertThrows(dev.noah.perplayerkit.storage.exceptions.StorageOperationException.class, storage::init);
+        storage.close();
+        assertEquals(original, java.nio.file.Files.readString(file));
     }
 }

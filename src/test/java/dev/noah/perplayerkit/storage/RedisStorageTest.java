@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,16 +42,16 @@ class RedisStorageTest {
     }
 
     @Test
-    void methodsFailGracefullyWhenPoolNotInitialized() {
+    void unavailableStorageReportsFailuresInsteadOfMissingData() {
         RedisStorage storage = new RedisStorage(plugin);
 
         assertDoesNotThrow(() -> storage.keepAlive());
-        assertDoesNotThrow(() -> storage.saveKitDataByID("kit-1", "payload-1"));
-        assertDoesNotThrow(() -> storage.deleteKitByID("kit-1"));
+        assertThrows(IllegalStateException.class, () -> storage.saveKitDataByID("kit-1", "payload-1"));
+        assertThrows(IllegalStateException.class, () -> storage.deleteKitByID("kit-1"));
 
-        assertEquals("Error", storage.getKitDataByID("kit-1"));
-        assertFalse(storage.doesKitExistByID("kit-1"));
-        assertTrue(storage.getAllKitIDs().isEmpty());
+        assertThrows(IllegalStateException.class, () -> storage.getKitDataByID("kit-1"));
+        assertThrows(IllegalStateException.class, () -> storage.doesKitExistByID("kit-1"));
+        assertThrows(IllegalStateException.class, storage::getAllKitIDs);
     }
 
     @Test

@@ -48,6 +48,8 @@ public class StorageMigrator {
 
         StorageManager source = null;
         StorageManager destination = null;
+        int migrated = 0;
+        int failed = 0;
 
         try {
             // Create storage managers
@@ -77,8 +79,6 @@ public class StorageMigrator {
             }
 
             // Migrate each kit
-            int migrated = 0;
-            int failed = 0;
 
             for (String kitID : kitIDs) {
                 try {
@@ -106,19 +106,21 @@ public class StorageMigrator {
 
         } catch (StorageConnectionException | StorageOperationException e) {
             return new MigrationResult(false, 0, 0, "Connection error: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return new MigrationResult(false, migrated, failed, "Storage error: " + e.getMessage());
         } finally {
             // Close connections
             if (source != null) {
                 try {
                     source.close();
-                } catch (StorageConnectionException e) {
+                } catch (StorageConnectionException | RuntimeException e) {
                     plugin.getLogger().warning("Failed to close source storage: " + e.getMessage());
                 }
             }
             if (destination != null) {
                 try {
                     destination.close();
-                } catch (StorageConnectionException e) {
+                } catch (StorageConnectionException | RuntimeException e) {
                     plugin.getLogger().warning("Failed to close destination storage: " + e.getMessage());
                 }
             }

@@ -162,7 +162,13 @@ public final class PerPlayerKit extends JavaPlugin {
 
         }, 30 * 20, 30 * 20); // runs every 30 seconds
 
-        loadDatabaseData();
+        try {
+            loadDatabaseData();
+        } catch (RuntimeException error) {
+            getLogger().log(java.util.logging.Level.SEVERE, "Could not load saved kit data. Disabling PerPlayerKit.", error);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         getLogger().info("Database data loaded");
 
         new StarterSetup(this).checkOnStartup();
