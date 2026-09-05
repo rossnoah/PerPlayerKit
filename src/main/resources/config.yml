@@ -52,8 +52,10 @@ rekit:
   respawn:
     enabled: true
     delay-ticks: 0 # 20 ticks = 1 second.
+    restore-enderchest: false # Also restore the player's last loaded enderchest slot.
   kill:
     enabled: false
+    restore-enderchest: false
     world-whitelist: [] # When nonempty, takes precedence over the blacklist.
     world-blacklist: []
     kits: {} # Optional world or "world:WorldGuard-region" -> public kit ID.
@@ -78,6 +80,7 @@ kitroom:
       material: "COBWEB"
 
 # Public kits have separate definitions and contents. Autosetup fills declared starter IDs.
+# /perplayerkit autosetup add-kits also adds missing bundled definitions.
 publickits:
   crystal:
     name: "Crystal"

@@ -73,6 +73,7 @@ public final class PerPlayerKit extends JavaPlugin {
 
     public static Plugin plugin;
     public static StorageManager storageManager;
+    private KitManager kitManager;
     private BackupManager backupManager;
 
     public static Plugin getPlugin() {
@@ -102,7 +103,7 @@ public final class PerPlayerKit extends JavaPlugin {
         new ItemFilter(this);
         new BroadcastManager(this);
 
-        new KitManager(this);
+        kitManager = new KitManager(this);
         new KitShareManager(this);
         new KitRoomDataManager(this);
 
@@ -148,6 +149,7 @@ public final class PerPlayerKit extends JavaPlugin {
             if (storageManager.isConnected()) {
                 try {
                     storageManager.keepAlive();
+                    kitManager.retryFailedWrites();
                 } catch (StorageConnectionException e) {
                     this.getLogger().warning("Database keep alive failed: " + e.getMessage());
                 }
@@ -198,6 +200,8 @@ public final class PerPlayerKit extends JavaPlugin {
         this.getCommand("swapkit").setTabCompleter(kitSlotTabCompleter);
 
         this.getCommand("deletekit").setExecutor(new DeleteKitCommand());
+        this.getCommand("deleteec").setExecutor(new DeleteKitCommand(true));
+        this.getCommand("deleteec").setTabCompleter(kitSlotTabCompleter);
         this.getCommand("deletekit").setTabCompleter(kitSlotTabCompleter);
 
         this.getCommand("inspectkit").setExecutor(new InspectKitCommand(plugin));
@@ -263,12 +267,9 @@ public final class PerPlayerKit extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (backupManager != null) backupManager.shutdown();
+        if (kitManager != null) kitManager.shutdown();
         closeDatabaseConnection();
-
-        // Shutdown backup manager if it exists
-        if (backupManager != null) {
-            backupManager.shutdown();
-        }
     }
 
     /**
@@ -292,7 +293,7 @@ public final class PerPlayerKit extends JavaPlugin {
         } else {
 
             publicKitsSection.getKeys(false).forEach(key -> {
-                String name = getConfig().getString("publickits." + key + ".name");
+                String name = getConfig().getString("publickits." + key + ".name", key);
                 String iconName = getConfig().getString("publickits." + key + ".icon", "");
                 Material icon = Material.matchMaterial(iconName);
 
@@ -301,7 +302,7 @@ public final class PerPlayerKit extends JavaPlugin {
                 // sitting there empty. That is how the bundled mace kit stays
                 // off pre-1.21 servers, and it also catches a typo'd icon
                 // instead of taking the whole plugin down with it.
-                if (icon == null) {
+                if (icon == null || !icon.isItem() || icon.isAir()) {
                     this.getLogger().warning("Public kit '" + key + "' has icon " + iconName
                             + ", which does not exist on this server - skipping the kit");
                     return;
@@ -320,8 +321,7 @@ public final class PerPlayerKit extends JavaPlugin {
         // max-kits this is many storage queries per player.
         List<UUID> onlineUuids = Bukkit.getOnlinePlayers().stream().map(Player::getUniqueId).toList();
         if (!onlineUuids.isEmpty()) {
-            Bukkit.getScheduler().runTaskAsynchronously(this,
-                    () -> onlineUuids.forEach(uuid -> KitManager.get().loadPlayerDataFromDB(uuid)));
+            onlineUuids.forEach(uuid -> KitManager.get().loadPlayerDataAsync(uuid));
         }
     }
 

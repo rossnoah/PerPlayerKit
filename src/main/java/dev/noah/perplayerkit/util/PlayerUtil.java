@@ -36,11 +36,10 @@ public class PlayerUtil {
     public static void repairItem(ItemStack i) {
         if (i != null) {
             ItemMeta meta = i.getItemMeta();
-            Damageable damageable = (Damageable) meta;
-            if (damageable != null && damageable.hasDamage()) {
+            if (meta instanceof Damageable damageable && damageable.hasDamage()) {
                 damageable.setDamage(0);
+                i.setItemMeta(damageable);
             }
-            i.setItemMeta(damageable);
         }
 
     }
@@ -54,7 +53,7 @@ public class PlayerUtil {
     }
 
     public static void healPlayer(Player p) {
-        p.setHealth(20);
+        p.setHealth(p.getMaxHealth());
         p.setFoodLevel(20);
         p.setSaturation(20);
 
@@ -67,7 +66,7 @@ public class PlayerUtil {
     }
 
     public static void healPlayerSilent(Player p) {
-        p.setHealth(20);
+        p.setHealth(p.getMaxHealth());
         p.setFoodLevel(20);
         p.setSaturation(20);
     }

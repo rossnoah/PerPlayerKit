@@ -180,7 +180,7 @@ public class BroadcastManager {
                     sendComponentMessage(player, messages.get(index[0]));
                 }
                 index[0] = (index[0] + 1) % messages.size();
-            }, 0, plugin.getConfig().getInt("broadcasts.scheduled.period-seconds") * 20L);
+            }, 0, Math.max(1, plugin.getConfig().getInt("broadcasts.scheduled.period-seconds", 90)) * 20L);
         }
     }
 

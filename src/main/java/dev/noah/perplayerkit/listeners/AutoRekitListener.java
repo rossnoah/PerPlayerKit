@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.listeners;
 
 import dev.noah.perplayerkit.KitManager;
+import dev.noah.perplayerkit.util.DisabledCommand;
 import dev.noah.perplayerkit.util.RekitKitResolver;
 import dev.noah.perplayerkit.util.WorldGuardSupport;
 import org.bukkit.Bukkit;
@@ -65,18 +66,25 @@ public class AutoRekitListener implements Listener {
         long delay = plugin.getConfig().getLong("rekit.respawn.delay-ticks", 0);
         Player player = e.getPlayer();
 
-        if (delay <= 0) {
+        new BukkitRunnable() {
+            @Override public void run() {
+                if (player.isOnline() && player.hasPermission("perplayerkit.rekitonrespawn")
+                        && !DisabledCommand.isBlockedInWorld(player.getWorld())) restore(player, "rekit.respawn");
+            }
+        }.runTaskLater(plugin, Math.max(1, delay));
+    }
+
+    private void restore(Player player, String path) {
+        if (KitManager.get().isLoading(player.getUniqueId())) return;
+        KitManager.KitReference ref = KitManager.get().getLastKitReference(player.getUniqueId());
+        if (ref != null && player.hasPermission(ref.publicId() == null ? "perplayerkit.kit" : "perplayerkit.publickit"))
             KitManager.get().loadLastKit(player);
-        } else {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (player.isOnline()) {
-                        KitManager.get().loadLastKit(player);
-                    }
-                }
-            }.runTaskLater(plugin, delay);
-        }
+        restoreEnderchest(player, path);
+    }
+
+    private void restoreEnderchest(Player player, String path) {
+        if (plugin.getConfig().getBoolean(path + ".restore-enderchest", false)
+                && player.hasPermission("perplayerkit.enderchest")) KitManager.get().restoreLastEnderchest(player);
     }
 
     @EventHandler
@@ -87,7 +95,7 @@ public class AutoRekitListener implements Listener {
         }
 
         Player killer = e.getEntity().getKiller();
-        if (killer == null) {
+        if (killer == null || killer.isDead() || DisabledCommand.isBlockedInWorld(killer.getWorld())) {
             return;
         }
 
@@ -102,7 +110,9 @@ public class AutoRekitListener implements Listener {
 
         String configuredKit = resolveConfiguredPublicKit(killer);
         if (configuredKit == null || !giveConfiguredPublicKit(killer, configuredKit)) {
-            KitManager.get().loadLastKit(killer);
+            restore(killer, "rekit.kill");
+        } else {
+            restoreEnderchest(killer, "rekit.kill");
         }
     }
 
@@ -137,6 +147,7 @@ public class AutoRekitListener implements Listener {
                 .filter(id -> id.equalsIgnoreCase(configuredKit))
                 .findFirst()
                 .orElse(configuredKit);
+        if (!killer.hasPermission("perplayerkit.publickit")) return false;
         if (KitManager.get().hasPublicKit(kitId) && KitManager.get().loadPublicKitSilent(killer, kitId)) {
             return true;
         }
@@ -152,13 +163,7 @@ public class AutoRekitListener implements Listener {
      * Checks if rekit-on-kill is enabled, supporting both old boolean format and new section format.
      */
     private boolean isRekitOnKillEnabled() {
-        // Check if it's a section (new format)
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection("rekit.kill");
-        if (section != null) {
-            return section.getBoolean("enabled", false);
-        }
-        // Fall back to old boolean format for backwards compatibility
-        return plugin.getConfig().getBoolean("rekit.kill", false);
+        return plugin.getConfig().getBoolean("rekit.kill.enabled", false);
     }
 
     /**

@@ -33,16 +33,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class DeleteKitCommand implements CommandExecutor {
+    private final boolean enderchest;
+    public DeleteKitCommand() { this(false); }
+    public DeleteKitCommand(boolean enderchest) { this.enderchest = enderchest; }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender);
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
         if (player == null) {
             return true;
         }
 
         UUID uuid = player.getUniqueId();
         if (args.length != 1) {
-            Lang.get().send(player, "command.deletekit-usage");
+            Lang.get().send(player, enderchest ? "command.deleteec-usage" : "command.deletekit-usage");
             SoundManager.playFailure(player);
             return true;
         }
@@ -50,20 +53,20 @@ public class DeleteKitCommand implements CommandExecutor {
         Integer slot = SlotArgumentParser.parseSlotInRange(args[0], 1, KitSlots.maxKits());
         KitManager kitManager = KitManager.get();
         if (slot == null) {
-            Lang.get().send(player, "command.deletekit-usage");
+            Lang.get().send(player, enderchest ? "command.deleteec-usage" : "command.deletekit-usage");
             Lang.get().send(player, "error.invalid-number");
             SoundManager.playFailure(player);
             return true;
         }
 
-        if (!kitManager.hasKit(uuid, slot)) {
+        if (!(enderchest ? kitManager.hasEC(uuid, slot) : kitManager.hasKit(uuid, slot))) {
             Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot));
             SoundManager.playFailure(player);
             return true;
         }
 
-        if (kitManager.deleteKit(uuid, slot)) {
-            Lang.get().send(player, "success.kit-deleted", "slot", String.valueOf(slot));
+        if (enderchest ? kitManager.deleteEnderchest(uuid, slot) : kitManager.deleteKit(uuid, slot)) {
+            Lang.get().send(player, enderchest ? "success.ec-deleted" : "success.kit-deleted", "slot", String.valueOf(slot));
             SoundManager.playSuccess(player);
         } else {
             Lang.get().send(player, "error.kit-deletion-failed");

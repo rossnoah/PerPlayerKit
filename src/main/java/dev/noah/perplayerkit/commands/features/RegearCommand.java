@@ -2,6 +2,8 @@ package dev.noah.perplayerkit.commands.features;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.commands.core.ActionGuards;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.CooldownManager;
@@ -60,7 +62,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         );
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerTakesDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
@@ -90,7 +92,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         return true;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onShulkerPlace(BlockPlaceEvent event) {
         if (!event.getItemInHand().equals(regearShulkerItem)) {
             return;
@@ -98,8 +100,7 @@ public class RegearCommand implements CommandExecutor, Listener {
         event.setCancelled(true);
         Player player = event.getPlayer();
 
-        Integer slot = getLastLoadedKitSlot(player);
-        if (slot == null) {
+        if (!ActionGuards.allowed(player, "perplayerkit.regear") || isElytraBlocked(player) || !hasLastKit(player)) {
             return;
         }
 
@@ -119,6 +120,8 @@ public class RegearCommand implements CommandExecutor, Listener {
         if (!(event.getInventory().getHolder() instanceof RegearInventoryHolder holder)) {
             return;
         }
+        if (preventPuttingItemsInRegearInventory) event.setCancelled(true);
+        if (!event.getWhoClicked().getUniqueId().equals(holder.player().getUniqueId())) { event.setCancelled(true); return; }
         ItemStack currentItem = event.getCurrentItem();
 
         if (currentItem == null) {
@@ -133,10 +136,10 @@ public class RegearCommand implements CommandExecutor, Listener {
             return;
         }
 
+        event.setCancelled(true);
         Player player = holder.player();
 
-        Integer slot = getLastLoadedKitSlot(player);
-        if (slot == null) {
+        if (!ActionGuards.allowed(player, "perplayerkit.regear") || isElytraBlocked(player) || !hasLastKit(player)) {
             return;
         }
 
@@ -146,13 +149,20 @@ public class RegearCommand implements CommandExecutor, Listener {
 
         player.closeInventory();
 
-        KitManager.get().regearKit(player, slot);
+        if (!KitManager.get().regearLastKit(player)) return;
         player.updateInventory();
 
         announceRegearSuccess(player);
     }
 
+    @EventHandler
+    public void onShulkerDrag(InventoryDragEvent event) {
+        if (preventPuttingItemsInRegearInventory && event.getInventory().getHolder() instanceof RegearInventoryHolder
+                && event.getRawSlots().stream().anyMatch(slot -> slot < event.getInventory().getSize())) event.setCancelled(true);
+    }
+
     private String getEffectiveMode(String label) {
+        label = label.substring(label.indexOf(':') + 1);
         if (label.equalsIgnoreCase("rg")) {
             return plugin.getConfig().getString("regear.modes.rg", "command");
         }
@@ -174,8 +184,7 @@ public class RegearCommand implements CommandExecutor, Listener {
     }
 
     private void handleCommandMode(Player player) {
-        Integer slot = getLastLoadedKitSlot(player);
-        if (slot == null) {
+        if (!ActionGuards.allowed(player, "perplayerkit.regear") || isElytraBlocked(player) || !hasLastKit(player)) {
             return;
         }
         if (isElytraBlocked(player)) {
@@ -188,19 +197,15 @@ public class RegearCommand implements CommandExecutor, Listener {
             return;
         }
 
-        KitManager.get().regearKit(player, slot);
+        if (!KitManager.get().regearLastKit(player)) return;
         announceRegearSuccess(player);
         commandCooldownManager.setCooldown(player);
     }
 
-    private Integer getLastLoadedKitSlot(Player player) {
-        int slot = KitManager.get().getLastKitLoaded(player.getUniqueId());
-        if (slot != -1) {
-            return slot;
-        }
-
+    private boolean hasLastKit(Player player) {
+        if (KitManager.get().hasLastKit(player.getUniqueId())) return true;
         Lang.get().send(player, "error.no-kit-loaded");
-        return null;
+        return false;
     }
 
     private boolean isElytraBlocked(Player player) {

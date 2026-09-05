@@ -153,15 +153,19 @@ public class KitShareManager {
             return;
         }
 
-        ItemStack[] data = kitShareMap.get(id);
+        if (!ItemFilter.get().isReady()) {
+            Lang.get().send(p, "error.kitroom-not-ready");
+            return;
+        }
+        ItemStack[] data = ItemFilter.get().filterItemStack(kitShareMap.get(id));
 
         if (data.length == 27) {
-            p.getEnderChest().setContents(kitShareMap.get(id));
+            p.getEnderChest().setContents(data);
             BroadcastManager.get().broadcastPlayerCopiedEC(p);
             SoundManager.playSuccess(p);
 
         } else if (data.length == 41) {
-            p.getInventory().setContents(kitShareMap.get(id));
+            p.getInventory().setContents(data);
             // Resync the client (including the offhand slot) so it doesn't render stale items.
             p.updateInventory();
             BroadcastManager.get().broadcastPlayerCopiedKit(p);
@@ -240,13 +244,17 @@ public class KitShareManager {
             return;
         }
 
+        if (request.getType() != ShareRequest.Type.TRANSFER && !ItemFilter.get().isReady()) {
+            Lang.get().send(target, "error.kitroom-not-ready");
+            return;
+        }
         request.cancelExpiryTask();
         shareRequestsById.remove(request.getId());
 
         Player sender = Bukkit.getPlayer(request.getSenderId());
         switch (request.getType()) {
             case KIT -> {
-                target.getInventory().setContents(request.getContents());
+                target.getInventory().setContents(ItemFilter.get().filterItemStack(request.getContents()));
                 // Resync the client (including the offhand slot) so it doesn't render stale items.
                 target.updateInventory();
                 BroadcastManager.get().broadcastPlayerCopiedKit(target);
@@ -255,7 +263,7 @@ public class KitShareManager {
                 }
             }
             case ENDERCHEST -> {
-                target.getEnderChest().setContents(request.getContents());
+                target.getEnderChest().setContents(ItemFilter.get().filterItemStack(request.getContents()));
                 BroadcastManager.get().broadcastPlayerCopiedEC(target);
                 if (sender != null) {
                     Lang.get().send(sender, "success.share-request-accepted", "player", target.getName());

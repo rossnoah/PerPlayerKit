@@ -35,6 +35,11 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> performed an action.</gray>"
 
 error:
+  autosetup-config-save: "<red>Could not save starter kit definitions: {error}"
+  no-permission: "<red>You do not have permission to do that."
+  kitroom-not-ready: "<red>The kit room is empty. Ask an admin to finish setup before loading kits."
+  kit-data-unavailable: "<red>Your kit data could not be loaded. Rejoin after the storage problem is fixed."
+  kit-data-loading: "<yellow>Your kits are still loading. Try again in a moment."
   disabled-in-world: "<red>Kits are disabled here!</red>"
   unexpected: "<red>Unexpected error occurred, please try again.</red>"
   kit-not-found: "<red>Error, that kit does not exist"
@@ -103,6 +108,7 @@ error:
   autosetup-reset-console-only: "<red>Resetting the kit room can only be done from the server console."
 
 success:
+  ec-deleted: "<green>Enderchest kit {slot} deleted."
   kit-saved: "<green>Kit {slot} saved!"
   kit-loaded: "<green>Kit {slot} loaded!"
   kit-deleted: "<green>Kit {slot} deleted!"
@@ -137,6 +143,7 @@ success:
   autosetup-applied: "<green>Autosetup complete! Filled {pages} kit room page(s) and {kits} public kit(s)."
 
 info:
+  autosetup-definitions-added: "<green>Added {count} starter public kit definitions."
   custom-version-available: "<gray>You can save a custom version of this kit by importing into the kit editor"
   assign-publickit-instruction: "<red>To assign a kit to this publickit use /savepublickit \\<id>"
   share-kit-code: "<green>Use /copykit {code} to copy this kit"
@@ -175,6 +182,7 @@ info:
   autosetup-next-steps: "<gray>Open <white>/kit</white> to browse the kit room, or <white>/publickit</white> to see the server kits."
 
 command:
+  deleteec-usage: "<red>Usage: /deleteec [slot]"
   perplayerkit-about: "<green>PerPlayerKit is a plugin that allows players to have their own kits."
   deletekit-usage: "<red>Usage: /deletekit \\<slot>"
   swapkit-usage: "<red>Usage: /swapkit \\<slot1> \\<slot2>"

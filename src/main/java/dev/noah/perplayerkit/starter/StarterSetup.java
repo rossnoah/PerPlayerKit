@@ -82,6 +82,29 @@ public final class StarterSetup {
         return instance;
     }
 
+    /** Explicitly opt into starter definitions on an existing server. Custom entries win. */
+    public int addMissingPublicKits() throws java.io.IOException {
+        org.bukkit.configuration.file.YamlConfiguration updated = new org.bukkit.configuration.file.YamlConfiguration();
+        try { updated.loadFromString(plugin.getConfig().saveToString()); }
+        catch (org.bukkit.configuration.InvalidConfigurationException e) { throw new java.io.IOException(e); }
+        org.bukkit.configuration.file.YamlConfiguration defaults;
+        try (java.io.InputStream in = plugin.getResource("config.yml")) {
+            if (in == null) throw new java.io.IOException("Bundled config.yml is missing");
+            defaults = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8));
+        }
+        List<PublicKit> added = new ArrayList<>();
+        for (String id : defaults.getConfigurationSection("publickits").getKeys(false)) {
+            if (updated.contains("publickits." + id)) continue;
+            updated.set("publickits." + id, defaults.get("publickits." + id));
+            org.bukkit.Material icon = org.bukkit.Material.matchMaterial(defaults.getString("publickits." + id + ".icon", ""));
+            if (icon != null) added.add(new PublicKit(id, defaults.getString("publickits." + id + ".name"), icon));
+        }
+        dev.noah.perplayerkit.ConfigFiles.write(updated, plugin.getDataFolder().toPath().resolve("config.yml"));
+        plugin.reloadConfig();
+        KitManager.get().getPublicKitList().addAll(added);
+        return added.size();
+    }
+
     /** What an autosetup run actually filled in. */
     public record Result(List<Integer> kitRoomPages, List<String> publicKits) {
 
@@ -192,7 +215,7 @@ public final class StarterSetup {
         }
 
         for (String id : filled) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> KitManager.get().savePublicKitToDB(id));
+            KitManager.get().savePublicKitToDB(id);
         }
         return filled;
     }

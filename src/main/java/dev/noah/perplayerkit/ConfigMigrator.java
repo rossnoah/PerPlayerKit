@@ -169,6 +169,8 @@ public class ConfigMigrator {
         else plugin.getLogger().info("Storage remains " + storage + ".");
         plugin.getLogger().info("Action broadcasts " + (updated.getBoolean("broadcasts.enabled") ? "remain enabled" : "remain disabled")
                 + "; notification permissions and custom public kits are preserved.");
+        plugin.getLogger().info("Review: menus now enforce action permissions; disabled worlds also block regear items, healing and automatic rekit.");
+        plugin.getLogger().info("Review: public kits now work with rekit/regear; Clear Kit deletes an empty saved slot. Upgrade notes: https://perplayerkit.com/upgrading");
         plugin.getLogger().info("Rollback: stop the server, restore these config/language backups and the previous jar. Keep the database backup for recovery; restore it only to undo item changes, since doing so discards later saves.");
     }
 }

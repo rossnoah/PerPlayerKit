@@ -95,6 +95,6 @@ class AutoSetupResetGuardTest {
         List<String> forConsole = cmd.onTabComplete(mock(ConsoleCommandSender.class), command, "perplayerkit", args);
 
         assertFalse(forPlayer.contains("reset"), "players should not be offered reset");
-        assertEquals(List.of("reset"), forConsole);
+        assertEquals(List.of("add-kits", "reset"), forConsole);
     }
 }

@@ -29,6 +29,7 @@ public class ShortKitCommand extends AbstractShortSlotCommand {
 
     @Override
     protected void executeForSlot(Player player, int slot) {
+        if (!dev.noah.perplayerkit.commands.core.ActionGuards.dataReady(player)) return;
         KitManager.get().loadKit(player, slot);
     }
 }

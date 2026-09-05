@@ -50,7 +50,7 @@ public final class CommandGuards {
         if (player == null) {
             return null;
         }
-        if (DisabledCommand.isBlockedInWorld(player)) {
+        if (DisabledCommand.isBlockedInWorld(player) || !ActionGuards.dataReady(player)) {
             return null;
         }
         return player;
@@ -61,7 +61,7 @@ public final class CommandGuards {
         if (player == null) {
             return null;
         }
-        if (DisabledCommand.isBlockedInWorld(player)) {
+        if (DisabledCommand.isBlockedInWorld(player) || !ActionGuards.dataReady(player)) {
             return null;
         }
         return player;

@@ -45,9 +45,7 @@ public class QuitListener implements Listener {
 
         GUI.forgetMainMenuPage(uuid);
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            KitManager.get().savePlayerKitsToDB(uuid);
-        });
+        KitManager.get().unloadPlayer(uuid);
     }
 
 

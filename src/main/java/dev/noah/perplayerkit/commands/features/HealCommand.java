@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class HealCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender, "Only players can use this command!");
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
         if (player == null) {
             return true;
         }

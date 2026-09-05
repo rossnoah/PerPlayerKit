@@ -67,17 +67,7 @@ public class JoinListener implements Listener {
 
         UUID uuid = player.getUniqueId();
 
-        //  KitManager.loadFromSQL(uuid);
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                KitManager.get().loadPlayerDataFromDB(uuid);
-            }
-
-        }.runTaskAsynchronously(plugin);
-
+        KitManager.get().loadPlayerDataAsync(uuid);
 
         // Check if MOTD is enabled and send MOTD messages
         if (plugin.getConfig().getBoolean("motd.enabled")) {
@@ -85,7 +75,7 @@ public class JoinListener implements Listener {
             Lang.get().rawList("motd.message").forEach(message -> motdMessages.add(MiniMessage.miniMessage().deserialize(message)));
 
             // Delay for sending the MOTD
-            Bukkit.getScheduler().runTaskLater(plugin, () -> motdMessages.forEach(message -> BroadcastManager.get().sendComponentMessage(player,message)), plugin.getConfig().getLong("motd.delay-seconds") * 20L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> { if (player.isOnline()) motdMessages.forEach(message -> BroadcastManager.get().sendComponentMessage(player,message)); }, plugin.getConfig().getLong("motd.delay-seconds") * 20L);
         }
     }
 

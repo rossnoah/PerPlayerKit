@@ -59,61 +59,46 @@ public class ItemFilter {
     }
 
 
+    public static ItemStack[] copy(ItemStack[] input) {
+        if (input == null) return null;
+        ItemStack[] output = new ItemStack[input.length];
+        for (int i = 0; i < input.length; i++) output[i] = input[i] == null ? null : input[i].clone();
+        return output;
+    }
+
+    public boolean isReady() { return !isEnabled || !whitelist.isEmpty(); }
+
     public ItemStack[] filterItemStack(ItemStack[] input) {
-
-        if(!isEnabled){
-            return input;
-        }
-
-        ItemStack[] output = input.clone();
-        for (ItemStack item : output) {
-            if (!isSafe(item)) {
-                item.setType(Material.AIR);
-                //item = null;
+        ItemStack[] output = copy(input);
+        if (output == null || !isEnabled) return output;
+        for (int i = 0; i < output.length; i++) {
+            ItemStack item = output[i];
+            if (item == null) continue;
+            if (!isSafe(item)) { output[i] = null; continue; }
+            if (item.getItemMeta() instanceof BlockStateMeta meta && meta.getBlockState() instanceof Container container) {
+                container.getInventory().setContents(filterItemStack(container.getInventory().getContents()));
+                meta.setBlockState(container);
+                item.setItemMeta(meta);
             }
-
-
-            if (item != null) {
-
-                if (item.getItemMeta() instanceof BlockStateMeta blockStateMeta) {
-                    if (blockStateMeta.getBlockState() instanceof Container container) {
-                        container.getInventory().setContents(filterItemStack(container.getInventory().getContents()));
-                        blockStateMeta.setBlockState(container);
-                        item.setItemMeta(blockStateMeta);
-                    }
-                }
-
-                // Handle bundles
-                if (item.getItemMeta() instanceof BundleMeta bundleMeta) {
-                    List<ItemStack> bundleItems = bundleMeta.getItems();
-                    if (!bundleItems.isEmpty()) {
-                        List<ItemStack> filteredItems = new ArrayList<>();
-                        for (ItemStack bundleItem : bundleItems) {
-                            if (isSafe(bundleItem)) {
-                                filteredItems.add(bundleItem);
-                            }
-                        }
-                        bundleMeta.setItems(filteredItems);
-                        item.setItemMeta(bundleMeta);
-                    }
-                }
+            if (item.getItemMeta() instanceof BundleMeta meta) {
+                ItemStack[] nested = filterItemStack(meta.getItems().toArray(new ItemStack[0]));
+                List<ItemStack> safe = new ArrayList<>();
+                for (ItemStack child : nested) if (child != null) safe.add(child);
+                meta.setItems(safe);
+                item.setItemMeta(meta);
             }
-
-
         }
-
-
         return output;
     }
 
     public static boolean isSafe(ItemStack i) {
 
-        if (i != null) {
+        if (i != null && !i.getType().isAir()) {
             if (!(whitelist.contains(i.getType().toString()))) {
                 return false;
             }
-            if (i.getAmount() != -1) {
-                if (i.getAmount() > i.getMaxStackSize()) {
+            {
+                if (i.getAmount() < 1 || i.getAmount() > i.getMaxStackSize()) {
                     return false;
                 }
             }
@@ -140,11 +125,19 @@ public class ItemFilter {
     public void addToWhitelist(Collection<ItemStack[]> items) {
         for (ItemStack[] itemStacks : items) {
             for (ItemStack item : itemStacks) {
-                if (item != null) {
-                    whitelist.add(item.getType().toString());
-                }
+                addWhitelistedItem(item);
+
             }
         }
+    }
+
+    private void addWhitelistedItem(ItemStack item) {
+        if (item == null || item.getType().isAir()) return;
+        whitelist.add(item.getType().toString());
+        if (item.getItemMeta() instanceof BlockStateMeta meta && meta.getBlockState() instanceof Container container)
+            for (ItemStack nested : container.getInventory().getContents()) addWhitelistedItem(nested);
+        if (item.getItemMeta() instanceof BundleMeta meta)
+            meta.getItems().forEach(this::addWhitelistedItem);
     }
 
     public void clearWhitelist() {

@@ -36,7 +36,7 @@ import java.util.UUID;
 public class SwapKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender);
+        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
         if (player == null) {
             return true;
         }
@@ -75,8 +75,6 @@ public class SwapKitCommand implements CommandExecutor {
         ItemStack[] tempkit = kitManager.getPlayerKit(uuid, slot1).clone();
         kitManager.savekit(uuid, slot1, kitManager.getPlayerKit(uuid, slot2), true);
         kitManager.savekit(uuid, slot2, tempkit.clone(), true);
-        kitManager.saveEnderchestToDB(uuid, slot1);
-        kitManager.saveEnderchestToDB(uuid, slot2);
 
         Lang.get().send(player, "success.kits-swapped", "slot1", String.valueOf(slot1), "slot2", String.valueOf(slot2));
         SoundManager.playSuccess(player);

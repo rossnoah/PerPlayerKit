@@ -115,7 +115,17 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
     private boolean handleAutoSetup(CommandSender sender, String[] args) {
         boolean reset = args.length >= 2 && args[1].equalsIgnoreCase("reset");
 
-        if (!reset && args.length >= 2) {
+        boolean addKits = args.length == 2 && args[1].equalsIgnoreCase("add-kits");
+        if (addKits) {
+            try {
+                int added = StarterSetup.get().addMissingPublicKits();
+                Lang.get().send(sender, "info.autosetup-definitions-added", "count", String.valueOf(added));
+            } catch (java.io.IOException e) {
+                Lang.get().send(sender, "error.autosetup-config-save", "error", e.getMessage());
+                return true;
+            }
+        }
+        if (!reset && args.length >= 2 && !addKits) {
             Lang.get().send(sender, "command.perplayerkit-autosetup-usage");
             return true;
         }
@@ -265,7 +275,7 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
 
         // Only the console can reset, so only the console is offered it.
         if (args.length == 2 && args[0].equalsIgnoreCase("autosetup")) {
-            return (sender instanceof ConsoleCommandSender) ? List.of("reset") : List.of();
+            return (sender instanceof ConsoleCommandSender) ? List.of("add-kits", "reset") : List.of("add-kits");
         }
 
         if (args.length == 3 && args[0].equalsIgnoreCase("autosetup") && args[1].equalsIgnoreCase("reset")) {

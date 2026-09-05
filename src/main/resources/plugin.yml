@@ -18,7 +18,21 @@ permissions:
   kit.use:
     children:
       perplayerkit.use: true
+  perplayerkit.admin:
+    default: op
+    children:
+      perplayerkit.staff: true
+      perplayerkit.editkitroom: true
+  perplayerkit.staff:
+    default: op
+  perplayerkit.editkitroom:
+    default: op
+  perplayerkit.kitnotify:
+    default: op
+  perplayerkit.deleteenderchest:
+    default: op
   perplayerkit.use:
+    default: op
     children:
       perplayerkit.menu: true
       perplayerkit.copykit: true
@@ -27,6 +41,7 @@ permissions:
       perplayerkit.transferkits: true
       perplayerkit.swapkit: true
       perplayerkit.deletekit: true
+      perplayerkit.deleteenderchest: true
       perplayerkit.publickit: true
       perplayerkit.kit: true
       perplayerkit.enderchest: true
@@ -95,6 +110,11 @@ commands:
   deletekit:
     usage: /<command>
     permission: perplayerkit.deletekit
+
+  deleteec:
+    usage: /<command> <slot>
+    permission: perplayerkit.deleteenderchest
+    aliases: deleteenderchest
 
   inspectkit:
     usage: /<command>

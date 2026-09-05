@@ -40,6 +40,7 @@ public class KitRoomDataManager {
     private final Plugin plugin;
     private static KitRoomDataManager instance;
     private boolean loadedAnyPage;
+    private final java.util.Set<Integer> storedPages = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     public KitRoomDataManager(Plugin plugin) {
         this.plugin = plugin;
@@ -47,7 +48,7 @@ public class KitRoomDataManager {
 
         for (int i = 0; i < PAGE_COUNT; i++) {
             ItemStack[] defaultPage = new ItemStack[45];
-            defaultPage[0] = ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, "<aqua>Default Kit Room Item</aqua>");
+            // An unsaved page is empty. Placeholders must never become whitelisted kit content.
             kitroomData.add(defaultPage);
         }
 
@@ -64,7 +65,7 @@ public class KitRoomDataManager {
     }
 
     public void setKitRoom(int page, ItemStack[] data) {
-        kitroomData.set(page, data);
+        kitroomData.set(page, ItemFilter.copy(data));
 
         ItemFilter.get().clearWhitelist();
 
@@ -73,7 +74,7 @@ public class KitRoomDataManager {
     }
 
     public ItemStack[] getKitRoomPage(int page) {
-        return kitroomData.get(page);
+        return ItemFilter.copy(kitroomData.get(page));
     }
 
     public void saveToDBAsync() {
@@ -90,31 +91,20 @@ public class KitRoomDataManager {
      */
     public void savePagesToDBAsync(List<Integer> pages) {
         List<Integer> targets = List.copyOf(pages);
+        storedPages.addAll(targets);
         if (!targets.isEmpty()) {
             // This server has a kit room now, so stop offering to make one.
             StarterSetup.notifyKitRoomSaved();
         }
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-
-                for (int page : targets) {
-                    ItemStack[] pagedata = kitroomData.get(page);
-                    String output = Serializer.itemStackArrayToBase64(pagedata);
-                    PerPlayerKit.storageManager.saveKitDataByID(IDUtil.getKitRoomId(page), output);
-                }
-            }
-
-        }.runTaskAsynchronously(plugin);
-
-
+        for (int page : targets) {
+            String output = Serializer.itemStackArrayToBase64(ItemFilter.copy(kitroomData.get(page)));
+            KitManager.get().queueWrite(IDUtil.getKitRoomId(page), output);
+        }
     }
 
     /** Whether this page has ever been saved on this server. */
     public static boolean hasStoredPage(int page) {
-        String data = PerPlayerKit.storageManager.getKitDataByID(IDUtil.getKitRoomId(page));
-        return data != null && !data.equalsIgnoreCase("error");
+        return get().storedPages.contains(page);
     }
 
     /**
@@ -129,10 +119,12 @@ public class KitRoomDataManager {
     public void loadFromDB() {
         ItemFilter.get().clearWhitelist();
         loadedAnyPage = false;
+        storedPages.clear();
         for (int i = 0; i < PAGE_COUNT; i++) {
             String input = PerPlayerKit.storageManager.getKitDataByID(IDUtil.getKitRoomId(i));
             if (!input.equalsIgnoreCase("error")) {
                 loadedAnyPage = true;
+                storedPages.add(i);
                 try {
                     ItemStack[] pagedata = Serializer.itemStackArrayFromBase64(input);
                     kitroomData.set(i, pagedata);
