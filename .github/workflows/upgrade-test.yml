@@ -68,6 +68,12 @@ jobs:
             --old-config-version "$CONFIG_VERSION" --backend "$BACKEND" \
             --server-jar tools/integration-test/.cache/paper-1.21.8.jar \
             --paper-cache tools/integration-test/.cache/paperclip/1.21.8
+      - name: Persist kit selections across restarts and storage migration
+        if: matrix.baseline.version == 2 && matrix.backend == 'sqlite'
+        run: |
+          python tools/integration-test/selections/run.py \
+            --server-jar tools/integration-test/.cache/paper-1.21.8.jar \
+            --paper-cache tools/integration-test/.cache/paperclip/1.21.8
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -75,3 +81,5 @@ jobs:
           path: |
             target/upgrade-test/*/*.log
             target/upgrade-test/*/result.json
+            target/selections-*/*/*.log
+            target/selections-*/inputs.json

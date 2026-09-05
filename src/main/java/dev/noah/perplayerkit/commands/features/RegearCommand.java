@@ -204,6 +204,7 @@ public class RegearCommand implements CommandExecutor, Listener {
     }
 
     private boolean hasLastKit(Player player) {
+        if (!ActionGuards.dataReady(player)) return false;
         if (KitManager.get().hasLastKit(player.getUniqueId())) return true;
         Lang.get().send(player, "error.no-kit-loaded");
         return false;

@@ -468,4 +468,84 @@ class KitBehaviorTest {
         assertTrue(shares.getPendingRequestIds(target).isEmpty());
         assertEquals(Material.DIRT, kits.getPlayerKit(uuid, 1)[0].getType());
     }
+
+    @ParameterizedTest @ValueSource(booleans={false, true})
+    void rememberedKitSurvivesDisconnectForBothRegearAndRespawn(boolean publicKit) {
+        if (publicKit) {
+            kits.savePublicKit("crystal", kit(Material.STONE));
+            kits.savePublicKitToDB("crystal");
+            assertTrue(kits.loadPublicKit(player, "crystal"));
+        } else {
+            kits.savekit(uuid, 1, kit(Material.STONE), true);
+            assertTrue(kits.loadKit(player, 1));
+        }
+        config.set("regear.invert-whitelist", true);
+        settle();
+        kits.unloadPlayer(uuid);
+        kits.loadPlayerDataAsync(uuid);
+        settle();
+        new ArrayList<>(mainTasks).forEach(Runnable::run);
+        assertTrue(kits.hasLastKit(uuid), "The remembered selection must survive reconnect");
+        assertTrue(kits.regearLastKit(player));
+        assertTrue(kits.loadLastKit(player));
+    }
+
+    @ParameterizedTest @ValueSource(booleans={false, true})
+    void anotherServerUsingTheSameStorageRestoresTheSelection(boolean publicKit) {
+        kits.savekit(uuid, 1, kit(Material.STONE), true);
+        kits.savePublicKit("crystal", kit(Material.DIRT)); kits.savePublicKitToDB("crystal");
+        if (publicKit) kits.loadPublicKit(player, "crystal"); else kits.loadKit(player, 1);
+        ItemStack[] ec = new ItemStack[27]; ec[0] = new ItemStack(Material.GRAVEL);
+        kits.saveECSilent(uuid, 2, ec); kits.loadEnderchest(player, 2);
+        kits.shutdown();
+        kits = new KitManager(plugin);
+        kits.loadPublicKitFromDB("crystal");
+        mainTasks.clear(); kits.loadPlayerDataAsync(uuid); settle();
+        new ArrayList<>(mainTasks).forEach(Runnable::run);
+        assertEquals(publicKit ? new KitManager.KitReference(null, "crystal") : new KitManager.KitReference(1, null), kits.getLastKitReference(uuid));
+        clearInvocations(player.getEnderChest());
+        kits.restoreLastEnderchest(player); verify(player.getEnderChest()).setContents(any());
+        assertTrue(kits.loadLastKit(player));
+    }
+
+    @Test void silentAutomaticKitsDoNotOverwriteThePersistedManualSelection() {
+        kits.savekit(uuid, 1, kit(Material.STONE), true);
+        kits.savePublicKit("override", kit(Material.DIRT));
+        kits.loadKit(player, 1); kits.loadPublicKitSilent(player, "override"); settle();
+        assertEquals("kit:1", database.get(KitSelection.kitKey(uuid)));
+    }
+
+    @Test void quittingDoesNotOverwriteASelectionSavedByAnotherServer() {
+        kits.savekit(uuid, 1, kit(Material.STONE), true); kits.loadKit(player, 1); settle();
+        database.put(KitSelection.kitKey(uuid), "kit:2");
+        kits.unloadPlayer(uuid); settle();
+        assertEquals("kit:2", database.get(KitSelection.kitKey(uuid)));
+    }
+
+    @Test void corruptPreferencesDoNotBlockValidKitsAndDoNotInventASelection() {
+        kits.savekit(uuid, 1, kit(Material.STONE), true); settle(); kits.unloadPlayer(uuid);
+        database.put(KitSelection.kitKey(uuid), "kit:0");
+        database.put(KitSelection.enderchestKey(uuid), "not-a-slot");
+        kits.loadPlayerDataAsync(uuid); settle(); new ArrayList<>(mainTasks).forEach(Runnable::run);
+        assertFalse(kits.isLoading(uuid)); assertTrue(kits.hasKit(uuid, 1)); assertFalse(kits.hasLastKit(uuid));
+        assertNull(kits.getLastKitReference(uuid));
+    }
+
+    @Test void deletedRememberedKitCannotBeRestoredAfterRejoining() {
+        kits.savekit(uuid, 1, kit(Material.STONE), true); kits.loadKit(player, 1); kits.deleteKit(uuid, 1);
+        kits.unloadPlayer(uuid); kits.loadPlayerDataAsync(uuid); settle(); new ArrayList<>(mainTasks).forEach(Runnable::run);
+        assertFalse(kits.hasLastKit(uuid)); assertFalse(kits.loadLastKit(player)); assertFalse(kits.regearLastKit(player));
+    }
+
+    @Test void failedSelectionWritesRemainAvailableOnRejoinAndRetryWithoutClobberingNewerChoices() {
+        kits.savekit(uuid, 1, kit(Material.STONE), true); kits.savekit(uuid, 2, kit(Material.DIRT), true); settle();
+        String key = KitSelection.kitKey(uuid);
+        doThrow(new IllegalStateException("selection write failed")).when(storage).saveKitDataByID(eq(key), anyString());
+        kits.loadKit(player, 1); settle(); kits.unloadPlayer(uuid); kits.loadPlayerDataAsync(uuid); settle();
+        new ArrayList<>(mainTasks).forEach(Runnable::run);
+        assertEquals(new KitManager.KitReference(1, null), kits.getLastKitReference(uuid));
+        doAnswer(i -> { database.put(i.getArgument(0), i.getArgument(1)); return null; }).when(storage).saveKitDataByID(eq(key), anyString());
+        kits.loadKit(player, 2); kits.retryFailedWrites(); settle();
+        assertEquals("kit:2", database.get(key));
+    }
 }

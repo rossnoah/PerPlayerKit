@@ -57,7 +57,7 @@ enderchests:
     saturate: false
     clear-effects: false
 
-# The last loaded personal or public inventory kit is remembered until disconnect.
+# Last loaded kit and enderchest selections are saved in your configured storage.
 # In kits maps, keys are your world or "world:region" names; values are public kit IDs.
 rekit:
   respawn:

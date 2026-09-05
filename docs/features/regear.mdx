@@ -113,3 +113,13 @@ locations:
 This blocks regear inside `protected_area` in the world named `world`. Replace both names with your own.
 
 The global rule also applies. See [Worlds and regions](/settings/locations) for allow mode and overlapping regions.
+
+## Reconnecting and switching servers
+
+Regear remembers the last personal or public kit you loaded, even after reconnecting or a server restart. Automatic rekit uses the same saved selection. The last loaded enderchest slot is saved separately.
+
+After upgrading from a version that kept selections only in memory, load a kit once to save your choice. Existing kit contents are preserved.
+
+Servers sharing MySQL, PostgreSQL, or Redis read the same saved choices when players join. Use matching kit slot limits and public kit definitions. This does not synchronize players who are already online on another server.
+
+See [Shared storage](/settings/storage#sharing-one-database-across-servers) for setup.

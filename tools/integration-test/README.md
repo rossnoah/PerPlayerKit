@@ -114,3 +114,7 @@ machine, not the plugin.
 ## WorldGuard regions
 
 The [region probe](regions/README.md) tests real geometry, inherited parents, overlapping priorities, unavailable data, and startup without WorldGuard. It uses isolated servers and supplied compatible WorldGuard and WorldEdit jars.
+
+## Remembered kit selections
+
+The [selection probe](selections/README.md) checks personal/public regear and respawn selection, enderchest choices, process restarts, and SQLite-to-YAML migration.

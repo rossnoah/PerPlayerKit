@@ -80,7 +80,8 @@ Existing saved pages and public kits are skipped. Custom definitions with matchi
 
 ## Behavior changes
 
-- Public kits work as the remembered kit for respawn and regear.
+- Personal and public kit selections persist across reconnects and restarts. Respawn and regear use the same saved choice.
+- Load a kit once after upgrading to save your selection; older versions did not store that choice.
 - Kit room filtering preserves stored definitions. Use `/purgeitem` for permanent removal.
 - Saving one kit room page leaves other unsaved pages available to autosetup.
 - Clearing a personal editor and closing it deletes that saved kit. `/deleteec <slot>` deletes an enderchest kit.

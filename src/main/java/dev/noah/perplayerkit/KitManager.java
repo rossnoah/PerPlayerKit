@@ -275,8 +275,13 @@ public class KitManager {
                 false, () -> {
                     BroadcastManager.get().broadcastPlayerLoadedPrivateKit(player, "Kit " + slot);
                     Lang.get().send(player, "success.kit-loaded", "slot", String.valueOf(slot));
-                    lastKitUsedByPlayer.put(player.getUniqueId(), new KitReference(slot, null));
+                    rememberKit(player.getUniqueId(), new KitReference(slot, null));
                 });
+    }
+
+    private void rememberKit(UUID uuid, KitReference reference) {
+        lastKitUsedByPlayer.put(uuid, reference);
+        queueWrite(KitSelection.kitKey(uuid), KitSelection.encode(reference));
     }
 
     public boolean loadKitSilent(Player player, int slot) {
@@ -295,7 +300,7 @@ public class KitManager {
         return loadKitInternal(player, IDUtil.getPublicKitId(id),
                 () -> Lang.get().send(player, "error.kit-not-found"),
                 false, () -> {
-                    lastKitUsedByPlayer.put(player.getUniqueId(), new KitReference(null, id));
+                    rememberKit(player.getUniqueId(), new KitReference(null, id));
                     BroadcastManager.get().broadcastPlayerLoadedPublicKit(player, kitDisplayName);
                     Lang.get().send(player, "success.public-kit-loaded");
                     Lang.get().send(player, "info.custom-version-available");
@@ -314,6 +319,7 @@ public class KitManager {
                 () -> Lang.get().send(player, "error.kit-slot-not-found", "slot", String.valueOf(slot)),
                 true, () -> {
                     lastEnderchest.put(player.getUniqueId(), slot);
+                    queueWrite(KitSelection.enderchestKey(player.getUniqueId()), Integer.toString(slot));
                     BroadcastManager.get().broadcastPlayerLoadedEnderChest(player);
                     Lang.get().send(player, "success.ec-loaded", "slot", String.valueOf(slot));
                 });
@@ -375,6 +381,7 @@ public class KitManager {
         for (int slot = 1; slot <= KitSlots.maxKits(); slot++) {
             loadPlayerEnderchestFromDB(uuid, slot);
         }
+        restoreSelections(uuid, readStoredData(KitSelection.kitKey(uuid)), readStoredData(KitSelection.enderchestKey(uuid)));
     }
 
     public void loadPlayerKitFromDB(UUID uuid, int slot) {
@@ -448,6 +455,13 @@ public class KitManager {
         }));
     }
 
+    private record LoadedPlayerData(Map<String, String> kits, String inventorySelection, String enderchestSelection) {}
+
+    private String readStoredData(String id) {
+        String pending = failedWrites.get(id);
+        return pending != null ? pending : PerPlayerKit.storageManager.getKitDataByID(id);
+    }
+
     public void loadPlayerDataAsync(UUID uuid) {
         Object session = new Object();
         sessions.put(uuid, session);
@@ -456,9 +470,9 @@ public class KitManager {
             Map<String, String> data = new java.util.LinkedHashMap<>();
             for (int slot = 1; slot <= KitSlots.maxKits(); slot++) {
                 for (String id : List.of(IDUtil.getPlayerKitId(uuid, slot), IDUtil.getECId(uuid, slot)))
-                    data.put(id, failedWrites.containsKey(id) ? failedWrites.get(id) : PerPlayerKit.storageManager.getKitDataByID(id));
+                    data.put(id, readStoredData(id));
             }
-            return data;
+            return new LoadedPlayerData(data, readStoredData(KitSelection.kitKey(uuid)), readStoredData(KitSelection.enderchestKey(uuid)));
         }).whenComplete((data, error) -> {
             if (!plugin.isEnabled()) return;
             plugin.getServer().getScheduler().runTask(plugin, () -> {
@@ -469,7 +483,7 @@ public class KitManager {
                     return; // Keep editing blocked until a successful join load.
                 }
                 Map<String, ItemStack[]> parsed = new java.util.LinkedHashMap<>();
-                for (Map.Entry<String, String> entry : data.entrySet()) {
+                for (Map.Entry<String, String> entry : data.kits().entrySet()) {
                     String encoded = entry.getValue();
                     if (!isStoredData(encoded)) continue;
                     int size = entry.getKey().startsWith(uuid + "ec") ? KitContents.ENDERCHEST_SIZE : KitContents.INVENTORY_SIZE;
@@ -482,9 +496,22 @@ public class KitManager {
                     }
                 }
                 parsed.forEach(kitByKitIDMap::putIfAbsent);
+                restoreSelections(uuid, data.inventorySelection(), data.enderchestSelection());
                 loading.remove(uuid);
             });
         });
+    }
+
+    private void restoreSelections(UUID uuid, String inventory, String enderchest) {
+        // A corrupt preference must not prevent access to otherwise valid saved kits.
+        if (isStoredData(inventory)) {
+            try { lastKitUsedByPlayer.putIfAbsent(uuid, KitSelection.decodeKit(inventory)); }
+            catch (IllegalArgumentException error) { plugin.getLogger().warning("Cannot restore remembered kit for " + uuid + ": " + error.getMessage()); }
+        }
+        if (isStoredData(enderchest)) {
+            try { lastEnderchest.putIfAbsent(uuid, KitSelection.decodeSlot(enderchest)); }
+            catch (IllegalArgumentException error) { plugin.getLogger().warning("Cannot restore remembered enderchest for " + uuid + ": " + error.getMessage()); }
+        }
     }
 
     public void unloadPlayer(UUID uuid) {
@@ -492,7 +519,8 @@ public class KitManager {
         loading.remove(uuid);
         lastKitUsedByPlayer.remove(uuid);
         lastEnderchest.remove(uuid);
-        // Mutations already captured and queued their own saves. Quit must not rewrite stale data.
+        // Contents and selections are already queued. Quit only clears this session's cache;
+        // it must not overwrite a selection saved by another server using the same database.
         for (int slot = 1; slot <= KitSlots.maxKits(); slot++) {
             kitByKitIDMap.remove(IDUtil.getPlayerKitId(uuid, slot));
             kitByKitIDMap.remove(IDUtil.getECId(uuid, slot));

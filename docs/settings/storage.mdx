@@ -97,6 +97,8 @@ Set `storage.type`, then fill the matching block.
   Set the same [`kits.max-slots`](/features/kits) on every server; a kit in slot 12 does not exist on a server capped at 9.
 </Warning>
 
+The last loaded inventory kit and enderchest slot are stored alongside kit data and read when players join. MySQL, PostgreSQL, and Redis can share these choices across servers. Keep public kit IDs and definitions consistent too.
+
 Kits are cached while a player is online; log them out before editing from another server.
 ## Changing database later
 
