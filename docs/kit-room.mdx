@@ -1,0 +1,137 @@
+---
+title: "Set up your kit room"
+sidebarTitle: "Set up your kit room"
+description: "The kit room holds every item your players are allowed to put in a kit. Fill it with one command, or stock it yourself."
+icon: "warehouse"
+related:
+  - Give out permissions: /permissions-setup
+  - Anti-exploit: /features/anti-exploit
+  - Kit room and public kits in config.yml: /settings/config-kitroom
+  - Kit and kit room problems: /help/kits
+---
+
+The kit room supplies items for players to build kits. It has five inventory pages.
+
+## Fill it with one command
+
+```bash
+/perplayerkit autosetup
+```
+
+Fills all five pages and the bundled public kits with a ready-made crystal setup. Edit it afterwards like anything else.
+
+Autosetup skips any page you have already saved, so it is safe to run on a server that is part way set up. Admins joining a server with an empty kit room are offered it in chat.
+
+The rest of this page is for stocking it yourself.
+
+<Frame>
+  <img src="/images/KitEditor.png" alt="The PerPlayerKit kit editor" width="340" />
+</Frame>
+
+<Frame caption="The kit room editor. The barrier block in the corner saves the page.">
+  <img src="/images/KitRoomEditor.png" alt="The PerPlayerKit kit room editor" width="340" />
+</Frame>
+
+## Stock it yourself
+
+<Steps>
+  <Step title="Join as an admin">
+    The account needs `perplayerkit.admin` or <Tooltip tip="A player with full server access, granted with the /op command.">operator</Tooltip> status.
+  </Step>
+
+  <Step title="Open the editor">
+    Run `/kit`, then click the **nether star**.
+  </Step>
+
+  <Step title="Fill the page with items">
+    Add the items players may use.
+  </Step>
+
+  <Step title="Save the page">
+    **Shift-right-click** the **barrier block** in the corner.
+  </Step>
+
+  <Step title="Repeat for the other pages">
+    Fill and save each remaining page.
+  </Step>
+</Steps>
+
+`/kitroom` does not open the editor. It only takes `save` and `load`.
+
+<Warning>
+  Close the menu without shift-right-clicking the barrier and the page's items are lost.
+</Warning>
+
+## Ideas for each page
+
+| Page | Put in it |
+| ---- | --------- |
+| Crystal PvP | End crystals, obsidian, glowstone, totems, netherite armor |
+| Sword PvP | Swords, shields, full armor, golden apples, food |
+| UHC | Golden apples, potions, bows, arrows, crafting materials |
+| Axe combat | Axes, shields, heavy armor, gapples |
+| Utility | Splash potions, wind charges, ender pearls, fireworks |
+
+## Name the pages
+
+```yaml config.yml
+kitroom:
+  items:
+    1:
+      name: Crystal
+      material: END_CRYSTAL
+    2:
+      name: Armory
+      material: NETHERITE_SWORD
+    3:
+      name: Potions
+      material: SPLASH_POTION
+    4:
+      name: Arrows
+      material: TIPPED_ARROW
+    5:
+      name: Utility
+      material: COBWEB
+```
+
+`material` is an uppercase [Bukkit material](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html) name. Restart the server after editing this. `name` accepts <Tooltip tip="The tag format Minecraft servers use to color and style text.">[MiniMessage](/settings/formatting)</Tooltip> tags, such as `"<gold><b>Crystal</b></gold>"`.
+
+## Lock kits to the kit room
+
+By default a kit can hold any legal item. To restrict kits to kit room items:
+
+```yaml config.yml
+anti-exploit:
+  only-allow-kitroom-items: true
+  import-filter: true
+```
+
+<Warning>
+  Removing a material from the kit room filters it out when a kit loads. Stored definitions remain intact.
+</Warning>
+
+## Turn kits off in some worlds
+
+```yaml config.yml
+locations:
+  global:
+    mode: deny
+    entries: [spawn, lobby]
+```
+
+To restrict only the kit room, use `locations.kit-room`. See [Worlds and regions](/settings/locations).
+
+## Copy a kit room to another server
+
+```bash
+/kitroom save
+/kitdata export kitroom my-kitroom
+```
+
+See [Export and import](/data/export-import).
+
+## Next step
+
+<Card title="Give out permissions" icon="key" href="/permissions-setup" horizontal>
+  Players cannot use `/kit` until you grant them permission.
+</Card>

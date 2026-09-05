@@ -1,0 +1,60 @@
+---
+title: "Add PerPlayerKit as a dependency"
+sidebarTitle: "Setup"
+description: "Add the PerPlayerKit jar to your project and declare it in plugin.yml so Paper loads it first."
+icon: "wrench"
+related:
+  - Java API: /api
+  - Reference: /api/reference
+---
+
+PerPlayerKit is not on a public Maven repository. Add the jar by hand.
+
+PerPlayerKit is not on a public Maven repository. Add the jar by hand.
+
+<Steps>
+  <Step title="Put the jar in your project">
+    Copy `PerPlayerKit-x.x.x.jar` into a `lib/` folder in your project root.
+  </Step>
+
+  <Step title="Declare it in pom.xml">
+    ```xml pom.xml
+    <dependency>
+        <groupId>com.local</groupId>
+        <artifactId>PerPlayerKit</artifactId>
+        <version>local</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/PerPlayerKit-x.x.x.jar</systemPath>
+    </dependency>
+    ```
+
+    Change the filename to match the jar you copied.
+  </Step>
+
+  <Step title="Declare it in plugin.yml">
+    ```yaml plugin.yml
+    name: ExamplePlugin
+    version: 1.0
+    main: com.example.ExamplePlugin
+    api-version: 1.19
+    depend:
+      - PerPlayerKit
+    ```
+
+    Paper now loads PerPlayerKit before your plugin.
+  </Step>
+</Steps>
+
+<Tip>
+  If PerPlayerKit is optional for you, use `softdepend` instead, and guard your code with `Bukkit.getPluginManager().isPluginEnabled("PerPlayerKit")`.
+</Tip>
+
+## Build notes
+
+The list from `getPublicKits()` is a copy, so iterating or modifying it never touches PerPlayerKit's own data. The `PublicKit` objects inside it are the live objects. Treat them as read-only.
+
+The dependency is <Tooltip tip="Maven takes the jar from a path on your disk instead of a repository.">`system`-scoped</Tooltip>, so the jar is not bundled into your build. Paper resolves PerPlayerKit at runtime through the `depend` entry.
+
+<Warning>
+  A `system`-scoped dependency does not warn you at build time when the server runs a different version than the jar in `lib/`. Re-check your integration on every PerPlayerKit update.
+</Warning>

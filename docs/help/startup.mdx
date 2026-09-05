@@ -1,0 +1,51 @@
+---
+title: "Startup and database problems"
+sidebarTitle: "Startup & database"
+description: "The plugin will not load, database errors on startup, and missing kit shortcut commands."
+icon: "triangle-exclamation"
+related:
+  - Storage and databases: /settings/storage
+  - Install PerPlayerKit: /installation
+  - Kits and enderchest kits: /features/kits
+  - Troubleshooting: /help/troubleshooting
+---
+
+## The plugin will not load
+
+Check the <Tooltip tip="The text window or log where your server prints what it is doing.">console</Tooltip> for the real error.
+
+- **Server version.** Paper or Spigot **1.19 or newer**.
+- **Java version.** **17 or newer**. Verify with `java -version` on the host, not the control panel.
+
+<Tooltip tip="The error Java prints when a jar was built for a newer Java than the one running.">`UnsupportedClassVersionError`</Tooltip> means Java is too old.
+
+## Database errors on startup
+
+| Check | |
+| ----- | --- |
+| Storage type | No database server? Use `storage.type: "sqlite"`. |
+| The database exists | MySQL and PostgreSQL: the database must **already exist**. The plugin creates tables, not databases. |
+| Credentials | Username, password, and host. |
+| Port reachable | Remote database: `3306` MySQL, `5432` PostgreSQL, `6379` Redis. |
+| Pool size | Connection-wait timeouts under load mean `maximum-pool-size` is too low. |
+
+See [Storage and databases](/settings/storage).
+
+## /k10 and above do not exist
+
+Slots above 9 need [`kits.max-slots`](/features/kits) raised, and register only at startup. **Full restart** required; a <Tooltip tip="Reloading re-reads plugins without stopping the server. Some things only take effect on a full restart.">reload</Tooltip> will not do.
+
+
+## Config migration failed
+
+Fix the file or folder named in the console error, then restart. The original config remains in place; backups are beside it.
+
+## Kit data is still loading
+
+Wait for the database read to finish. If the plugin says data is unavailable, fix the storage error and rejoin. Editing stays blocked to protect existing kits.
+
+## A kit save failed
+
+The console reports the storage error. Failed writes are retried after a successful connection check. If shutdown still has failed writes, it retains them in `failed-kit-writes-<time>.yml` in the plugin folder. Keep that file with your database backup and ask for help before switching backends.
+
+See [Backups](/data/backups) and [Upgrading](/upgrading).

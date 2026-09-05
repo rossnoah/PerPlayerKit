@@ -1,0 +1,138 @@
+---
+title: "Staff and admin commands"
+sidebarTitle: "For staff & admins"
+description: "Commands that need staff or admin permission, from inspecting a player's kits to moving all your kit data to another database."
+icon: "user-shield"
+related:
+  - Player commands: /commands/players
+  - Permission list: /commands/permissions
+  - Set up your kit room: /kit-room
+  - Export and import kit data: /data/export-import
+---
+
+`kit.staff` and `kit.admin` are the same two nodes, shortened.
+
+## Staff commands
+
+These need `perplayerkit.staff`.
+
+| Command | Does |
+| ------- | ---- |
+| `/inspectkit <player>` | Opens that player's kits. |
+| `/inspectec <player>` | Opens that player's enderchest kits. |
+
+## Admin commands
+
+These need `perplayerkit.admin`.
+
+| Command | Does |
+| ------- | ---- |
+| `/kitroom save` | Saves the current kit room to the database. |
+| `/kitroom load` | Reloads the kit room from the database. Unsaved edits are lost. |
+| `/savepublickit <id>` | Saves your inventory as that public kit. |
+| `/purgeitem <item> <all confirm\|player ...>` | Deletes every copy of an item from stored kits. |
+| `/kitdata export <scope> <file>` | Writes kit data to a `.ppk` file. |
+| `/kitdata import <file>` | Reads a `.ppk` file back in. |
+| `/perplayerkit autosetup` | Fills empty kit room pages and public kits with the bundled setup. |
+| `/perplayerkit migrate <from> <to>` | Copies all kit data to a different database. |
+| `/perplayerkit import kitsx` | Imports data from the KitsX plugin. |
+| `/perplayerkit about` | Prints a one-line description of the plugin. |
+
+`/purgeitem`, `/kitdata`, and `/perplayerkit` also run from the **console**.
+
+## Set the server up quickly
+
+```bash
+/perplayerkit autosetup
+/perplayerkit autosetup add-kits
+```
+
+Fills every kit room page and public kit that has **never** been saved on this server, using the bundled crystal setup. Anything you already configured is left alone, so it is safe to run twice.
+
+It reports what it filled, then points you at `/kit` and `/publickit`.
+
+<Note>
+  Admins joining a server with an empty kit room see this offered in chat, with the command as a clickable link.
+</Note>
+
+`add-kits` also adds missing bundled definitions to an existing config. It preserves custom entries and saved contents.
+
+### Starting over
+
+```bash
+/perplayerkit autosetup reset confirm
+```
+
+Replaces all five kit room pages and declared public kits that have bundled defaults. Custom kit IDs without bundled contents are preserved.
+
+<Warning>
+  `reset` overwrites work you have done. It runs from the **server console only**, and `confirm` is required.
+
+  Player kits are not touched.
+</Warning>
+
+## The kit room
+
+```bash
+/kitroom save     # save the current contents
+/kitroom load     # throw away unsaved edits and reload
+```
+
+<Warning>
+  `/kitroom` does **not** open the editor. It only takes `save` or `load`. To edit, run `/kit` and click the **nether star**.
+</Warning>
+
+In the editor, shift-right-click the barrier block to save a page. Run `/kitroom save` before an [export](/data/export-import).
+
+## Public kits
+
+```bash
+/savepublickit <id>
+```
+
+The id is the key under `publickits` in `config.yml`, not the display name. See [Public kits](/features/public-kits).
+
+## Managing data
+
+| Task | Page |
+| ---- | ---- |
+| Delete a banned item from every stored kit, including copies inside <Tooltip tip="Container blocks you can pick up with the items still inside.">shulkers</Tooltip> and bundles | [Purge items](/data/purge-items) |
+| Move a kit room and public kits to another server | [Export and import](/data/export-import) |
+| Copy all kit data to another database | [Change database](/data/storage-migration) |
+| Find and restore a backup | [Backups](/data/backups) |
+
+## Move to a different database
+
+```bash
+/perplayerkit migrate <from> <to>
+```
+
+Valid types: `sqlite`, `mysql`, `postgresql`, `redis`, `yml`.
+
+```bash
+/perplayerkit migrate sqlite mysql
+/perplayerkit migrate mysql postgresql
+/perplayerkit migrate redis sqlite
+```
+
+Runs in the background with the server online, and leaves the source database untouched.
+
+<Warning>
+  Back up first, and set the new database's details in `config.yml` before you run this.
+</Warning>
+
+## Import from KitsX
+
+```bash
+/perplayerkit import kitsx
+```
+
+Reads KitsX data files from `plugins/PerPlayerKit/`.
+
+## Check world and region rules
+
+Stand at the location and run `/perplayerkit location [feature]`. This uses the existing `perplayerkit.admin` permission.
+
+For example, `/perplayerkit location rekit-respawn` shows the current world, matching regions, location decision, and configured kit choice. Tab completes feature names.
+
+The command checks location rules only. See [Worlds and regions](/settings/locations) for how permissions and other settings also affect an action.

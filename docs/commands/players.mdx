@@ -1,0 +1,96 @@
+---
+title: "Player commands"
+sidebarTitle: "For players"
+description: "Every PerPlayerKit command a normal player can run, with its shortcuts and the permission node behind it."
+icon: "terminal"
+related:
+  - Staff and admin commands: /commands/admin
+  - Permission list: /commands/permissions
+  - Sharing kits and moving accounts: /features/sharing
+  - Regear: /features/regear
+---
+
+One permission covers every command on this page: `perplayerkit.use`.
+
+## Kits
+
+| Command | Also works as | Does |
+| ------- | ------------- | ---- |
+| `/kit` | `/k` | Opens the main menu. You build and edit your kits here. |
+| `/k1` to `/k9` | `/kit1` to `/kit9` | Loads that kit straight into your inventory. No menu. |
+| `/publickit` | `/pk`, `/premadekit` | Opens the server's preset kits. |
+| `/swapkit` | None | Swaps two of your kit slots. |
+| `/deletekit <slot>` | None | Deletes a kit slot. |
+
+Raising [`kits.max-slots`](/features/kits) above 9 adds `/k10` and up.
+
+<Warning>
+  `/deletekit` does not ask you to confirm. The saved slot is deleted.
+</Warning>
+
+## Enderchest kits
+
+An enderchest kit loads into your enderchest instead of your inventory.
+
+| Command | Also works as | Does |
+| ------- | ------------- | ---- |
+| `/enderchest` | `/ec` | Opens your enderchest. |
+| `/ec1` to `/ec9` | `/enderchest1` to `/enderchest9` | Loads that enderchest kit. |
+
+| `/deleteec <slot>` | `/deleteenderchest <slot>` | Deletes an enderchest kit. |
+
+`/deleteec` deletes the saved slot without confirmation.
+
+## Sharing
+
+| Command | Does |
+| ------- | ---- |
+| `/sharekit <slot> <player>` | Sends that kit to a player. They click **[ACCEPT]**. |
+| `/sharekit <slot>` | Gives you a code instead. Anyone can use it for 15 minutes. |
+| `/shareec <slot> [player]` | The same, for an enderchest kit. |
+| `/copykit <code>` | Redeems a share code. |
+| `/transferkits <player>` | Sends **all** your kits to another account. |
+| `/shareaccept [id]` | Accepts a request sent to you. |
+| `/sharedecline [id]` | Declines it. |
+
+Expiry times, codes, and account moves: [Sharing](/features/sharing).
+
+## In a fight
+
+| Command | Also works as | Does |
+| ------- | ------------- | ---- |
+| `/regear` | `/rg` | Restocks pearls, crystals, and potions from your loaded kit. |
+| `/heal` | None | Refills your health. |
+| `/repair` | None | Repairs the gear you are holding and wearing. |
+
+`/regear` and `/rg` are configured separately: one may restock instantly, the other hand you a <Tooltip tip="A container block you can pick up with the items still inside.">shulker box</Tooltip>. Servers set a cooldown and a post-damage delay. See [Regear](/features/regear).
+
+## Other
+
+| Command | Does |
+| ------- | ---- |
+| `/aboutperplayerkit` | Shows the version, author, license, and source link. Anyone can run it. |
+
+## Permissions for each command
+
+| Command | Permission |
+| ------- | ---------- |
+| `/kit` | `perplayerkit.menu` |
+| `/k1` and up | `perplayerkit.kit` |
+| `/publickit` | `perplayerkit.publickit` |
+| `/enderchest` | `perplayerkit.viewenderchest` |
+| `/ec1` and up | `perplayerkit.enderchest` |
+| `/swapkit` | `perplayerkit.swapkit` |
+| `/deletekit` | `perplayerkit.deletekit` |
+| `/sharekit` | `perplayerkit.sharekit` |
+| `/shareec` | `perplayerkit.shareenderchest` |
+| `/transferkits` | `perplayerkit.transferkits` |
+| `/copykit`, `/shareaccept`, `/sharedecline` | `perplayerkit.copykit` |
+| `/regear`, `/rg` | `perplayerkit.regear` |
+| `/heal` | `perplayerkit.heal` |
+| `/repair` | `perplayerkit.repair` |
+| `/aboutperplayerkit` | none |
+
+<Card title="Full permission list" icon="key" href="/commands/permissions" horizontal>
+  Every node, plus recipes for common setups.
+</Card>

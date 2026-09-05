@@ -1,0 +1,56 @@
+---
+title: "Features not working"
+sidebarTitle: "Features not working"
+description: "Rekit on kill doing nothing, regear restocking nothing, chat full of kit messages, and messages showing the wrong text."
+icon: "toggle-off"
+related:
+  - Rekit on kill: /features/rekit-kill
+  - Regear: /features/regear
+  - Messages and broadcasts: /settings/messages
+  - Languages: /settings/languages
+---
+
+## Rekit on kill does nothing
+
+| Check | |
+| ----- | --- |
+| Enabled | `rekit.kill.enabled: true` |
+| Location | Both `locations.global` and `locations.rekit-kill` allow the killer's position |
+| Permission | The killer has `perplayerkit.rekitonkill` |
+| Kit id | A `kits` entry names an existing **public kit id** with contents saved by `/savepublickit`. The console warns if not |
+| WorldGuard | Region entries (`"world:region"`) need <Tooltip tip="A separate plugin that lets you mark protected regions in a world.">WorldGuard</Tooltip> installed |
+| Restart | The server was restarted after the config change |
+
+Run `/perplayerkit location rekit-kill` at the affected position. See [Worlds and regions](/settings/locations) and [Rekit on kill](/features/rekit-kill).
+
+## Regear restocks nothing
+
+| Check | |
+| ----- | --- |
+| Loaded kit | Regear pulls from the currently loaded kit. No kit loaded, nothing to restock |
+| Location | `locations.global` and `locations.regear` both allow the action |
+| Whitelist | Only whitelisted items are restocked. Check `whitelist` and `invert-whitelist` |
+| `damage-cooldown-seconds` | Blocks regearing for a few seconds after taking damage |
+| `command-cooldown-seconds` | Limits how often it can run |
+
+See [Regear](/features/regear).
+
+## Chat is full of kit messages
+
+`perplayerkit.kitnotify` defaults to operators. Grant it separately for other players.
+
+| Want to silence | Do this |
+| --------------- | ------- |
+| Everything | Set `broadcasts.enabled: false` |
+| One action | Set that action's `enabled` to `false` |
+| One group | Deny them `perplayerkit.kitnotify` |
+
+See [Messages and broadcasts](/settings/messages).
+
+## A message shows %player% or the wrong text
+
+Message text lives in `plugins/PerPlayerKit/lang/<code>.yml`, not `config.yml`, and placeholders use `{player}`, not `%player%`. See [Languages](/settings/languages).
+
+## Menu titles show raw tags like &lt;blue&gt;
+
+Look for an unclosed <Tooltip tip="The tag format Minecraft servers use to color and style text.">[MiniMessage](/settings/formatting)</Tooltip> tag earlier in the same line, and escape any literal `<` as `\<`.

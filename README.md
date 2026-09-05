@@ -1,64 +1,72 @@
+<div align="center">
+
 # PerPlayerKit
-[![Modrinth](https://img.shields.io/modrinth/dt/perplayerkit?logo=modrinth)](https://modrinth.com/plugin/perplayerkit)
+
+The kit plugin powering modern PvP practice servers.
+
+[![Modrinth](https://img.shields.io/modrinth/dt/perplayerkit?logo=modrinth&label=Modrinth)](https://modrinth.com/plugin/perplayerkit)
 [![Spigot](https://img.shields.io/spiget/downloads/121437?label=Spigot&logo=spigotmc)](https://www.spigotmc.org/resources/perplayerkit.121437/)
 [![Hangar](https://img.shields.io/hangar/dt/PerPlayerKit?label=Hangar&logo=papermc)](https://hangar.papermc.io/noah32/PerPlayerKit)
-[![bStats](https://img.shields.io/bstats/servers/24380?label=Servers%20[Live]&logo=chartdotjs)](https://bstats.org/plugin/bukkit/PerPlayerKit/24380)
-[![Build](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fjenkins.noah.dev%2Fjob%2FPerPlayerKit&label=dev%20build&logo=jenkins&logoColor=white)](https://jenkins.noah.dev/job/PerPlayerKit/)
+[![Build](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fjenkins.noah.dev%2Fjob%2FPerPlayerKit&label=Dev%20Build&logo=jenkins&logoColor=white)](https://jenkins.noah.dev/job/PerPlayerKit/)
 
-Docs: [perplayerkit.com](https://perplayerkit.com) (work in progress)
+**[Documentation](https://perplayerkit.com)** · **[Download](https://modrinth.com/plugin/perplayerkit)** · **[Discord](https://discord.gg/5djuBSKWuV)**
 
-## Downloads
+</div>
 
-| Where | Link |
-| --- | --- |
-| Modrinth | https://modrinth.com/plugin/perplayerkit |
-| SpigotMC | https://www.spigotmc.org/resources/perplayerkit.121437/ |
-| Hangar | https://hangar.papermc.io/noah32/PerPlayerKit |
-| GitHub releases | https://github.com/rossnoah/PerPlayerKit/releases |
-| Dev builds (Jenkins) | https://jenkins.noah.dev/job/PerPlayerKit/ |
+<div align="center">
+  <img src="./docs/images/MainMenu.png" alt="The PerPlayerKit main menu" width="640">
+</div>
 
-Dev builds are built from the main branch on every commit and are untested — back up your kit data before running one in production.
+<br>
 
-Join the discord for more information and support: [Discord](https://discord.gg/5djuBSKWuV)
+Most kit plugins give everyone the same loadout. PerPlayerKit gives every player their own.
 
-## 🚀 Quick Start
+You stock a **kit room** with the items you approve. Players pick from it, build nine kits each by default, and load one with `/k1`. Kits can be shared, inspected by staff, and restocked mid-fight.
 
-New to PerPlayerKit? Check out our [Simple Setup Guide](./SIMPLE_SETUP_GUIDE.md) for a step-by-step walkthrough that gets you up and running in minutes!
+## Get started
 
-![Main Menu](./images/MainMenu.png)
+1. **[Install it](https://perplayerkit.com/installation)**. Drop in the jar, pick a database, restart.
+2. **[Set up your kit room](https://perplayerkit.com/kit-room)**. Choose the items players can use.
+3. **[Give out permissions](https://perplayerkit.com/permissions-setup)**. Grant `perplayerkit.use` and you are done.
 
-## License: AGPLv3
+Needs Paper or Spigot 1.19+ and Java 17+.
 
-PerPlayerKit is open source and licensed under the terms of the [GNU Affero General Public License v3. 0](./LICENSE). Read and understand the license before using this software. [Frequently Asked Questions about the GNU Licenses](https://www.gnu.org/licenses/gpl-faq.html#AGPLv3InteractingRemotely).
+## Documentation
 
-## Contributing to PerPlayerKit
+Everything lives at **[perplayerkit.com](https://perplayerkit.com)**.
 
-If you would like to contribute to the project you can do so by forking the repository and submitting a pull request. We prefer that improvements and contributions be merged into the main branch, rather than spread across numerous forks.
+|                                                                            |                                              |
+| -------------------------------------------------------------------------- | -------------------------------------------- |
+| [Commands](https://perplayerkit.com/commands/players)                      | Every command for players, staff, and admins |
+| [Permissions](https://perplayerkit.com/commands/permissions)               | Every node, plus recipes for common setups   |
+| [config.yml reference](https://perplayerkit.com/settings/config-reference) | Every setting and what it does               |
+| [Troubleshooting](https://perplayerkit.com/help/troubleshooting)           | Fixes for the problems people hit most       |
+| [FAQ](https://perplayerkit.com/help/faq)                                   | Short answers to common questions            |
+| [Java API](https://perplayerkit.com/api)                                   | For plugin developers                        |
 
-## About the plugin
+## Download
 
-PerPlayerKit is a [PaperMC](https://papermc.io/) plugin that allows players to make their own unique kits to PvP with. Administrators create a set of items in the "Virtual Kit Room", from which players pick their items. They can then make up to 9 kits each (configurable up to 99 with the `max-kits` option) which can be shared, modified, and inspected by moderators. It features a GUI for simple kit usage of the plugin. Additionally, commands can be used to quickly load kits and for moderator features. It also features protections against abusive items, limiting NBT data and enchantments to what is available in vanilla Minecraft and only allowing items that can be found in the "virtual kit room". Players can also use the plugin to create enderchest kits that will be loaded into their enderchest when they select the enderchest kit.
+| Where      |                                                         |
+| ---------- | ------------------------------------------------------- |
+| Modrinth   | https://modrinth.com/plugin/perplayerkit                |
+| SpigotMC   | https://www.spigotmc.org/resources/perplayerkit.121437/ |
+| Hangar     | https://hangar.papermc.io/noah32/PerPlayerKit           |
+| Dev builds | https://jenkins.noah.dev/job/PerPlayerKit/              |
 
-## Dependencies
+Dev builds come from every commit on `main` and are untested. Back up your kit data before running one in production.
 
-PerPlayerKits uses a minecraft GUI library called canvas, it can be found [here](https://github.com/IPVP-MC/canvas). PerPlayerKits was supports version 1.19 and above.
+## Help
 
-Optionally, PerPlayerKit integrates with [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) for placeholders in messages and [WorldGuard](https://enginehub.org/worldguard) for region-specific rekit-on-kill kits (see the [configuration documentation](./CONFIG.md#rekit-on-kill-configuration)). Neither is required.
+Join the **[Discord](https://discord.gg/5djuBSKWuV)** for setup help. Report bugs on the [issue tracker](https://github.com/rossnoah/PerPlayerKit/issues).
 
-## Installation
+## Contributing
 
-PerPlayerKits has a minimal configuration just requiring selecting the database type. PerPlayerKit supports MySQL/MySQL compatible (MariaDB), PostgreSQL, and SQLite databases. If you don't know what you are doing or don't have access to a database, use `sqlite` as the database type.
+Fork the repository and open a pull request against `main`. We would rather merge improvements than see them spread across forks.
 
-To use the plugin run the server with the plugin in the "plugins" folder, then stop the server and edit the config.yml file in the "plugins/PerPlayerKits" folder.
+Documentation source is in [`docs/`](./docs). See [docs/README.md](./docs/README.md).
 
-More configuration options are available, please refer to the [configuration documentation](./CONFIG.md).
+## License
 
-Need to switch storage backends? See the [Storage Migration Guide](./MIGRATION.md) for instructions on migrating data between SQLite, MySQL, PostgreSQL, Redis, and YAML storage types.
+PerPlayerKit is licensed under the [GNU Affero General Public License v3.0](./LICENSE).
 
-## Commands and Permissions
-
-For detailed information on commands and permissions, please refer to the [command documentation](./COMMANDS.md).
-
-## External API
-
-PerPlayerKit has a simple API that allows developers to interact with the plugin. The API is **NOT** stable and will possibly change in the future. Please refer to the [API documentation](./API.md) for more information.
+[PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) and [WorldGuard](https://enginehub.org/worldguard) are optional integrations.

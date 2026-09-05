@@ -1,0 +1,96 @@
+---
+title: "Backups"
+sidebarTitle: "Backups"
+description: "PerPlayerKit backs up SQLite and YAML storage hourly, daily, weekly, and monthly. Where the files land, and how to restore one."
+icon: "clock-rotate-left"
+related:
+  - Storage and databases: /settings/storage
+  - Export and import kit data: /data/export-import
+  - Change database: /data/storage-migration
+  - Remove a banned item: /data/purge-items
+---
+
+```yaml config.yml
+storage:
+  backup:
+    enabled: true
+```
+
+| Key | Type | Default | |
+| --- | --- | --- | --- |
+| `storage.backup.enabled` | boolean | `true` | Set it to `false` to stop automatic backups. |
+
+## What gets backed up
+
+| Storage type | Backed up | If not, do this instead |
+| ------------ | --------- | ----------------------- |
+| `sqlite` | Yes | |
+| `yml` | Yes | |
+| `mysql`, `postgresql` | No | Use `mysqldump` or `pg_dump` |
+| `redis` | No | Use Redis persistence: <Tooltip tip="The two ways Redis writes its data to disk so it survives a restart.">RDB snapshots or AOF</Tooltip> |
+
+Each backup includes a copy of `config.yml`.
+
+SQLite backups use <Tooltip tip="A SQLite command that writes a clean copy of the database to a new file.">`VACUUM INTO`</Tooltip>: one self-contained `.db` file including the <Tooltip tip="A side file SQLite writes new changes into before folding them into the database.">write-ahead log</Tooltip>, with no `-wal` or `-shm` to restore alongside. If the snapshot fails, the plugin copies the files and logs a warning, writing `database-wal_` and `database-shm_` files that restore together.
+
+## The schedule
+
+| Tier | Runs every | Kept for | File starts with |
+| ---- | ---------- | -------- | ---------------- |
+| Hourly | 1 hour | 24 hours | `hourly_` |
+| Daily | 24 hours | 7 days | `daily_` |
+| Weekly | 7 days | 30 days | `weekly_` |
+| Monthly | 30 days | 365 days | `monthly_` |
+
+Cleanup runs every six hours.
+
+<Warning>
+  Timers start at server start; a server restarting more than hourly never produces an hourly backup.
+</Warning>
+
+Files land here:
+
+<Tree>
+  <Tree.Folder name="plugins" defaultOpen>
+    <Tree.Folder name="PerPlayerKit" defaultOpen>
+      <Tree.Folder name="backups" defaultOpen>
+        <Tree.File name="hourly_database_2026-08-21_14-00-00.db" />
+        <Tree.File name="hourly_config_2026-08-21_14-00-00.yml" />
+        <Tree.File name="daily_database_2026-08-20_09-00-00.db" />
+      </Tree.Folder>
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+
+## Restore a backup
+
+<Steps>
+  <Step title="Stop the server">
+    Fully, not a reload.
+  </Step>
+
+  <Step title="Put the backup in place">
+    Move the snapshot out of `backups/` and rename it:
+
+    | Storage | Backup file | Rename it to |
+    | ------- | ----------- | ------------ |
+    | SQLite | `<tier>_database_<time>.db` | `database.db` |
+    | YAML | `<tier>_yaml-storage_<time>.yml` | `please-use-a-real-database.yml` |
+
+    <Warning>
+      Keep a copy of the broken file first. For SQLite, delete any `database.db-wal` and `database.db-shm` next to it. They corrupt the restored database.
+    </Warning>
+  </Step>
+
+  <Step title="Restore config.yml if you need it">
+    Only if settings have drifted.
+  </Step>
+
+  <Step title="Start the server and check">
+    Watch the console for storage errors and confirm a test player's kits load.
+  </Step>
+</Steps>
+
+## These are not off-site backups
+
+Backups sit on the same disk as the data. Copy `plugins/PerPlayerKit/backups/` off the server, or run [`/kitdata export all`](/data/export-import). It works on **every** storage type, including MySQL and Redis.

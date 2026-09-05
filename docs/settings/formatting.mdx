@@ -1,0 +1,32 @@
+---
+title: "MiniMessage formatting"
+sidebarTitle: "Formatting"
+description: "Color and style plugin text with MiniMessage tags."
+icon: "palette"
+---
+
+Messages use <Tooltip tip="The tag format Minecraft servers use to color and style text.">[MiniMessage](https://docs.papermc.io/adventure/minimessage/)</Tooltip>, not the old <Tooltip tip="The old Minecraft color system, written as a section sign and a letter.">`§` codes</Tooltip>. Tags wrap text, close with a matching slash tag, and nest.
+
+| Tag | Does | Example |
+| --- | ---- | ------- |
+| `<red>` … `</red>` | Named color | `<red>Warning</red>` |
+| `<aqua>`, `<green>`, `<gray>`, `<gold>`, `<white>` | More named colors | `<gold>Gold text</gold>` |
+| `<color:#RRGGBB>` | An exact color | `<color:#FF6B35>Orange</color:#FF6B35>` |
+| `<gradient:#5FD3C2:#17605A>` | A gradient across the text | `<gradient:#5FD3C2:#17605A>Kits</gradient>` |
+| `<b>` | Bold | `<b>Important</b>` |
+| `<i>` | Italic | `<i>Hint</i>` |
+| `<u>` | Underline | `<u>/kit</u>` |
+| `<st>` | Strikethrough | `<st>Removed</st>` |
+| `<reset>` | Clears formatting | `<reset>Plain text` |
+
+Combined:
+
+```xml
+<gray>{player} <aqua><b>loaded</b></aqua> a kit</gray>
+```
+
+<Warning>
+  MiniMessage reads `<` as a tag opener. Escape a literal one: `\<slot>`.
+</Warning>
+
+Placeholders use `{name}`: `{player}`, `{slot}`. A literal `%player%` is the old style.

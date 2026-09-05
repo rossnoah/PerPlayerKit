@@ -1,150 +1,160 @@
 ---
-title: "How to Install PerPlayerKit on Your Minecraft Server"
-sidebarTitle: "Installation"
-description: "Step-by-step guide to installing PerPlayerKit on a Paper or Spigot 1.19+ server, including database setup and initial configuration."
+title: "Install PerPlayerKit"
+sidebarTitle: "Install it"
+description: "Install PerPlayerKit on a Paper or Spigot 1.19+ server. Drop in the jar, pick a database, and restart."
 icon: "download"
+related:
+  - Download PerPlayerKit: /downloads
+  - Set up your kit room: /kit-room
+  - Storage and databases: /settings/storage
+  - Startup and database problems: /help/startup
 ---
 
-Installing PerPlayerKit takes only a few minutes. The plugin has a minimal required configuration — all you must decide upfront is which storage backend to use. Follow the steps below to go from a fresh download to a fully running plugin.
+import VersionNote from '/snippets/version-note.mdx';
 
 <Warning>
-  PerPlayerKit requires **Paper or Spigot 1.19 or newer** and **Java 17 or newer**. Starting the plugin on an older server version or an older JDK will cause it to fail to load. Verify both before proceeding.
+  <VersionNote />
 </Warning>
 
-## Installation Steps
+## Install the plugin
 
 <Steps>
-  <Step title="Download the Plugin">
-    Grab the latest `PerPlayerKit-x.x.x.jar` from [Modrinth](https://modrinth.com/plugin/perplayerkit), [SpigotMC](https://www.spigotmc.org/resources/perplayerkit.121437/), [Hangar](https://hangar.papermc.io/noah32/PerPlayerKit), or the [GitHub releases page](https://github.com/rossnoah/PerPlayerKit/releases). Always use the most recent stable release to get the latest bug fixes and features. Unreleased builds are on the [Downloads page](/downloads).
+  <Step title="Download the jar">
+    Get `PerPlayerKit-x.x.x.jar` from [Modrinth](https://modrinth.com/plugin/perplayerkit), [SpigotMC](https://www.spigotmc.org/resources/perplayerkit.121437/), or [Hangar](https://hangar.papermc.io/noah32/PerPlayerKit).
   </Step>
 
-  <Step title="Stop Your Server and Place the JAR">
-    Shut down your server completely before adding any new plugin. Once it has stopped, copy the `.jar` file into your server's `plugins/` folder.
+  <Step title="Stop the server">
+    Shut it down fully.
   </Step>
 
-  <Step title="Start the Server to Generate Config Files">
-    Start the server. PerPlayerKit will initialize and create its configuration files inside `plugins/PerPlayerKit/`. Watch your console for any startup errors, then let the server finish loading.
+  <Step title="Put the jar in the plugins folder">
+    Copy the <Tooltip tip="The plugin file you drop into your server's plugins folder.">jar</Tooltip> into `plugins/`.
   </Step>
 
-  <Step title="Stop the Server Again">
-    Stop the server before editing any configuration files. Editing config files while the server is running will cause your changes to be overwritten on the next save cycle.
+  <Step title="Start the server">
+    The plugin creates `plugins/PerPlayerKit/`.
   </Step>
 
-  <Step title="Edit config.yml and Set Your Storage Type">
-    Open `plugins/PerPlayerKit/config.yml` in a text editor. Find the `storage` block and set `type` to your chosen backend (`sqlite`, `mysql`, `postgresql`, or `redis`). If you choose anything other than SQLite, fill in the corresponding connection details as shown in the **Database Configuration** section below.
+  <Step title="Stop the server again">
+    A running server overwrites edits to `config.yml` when it saves.
   </Step>
 
-  <Step title="Restart the Server">
-    Start the server one final time. PerPlayerKit will connect to your chosen database and complete its initialization. The plugin is now ready to use.
+  <Step title="Pick a database">
+    Set `storage.type` in `plugins/PerPlayerKit/config.yml`. See [below](#choose-a-database).
+  </Step>
+
+  <Step title="Start the server">
+    The plugin connects and finishes setup.
   </Step>
 </Steps>
 
-## What Gets Created
+## What the plugin creates
 
-After the first startup, your plugin folder looks like this:
+<Tree>
+  <Tree.Folder name="plugins/" defaultOpen>
+    <Tree.File name="PerPlayerKit-x.x.x.jar" />
+    <Tree.Folder name="PerPlayerKit/" defaultOpen>
+      <Tree.File name="config.yml" />
+      <Tree.Folder name="lang/" />
+      <Tree.Folder name="backups/" />
+      <Tree.File name="database.db" />
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
 
-```bash
-plugins/
-├── PerPlayerKit-x.x.x.jar
-└── PerPlayerKit/
-    ├── config.yml       # all settings
-    ├── lang/            # one file per language (en.yml, de.yml, …)
-    ├── backups/         # automatic backups for SQLite / YAML storage
-    └── database.db      # only when using SQLite
-```
+| | |
+| --- | --- |
+| `config.yml` | All settings. |
+| `lang/` | One file per language. |
+| `backups/` | Automatic backups. SQLite and YAML only. |
+| `database.db` | SQLite only. |
 
-## Database Configuration
+## Choose a database
 
-Choose the storage backend that fits your server setup. All options are fully supported; the right choice depends on your infrastructure.
-
-<Tip>
-  Use **SQLite** if you run a single server and want zero-configuration storage — no external database required. Choose **MySQL, PostgreSQL, or Redis** only if you run a network of servers that need to share kit data, or if you already manage a dedicated database server.
-</Tip>
-
-<Warning>
-  The **YAML** storage type is included for development and testing purposes only. Do not use it in production — it does not scale and offers no data integrity guarantees.
-</Warning>
+| `storage.type` | Use it for |
+| -------------- | ---------- |
+| `sqlite` | A single server. No setup, no password. |
+| `mysql`, `postgresql`, `redis` | A network that shares kits between servers. |
 
 <Tabs>
-  <Tab title="SQLite (Recommended)">
-    SQLite stores all kit data in a local file inside the `plugins/PerPlayerKit/` directory. No external database software or credentials needed.
-
+  <Tab title="SQLite (recommended)">
     ```yaml config.yml
     storage:
-      type: "sqlite"
+      type: sqlite
     ```
 
-    That is the only change required. Restart the server and the plugin creates the database file automatically.
+    Created at `plugins/PerPlayerKit/database.db` on the next start.
   </Tab>
 
   <Tab title="MySQL">
-    Use MySQL (or a compatible drop-in like MariaDB) when you need a shared database across multiple server instances.
+    Works with MariaDB too.
 
     ```yaml config.yml
     storage:
-      type: "mysql"
-
-    mysql:
-      host: "localhost"
-      port: "3306"
-      dbname: "kitdatabase"
-      username: "username"
-      password: "pa55w0rd"
-      useSSL: false
-      maximumPoolSize: 10
+      type: mysql
+      mysql:
+        host: localhost
+        port: '3306'
+        dbname: kitdatabase
+        username: username
+        password: pa55w0rd
+        use-ssl: false
+        maximum-pool-size: 10
     ```
 
-    Create the target database on your MySQL server before starting the plugin. PerPlayerKit creates its own tables automatically on first launch.
+    Create the database first; the plugin makes its own tables.
   </Tab>
 
   <Tab title="PostgreSQL">
-    PostgreSQL is supported for servers that prefer it over MySQL, or for environments where a PostgreSQL instance is already available.
-
     ```yaml config.yml
     storage:
-      type: "postgresql"
-
-    postgresql:
-      host: "localhost"
-      port: "5432"
-      dbname: "kitdatabase"
-      username: "username"
-      password: "pa55w0rd"
-      useSSL: false
-      maximumPoolSize: 10
+      type: postgresql
+      postgresql:
+        host: localhost
+        port: '5432'
+        dbname: kitdatabase
+        username: username
+        password: pa55w0rd
+        use-ssl: false
+        maximum-pool-size: 10
     ```
 
-    As with MySQL, create the target database before first launch. The plugin handles table creation automatically.
+    Create the database first; the plugin makes its own tables.
   </Tab>
 
   <Tab title="Redis">
-    Redis suits networks that need very fast reads and writes across many nodes.
-
     ```yaml config.yml
     storage:
-      type: "redis"
-
-    redis:
-      host: "localhost"
-      port: 6379
-      password: "pa55w0rd"
+      type: redis
+      redis:
+        host: localhost
+        port: 6379
+        password: pa55w0rd
     ```
   </Tab>
 </Tabs>
 
-## Migrating from KitsX
+<Warning>
+  Do not use the `yml` storage type on a real server. It is slow and can lose data.
+</Warning>
 
-If you are moving from the KitsX plugin, PerPlayerKit can import its data. Place the KitsX data files in the PerPlayerKit plugin folder and run:
+## Optional plugins
+
+| Plugin | What it adds |
+| ------ | ------------ |
+| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | Placeholders in plugin messages. |
+| [WorldGuard](https://enginehub.org/worldguard) | Per-region kits for [rekit on kill](/features/rekit-kill). |
+
+Both are detected automatically.
+
+## Next step
+
+Players cannot build a kit until the kit room is stocked. For a working setup straight away:
 
 ```bash
-/perplayerkit import kitsx
+/perplayerkit autosetup
 ```
 
-The command reports which files it found and whether the import succeeded. Back up your existing data first.
-
-## Next Steps
-
-With the plugin installed and storage configured, set up your Virtual Kit Room and assign permissions so players can start building kits.
-
-* Follow the [Quickstart guide](/quickstart) to configure a Kit Room and test the plugin end-to-end.
-* Browse the [Configuration reference](/configuration/database) for the full list of available settings.
+<Card title="Set up your kit room" icon="warehouse" href="/kit-room" horizontal>
+  The items players may use, by command or by hand.
+</Card>

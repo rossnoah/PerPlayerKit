@@ -1,0 +1,115 @@
+---
+title: "Regear"
+sidebarTitle: "Regear"
+description: "Players restock pearls, crystals, and potions mid-fight from their loaded kit. Set the mode for each command, plus a cooldown and a damage timer."
+icon: "arrows-rotate"
+related:
+  - Kits and enderchest kits: /features/kits
+  - Rekit on respawn: /features/rekit-respawn
+  - Player commands: /commands/players
+---
+
+Restocks whitelisted items from the kit the player has loaded, without a menu. `/rg` and `/regear` are separate commands, configured separately.
+
+## The two modes
+
+| Mode | What the player does |
+| ---- | -------------------- |
+| `command` | Runs the command. Whitelisted items go straight into their inventory |
+| `shulker` | Gets a regear <Tooltip tip="A container block you can pick up with the items still inside.">shulker box</Tooltip>, places it, and clicks the shell inside to restock |
+
+Both modes enforce the damage timer, permissions, location rules, and elytra setting. The command cooldown applies only to command mode.
+
+## Settings
+
+```yaml config.yml
+regear:
+  modes:
+    rg: command
+    regear: command
+  command-cooldown-seconds: 5
+  damage-cooldown-seconds: 5
+  allow-while-using-elytra: true
+  prevent-putting-items-in-regear-inventory: false
+  invert-whitelist: false
+  whitelist:
+  - ENDER_PEARL
+  - END_CRYSTAL
+  - OBSIDIAN
+  - GLOWSTONE
+  - SPLASH_POTION
+```
+
+| Key | Type | Default | |
+| --- | --- | --- | --- |
+| `modes.rg` | string | `command` | What `/rg` does. Use `"command"` or `"shulker"`. |
+| `modes.regear` | string | `command` | What `/regear` does. Use `"command"` or `"shulker"`. |
+| `command-cooldown-seconds` | integer | `5` | Seconds between restocks in command mode. `0` removes the cooldown. |
+| `damage-cooldown-seconds` | integer | `5` | Seconds after taking damage before a player can regear. `0` switches it off. |
+| `allow-while-using-elytra` | boolean | `true` | `false` blocks regearing while a player is <Tooltip tip="Flying with an elytra.">gliding</Tooltip>. |
+| `prevent-putting-items-in-regear-inventory` | boolean | `false` | Shulker mode only. `true` stops players using the regear shulker as extra storage. |
+| `invert-whitelist` | boolean | `false` | `false` means `whitelist` is a list of allowed items. `true` turns it into a list of blocked items. |
+| `whitelist` | list of string | | Uppercase <Tooltip tip="The internal Minecraft name for an item, always uppercase, such as DIAMOND_SWORD.">[Bukkit material](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)</Tooltip> names. The items regear restocks, unless `invert-whitelist` is `true`. |
+
+Regear uses the last personal or public inventory kit loaded since joining. It does not use enderchest kits.
+
+## Examples
+
+<Tabs>
+  <Tab title="A mode for each command">
+    `/rg` restocks instantly, `/regear` hands out a shulker.
+
+    ```yaml config.yml
+    regear:
+      modes:
+        rg: command
+        regear: shulker
+      command-cooldown-seconds: 3
+      damage-cooldown-seconds: 5
+      allow-while-using-elytra: false
+      prevent-putting-items-in-regear-inventory: true
+      invert-whitelist: false
+      whitelist:
+      - ENDER_PEARL
+      - OBSIDIAN
+    ```
+  </Tab>
+
+  <Tab title="Allow every item">
+    An inverted whitelist left empty blocks nothing, so every item is restocked.
+
+    ```yaml config.yml
+    regear:
+      modes:
+        rg: command
+        regear: command
+      command-cooldown-seconds: 10
+      damage-cooldown-seconds: 5
+      allow-while-using-elytra: true
+      invert-whitelist: true
+      whitelist: []
+    ```
+  </Tab>
+</Tabs>
+
+## Make regear a rank perk
+
+```bash
+/lp group default permission set perplayerkit.regear false
+/lp group donor   permission set perplayerkit.regear true
+```
+
+## World and region rules
+
+Use `locations.regear` to choose where regear commands and items work. Item use is checked again at the current position.
+
+```yaml config.yml
+locations:
+  regear:
+    mode: deny
+    entries: ["world:protected_area"]
+```
+
+This blocks regear inside `protected_area` in the world named `world`. Replace both names with your own.
+
+The global rule also applies. See [Worlds and regions](/settings/locations) for allow mode and overlapping regions.

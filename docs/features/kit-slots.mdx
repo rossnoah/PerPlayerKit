@@ -1,0 +1,41 @@
+---
+title: "Kit slots"
+sidebarTitle: "Kit slots"
+description: "Give players more than nine kit slots with kits.max-slots, up to 99."
+icon: "layer-group"
+---
+
+```yaml config.yml
+kits:
+  max-slots: 9
+```
+
+| Key | Type | Default | |
+| --- | --- | --- | --- |
+| `kits.max-slots` | integer | `9` | Kit slots per player, **1 to 99**. A value outside that range is <Tooltip tip="A number below 1 or above 99 is pulled back to the nearest allowed value.">clamped</Tooltip>, not rejected. |
+
+<Warning>
+  Changing `kits.max-slots` needs a **full server restart**. A <Tooltip tip="Running /reload instead of stopping and starting the server.">reload</Tooltip> does not register the new commands.
+</Warning>
+
+## What changes when you raise it
+
+| Above nine slots | Effect |
+| ---------------- | ------ |
+| The `/kit` menu | Splits into pages with next and previous buttons |
+| Commands | `/k10` to `/k<max>` and `/ec10` to `/ec<max>` register at startup |
+
+Write the long form if another plugin has taken the same command name:
+
+```bash
+/k12
+/perplayerkit:k12   # the same command, no ambiguity
+```
+
+## Before you change it
+
+| | |
+| --- | --- |
+| Lowering the value | Hides kits, does not delete them. A kit in slot 15 stays in the database and returns when you raise `kits.max-slots`. [`/purgeitem`](/data/purge-items) always scans all 99 slots, so a banned item cannot hide in a disabled slot |
+| Servers on one database | All need the same `kits.max-slots`. A kit in slot 12 does not exist on a server that allows 9 |
+| Stored data | Each slot is one saved inventory: 99 slots is up to 198 per player. Watch this on SQLite or YAML with many players |

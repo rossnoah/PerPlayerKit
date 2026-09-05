@@ -1,0 +1,125 @@
+---
+title: "Frequently asked questions"
+sidebarTitle: "FAQ"
+description: "Short answers to the questions server owners ask most about PerPlayerKit."
+icon: "circle-question"
+related:
+  - Troubleshooting: /help/troubleshooting
+  - Install PerPlayerKit: /installation
+  - Storage and databases: /settings/storage
+  - Give out permissions: /permissions-setup
+---
+
+## About the plugin
+
+<AccordionGroup>
+  <Accordion title="Does it work on Spigot, or only Paper?">
+    Both, 1.19 or newer. Prefer Paper.
+  </Accordion>
+
+  <Accordion title="Is it free?">
+    Yes, and open source under the <Tooltip tip="An open source license. The code is public, and anyone who changes it has to keep their version public too.">AGPL-3.0 license</Tooltip>.
+  </Accordion>
+
+  <Accordion title="Do I need WorldGuard or PlaceholderAPI?">
+    Both optional. <Tooltip tip="A separate plugin that lets you mark protected regions in a world.">WorldGuard</Tooltip> adds per-region kits for [rekit on kill](/features/rekit-kill); <Tooltip tip="A plugin other plugins use to drop values like a player name into text.">PlaceholderAPI</Tooltip> adds placeholders in messages.
+  </Accordion>
+
+  <Accordion title="Will it work with my other kit plugin?">
+    Two kit plugins fight over the same commands. Remove or rename the other. Coming from KitsX? [Import your data](/commands/admin#import-from-kitsx).
+  </Accordion>
+</AccordionGroup>
+
+## Setting it up
+
+<AccordionGroup>
+  <Accordion title="Which database should I pick?">
+    One server: **SQLite**. A network: **MySQL**, **PostgreSQL**, or **Redis**. Never `yml`. See [Storage and databases](/settings/storage).
+  </Accordion>
+
+  <Accordion title="Can I change database later?">
+    Yes. One command copies everything while the server stays online. See [Change database](/data/storage-migration).
+  </Accordion>
+
+  <Accordion title="Is there a fast way to get a working setup?">
+    Yes. `/perplayerkit autosetup` fills the kit room and the bundled public kits. See [Set up your kit room](/kit-room).
+  </Accordion>
+
+  <Accordion title="How do I open the kit room editor?">
+    `/kit`, then the **nether star**. `/kitroom` takes only `save` and `load`.
+  </Accordion>
+
+  <Accordion title="How many kits can a player have?">
+    Nine by default, up to 99 via `kits.max-slots`. Needs a full restart. See [Kits](/features/kits).
+  </Accordion>
+
+  <Accordion title="Why can admins not use /kit?">
+    `perplayerkit.admin` grants admin tools and staff inspection. Give admins `perplayerkit.use` as well. See [Give out permissions](/permissions-setup).
+  </Accordion>
+</AccordionGroup>
+
+## Running it
+
+<AccordionGroup>
+  <Accordion title="Why do items keep disappearing from kits?">
+    `only-allow-kitroom-items: true` filters loaded copies against your kit room. Stored definitions are preserved. See [Anti-exploit](/features/anti-exploit).
+  </Accordion>
+
+  <Accordion title="How do I stop the chat spam?">
+    Set `broadcasts.enabled: false`. For finer control, see [Messages and broadcasts](/settings/messages).
+  </Accordion>
+
+  <Accordion title="A player changed account. Can I move their kits?">
+    Kits belong to a <Tooltip tip="The permanent ID Minecraft gives an account. It never changes, even after a name change.">UUID</Tooltip>: run `/transferkits <newname>` from the old account with both online, and the new account clicks **[ACCEPT]**. See [Sharing and transfers](/features/sharing).
+  </Accordion>
+
+  <Accordion title="How do I ban an item that is already in people's kits?">
+    Take it out of the kit room, turn on `only-allow-kitroom-items`, then run `/purgeitem <item> all confirm`. See [Remove a banned item](/data/purge-items).
+  </Accordion>
+
+  <Accordion title="Can I disable kits in my lobby?">
+    ```yaml config.yml
+    locations:
+      global:
+        mode: deny
+        entries: [spawn, lobby]
+    ```
+  </Accordion>
+
+  <Accordion title="Can I give my players a different language?">
+    Fourteen ship with the plugin; set `language` in `config.yml`. See [Languages](/settings/languages).
+  </Accordion>
+</AccordionGroup>
+
+## Data and safety
+
+<AccordionGroup>
+  <Accordion title="Does the plugin back up my data?">
+    SQLite and YAML: hourly, daily, weekly, monthly. Otherwise use your database's own tools or `/kitdata export all`. See [Backups](/data/backups).
+  </Accordion>
+
+  <Accordion title="Can I copy my kit room to another server?">
+    ```bash
+    /kitroom save
+    /kitdata export kitroom my-kitroom
+    ```
+
+    Send the file and they import it. See [Export and import](/data/export-import).
+  </Accordion>
+
+  <Accordion title="Is upgrading the plugin safe?">
+    Yes. Stop the server, swap the jar, start it again. Back up first on a [dev build](/downloads#development-builds).
+  </Accordion>
+</AccordionGroup>
+
+## Still not answered
+
+<Columns cols={2}>
+  <Card title="Troubleshooting" icon="wrench" href="/help/troubleshooting">
+    Longer fixes for specific problems.
+  </Card>
+
+  <Card title="Ask in Discord" icon="discord" href="https://discord.gg/5djuBSKWuV">
+    The developer and other owners.
+  </Card>
+</Columns>

@@ -1,0 +1,60 @@
+---
+title: "Load effects and other settings"
+sidebarTitle: "Load effects"
+description: "Health, food, potion effects, death drops, and update notices."
+icon: "toggle-on"
+related:
+  - Automatic rekit: /features/rekit
+  - Rekit on kill: /features/rekit-kill
+  - Messages and broadcasts: /settings/messages
+  - config.yml reference: /settings/config-reference
+---
+
+Load effects use the same names for inventory kits and enderchest kits.
+
+## Load effects
+
+```yaml config.yml
+kits:
+  load:
+    heal: false
+    feed: false
+    saturate: false
+    clear-effects: false
+enderchests:
+  load:
+    heal: false
+    feed: false
+    saturate: false
+    clear-effects: false
+```
+
+| Setting | Default | Effect |
+| --- | --- | --- |
+| `heal` | `false` | Restores the player's maximum health |
+| `feed` | `false` | Fills the hunger bar |
+| `saturate` | `false` | Sets saturation to 20 |
+| `clear-effects` | `false` | Removes active potion effects |
+
+`kits.load` applies to personal and public inventory kits. `enderchests.load` applies when an enderchest kit loads.
+
+Use `locations.heal` and `locations.repair` for command and menu restrictions. Kit load effects follow the loading action's rule. See [Worlds and regions](/settings/locations).
+
+## Other settings
+
+```yaml config.yml
+heal:
+  clear-effects: false
+death:
+  condensed-drops: false
+updates:
+  notify-admins-on-join: true
+```
+
+| Key | Effect |
+| --- | --- |
+| `heal.clear-effects` | Makes `/heal` remove potion effects |
+| `death.condensed-drops` | Drops death items in a tight pile |
+| `updates.notify-admins-on-join` | Tells admins when a plugin update exists |
+
+See [Automatic rekit](/features/rekit) and [Messages](/settings/messages) for their settings.

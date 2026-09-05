@@ -1,0 +1,67 @@
+---
+title: "Interface, sounds and join messages in config.yml"
+sidebarTitle: "Interface & sounds"
+description: "The interface, sounds, motd and scheduled-broadcast blocks: menu colors, filler glass, sound effects, and timed messages."
+icon: "palette"
+related:
+  - Messages and broadcasts: /settings/messages
+  - Languages: /settings/languages
+  - config.yml reference: /settings/config-reference
+---
+
+## interface
+
+```yaml config.yml
+interface:
+  glass-material: BLUE_STAINED_GLASS_PANE
+  main-color: <blue>
+```
+
+| Key | Type | Default | |
+| --- | --- | --- | --- |
+| `interface.glass-material` | string | `BLUE_STAINED_GLASS_PANE` | The filler item in empty decorative menu slots. Any <Tooltip tip="Any item or block name Minecraft knows, written in capitals, such as STONE.">[Bukkit material](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)</Tooltip> works, but the menus are designed around stained glass panes. |
+| `interface.main-color` | string | | The plugin's accent color in menu titles and highlights, as an opening <Tooltip tip="The tag format Minecraft servers use to color and style text.">[MiniMessage](/settings/formatting)</Tooltip> tag. Named colors like `"<aqua>"` and hex colors like `"<color:#FF6B35>"` both work. |
+
+## sounds
+
+```yaml config.yml
+sounds:
+  enabled: true
+  success: ENTITY_PLAYER_LEVELUP
+  failure: ENTITY_ITEM_BREAK
+  click: UI_BUTTON_CLICK
+  open-gui: UI_BUTTON_CLICK
+  close-gui: UI_BUTTON_CLICK
+```
+
+| Setting | Default | Plays when |
+| ------- | ------- | ---------- |
+| `enabled` | `true` | Set to `false` to turn off every plugin sound. |
+| `success` | `ENTITY_PLAYER_LEVELUP` | Something worked: a kit saved, a kit loaded, a share completed. |
+| `failure` | `ENTITY_ITEM_BREAK` | Something failed: a blocked world, a cooldown, a bad slot. |
+| `click` | `UI_BUTTON_CLICK` | A button in a menu is clicked. |
+| `open-gui` | `UI_BUTTON_CLICK` | A menu opens. |
+| `close-gui` | `UI_BUTTON_CLICK` | A menu closes. |
+
+Values must be valid [Bukkit sound](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html) names for your Minecraft version. An unknown name falls back to the default and logs a warning.
+
+## motd and scheduled-broadcast
+
+```yaml config.yml
+motd:
+  enabled: true
+  delay-seconds: 5
+broadcasts:
+  scheduled:
+    enabled: true
+    period-seconds: 90
+```
+
+| Setting | Default | Does |
+| ------- | ------- | ---- |
+| `motd.enabled` | `true` | Sends a message to players shortly after they join. |
+| `motd.delay-seconds` | `5` | Seconds to wait after joining. |
+| `broadcasts.scheduled.enabled` | `true` | Repeats a reminder message to everyone online. |
+| `broadcasts.scheduled.period-seconds` | `90` | Seconds between broadcasts. |
+
+Wording lives in the language file. See [Messages and broadcasts](/settings/messages).

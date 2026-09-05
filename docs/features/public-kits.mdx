@@ -1,0 +1,116 @@
+---
+title: "Public kits"
+sidebarTitle: "Public kits"
+description: "Server-wide preset kits that any player can load with /publickit. How to add one in config.yml and save what goes inside it."
+icon: "globe"
+related:
+  - Set up your kit room: /kit-room
+  - Rekit on kill: /features/rekit-kill
+  - Kit room and public kits in config.yml: /settings/config-kitroom
+  - Export and import kit data: /data/export-import
+---
+
+<Frame>
+  <img src="/images/PublicKits.png" alt="The public kits menu" width="340" />
+</Frame>
+
+## What ships by default
+
+Nine kits are declared in `config.yml`: `crystal`, `mace`, `netherite`, `pot`, `uhc`, `sword`, `axe`, `ffa` and `cart`. They are declared, not filled.
+
+A declared kit with no contents shows in the menu with a red **[UNASSIGNED]** tag. Fill them all at once:
+
+```bash
+/perplayerkit autosetup
+```
+
+<Note>
+  A kit whose `icon` material does not exist on the server is skipped entirely rather than shown empty. The `mace` kit is hidden when the server API has no `MACE` material.
+</Note>
+
+On an existing install, `/perplayerkit autosetup add-kits` adds missing starter definitions and fills unsaved content. Custom entries are preserved.
+
+The menu uses pages when more than 27 kits are declared.
+
+## Add a public kit
+
+<Steps>
+  <Step title="Add the entry to config.yml">
+    ```yaml config.yml
+    publickits:
+      crystal:
+        name: Crystal
+        icon: END_CRYSTAL
+      gapple:
+        name: Gapple Fight
+        icon: ENCHANTED_GOLDEN_APPLE
+    ```
+
+    The key (`gapple`) is the kit **id**. Commands take the id, not the display name: `/savepublickit gapple`, never `"Gapple Fight"`.
+  </Step>
+
+  <Step title="Restart the server">
+    Contents cannot be saved until the kit exists in the config.
+  </Step>
+
+  <Step title="Hold exactly what the kit should contain">
+    Armor slots and off-hand included. The kit is a <Tooltip tip="The kit stores exactly what you are holding at that moment.">snapshot</Tooltip>.
+  </Step>
+
+  <Step title="Save it">
+    ```bash
+    /savepublickit gapple
+    ```
+
+    Requires `perplayerkit.admin`. In `/publickit`, an admin can also **shift-click** a kit to open its editor.
+  </Step>
+
+  <Step title="Check it">
+    Run `/publickit` and load the kit.
+  </Step>
+</Steps>
+
+### The two config fields
+
+| Key | Type | |
+| --- | --- | --- |
+| `publickits.<id>.name` | string | Menu label. Accepts <Tooltip tip="The tag format Minecraft servers use to color and style text.">[MiniMessage](/settings/formatting)</Tooltip> tags, such as `"<gold><b>Gapple Fight</b></gold>"` |
+| `publickits.<id>.icon` | string | Menu icon. An uppercase <Tooltip tip="The internal Minecraft name for an item, always uppercase, such as DIAMOND_SWORD.">[Bukkit material](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)</Tooltip> name |
+
+## Load a public kit
+
+```bash
+/publickit
+```
+
+`/pk` and `/premadekit` open the same menu. Clicking a kit replaces the player's inventory. An unassigned kit cannot load. Rekit-on-kill references to missing contents log a warning and fall back to the remembered kit.
+
+## Restrict who can use them
+
+`perplayerkit.publickit` controls access; `perplayerkit.use` includes it. As a rank perk:
+
+```bash
+/lp group default permission set perplayerkit.publickit false
+/lp group donor   permission set perplayerkit.publickit true
+```
+
+## What else uses public kits
+
+| | |
+| --- | --- |
+| [Automatic rekit](/features/rekit) | Selects a public kit by world or region after respawns and kills |
+| [The Java API](/api) | Loads a public kit for a player from your own plugin |
+
+## Copy public kits to another server
+
+```bash
+/kitdata export publickits my-publickits
+```
+
+The export holds every public kit **and its config entry**; [importing](/data/export-import) adds the missing entries to the other server's `config.yml`.
+
+## World and region rules
+
+Use `locations.public-kits` to choose where this feature works. This controls manual browsing and loading. Automatic rekit has separate feature rules.
+
+See [Worlds and regions](/settings/locations) for configuration and troubleshooting.

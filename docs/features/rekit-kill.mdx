@@ -1,0 +1,41 @@
+---
+title: "Rekit on kill"
+sidebarTitle: "On kill"
+description: "Restore the killer's gear, with optional world and region rules."
+icon: "skull"
+---
+
+Rekit on kill restores the killer's inventory kit after a player kill. It is off by default.
+
+```yaml config.yml
+rekit:
+  kill:
+    enabled: true
+    restore-enderchest: false
+    kits: {}
+```
+
+| Key under `rekit.kill` | Default | Effect |
+| --- | --- | --- |
+| `enabled` | `false` | Enables rekit after player kills |
+| `restore-enderchest` | `false` | Also restores the last loaded enderchest kit |
+| `kits` | `{}` | Optional public kit selection by world or region |
+
+The killer needs `perplayerkit.rekitonkill` and permission for the kit type being loaded. `perplayerkit.use` grants both.
+
+## Only inside a Nether combat area
+
+```yaml config.yml
+locations:
+  rekit-kill:
+    mode: allow
+    entries: ["world_nether:combat_area"]
+```
+
+Use your Nether world name before the colon and your combat region ID after it.
+
+This checks the killer's position, including projectile kills. The global location rule must also allow the action.
+
+A killer who is already dead receives nothing. The last loaded selection resets on disconnect.
+
+See [Automatic rekit](/features/rekit#choose-a-public-kit-by-location) to choose public kits, or [Worlds and regions](/settings/locations) to configure location rules.

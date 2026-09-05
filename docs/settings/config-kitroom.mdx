@@ -1,0 +1,82 @@
+---
+title: "Kit room and public kits in config.yml"
+sidebarTitle: "Kit room & public kits"
+description: "The kitroom and publickits blocks: page names, page icons, and the id, name and icon of every public kit."
+icon: "warehouse"
+related:
+  - Set up your kit room: /kit-room
+  - Public kits: /features/public-kits
+  - config.yml reference: /settings/config-reference
+  - Export and import kit data: /data/export-import
+---
+
+Neither block holds items; contents are saved in game.
+
+## kitroom
+
+Names and icons for the five kit room pages.
+
+```yaml config.yml
+kitroom:
+  items:
+    1:
+      name: Crystal
+      material: END_CRYSTAL
+    2:
+      name: Armory
+      material: NETHERITE_SWORD
+    3:
+      name: Potions
+      material: SPLASH_POTION
+    4:
+      name: Arrows
+      material: TIPPED_ARROW
+    5:
+      name: Utility
+      material: COBWEB
+```
+
+See [Set up your kit room](/kit-room).
+
+## publickits
+
+Nine kits ship in the default config.
+
+```yaml config.yml
+publickits:
+  crystal:
+    name: Crystal
+    icon: END_CRYSTAL
+  mace:
+    name: Mace
+    icon: MACE
+  netherite:
+    name: Netherite OP
+    icon: NETHERITE_SWORD
+  pot:
+    name: Pot
+    icon: SPLASH_POTION
+  uhc:
+    name: UHC
+    icon: GOLDEN_APPLE
+  sword:
+    name: Sword
+    icon: DIAMOND_SWORD
+  axe:
+    name: Axe
+    icon: DIAMOND_AXE
+  ffa:
+    name: FFA
+    icon: ENCHANTED_GOLDEN_APPLE
+  cart:
+    name: Cart
+    icon: TNT_MINECART
+```
+
+The <Tooltip tip="In YAML, the name to the left of the colon.">key</Tooltip> is the kit id. Add your own by copying a block.
+
+Fill the contents with [`/perplayerkit autosetup`](/commands/admin#set-the-server-up-quickly), or save them yourself with `/savepublickit`. See [Public kits](/features/public-kits).
+
+<Note>
+  A kit whose `icon` material does not exist on the server is skipped rather than shown empty. This hides `mace` on versions whose API has no `MACE` material.
+</Note>

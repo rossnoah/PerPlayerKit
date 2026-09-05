@@ -1,142 +1,115 @@
 ---
-title: "PerPlayerKit Permissions: All Permission Nodes Listed"
-sidebarTitle: "Permissions"
-description: "PerPlayerKit permissions reference. Assign perplayerkit.use for players, perplayerkit.staff for moderators, and perplayerkit.admin for full admin access."
-icon: "key"
+title: "Permission list"
+sidebarTitle: "Permission list"
+description: "Every PerPlayerKit permission node, what it unlocks, and recipes for common server setups."
+icon: "list"
+related:
+  - Give out permissions: /permissions-setup
+  - Player commands: /commands/players
+  - Staff and admin commands: /commands/admin
+  - Permission problems: /help/permissions
 ---
 
-PerPlayerKit uses a node-based permission system compatible with LuckPerms and any other Bukkit permission plugin. Every command maps to an individual node, and three bundle permissions grant an entire access tier at once. Mix bundles and individual nodes to build exactly the access each group needs.
+Every command has its own <Tooltip tip="The exact permission string a plugin checks, such as perplayerkit.use.">node</Tooltip>. PerPlayerKit works with <Tooltip tip="The free permissions plugin most Minecraft servers run.">LuckPerms</Tooltip> and any other Bukkit permissions plugin.
 
-<Tip>
-  [LuckPerms](https://luckperms.net) is the recommended permission plugin. Assign any node with `/lp group <group> permission set <node> true`.
-</Tip>
+## The three bundles
 
-## Permission Tiers
+| Bundle | Covers |
+| ------ | ------ |
+| `perplayerkit.use` | Every normal player command |
+| `perplayerkit.staff` | `/inspectkit` and `/inspectec` |
+| `perplayerkit.admin` | Kit room, public kits, purge, export, import, migrate |
 
-Tiers are **additive, not hierarchical** — `perplayerkit.admin` does not include `perplayerkit.use`. Give staff and admin groups both.
-
-| Tier   | Permission           | Access Level                                                        |
-| ------ | -------------------- | --------------------------------------------------------------------- |
-| Player | `perplayerkit.use`   | All standard player-facing commands and features                    |
-| Staff  | `perplayerkit.staff` | Moderator tools — inspect player kits and enderchests               |
-| Admin  | `perplayerkit.admin` | Kit room, public kits, purge, data export/import, storage migration |
-
-```bash
-# A typical LuckPerms setup
-/lp group default permission set perplayerkit.use true
-/lp group staff   permission set perplayerkit.use true
-/lp group staff   permission set perplayerkit.staff true
-/lp group admin   permission set perplayerkit.use true
-/lp group admin   permission set perplayerkit.staff true
-/lp group admin   permission set perplayerkit.admin true
+```mermaid
+flowchart TD
+    G["Your admin group"] --> U["perplayerkit.use"]
+    G --> S["perplayerkit.staff"]
+    G --> A["perplayerkit.admin"]
+    U --> UD["Kits, enderchest kits,<br/>sharing, regear"]
+    S --> SD["Inspect other<br/>players' kits"]
+    A --> AD["Kit room, public kits,<br/>data tools"]
 ```
 
-## Shorthand Nodes
+<Warning>
+  `perplayerkit.admin` includes staff inspection and kit room editing. It does **not** grant `perplayerkit.use`; add that for player features.
+</Warning>
 
-Aliases that map to their `perplayerkit.*` counterparts. Use them if you prefer shorter node names.
+## Short names
 
-| Shorthand   | Grants               |
-| ----------- | -------------------- |
-| `kit.admin` | `perplayerkit.admin` |
+| Short name | Grants |
+| ---------- | ------ |
+| `kit.use` | `perplayerkit.use` |
 | `kit.staff` | `perplayerkit.staff` |
-| `kit.use`   | `perplayerkit.use`   |
+| `kit.admin` | `perplayerkit.admin` |
 
-## `perplayerkit.use` — Expanded Grants
+## What `perplayerkit.use` contains
 
-Assigning `perplayerkit.use` automatically grants all of the following. Assign them individually only when you want to withhold one.
+| Group | Nodes |
+| ----- | ----- |
+| Kits | `perplayerkit.menu`, `perplayerkit.kit`, `perplayerkit.publickit`, `perplayerkit.swapkit`, `perplayerkit.deletekit` |
+| Enderchest kits | `perplayerkit.enderchest`, `perplayerkit.viewenderchest`, `perplayerkit.deleteenderchest` |
+| Sharing | `perplayerkit.copykit`, `perplayerkit.sharekit`, `perplayerkit.shareenderchest`, `perplayerkit.transferkits` |
+| In a fight | `perplayerkit.regear`, `perplayerkit.heal`, `perplayerkit.repair`, `perplayerkit.rekitonrespawn`, `perplayerkit.rekitonkill` |
 
-<Columns cols={2}>
-  <Card title="Kits" icon="backpack">
-    `perplayerkit.menu`<br />
-    `perplayerkit.kit`<br />
-    `perplayerkit.publickit`<br />
-    `perplayerkit.swapkit`<br />
-    `perplayerkit.deletekit`
-  </Card>
+Notifications use the separate `perplayerkit.kitnotify` permission, which defaults to operators. Commands and menus check the same action permissions.
 
-  <Card title="Enderchests" icon="box">
-    `perplayerkit.enderchest`<br />
-    `perplayerkit.viewenderchest`
-  </Card>
+## Every node
 
-  <Card title="Sharing" icon="share-nodes">
-    `perplayerkit.copykit`<br />
-    `perplayerkit.sharekit`<br />
-    `perplayerkit.shareenderchest`<br />
-    `perplayerkit.transferkits`
-  </Card>
+| Node | Unlocks |
+| ---- | ------- |
+| `perplayerkit.menu` | `/kit` |
+| `perplayerkit.kit` | `/k1` to `/k<max>` |
+| `perplayerkit.publickit` | `/publickit` |
+| `perplayerkit.viewenderchest` | `/enderchest` |
+| `perplayerkit.enderchest` | `/ec1` to `/ec<max>` |
+| `perplayerkit.copykit` | `/copykit`, `/shareaccept`, `/sharedecline` |
+| `perplayerkit.sharekit` | `/sharekit` |
+| `perplayerkit.shareenderchest` | `/shareec` |
+| `perplayerkit.transferkits` | `/transferkits` |
+| `perplayerkit.swapkit` | `/swapkit` |
+| `perplayerkit.deletekit` | `/deletekit` |
+| `perplayerkit.deleteenderchest` | `/deleteec` |
+| `perplayerkit.editkitroom` | Saving kit room pages |
+| `perplayerkit.regear` | `/regear`, `/rg` |
+| `perplayerkit.heal` | `/heal` |
+| `perplayerkit.repair` | `/repair` |
+| `perplayerkit.rekitonrespawn` | Getting a kit back on respawn |
+| `perplayerkit.rekitonkill` | Getting a kit after a kill |
+| `perplayerkit.staff` | `/inspectkit`, `/inspectec` |
+| `perplayerkit.admin` | `/kitroom`, `/savepublickit`, `/purgeitem`, `/kitdata`, `/perplayerkit` |
+| `perplayerkit.kitnotify` | Seeing kit broadcasts. Defaults to operators; grant it separately for other players. |
 
-  <Card title="Utilities & automation" icon="wand-magic-sparkles">
-    `perplayerkit.regear`<br />
-    `perplayerkit.heal`<br />
-    `perplayerkit.repair`<br />
-    `perplayerkit.rekitonrespawn`<br />
-    `perplayerkit.rekitonkill`
-  </Card>
-</Columns>
-
-## Individual Nodes
-
-| Permission                     | Command / Purpose                                                         |
-| ------------------------------ | ------------------------------------------------------------------------- |
-| `perplayerkit.menu`            | `/kit` — open the main kit GUI                                            |
-| `perplayerkit.kit`             | `/k1`–`/k<max>` — quick-load kit slots                                    |
-| `perplayerkit.publickit`       | `/publickit` — open the public kits menu                                  |
-| `perplayerkit.viewenderchest`  | `/enderchest` — view enderchest inventory                                 |
-| `perplayerkit.enderchest`      | `/ec1`–`/ec<max>` — quick-load enderchest slots                           |
-| `perplayerkit.copykit`         | `/copykit`, `/shareaccept`, `/sharedecline` — redeem and answer shares    |
-| `perplayerkit.sharekit`        | `/sharekit` — share a kit slot                                            |
-| `perplayerkit.shareenderchest` | `/shareec` — share an enderchest slot                                     |
-| `perplayerkit.transferkits`    | `/transferkits` — send all kits to another account                        |
-| `perplayerkit.swapkit`         | `/swapkit` — swap two kit slots                                           |
-| `perplayerkit.deletekit`       | `/deletekit` — delete a kit slot                                          |
-| `perplayerkit.regear`          | `/regear`, `/rg` — restock from the loaded kit                            |
-| `perplayerkit.heal`            | `/heal` — restore full health                                             |
-| `perplayerkit.repair`          | `/repair` — repair equipped gear                                          |
-| `perplayerkit.rekitonrespawn`  | Automatically re-apply a kit on respawn                                   |
-| `perplayerkit.rekitonkill`     | Automatically re-apply a kit on kill                                      |
-| `perplayerkit.staff`           | `/inspectkit`, `/inspectec` — inspect player kits                         |
-| `perplayerkit.admin`           | `/kitroom`, `/savepublickit`, `/purgeitem`, `/kitdata`, `/perplayerkit`   |
-| `perplayerkit.kitnotify`       | Receive kit action broadcasts (**defaults to `true`**)                    |
-
-<Note>
-  `perplayerkit.kitnotify` defaults to `true`, so every player sees kit action broadcasts unless you explicitly set it to `false` for them. To silence the messages server-wide instead, use the [message settings](/configuration/messages).
-</Note>
+To turn broadcasts off server-wide, see [Messages and broadcasts](/settings/messages).
 
 ## Recipes
 
-<AccordionGroup>
-  <Accordion title="Players can build kits but never share them" icon="lock">
-    Grant `perplayerkit.use`, then deny the sharing nodes:
+### Players build kits but cannot share them
 
-    ```bash
-    /lp group default permission set perplayerkit.sharekit false
-    /lp group default permission set perplayerkit.shareenderchest false
-    /lp group default permission set perplayerkit.transferkits false
-    /lp group default permission set perplayerkit.copykit false
-    ```
-  </Accordion>
+```bash
+/lp group default permission set perplayerkit.use true
+/lp group default permission set perplayerkit.sharekit false
+/lp group default permission set perplayerkit.shareenderchest false
+/lp group default permission set perplayerkit.transferkits false
+/lp group default permission set perplayerkit.copykit false
+```
 
-  <Accordion title="Public kits only — no personal kit building" icon="globe">
-    Skip the `perplayerkit.use` bundle and grant just the public kit node:
+### Public kits only, no kit building
 
-    ```bash
-    /lp group default permission set perplayerkit.publickit true
-    ```
-  </Accordion>
+Skip the bundle and grant one node.
 
-  <Accordion title="Regear as a donor perk" icon="star">
-    Deny it by default and grant it to the rank that should have it:
+```bash
+/lp group default permission set perplayerkit.publickit true
+```
 
-    ```bash
-    /lp group default permission set perplayerkit.regear false
-    /lp group donor   permission set perplayerkit.regear true
-    ```
-  </Accordion>
+### Regear as a rank perk
 
-  <Accordion title="Silence broadcasts for one group" icon="volume-xmark">
-    ```bash
-    /lp group default permission set perplayerkit.kitnotify false
-    ```
-  </Accordion>
-</AccordionGroup>
+```bash
+/lp group default permission set perplayerkit.regear false
+/lp group donor   permission set perplayerkit.regear true
+```
+
+### No kit broadcasts for one group
+
+```bash
+/lp group default permission set perplayerkit.kitnotify false
+```

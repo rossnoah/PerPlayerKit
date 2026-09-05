@@ -1,0 +1,86 @@
+---
+title: "Languages"
+sidebarTitle: "Languages"
+description: "Switch PerPlayerKit to one of 14 bundled languages, or write your own language file to change every message the plugin sends."
+icon: "language"
+related:
+  - Messages and broadcasts: /settings/messages
+  - config.yml reference: /settings/config-reference
+  - Features not working: /help/features
+---
+
+All message text lives here, not in `config.yml`.
+
+## Change the language
+
+```yaml config.yml
+language: de
+```
+
+Set the code and restart.
+
+| Key | Type | Default | |
+| --- | --- | --- | --- |
+| `language` | string | `en` | Which file to load from `plugins/PerPlayerKit/lang/`. A bundled code, or one matching a file you added. |
+
+## Bundled languages
+
+| Code | Language | Code | Language |
+| ---- | -------- | ---- | -------- |
+| `en` | English | `it` | Italian (Italiano) |
+| `zh` | Chinese (中文) | `pl` | Polish (Polski) |
+| `es` | Spanish (Español) | `ro` | Romanian (Română) |
+| `pt` | Portuguese | `nl` | Dutch (Nederlands) |
+| `fr` | French (Français) | `de` | German (Deutsch) |
+| `uk` | Ukrainian (Українська) | `sv` | Swedish (Svenska) |
+| `da` | Danish (Dansk) | `fi` | Finnish (Suomi) |
+
+## Write your own
+
+<Steps>
+  <Step title="Copy a file">
+    Copy `lang/en.yml` to `lang/custom.yml`; an update overwrites `en.yml`.
+  </Step>
+
+  <Step title="Change the text">
+    Edit values only; leave the <Tooltip tip="In YAML, the name to the left of the colon. The plugin looks each one up by name.">keys</Tooltip> unchanged. Text uses <Tooltip tip="The tag format Minecraft servers use to color and style text.">[MiniMessage](/settings/formatting)</Tooltip>.
+  </Step>
+
+  <Step title="Point config.yml at it">
+    ```yaml config.yml
+    language: custom
+    ```
+  </Step>
+
+  <Step title="Restart and check the console">
+    Missing keys fall back to English and are logged.
+  </Step>
+</Steps>
+
+<Warning>
+  Never translate a placeholder name. `{jugador}` prints as literal text.
+</Warning>
+
+## What is in the file
+
+| Section | Holds |
+| ------- | ----- |
+| `prefix` | The `[Kits]` tag in front of plugin messages |
+| `motd` | The join message |
+| `scheduled-broadcast` | The repeating reminder messages |
+| `broadcast-messages` | One line per action: kit loaded, gear repaired, and so on |
+| `error` | Every failure message, including `disabled-in-world` |
+| `success` | Confirmations for saves, shares, deletes, imports |
+| `info` | Status lines, such as migration progress |
+| `command` | Usage text shown when a command is typed wrong |
+| `update` | The new-version notice for admins |
+| `about` | What `/aboutperplayerkit` prints |
+| `gui` | Menu titles and button labels |
+
+## Contribute a translation
+
+Translate `en.yml` and open a <Tooltip tip="A request on GitHub to add your changes to the project.">pull request</Tooltip> on [GitHub](https://github.com/rossnoah/PerPlayerKit) adding `lang/<code>.yml`.
+
+<Card title="Messages and broadcasts" icon="message" href="/settings/messages" horizontal>
+  Which messages fire and who sees them.
+</Card>

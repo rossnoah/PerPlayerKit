@@ -1,0 +1,27 @@
+---
+title: "Kit and kit room problems"
+sidebarTitle: "Kits & kit room"
+description: "An empty kit room, items disappearing from kits, kits vanishing after an account change, and kits differing between servers."
+icon: "warehouse"
+related:
+  - Set up your kit room: /kit-room
+  - Anti-exploit: /features/anti-exploit
+  - Kits and enderchest kits: /features/kits
+  - Sharing kits and moving accounts: /features/sharing
+---
+
+## The kit room is empty
+
+Run `/perplayerkit autosetup` to fill it with the bundled setup. To stock it yourself, `/kit` → **nether star** opens the editor; `/kitroom` takes only `save` and `load`. **Shift-right-click the barrier block** to save each page. Closing the menu discards it. See [Set up your kit room](/kit-room).
+
+## Items disappear from player kits
+
+With `only-allow-kitroom-items: true`, the <Tooltip tip="A setting that strips out any item that is not in your kit room.">anti-exploit filter</Tooltip> filters loaded copies against your kit room. Stored definitions remain unchanged unless you save edits or purge them. Add the item, or set the flag to `false`. See [Anti-exploit](/features/anti-exploit).
+
+## A player's kits vanished after they switched accounts
+
+Kits belong to a <Tooltip tip="The permanent ID Minecraft gives an account. It never changes, even after a name change.">UUID</Tooltip>, so a name change keeps them but a new account does not. Run [`/transferkits`](/features/sharing) from the old account while both are online.
+
+## Kits differ between servers on the same database
+
+Set the same [`kits.max-slots`](/features/kits) on every server sharing the database; a kit in slot 12 does not exist on a server capped at 9.

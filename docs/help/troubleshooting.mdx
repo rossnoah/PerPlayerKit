@@ -1,0 +1,55 @@
+---
+title: "Troubleshooting"
+sidebarTitle: "Troubleshooting"
+description: "Fixes for the most common PerPlayerKit problems, sorted by what is going wrong."
+icon: "wrench"
+related:
+  - Frequently asked questions: /help/faq
+  - Backups: /data/backups
+  - Change database: /data/storage-migration
+  - Give out permissions: /permissions-setup
+---
+
+<Columns cols={2}>
+  <Card title="Startup & database" icon="triangle-exclamation" href="/help/startup">
+    Will not load, database errors, missing `/k10`.
+  </Card>
+
+  <Card title="Permissions" icon="key" href="/help/permissions">
+    Players cannot use `/kit`; admins cannot build kits.
+  </Card>
+
+  <Card title="Kits & kit room" icon="warehouse" href="/help/kits">
+    Empty kit room, vanishing items, kits after an account change.
+  </Card>
+
+  <Card title="Features not working" icon="toggle-off" href="/help/features">
+    Rekit on kill, regear, chat spam.
+  </Card>
+</Columns>
+
+## Getting data back
+
+### A purge or import removed something it should not have
+
+SQLite or YAML: restore from `plugins/PerPlayerKit/backups/`. See [Backups](/data/backups).
+
+MySQL, PostgreSQL, or Redis: use your database server's own backups, or a <Tooltip tip="A single file holding kit data you exported with /kitdata export.">`.ppk` snapshot</Tooltip>.
+
+### Data went missing after changing database
+
+The migration copies; the original is intact. Set `storage.type` back, restart, and re-run it. Wait for the success message before switching. See [Change database](/data/storage-migration).
+
+## Still stuck
+
+Run `/aboutperplayerkit` for the exact plugin version.
+
+<Columns cols={2}>
+  <Card title="Ask in Discord" icon="discord" href="https://discord.gg/5djuBSKWuV">
+    Other owners and the developer.
+  </Card>
+
+  <Card title="Report a bug" icon="github" href="https://github.com/rossnoah/PerPlayerKit/issues">
+    Include server version, plugin version, and the first 50 lines of <Tooltip tip="The text window or log where your server prints what it is doing.">console</Tooltip> output after startup.
+  </Card>
+</Columns>

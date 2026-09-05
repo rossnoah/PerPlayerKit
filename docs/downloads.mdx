@@ -1,54 +1,40 @@
 ---
 title: "Download PerPlayerKit"
 sidebarTitle: "Downloads"
-description: "Every place to download PerPlayerKit — Modrinth, SpigotMC, Hangar, and GitHub releases — plus bleeding-edge dev builds from Jenkins."
+description: "Every place to download PerPlayerKit: Modrinth, SpigotMC, and Hangar, plus dev builds from Jenkins."
 icon: "download"
+related:
+  - Install PerPlayerKit: /installation
+  - Backups: /data/backups
+  - Frequently asked questions: /help/faq
 ---
 
-PerPlayerKit is published to every major plugin platform. The jar is identical on all of them, so pick whichever you already use — releases go out to all four at the same time.
+import Requirements from '/snippets/requirements.mdx';
 
-## Stable releases
+All three sites get the same <Tooltip tip="The plugin file you drop into your server's plugins folder.">jar</Tooltip>, released at the same time.
 
-<Columns cols={2}>
-  <Card title="Modrinth" icon="box" href="https://modrinth.com/plugin/perplayerkit">
-    The primary release channel. Open source friendly, no ads, direct jar downloads.
-  </Card>
+## Releases
 
-  <Card title="SpigotMC" icon="faucet" href="https://www.spigotmc.org/resources/perplayerkit.121437/">
-    The classic Spigot resource page, with the discussion and review threads.
-  </Card>
+| Site | Notes |
+| ---- | ----- |
+| [Modrinth](https://modrinth.com/plugin/perplayerkit) | The main release page. No ads. |
+| [SpigotMC](https://www.spigotmc.org/resources/perplayerkit.121437/) | Reviews and the discussion thread. |
+| [Hangar](https://hangar.papermc.io/noah32/PerPlayerKit) | PaperMC's own plugin repository. |
 
-  <Card title="Hangar" icon="paper-plane" href="https://hangar.papermc.io/noah32/PerPlayerKit">
-    PaperMC's official plugin repository.
-  </Card>
-
-  <Card title="GitHub releases" icon="github" href="https://github.com/rossnoah/PerPlayerKit/releases">
-    Tagged releases with changelogs, next to the source code.
-  </Card>
-</Columns>
-
-<Tip>
-  Always run the newest stable release. Kit data is forward-compatible between versions, so upgrading is a drop-in jar swap — stop the server, replace the jar, start it again.
-</Tip>
+Kit data carries forward between versions: stop the server, replace the jar, start it again.
 
 ## Development builds
 
-Every commit to the main branch is built automatically on Jenkins. Dev builds carry fixes and features that have not shipped in a release yet.
-
-<Card title="Jenkins — PerPlayerKit" icon="hammer" href="https://jenkins.noah.dev/job/PerPlayerKit/">
-  Browse all builds, or grab the jar straight from the [latest successful build](https://jenkins.noah.dev/job/PerPlayerKit/lastSuccessfulBuild/).
-</Card>
+Every commit to the main branch is built on [Jenkins](https://jenkins.noah.dev/job/PerPlayerKit/), with fixes not yet in a release: [latest successful build](https://jenkins.noah.dev/job/PerPlayerKit/lastSuccessfulBuild/).
 
 <Warning>
-  Development builds are unreleased code. They compile, but they have not been through a release's testing. Do not run them on a production server without backing up your kit data first — see [Backups](/configuration/backups).
+  A dev build is compiled, not tested. Back up your kit data before running one on a live server. See [Backups](/data/backups).
 </Warning>
 
-## Requirements
+## What you need
 
-| Requirement       | Minimum Version |
-| ----------------- | --------------- |
-| Server software   | Paper or Spigot |
-| Minecraft version | 1.19 or newer   |
-| Java              | 17 or newer     |
+<Requirements />
 
-Once you have the jar, follow the [installation guide](/installation) to get it running.
+<Card title="Install it" icon="wrench" href="/installation" horizontal>
+  About five minutes.
+</Card>

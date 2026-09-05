@@ -1,0 +1,62 @@
+---
+title: "config.yml reference"
+sidebarTitle: "config.yml reference"
+description: "Every setting in the PerPlayerKit config.yml file, with its default value and what it does."
+icon: "sliders"
+related:
+  - Storage and databases: /settings/storage
+  - Messages and broadcasts: /settings/messages
+  - Languages: /settings/languages
+  - Anti-exploit: /features/anti-exploit
+---
+
+`config.yml` controls plugin behavior. Message text lives in the [language file](/settings/languages).
+
+Stop the server before editing this file. Start it again to apply changes.
+
+## Upgrading
+
+Version 1.8 uses config version 3. Older files are backed up and converted automatically. Keep `config-version` unchanged.
+
+Custom kit definitions and disabled settings are preserved. See [Upgrading](/upgrading).
+
+## Settings by feature
+
+| Section | Controls | Reference |
+| --- | --- | --- |
+| `language` | Active language file | [Languages](/settings/languages) |
+| `storage` | Database, connection settings, backups | [Storage](/settings/storage) |
+| `locations` | World and region rules, globally or per feature | [Worlds and regions](/settings/locations) |
+| `kits` | Slot count and inventory load effects | [Kits](/features/kits) |
+| `enderchests` | Enderchest load effects | [Load effects](/settings/config-features) |
+| `rekit` | Respawn and kill behavior | [Automatic rekit](/features/rekit) |
+| `kitroom`, `publickits` | Page buttons and public kit definitions | [Kit room settings](/settings/config-kitroom) |
+| `anti-exploit` | Item and command filtering | [Anti-exploit](/features/anti-exploit) |
+| `regear` | Restocking modes and restrictions | [Regear](/features/regear) |
+| `heal`, `death`, `updates` | Healing, death drops, update notices | [Other settings](/settings/config-features) |
+| `motd`, `broadcasts` | Join messages and announcements | [Messages](/settings/messages) |
+| `interface`, `sounds` | Menu appearance and feedback | [Interface](/settings/config-interface) |
+
+## Disable player actions in a world
+
+```yaml config.yml
+locations:
+  global:
+    mode: deny
+    entries: [lobby, spawn]
+```
+
+Blocks player menus, kit actions, sharing, regear, healing, repair, and automatic rekit in those worlds. Admin data tools remain available.
+
+Use `mode: allow` to allow only listed locations. Add optional feature rules or `world:region` entries as described in [Worlds and regions](/settings/locations).
+
+## Slot count
+
+```yaml config.yml
+kits:
+  max-slots: 9
+```
+
+The range is 1 to 99. It applies to personal kits and enderchest kits. Use the same value on servers sharing a database.
+
+See [Kit slots](/features/kit-slots) for paging and command names.

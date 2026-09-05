@@ -1,0 +1,103 @@
+---
+title: "Export and import kit data"
+sidebarTitle: "Export & import"
+description: "Use /kitdata to move a kit room, public kits, or every player kit to another server as a single .ppk file."
+icon: "file-export"
+related:
+  - Backups: /data/backups
+  - Change database: /data/storage-migration
+  - Set up your kit room: /kit-room
+  - Public kits: /features/public-kits
+---
+
+**Permission:** `perplayerkit.admin`. Works in game and from the console.
+
+## Export
+
+```bash
+/kitdata export <all|kitroom|publickits|playerkits> <file>
+```
+
+Written to `plugins/PerPlayerKit/<file>.ppk`; the plugin adds the extension. An existing file requires `confirm` to overwrite.
+
+```bash
+/kitdata export all season4-backup
+/kitdata export kitroom crystal-kitroom
+/kitdata export publickits ffa-kits
+```
+
+### What each option includes
+
+| Option | Includes |
+| ------ | -------- |
+| `kitroom` | The five kit room pages, **as last saved to the database**. Run `/kitroom save` first if you edited the kit room. The export reads the database, not the editor. |
+| `publickits` | Every public kit **and its config entry**: display name and menu icon. On import, the receiving server adds missing `publickits` entries to its own `config.yml` and updates existing ones. A kit in config that was never saved with `/savepublickit` carries over as a config entry with no contents. |
+| `playerkits` | Every player kit and enderchest kit in the database. |
+| `all` | Everything above, in one file. |
+
+## Import
+
+Put the <Tooltip tip="PerPlayerKit's own export file. One file holding the kit data you exported.">`.ppk` file</Tooltip> in `plugins/PerPlayerKit/`, then:
+
+```bash
+/kitdata import season4-backup
+```
+
+If the import would replace anything it lists what and stops. Run it again with `confirm`:
+
+```bash
+/kitdata import season4-backup confirm
+```
+
+Kit room, public kits, and the kits of affected online players reload immediately. No restart.
+
+## How it behaves
+
+| Behavior | Detail |
+| -------- | ------ |
+| Any database to any database | Export from SQLite and import into MySQL, PostgreSQL, Redis, or YAML. |
+| Checked before anything is written | `.ppk` carries a version number and a <Tooltip tip="A short fingerprint of the file. If it does not match, the file is damaged.">checksum</Tooltip>. Every kit is test-decoded **before** anything is written. |
+| Locked to the plugin folder | Files are only read from and written to `plugins/PerPlayerKit/`. Names may use letters, numbers, dots, dashes, and underscores. |
+| One at a time | Exports and imports never overlap. |
+
+<Warning>
+  A damaged file is rejected whole, never half-applied. Only import `.ppk` files from people you trust. Treat one like a plugin jar.
+</Warning>
+
+## Common jobs
+
+<Tabs>
+  <Tab title="Hand a setup to another owner">
+    ```bash
+    /kitroom save
+    /kitdata export kitroom my-kitroom
+    /kitdata export publickits my-publickits
+    ```
+
+    Send both files; they drop them in `plugins/PerPlayerKit/` and import each.
+  </Tab>
+
+  <Tab title="Fill a test server">
+    ```bash
+    /kitdata export all prod-snapshot
+    ```
+
+    Copy `prod-snapshot.ppk` to the test server and import it. Database types need not match.
+  </Tab>
+
+  <Tab title="Keep an off-site copy">
+    ```bash
+    /kitdata export all weekly-2026-08-21
+    ```
+
+    Unlike automatic [backups](/data/backups), this works on MySQL, PostgreSQL, and Redis too.
+  </Tab>
+</Tabs>
+
+## Which data tool do I want
+
+| Tool | Moves | Works on | Use it to |
+| ---- | ----- | -------- | --------- |
+| `/kitdata` | A file you carry | Every database | Move a setup to an unrelated server |
+| [`/perplayerkit migrate`](/data/storage-migration) | One database to another | Every database | Change database type on the same server |
+| [Automatic backups](/data/backups) | Timed local snapshots | SQLite and YAML only | Recover from corruption or a mistake |

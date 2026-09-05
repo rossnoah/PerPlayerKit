@@ -1,0 +1,33 @@
+---
+title: "PerPlayerKit API reference"
+sidebarTitle: "Reference"
+description: "Every method on the PerPlayerKit API singleton, and the fields of PublicKit."
+icon: "list"
+related:
+  - Setup: /api/setup
+  - Example: /api/example
+---
+
+```java
+import dev.noah.perplayerkit.API;
+
+API api = API.getInstance();
+```
+
+| Method | Returns | Does |
+| ------ | ------- | ---- |
+| `API.getInstance()` | `API` | The <Tooltip tip="One shared instance. Every call returns the same object.">singleton</Tooltip>. Creates it if it does not exist, so it is never `null`. |
+| `api.getPublicKits()` | `List<PublicKit>` | A **copy** of the configured public kits. |
+| `api.loadPublicKit(Player, PublicKit)` | `void` | Applies a public kit to an online player, silently. No message, no broadcast. |
+
+### PublicKit
+
+| Field | Type | Is |
+| ----- | ---- | -- |
+| `id` | `String` | The kit id, the key under `publickits` in `config.yml` |
+| `name` | `String` | The display name |
+| `icon` | `org.bukkit.Material` | The icon shown in menus |
+
+<Note>
+  `getInstance()` never returns `null`, but it cannot promise that PerPlayerKit has finished loading its kits. Call the API from an event handler or a command, not from your own `onEnable()`.
+</Note>

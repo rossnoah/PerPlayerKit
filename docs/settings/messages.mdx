@@ -1,0 +1,88 @@
+---
+title: "Messages and broadcasts"
+sidebarTitle: "Messages & broadcasts"
+description: "Control which messages PerPlayerKit sends: the join message, the repeating broadcast, and the announcement for every kit action."
+icon: "message"
+related:
+  - Languages: /settings/languages
+  - Interface and sounds: /settings/config-interface
+  - Feature flags: /settings/config-features
+  - Features not working: /help/features
+---
+
+Message text lives in `lang/<code>.yml`. Enable messages and choose their audience in `config.yml`.
+
+## Action messages
+
+```yaml config.yml
+broadcasts:
+  enabled: true
+  use-display-name: false
+  actions:
+    player-loaded-private-kit:
+      enabled: true
+      permission: perplayerkit.kitnotify
+```
+
+| Key | Default | Effect |
+| --- | --- | --- |
+| `broadcasts.enabled` | `true` | Master switch for action messages |
+| `broadcasts.use-display-name` | `false` | Uses display names, including nicknames, for `{player}` |
+| `broadcasts.actions.<action>.enabled` | `true` | Enables one action message |
+| `broadcasts.actions.<action>.permission` | `perplayerkit.kitnotify` | Permission required to receive it |
+
+`perplayerkit.kitnotify` defaults to operators. `perplayerkit.use` does not grant it. Existing grants and denials still apply.
+
+To include ordinary players:
+
+```bash
+/lp group default permission set perplayerkit.kitnotify true
+```
+
+Recipients must be in the same world, less than 200 blocks from the player. Automatic rekit does not announce another manual kit load.
+
+| Action | Fires when |
+| --- | --- |
+| `player-repaired` | Gear is repaired |
+| `player-healed` | A player uses `/heal` |
+| `player-opened-kit-room` | The kit room is opened |
+| `player-loaded-private-kit` | A personal inventory kit loads |
+| `player-loaded-public-kit` | A public kit loads |
+| `player-loaded-enderchest` | An enderchest kit loads |
+| `player-copied-kit` | A kit is copied |
+| `player-copied-ec` | An enderchest kit is copied |
+| `player-regeared` | A player restocks with regear |
+
+Wording uses the same action names under `broadcast-messages` in the language file.
+
+## Reduce chat
+
+| Silence | Change |
+| --- | --- |
+| All action messages | Set `broadcasts.enabled: false` |
+| One action | Set its `enabled` to `false` |
+| Messages for one group | Deny that group `perplayerkit.kitnotify` |
+| Scheduled announcements | Set `broadcasts.scheduled.enabled: false` |
+
+## Join message
+
+```yaml config.yml
+motd:
+  enabled: true
+  delay-seconds: 5
+```
+
+Text is the `motd.message` list in the language file. Each entry is one chat line.
+
+## Scheduled announcements
+
+```yaml config.yml
+broadcasts:
+  scheduled:
+    enabled: true
+    period-seconds: 90
+```
+
+These cycle through `scheduled-broadcast.messages` in the language file and go to everyone online. They have their own switch.
+
+See [Text formatting](/settings/formatting) for colors and placeholders.

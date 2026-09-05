@@ -1,0 +1,94 @@
+---
+title: "Kits and enderchest kits"
+sidebarTitle: "Kits & enderchest kits"
+description: "How kit slots and enderchest slots work, and how kits.max-slots changes the number of slots each player gets."
+icon: "backpack"
+related:
+  - Set up your kit room: /kit-room
+  - Public kits: /features/public-kits
+  - Automatic rekit: /features/rekit
+  - Sharing kits and moving accounts: /features/sharing
+---
+
+Every player gets nine kit slots and nine enderchest slots by default. A kit slot holds a full inventory.
+
+## What a player does
+
+| To do this | They run |
+| ---------- | -------- |
+| Open the kit menu | `/kit` or `/k` |
+| Load kit 3 | `/k3` |
+| Open their enderchest | `/enderchest` or `/ec` |
+| Load enderchest kit 3 | `/ec3` |
+| Swap two kit slots | `/swapkit` |
+| Delete a kit | `/deletekit <slot>` |
+| Delete an enderchest kit | `/deleteec <slot>` |
+
+Loading a kit replaces the player's whole inventory. An enderchest kit fills their enderchest instead.
+## Saving a kit
+
+<Steps>
+  <Step title="Collect items">
+    Run `/kit`, click the **nether star**, and take items from the kit room into your inventory.
+  </Step>
+  <Step title="Open a kit editor">
+    Return to `/kit`. Right-click a kit chest, or click its book, to edit that slot.
+  </Step>
+  <Step title="Import and arrange">
+    Click the **import chest** to copy your current inventory into the editor. Arrange the items, armor, and off-hand.
+  </Step>
+  <Step title="Save and load">
+    Close the editor to save. Run `/k1` to load slot 1.
+  </Step>
+</Steps>
+
+The **Clear Kit** button empties the editor. Closing it while empty deletes the saved slot; filling it again saves the replacement.
+
+
+<Frame caption="Enderchest kits load into the enderchest instead of the inventory">
+  <img src="/images/EnderchestMenu.png" alt="The PerPlayerKit enderchest kit menu" width="340" />
+</Frame>
+## Clean up the player when a kit loads
+
+All default to `false`.
+
+```yaml config.yml
+kits:
+  load:
+    heal: false
+    feed: false
+    saturate: false
+    clear-effects: false
+enderchests:
+  load:
+    heal: false
+    feed: false
+    saturate: false
+    clear-effects: false
+```
+
+| Setting | What it does when a kit loads |
+| ------- | ----------------------------- |
+| `kits.load.heal` | Restores full health |
+| `kits.load.feed` | Fills the hunger bar |
+| `kits.load.saturate` | Resets <Tooltip tip="The hidden buffer that keeps the hunger bar full before it starts to drop.">saturation</Tooltip> |
+| `kits.load.clear-effects` | Clears all potion effects |
+
+The same four names under `enderchests.load` control enderchest kit loads.
+## Related
+
+<Columns cols={2}>
+  <Card title="Rekit automatically" icon="rotate" href="/features/rekit">
+    Give the kit back on respawn or after a kill.
+  </Card>
+
+  <Card title="Share a kit" icon="share-nodes" href="/features/sharing">
+    Send a kit to a player or hand out a share code.
+  </Card>
+</Columns>
+
+## World and region rules
+
+Use `locations.kits` to choose where this feature works. Use `locations.enderchests` for enderchest kits. Automatic rekit has separate feature rules.
+
+See [Worlds and regions](/settings/locations) for configuration and troubleshooting.

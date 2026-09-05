@@ -1,0 +1,181 @@
+---
+title: "Worlds and regions"
+sidebarTitle: "Worlds and regions"
+description: "Choose where commands, menus, regear, and automatic rekit work, using one allow or deny list."
+icon: "map-location-dot"
+---
+
+Location rules choose where player actions work. First choose the feature, then list the places.
+
+**`global` means "all player features."** It is a fixed setting name, not the name of a world or region.
+
+The names directly under `locations:` are built in: `global`, `regear`, `kits`, and the other features listed below. Your own world and region names go inside `entries`.
+
+## Start with one rule
+
+This blocks player actions throughout the Nether and inside a protected area in the Overworld:
+
+```yaml config.yml
+locations:
+  global: # Fixed setting name: all player features.
+    mode: deny # Block actions in the listed places.
+    entries: # Your existing world and region names.
+      - world_nether
+      - "world:protected_area"
+```
+
+To apply that rule only to regear, change `global:` to `regear:`. Keep `mode:` and `entries:` as written.
+
+| Part of the example | Meaning | What you change |
+| --- | --- | --- |
+| `global` | All player features | Choose a built-in feature name, such as `regear`, to narrow the rule |
+| `world_nether` | A whole world | Use your Nether world's actual name |
+| `world` | The world containing the region | Use that world's actual name |
+| `protected_area` | A WorldGuard region in that world | Use an existing region ID |
+
+These examples call the Overworld `world` and the Nether `world_nether`. Region and world names refer to places that already exist; this config does not create them.
+
+In `world:protected_area`, **before the colon is the world name; after it is the region ID**. Replace `protected_area` with an existing WorldGuard region. Restart after changing `config.yml`.
+
+World-only entries need no extra plugin. Region entries need [WorldGuard and WorldEdit](https://worldguard.enginehub.org/en/latest/install/).
+
+## Allow or deny
+
+Choose one mode for each rule. There is no separate whitelist and blacklist.
+
+| Rule | Result |
+| --- | --- |
+| `mode: allow`, with entries | Works only where at least one entry matches |
+| `mode: deny`, with entries | Works everywhere except where an entry matches |
+| `mode: allow`, `entries: []` | Works nowhere |
+| `mode: deny`, `entries: []` | Works everywhere |
+| Feature rule omitted | Uses only the global rule |
+
+| Entry | Matches |
+| --- | --- |
+| `world_nether` | The entire Nether world |
+| `"world:protected_area"` | The `protected_area` region in the Overworld |
+| `"world_nether:protected_area"` | The `protected_area` region in the Nether |
+
+Names ignore capitalization and surrounding spaces. Use actual world names and region IDs, without wildcards.
+
+A bare world name includes every region in that world. Use it instead of `world:__global__`.
+
+## Rules for individual features
+
+Add another built-in feature name at the same indentation as `global` to restrict that feature further. **Both the global rule and the feature rule must allow the action.**
+
+For example, `regear:` identifies the regear feature. It is not an arbitrary name for a rule. Use only the feature names in the table below.
+
+This allows manual kit loading only in the Overworld. Automatic respawn rekit works only in the Nether's `combat_area` region:
+
+```yaml config.yml
+locations:
+  global:
+    mode: deny
+    entries: []
+  kits:
+    mode: allow
+    entries: [world]
+  public-kits:
+    mode: allow
+    entries: [world]
+  rekit-respawn:
+    mode: allow
+    entries: ["world_nether:combat_area"]
+
+rekit:
+  respawn:
+    enabled: true
+```
+
+Merge these settings into your existing blocks. Do not add a second `locations:` or `rekit:` block.
+
+| Key below `locations` | Actions it controls |
+| --- | --- |
+| `global` | All player actions listed below |
+| `menu` | Opening and using the main `/kit` menu, including Clear Inventory |
+| `kits` | Loading, editing, swapping, and deleting personal inventory kits |
+| `enderchests` | Loading, editing, and deleting enderchest kits; `/ec` viewing |
+| `public-kits` | Browsing, previewing, and manually loading public kits |
+| `kit-room` | Opening the kit room, taking items, and saving a page |
+| `sharing` | Creating share codes, sending requests, copying codes, accepting, and transferring kits |
+| `regear` | Regear commands and using regear items |
+| `heal` | `/heal` |
+| `repair` | `/repair` and the menu repair button |
+| `rekit-respawn` | Automatic inventory and optional enderchest restoration after respawn |
+| `rekit-kill` | Automatic inventory and optional enderchest restoration after a kill |
+
+A menu action must also pass its own feature rule. For example, repairing from `/kit` needs both menu and repair access.
+
+Automatic rekit and regear use their own location rules. They do not also require manual `kits` or `public-kits` access.
+
+Permissions, cooldowns, and enabled switches still apply. A location rule does not grant permission or enable a feature.
+
+Kit load effects follow the action that loads the kit. `locations.heal` controls `/heal`, not healing attached to kit loading.
+
+Admin data tools, public kit administration, and staff inspection remain available. Players can always decline a share request.
+
+## What counts as being inside a region?
+
+WorldGuard reports the regions containing the player's position, including their height limits. It also reports their parent regions.
+
+**Parent regions count too**, even when the player is outside the parent's own boundary. A parent used as a template can therefore match through its child regions. See [WorldGuard inheritance](https://worldguard.enginehub.org/en/latest/regions/priorities/).
+
+PerPlayerKit uses those region IDs. It does not evaluate flags, ownership, membership, or WorldGuard bypass permissions.
+
+[Create a region with WorldEdit and WorldGuard](https://worldguard.enginehub.org/en/latest/regions/quick-start/), then use its ID in the config. Use `/region` for WorldGuard commands; PerPlayerKit also uses `/rg` for regear.
+
+| Action | Position checked |
+| --- | --- |
+| Command or menu interaction | The player's position when they use it |
+| Regear item | The position where the item is used |
+| Rekit on kill | The killer's position, including kills with projectiles |
+| Rekit on respawn | The player's position when the delay finishes, after respawning |
+
+Walking into a region does not give a kit. A command, menu action, kill, or respawn must trigger it.
+
+An open menu cannot bypass a later location restriction. Clicks and drags are checked again, and restricted personal editors are not saved on close.
+
+### Overlapping regions
+
+For an allow or deny list, **any matching entry counts**. Priority does not change a filter's result.
+
+Suppose `protected_area` and `combat_area` overlap in the Overworld. A deny entry for `world:protected_area` blocks actions in that overlap. Increasing `combat_area`'s priority does not override the denial.
+
+To allow an action only inside `combat_area`, use an `allow` rule containing `world:combat_area`. Keep the global rule unrestricted there.
+
+Priority matters separately when [automatic rekit chooses between public kits](/features/rekit#choose-a-public-kit-by-location).
+
+## If WorldGuard is unavailable
+
+A region-dependent action stops when WorldGuard is missing, disabled, incompatible, or cannot supply region data. The console reports why. It resumes when region queries work again.
+
+World-only rules keep working. A region entry in `world_nether` does not affect actions in the Overworld. A matching whole-world entry can decide a filter without querying regions.
+
+Automatic kit selection needs a region lookup whenever that world has region mappings. If the lookup fails, it skips rekit entirely, including enderchest restoration. It does not guess a world-wide fallback kit.
+
+## Check a rule in game
+
+Stand at the location and run this as an admin:
+
+```bash
+/perplayerkit location regear
+```
+
+The output shows the world, the location decision, the rule that blocked it, and the region IDs in priority order. Reported parent regions are included.
+
+Use `rekit-respawn` or `rekit-kill` to also see the configured kit choice. Tab completes the feature names. Omit the feature to check the global rule.
+
+The diagnostic checks location rules only. An `ALLOW` result does not prove that the feature is enabled, its kit exists, or the player has permission.
+
+| Problem | Check |
+| --- | --- |
+| A feature rule allows a region but the action is denied | Read the global rule too |
+| A region never matches | Check the world, region ID, and selection height against the diagnostic |
+| A deny entry has no effect | Confirm that its region exists and appears in the diagnostic |
+| An overlapping combat area does not override a denial | Filters use any match, not priority |
+| The plugin reports an invalid location rule | Use a listed feature name, `allow` or `deny`, and a list under `entries` |
+| A kit choice looks right but nothing happens | Check permissions, saved kit contents, and the feature's enabled switch |
+
+See [Automatic rekit](/features/rekit) for choosing kits, or [Upgrading](/upgrading) for automatic conversion of older world lists.

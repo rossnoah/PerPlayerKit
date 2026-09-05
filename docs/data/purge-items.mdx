@@ -1,0 +1,90 @@
+---
+title: "Remove an item from every kit"
+sidebarTitle: "Remove a banned item"
+description: "Use /purgeitem to delete every copy of an item from stored player kits and enderchest kits, including copies inside shulkers and bundles."
+icon: "trash"
+related:
+  - Anti-exploit: /features/anti-exploit
+  - Backups: /data/backups
+  - Export and import kit data: /data/export-import
+  - Set up your kit room: /kit-room
+---
+
+Deletes every copy of a <Tooltip tip="Duplicated through a bug, so more copies exist than should.">duped</Tooltip> or banned item from stored kits and enderchest kits.
+
+```bash
+/purgeitem <item> <all confirm|player ...>
+```
+
+**Permission:** `perplayerkit.admin`. Works in game and from the console.
+
+## For specific players
+
+```bash
+/purgeitem TNT PlayerOne PlayerTwo
+```
+
+Names or <Tooltip tip="The permanent ID Minecraft gives an account. It never changes, even after a name change.">UUIDs</Tooltip>, online or not. An unresolvable name cancels the whole purge; a mistyped name is never quietly skipped.
+
+## For the whole server
+
+```bash
+/purgeitem TNT all confirm
+```
+
+`confirm` is required; without it the command prints a warning.
+
+<Warning>
+  There is no undo.
+
+  Take a [backup](/data/backups) or run `/kitdata export playerkits before-purge` first.
+</Warning>
+
+## What it reaches
+
+| Scope | Detail |
+| ----- | ------ |
+| Inside containers | Shulker boxes of every color, plus chests, barrels, and dispensers stored as items. Bundles too, including containers inside them. |
+| Every database | Behaves identically on SQLite, MySQL, PostgreSQL, Redis, and YAML. |
+| All 99 slots | Every slot is scanned whatever [`kits.max-slots`](/features/kits) is set to. An item cannot hide in a slot you turned off. |
+| Online players too | Kits held in memory are refreshed. Their next `/k1` uses the cleaned version. |
+
+### What it leaves alone
+
+| Not touched | What to do instead |
+| ----------- | ------------------ |
+| What players are currently holding | Only stored kits change. Live inventories are yours to handle. |
+| The kit room | Edit it yourself in the [kit room editor](/kit-room). |
+| Public kits | Re-save them with [`/savepublickit`](/features/public-kits). |
+
+## Do it in this order
+
+<Steps>
+  <Step title="Take a snapshot">
+    ```bash
+    /kitdata export playerkits before-purge
+    ```
+  </Step>
+
+  <Step title="Stop the item coming back">
+    Remove it from the kit room and turn on [`only-allow-kitroom-items`](/features/anti-exploit), or it returns when someone saves a kit holding it.
+  </Step>
+
+  <Step title="Test on one player">
+    ```bash
+    /purgeitem TNT PlayerOne
+    ```
+
+    Check their kits before going wider.
+  </Step>
+
+  <Step title="Purge the server">
+    ```bash
+    /purgeitem TNT all confirm
+    ```
+
+    Runs in the background; the console summary lists items removed, entries changed, deleted, and scanned.
+  </Step>
+</Steps>
+
+A kit left empty is deleted. Only one purge runs at a time.

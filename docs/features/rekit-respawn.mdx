@@ -1,0 +1,47 @@
+---
+title: "Rekit on respawn"
+sidebarTitle: "On respawn"
+description: "Restore gear after respawning, with an optional delay and world or region kit selection."
+icon: "heart-pulse"
+---
+
+Rekit on respawn restores the player's inventory kit after death. It is on by default.
+
+```yaml config.yml
+rekit:
+  respawn:
+    enabled: true
+    delay-ticks: 0
+    restore-enderchest: false
+    kits: {}
+```
+
+| Key under `rekit.respawn` | Default | Effect |
+| --- | --- | --- |
+| `enabled` | `true` | Enables rekit after respawning |
+| `delay-ticks` | `0` | Waits before restoring. `0` uses the next server tick; `20` waits one second |
+| `restore-enderchest` | `false` | Also restores the last loaded enderchest kit |
+| `kits` | `{}` | Optional public kit selection by world or region |
+
+Players need `perplayerkit.rekitonrespawn` and permission for the kit type being loaded. `perplayerkit.use` grants both.
+
+## Choose where it works
+
+```yaml config.yml
+locations:
+  rekit-respawn:
+    mode: allow
+    entries: ["world_nether:combat_area"]
+```
+
+This allows restoration inside `combat_area` in the Nether world `world_nether`. Replace both names with your own.
+
+The player must be inside that region when the delay finishes. The global location rule must also allow it.
+
+The death location does not select the kit. Respawn destinations and teleports during the delay can change the result.
+
+Disconnecting cancels pending restoration and clears remembered selections. Another respawn replaces an earlier pending task.
+
+Increase the delay if another plugin gives items or teleports players after respawn.
+
+See [Automatic rekit](/features/rekit#choose-a-public-kit-by-location) to select public kits, or [Worlds and regions](/settings/locations) for location rules.

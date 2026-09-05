@@ -13,7 +13,7 @@ storage:
     username: "username"
     password: "pa55w0rd"
     use-ssl: false
-    maximum-pool-size: 10 #only change this if you know what your doing
+    maximum-pool-size: 10 # Maximum database connections.
   postgresql:
     host: "localhost"
     port: "5432"
@@ -21,23 +21,26 @@ storage:
     username: "username"
     password: "pa55w0rd"
     use-ssl: false
-    maximum-pool-size: 10 #only change this if you know what your doing
+    maximum-pool-size: 10 # Maximum database connections.
   redis:
     host: "localhost"
     port: 6379
     password: "pa55w0rd"
 
-# Shared by commands, menus, regear items, and automatic rekit. Admin data tools remain available.
+# Feature names below are fixed; entries use your existing world/region names.
 locations:
-  global:
-    mode: deny # deny = everywhere except entries; allow = only entries.
-    entries: [] # World names or "world:region" (WorldGuard). No wildcards.
-  # Optional extra rules use the same mode/entries format. Global rules always apply.
-  # Features: menu, kits, enderchests, public-kits, kit-room, sharing,
+  global: # All player features. Admin data tools stay available.
+    mode: deny # deny: everywhere except entries. allow: only entries.
+    entries: [] # [] means everywhere with deny, nowhere with allow.
+  # Entries are world names or "world:region". Regions require WorldGuard.
+  # Feature rules add restrictions to global. Available feature names:
+  # menu, kits, enderchests, public-kits, kit-room, sharing,
   # regear, heal, repair, rekit-respawn, rekit-kill.
   # regear:
-  #   mode: allow
-  #   entries: ["pvp:arena"]
+  #   mode: deny
+  #   entries:
+  #     - world_nether # Whole world.
+  #     - "world:protected_area" # One region in world.
 
 kits:
   max-slots: 9 # 1-99. Applies to personal kits and enderchest kits.
@@ -54,17 +57,19 @@ enderchests:
     saturate: false
     clear-effects: false
 
-# The last loaded private or public inventory kit is remembered until disconnect.
+# The last loaded personal or public inventory kit is remembered until disconnect.
+# In kits maps, keys are your world or "world:region" names; values are public kit IDs.
 rekit:
   respawn:
     enabled: true
-    delay-ticks: 0 # 20 ticks = 1 second.
+    delay-ticks: 0 # 0 uses the next tick; 20 waits one second.
     restore-enderchest: false # Also restore the player's last loaded enderchest slot.
-    kits: {} # Optional world or "world:region" -> public kit ID.
+    kits: {} # No matching entry: restore the last loaded kit.
+    # Example: kits: {world_nether: crystal, "world:protected_area": sword}
   kill:
     enabled: false
     restore-enderchest: false
-    kits: {} # Optional world or "world:WorldGuard-region" -> public kit ID.
+    kits: {} # Same format and fallback as respawn.kits.
 
 # Five pages. /perplayerkit autosetup fills pages that have never been saved.
 kitroom:
@@ -85,7 +90,8 @@ kitroom:
       name: "Utility"
       material: "COBWEB"
 
-# Public kits have separate definitions and contents. Autosetup fills declared starter IDs.
+# Keys below (crystal, mace, ...) are public kit IDs. Contents are saved separately.
+# Autosetup fills declared starter IDs.
 # /perplayerkit autosetup add-kits also adds missing bundled definitions.
 publickits:
   crystal:
@@ -118,27 +124,21 @@ publickits:
 
 # These checks filter copies on use. Stored definitions are preserved; use /purgeitem for permanent removal.
 anti-exploit:
-  only-allow-kitroom-items: false #requires that items be in the kitroom before they can be used in a kit.
-  import-filter: false #requires only-allow-kitroom-items to be true. prevents the duplications of items not in the kitroom by using the kit import button.
-  block-spaces-in-commands: false #prevents bypassing command filters.
-  prevent-shulkers-dropping-items: false #prevents shulkers from dropping items when broken. Anti-lag feature.
+  only-allow-kitroom-items: false # Allow only materials present in the kit room.
+  import-filter: false # Also filter editor imports. Requires only-allow-kitroom-items.
+  block-spaces-in-commands: false
+  prevent-shulkers-dropping-items: false # Remove dropped shulker boxes when they take damage.
 
 regear:
   modes: # command or shulker; each alias can use a different mode.
     rg: "command"
     regear: "command"
-  command-cooldown-seconds: 5 #command cooldown in seconds. recommended to be low or 0 if using shulker mode.
-  damage-cooldown-seconds: 5 #time in seconds to wait after taking damage before players can regear
-  allow-while-using-elytra: true #set false to block regearing command while using elytra
-  prevent-putting-items-in-regear-inventory: false # set true to prevent putting items inside the regear shulker inventory
-  #
-  # Allow regearing all items by setting:
-  # invert-whitelist: true
-  # whitelist: []
-  #
-  #
-  invert-whitelist: false #setting this to true makes the whitelist a blacklist
-  whitelist:
+  command-cooldown-seconds: 5 # Command mode only.
+  damage-cooldown-seconds: 5 # Wait after taking damage.
+  allow-while-using-elytra: true
+  prevent-putting-items-in-regear-inventory: false
+  invert-whitelist: false # true excludes the listed materials instead.
+  whitelist: # With []: false restocks nothing; true allows all materials.
     - ENDER_PEARL
     - END_CRYSTAL
     - OBSIDIAN
@@ -174,7 +174,7 @@ broadcasts:
   scheduled:
     enabled: true
     period-seconds: 90
-  actions:
+  actions: # Each permission selects who receives that message.
     player-repaired:
       enabled: true
       permission: "perplayerkit.kitnotify"

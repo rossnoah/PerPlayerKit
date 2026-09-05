@@ -1,0 +1,113 @@
+---
+title: "Storage and databases"
+sidebarTitle: "Storage & databases"
+description: "Choose where PerPlayerKit keeps kit data: SQLite, MySQL, MariaDB, PostgreSQL, or Redis. Includes every connection setting."
+icon: "database"
+related:
+  - Change database: /data/storage-migration
+  - Backups: /data/backups
+  - Export and import kit data: /data/export-import
+  - Startup and database problems: /help/startup
+---
+
+## Which one should you use
+
+| `storage.type` | Use it for |
+| -------------- | ---------- |
+| `sqlite` | **One server.** Everything goes in one file. Nothing to install, no password to set. The default, and the right answer for most servers. |
+| `mysql` | **A network that shares kits.** Every server reads and writes the same database. MariaDB uses this type too. There is no separate `mariadb` type. |
+| `postgresql` | **A network that shares kits.** Use it if you already run Postgres. |
+| `redis` | **A large network.** Redis holds everything in memory, so reads and writes are fast. |
+| `yml` | **Testing only.** A flat file. |
+
+<Warning>
+  Never use `yml` on a real server; concurrent writes lose data.
+</Warning>
+## Set it up
+
+Set `storage.type`, then fill the matching block.
+
+<Tabs>
+  <Tab title="SQLite">
+    ```yaml config.yml
+    storage:
+      type: sqlite
+    ```
+
+    The file appears at `plugins/PerPlayerKit/database.db`.
+  </Tab>
+
+  <Tab title="MySQL">
+    ```yaml config.yml
+    storage:
+      type: mysql
+      mysql:
+        host: localhost
+        port: '3306'
+        dbname: kitdatabase
+        username: username
+        password: pa55w0rd
+        use-ssl: false
+        maximum-pool-size: 10
+    ```
+  </Tab>
+
+  <Tab title="PostgreSQL">
+    ```yaml config.yml
+    storage:
+      type: postgresql
+      postgresql:
+        host: localhost
+        port: '5432'
+        dbname: kitdatabase
+        username: username
+        password: pa55w0rd
+        use-ssl: false
+        maximum-pool-size: 10
+    ```
+  </Tab>
+
+  <Tab title="Redis">
+    ```yaml config.yml
+    storage:
+      type: redis
+      redis:
+        host: localhost
+        port: 6379
+        password: pa55w0rd
+    ```
+  </Tab>
+
+  <Tab title="YAML">
+    Data goes to `plugins/PerPlayerKit/please-use-a-real-database.yml`.
+
+    ```yaml config.yml
+    storage:
+      type: yml
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+  Create the database before first start. The plugin creates its <Tooltip tip="The parts inside a database that hold the rows of data.">**tables**</Tooltip>, not the database.
+</Warning>
+## Sharing one database across servers
+
+<Warning>
+  Set the same [`kits.max-slots`](/features/kits) on every server; a kit in slot 12 does not exist on a server capped at 9.
+</Warning>
+
+Kits are cached while a player is online; log them out before editing from another server.
+## Changing database later
+
+<Columns cols={2}>
+  <Card title="Change database" icon="right-left" href="/data/storage-migration">
+    SQLite to MySQL, or any two types.
+  </Card>
+
+  <Card title="Export and import" icon="file-export" href="/data/export-import">
+    Copy a kit room to another server.
+  </Card>
+</Columns>
+
+V3 storage type names ignore case and surrounding spaces. Unknown types stop startup. During an upgrade, an old SQLite fallback is preserved and reported; see [Upgrading](/upgrading).

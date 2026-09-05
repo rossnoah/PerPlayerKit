@@ -1,0 +1,107 @@
+---
+title: "Sharing kits and moving accounts"
+sidebarTitle: "Sharing & transfers"
+description: "Send a kit straight to another player, or hand out a share code anyone can redeem. /transferkits moves every kit you own to a new account."
+icon: "share-nodes"
+related:
+  - Kits and enderchest kits: /features/kits
+  - Player commands: /commands/players
+  - Anti-exploit: /features/anti-exploit
+  - Export and import kit data: /data/export-import
+---
+
+| To do this | Run | Result |
+| ---------- | --- | ------ |
+| Send a kit to one player | `/sharekit <slot> <player>` | They click **[ACCEPT]** in chat |
+| Hand out a code | `/sharekit <slot>` | Anyone can redeem it with `/copykit` |
+| Move every kit to a new account | `/transferkits <player>` | The new account accepts in chat |
+
+## Send a kit to one player
+
+```bash
+/sharekit <slot> <player>
+/shareec  <slot> <player>   # for enderchest kits
+```
+
+| | |
+| --- | --- |
+| The other player sees | **[ACCEPT]** and **[DECLINE]** buttons in chat |
+| The request expires after | **120 seconds** |
+| A second request to the same player | Replaces the first |
+| The buttons run | `/shareaccept <id>` and `/sharedecline <id>` |
+| With only one request pending | Plain `/shareaccept` works |
+
+<Warning>
+  Accepting **replaces** the player's whole inventory. It does not add to what they have.
+</Warning>
+
+## Hand out a share code
+
+Omit the player name to get a <Tooltip tip="A short string anyone can redeem with /copykit to get the same kit.">code</Tooltip> instead.
+
+```bash
+/sharekit <slot>          # prints a code
+/copykit  <code>          # anyone redeems it
+```
+
+A code works for **15 minutes**, for any number of players.
+
+## Move every kit to a new account
+
+```bash
+/transferkits <player>
+```
+
+<Steps>
+  <Step title="Log in on both accounts">
+    Both accounts must be online, on the same server.
+  </Step>
+
+  <Step title="Run the command on the old account">
+    ```bash
+    /transferkits NewAccountName
+    ```
+  </Step>
+
+  <Step title="Accept on the new account">
+    Click **[ACCEPT]** in chat, or run `/shareaccept`.
+  </Step>
+</Steps>
+
+| On accept | |
+| --------- | --- |
+| Every slot you have | Copied into their matching slot |
+| Slots they already used | **Overwritten** |
+| Slots you do not have | Left alone |
+| Your own kits | Unchanged. This is a copy, not a move |
+
+<Warning>
+  There is no undo. Save the new account's kits elsewhere first if they are worth keeping.
+</Warning>
+
+## Permissions
+
+| Command | Permission |
+| ------- | ---------- |
+| `/sharekit` | `perplayerkit.sharekit` |
+| `/shareec` | `perplayerkit.shareenderchest` |
+| `/transferkits` | `perplayerkit.transferkits` |
+| `/copykit` | `perplayerkit.copykit` |
+| `/shareaccept`, `/sharedecline` | `perplayerkit.copykit` |
+
+`perplayerkit.use` grants all of them. Deny all four <Tooltip tip="The exact permission string a plugin checks, such as perplayerkit.use.">nodes</Tooltip> to keep kits with their owner:
+
+```bash
+/lp group default permission set perplayerkit.sharekit false
+/lp group default permission set perplayerkit.shareenderchest false
+/lp group default permission set perplayerkit.transferkits false
+/lp group default permission set perplayerkit.copykit false
+```
+
+Shared kits pass the same [anti-exploit](/features/anti-exploit) checks: with `only-allow-kitroom-items` on, items missing from the kit room do not survive.
+
+## World and region rules
+
+Use `locations.sharing` to choose where this feature works. Sending, copying, accepting, and transferring use the same rule. Declining a request remains available.
+
+See [Worlds and regions](/settings/locations) for configuration and troubleshooting.

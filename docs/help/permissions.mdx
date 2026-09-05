@@ -1,0 +1,24 @@
+---
+title: "Permission problems"
+sidebarTitle: "Permissions"
+description: "Players cannot use /kit, admins cannot build kits, and how the three permission bundles fit together."
+icon: "key"
+related:
+  - Give out permissions: /permissions-setup
+  - Permission list: /commands/permissions
+  - Troubleshooting: /help/troubleshooting
+---
+
+## Players cannot use /kit
+
+They need `perplayerkit.use`.
+
+```bash
+/lp group default permission set perplayerkit.use true
+```
+
+## Admins can manage kits but cannot build one
+
+<Tooltip tip="The exact permission string a plugin checks, such as perplayerkit.use.">Permission nodes</Tooltip> can include other nodes. `perplayerkit.admin` includes staff inspection and kit room editing. Give staff and admin groups `perplayerkit.use` as well.
+
+See [Give out permissions](/permissions-setup).

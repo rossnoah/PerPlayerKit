@@ -1,0 +1,30 @@
+---
+title: "Storage connection settings"
+sidebarTitle: "Connection settings"
+description: "Every connection field for MySQL, PostgreSQL and Redis, with types and defaults."
+icon: "plug"
+---
+
+Fields live under `storage.mysql`, `storage.postgresql`, or `storage.redis`.
+
+## MySQL and PostgreSQL
+
+| Key | Type | Default | |
+| --- | --- | --- | --- |
+| `host` | string | required | Where the database runs. Use `localhost` if it is on the same machine. |
+| `port` | string | required | The port it listens on. `3306` for MySQL, `5432` for PostgreSQL. |
+| `dbname` | string | required | The database name. Create it first and give your user access to it. |
+| `username` | string | required | The user the plugin logs in as. Needs `SELECT`, `INSERT`, `UPDATE`, `DELETE`, and `CREATE TABLE` on that database. |
+| `password` | string | required | That user's password. Anyone who can read `config.yml` can read it. |
+| `use-ssl` | boolean | `false` | Encrypts the connection. Turn it on for any database that is not on `localhost`. |
+| `maximum-pool-size` | integer | `10` | How many connections the plugin opens at once, its <Tooltip tip="A set of open database connections the plugin reuses instead of opening a new one every time.">connection pool</Tooltip> size. Raise it only if the console shows connection-wait timeouts. |
+
+## Redis
+
+| Key | Type | Default | |
+| --- | --- | --- | --- |
+| `host` | string | required | Where Redis runs. |
+| `port` | integer | `6379` | The port Redis listens on. |
+| `password` | string | | The Redis <Tooltip tip="The Redis setting that turns on password protection.">`requirepass`</Tooltip> password. Leave it empty if Redis has no password. |
+
+See [Choose a database](/settings/storage) for complete examples.

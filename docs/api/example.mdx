@@ -1,0 +1,64 @@
+---
+title: "PerPlayerKit API example"
+sidebarTitle: "Example"
+description: "A working Paper plugin that loads a public kit for a player, and how to select a kit by id."
+icon: "play"
+related:
+  - Reference: /api/reference
+  - Public kits: /features/public-kits
+---
+
+```java ExamplePlugin.java
+import dev.noah.perplayerkit.API;
+import dev.noah.perplayerkit.PublicKit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
+
+public class ExamplePlugin extends JavaPlugin implements Listener {
+
+    @Override
+    public void onEnable() {
+        getServer().getPluginManager().registerEvents(this, this);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        API api = API.getInstance();
+
+        List<PublicKit> publicKits = api.getPublicKits();
+        if (publicKits.isEmpty()) {
+            return;
+        }
+
+        api.loadPublicKit(event.getPlayer(), publicKits.get(0));
+    }
+}
+```
+
+<Warning>
+  Always check `isEmpty()` before you index. With no public kits configured, `get(0)` throws `IndexOutOfBoundsException`.
+</Warning>
+
+## Pick a kit by id
+
+Indexing by position breaks as soon as somebody reorders `config.yml`. Match on the id instead.
+
+```java
+private Optional<PublicKit> kitById(API api, String id) {
+    return api.getPublicKits().stream()
+            .filter(kit -> kit.id.equalsIgnoreCase(id))
+            .findFirst();
+}
+
+// usage
+kitById(API.getInstance(), "crystal")
+        .ifPresent(kit -> API.getInstance().loadPublicKit(player, kit));
+```
+
+<Note>
+  A kit in `getPublicKits()` is declared in `config.yml`. That does not mean an admin ever saved contents to it with `/savepublickit`. Loading an empty kit gives the player an empty inventory.
+</Note>

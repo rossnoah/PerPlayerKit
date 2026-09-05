@@ -20,54 +20,136 @@
   "navigation": {
     "groups": [
       {
-        "group": "Get started",
+        "group": "Start here",
+        "icon": "rocket",
         "pages": [
           "introduction",
           "downloads",
           "installation",
-          "quickstart"
+          "upgrading",
+          "kit-room",
+          "permissions-setup"
         ]
       },
       {
-        "group": "Configuration",
+        "group": "Features",
+        "icon": "layer-group",
         "pages": [
-          "configuration/database",
-          "configuration/backups",
-          "configuration/kit-slots",
-          "configuration/feature-flags",
-          "configuration/rekit-on-kill",
-          "configuration/regear",
-          "configuration/anti-exploit",
-          "configuration/messages",
-          "configuration/languages",
-          "configuration/interface"
+          {
+            "group": "Kits",
+            "icon": "backpack",
+            "root": "features/kits",
+            "expanded": false,
+            "pages": [
+              "features/kit-slots"
+            ]
+          },
+          "features/sharing",
+          "features/public-kits",
+          {
+            "group": "Automatic rekit",
+            "icon": "rotate",
+            "root": "features/rekit",
+            "expanded": false,
+            "pages": [
+              "features/rekit-respawn",
+              "features/rekit-kill"
+            ]
+          },
+          "features/regear",
+          "features/anti-exploit"
         ]
       },
       {
-        "group": "Commands & permissions",
+        "group": "Commands",
+        "icon": "terminal",
         "pages": [
-          "commands/player-commands",
-          "commands/sharing",
-          "commands/admin-commands",
+          "commands/players",
+          "commands/admin",
           "commands/permissions"
         ]
       },
       {
-        "group": "Guides",
+        "group": "Settings",
+        "icon": "sliders",
         "pages": [
-          "guides/kit-room-setup",
-          "guides/public-kits",
-          "guides/storage-migration",
-          "guides/kit-data",
-          "guides/purge-items",
-          "guides/troubleshooting"
+          {
+            "group": "config.yml",
+            "icon": "file-code",
+            "root": "settings/config-reference",
+            "expanded": false,
+            "pages": [
+              "settings/config-kitroom",
+              "settings/config-interface",
+              "settings/config-features"
+            ]
+          },
+          "settings/locations",
+          {
+            "group": "Storage",
+            "icon": "database",
+            "root": "settings/storage",
+            "expanded": false,
+            "pages": [
+              "settings/storage-reference"
+            ]
+          },
+          {
+            "group": "Messages",
+            "icon": "message",
+            "root": "settings/messages",
+            "expanded": false,
+            "pages": [
+              "settings/formatting"
+            ]
+          },
+          "settings/languages"
         ]
       },
       {
-        "group": "Developer API",
+        "group": "Managing data",
+        "icon": "box-archive",
         "pages": [
-          "api/overview",
-          "api/usage"
+          "data/backups",
+          "data/export-import",
+          "data/storage-migration",
+          "data/purge-items"
+        ]
+      },
+      {
+        "group": "Common issues",
+        "icon": "circle-question",
+        "pages": [
+          {
+            "group": "Troubleshooting",
+            "icon": "wrench",
+            "root": "help/troubleshooting",
+            "expanded": false,
+            "pages": [
+              "help/startup",
+              "help/permissions",
+              "help/kits",
+              "help/features"
+            ]
+          },
+          "help/faq"
+        ]
+      },
+      {
+        "group": "For developers",
+        "icon": "code",
+        "pages": [
+          {
+            "group": "Java API",
+            "icon": "code",
+            "root": "api",
+            "expanded": false,
+            "pages": [
+              "api/setup",
+              "api/reference",
+              "api/example"
+            ]
+          }
         ]
       }
     ]
@@ -84,7 +166,8 @@
       }
     ],
     "primary": {
-      "type": "discord",
+      "type": "button",
+      "label": "Discord",
       "href": "https://discord.gg/5djuBSKWuV"
     }
   },
@@ -96,7 +179,7 @@
     },
     "links": [
       {
-        "header": "Downloads",
+        "header": "PerPlayerKit",
         "items": [
           {
             "label": "Modrinth",
@@ -111,29 +194,8 @@
             "href": "https://hangar.papermc.io/noah32/PerPlayerKit"
           },
           {
-            "label": "GitHub releases",
-            "href": "https://github.com/rossnoah/PerPlayerKit/releases"
-          },
-          {
-            "label": "Dev builds (Jenkins)",
-            "href": "https://jenkins.noah.dev/job/PerPlayerKit/"
-          }
-        ]
-      },
-      {
-        "header": "Project",
-        "items": [
-          {
             "label": "Source code",
             "href": "https://github.com/rossnoah/PerPlayerKit"
-          },
-          {
-            "label": "Report an issue",
-            "href": "https://github.com/rossnoah/PerPlayerKit/issues"
-          },
-          {
-            "label": "License (AGPL-3.0)",
-            "href": "https://github.com/rossnoah/PerPlayerKit/blob/main/LICENSE"
           }
         ]
       }

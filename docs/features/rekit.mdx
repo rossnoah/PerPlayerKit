@@ -1,0 +1,84 @@
+---
+title: "Automatic rekit"
+sidebarTitle: "Automatic rekit"
+description: "Restore the last loaded kit, or choose a public kit by world and region, after respawns and kills."
+icon: "rotate"
+---
+
+Automatic rekit gives gear after a respawn or kill. Each trigger can restore the last loaded kit or choose a public kit by location.
+
+| Trigger | Default | Location rule | Extra setting |
+| --- | --- | --- | --- |
+| [Respawn](/features/rekit-respawn) | On | `locations.rekit-respawn` | Configurable delay |
+| [Kill](/features/rekit-kill) | Off | `locations.rekit-kill` | Uses the killer's position |
+
+Both apply silently, without load messages or broadcasts. Both can also restore the last loaded enderchest kit.
+
+Players need the trigger permission and permission for the kit type being loaded. `perplayerkit.use` includes these permissions.
+
+## Restore the last loaded kit
+
+Leave `kits: {}` under the trigger. PerPlayerKit remembers the last personal or public inventory kit the player manually loaded.
+
+The remembered inventory and enderchest selections reset on disconnect. A player with no remembered selection receives nothing for that inventory.
+
+## Choose a public kit by location
+
+Use the same `kits` format under `rekit.respawn` and `rekit.kill`.
+
+Here, `kits:` is a fixed setting name. **The keys inside this particular map are your world and region names**, and their values are public kit IDs:
+
+```yaml config.yml
+rekit:
+  respawn:
+    enabled: true
+    delay-ticks: 0
+    restore-enderchest: false
+    kits:
+      world_nether: crystal
+      "world_nether:sword_arena": sword
+  kill:
+    enabled: true
+    restore-enderchest: false
+    kits:
+      world_nether: crystal
+      "world_nether:sword_arena": sword
+```
+
+These examples use bundled public kit IDs. Each kit needs saved contents. See [Public kits](/features/public-kits).
+
+This map chooses which kit to give. The feature names under `locations:` choose which action to restrict.
+
+Here, `world_nether` selects `crystal` throughout the Nether. Inside its `sword_arena` region, players receive `sword` instead. Replace the world and region names with your own.
+
+**Mappings select a kit; they do not limit where rekit runs.** Use [location rules](/settings/locations) to allow rekit only in particular worlds or regions.
+
+### Which kit wins?
+
+Location rules run first. If the action is allowed, PerPlayerKit chooses in this order:
+
+1. A matching region mapping, with the highest WorldGuard priority.
+2. A mapping for the current world, when no region mapping matches.
+3. The player's last loaded kit, when neither matches.
+
+WorldGuard parent regions also participate, including template parents. Only regions with kit mappings compete. Equal priorities use alphabetical region ID order. Config entry order does not affect region priority.
+
+For example, overlapping `sword_arena` and `crystal_arena` mappings use whichever region has higher priority. Equal priorities select `crystal_arena`.
+
+WorldGuard priorities choose between kits here. They do not override an allow or deny [location filter](/settings/locations#overlapping-regions).
+
+| Situation | Result |
+| --- | --- |
+| The selected public kit has no saved contents | Warns once in the console and tries the remembered kit |
+| The player lacks public kit permission | Tries the remembered kit, subject to its type permission |
+| A relevant region mapping cannot be checked | Skips the entire rekit, including enderchest restoration |
+| The kit room item filter is enabled but has no allowed items | Leaves the affected inventory unchanged |
+| Nothing is remembered and no mapping applies | Leaves the inventory unchanged |
+
+A configured kit does not replace the remembered selection. The next regear or unmapped automatic rekit still uses the last manually loaded kit.
+
+Mapping keys and public kit IDs ignore case. Older nested values such as `kit: sword` remain accepted; use plain IDs for new entries.
+
+Restart after changing the config. Use `/perplayerkit location rekit-respawn` or `/perplayerkit location rekit-kill` to check the current location and kit choice.
+
+See [Worlds and regions](/settings/locations) for region setup, overlaps, and troubleshooting.

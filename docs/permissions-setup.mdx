@@ -1,0 +1,100 @@
+---
+title: "Give out permissions"
+sidebarTitle: "Give out permissions"
+description: "The three permissions to hand out, who gets each one, and LuckPerms commands you can paste into the console."
+icon: "key"
+related:
+  - Permission list: /commands/permissions
+  - Player commands: /commands/players
+  - Set up your kit room: /kit-room
+  - Permission problems: /help/permissions
+---
+
+Three permissions cover most servers. PerPlayerKit works with <Tooltip tip="The free permissions plugin most Minecraft servers run.">[LuckPerms](https://luckperms.net)</Tooltip> and any other Bukkit permissions plugin.
+
+## The three permissions
+
+| Give this           | To      | They get                                                  |
+| ------------------- | ------- | --------------------------------------------------------- |
+| `perplayerkit.use`  | Players | Every normal command: kits, enderchests, sharing, regear  |
+| `perplayerkit.staff`| Staff   | `/inspectkit` and `/inspectec`                            |
+| `perplayerkit.admin`| Admins  | The kit room, public kits, and all data tools             |
+
+<Warning>
+  These three do not include each other. `perplayerkit.admin` does **not** give an admin `/kit`. Give staff and admins `perplayerkit.use` too.
+</Warning>
+
+## Copy and paste this
+
+Substitute your own group names.
+
+```bash
+# Players
+/lp group default permission set perplayerkit.use true
+
+# Staff
+/lp group staff permission set perplayerkit.use true
+/lp group staff permission set perplayerkit.staff true
+
+# Admins
+/lp group admin permission set perplayerkit.use true
+/lp group admin permission set perplayerkit.staff true
+/lp group admin permission set perplayerkit.admin true
+```
+
+## Test it
+
+| Do this | Expect |
+| ------- | ------ |
+| Join on a test account, not an <Tooltip tip="A player with full server access, granted with the /op command.">operator</Tooltip> | None |
+| Run `/kit` | The menu opens. If not, the account is missing `perplayerkit.use`. |
+| Click an empty slot, pick items, save | The kit is stored in that slot. |
+| Run `/k1` | The kit loads. |
+
+## Settings worth turning on
+
+Edit `config.yml` and restart.
+
+```yaml config.yml
+kits:
+  load:
+    heal: true
+    feed: true
+rekit:
+  respawn:
+    enabled: true
+    delay-ticks: 0
+```
+
+More kits per player, up to 99:
+
+```yaml config.yml
+kits:
+  max-slots: 18
+```
+
+`kits.max-slots` needs a full restart, not a reload. See [Kits and enderchest kits](/features/kits).
+
+## Finer control
+
+The three permissions are bundles. Every command also has its own <Tooltip tip="The exact permission string a plugin checks, such as perplayerkit.use.">permission node</Tooltip>, so a single feature can be withheld. See the [full permission list](/commands/permissions).
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title="Public kits" icon="globe" href="/features/public-kits">
+    Preset kits, loaded with `/publickit`.
+  </Card>
+
+  <Card title="Rekit on kill" icon="skull" href="/features/rekit-kill">
+    A kit for the killer after every kill.
+  </Card>
+
+  <Card title="All commands" icon="terminal" href="/commands/players">
+    Player, staff, and admin commands.
+  </Card>
+
+  <Card title="Something is broken" icon="circle-question" href="/help/troubleshooting">
+    Fixes for common problems.
+  </Card>
+</Columns>

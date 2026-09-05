@@ -1,0 +1,140 @@
+---
+title: "Change database"
+sidebarTitle: "Change database"
+description: "Move PerPlayerKit kit data from SQLite to MySQL, PostgreSQL, or Redis with the built-in migrate command. The server stays online and the old database is left in place."
+icon: "right-left"
+related:
+  - Storage and databases: /settings/storage
+  - Backups: /data/backups
+  - Export and import kit data: /data/export-import
+  - Startup and database problems: /help/startup
+---
+
+```bash
+/perplayerkit migrate <from> <to>
+```
+
+**Permission:** `perplayerkit.admin`. Works in game and from the console. The copy runs in the background while the server stays online.
+
+| Type | Use it for |
+| ---- | ---------- |
+| `sqlite` | One server. The default. |
+| `mysql` | A network, or a bigger server |
+| `postgresql` | A network, or a bigger server |
+| `redis` | A large, fast network |
+| `yml` | Testing only. Never production. |
+
+```bash
+/perplayerkit migrate sqlite mysql
+/perplayerkit migrate sqlite postgresql
+/perplayerkit migrate mysql redis
+/perplayerkit migrate redis sqlite
+```
+
+<Warning>
+  Back up first. For SQLite, copy `plugins/PerPlayerKit/database.db`; for YAML, copy `please-use-a-real-database.yml`.
+</Warning>
+
+## Step by step
+
+<Steps>
+  <Step title="Back up your data">
+    Copy the file; for a managed database take a <Tooltip tip="Tools that write a whole database out to a single file you can keep.">`mysqldump` or `pg_dump`</Tooltip>.
+  </Step>
+
+  <Step title="Put the new details in config.yml">
+    Add the credentials and leave `storage.type` on the old database.
+
+    <Tabs>
+      <Tab title="MySQL">
+        ```yaml config.yml
+        storage:
+          mysql:
+            host: localhost
+            port: '3306'
+            dbname: kitdatabase
+            username: username
+            password: pa55w0rd
+            use-ssl: false
+            maximum-pool-size: 10
+        ```
+      </Tab>
+
+      <Tab title="PostgreSQL">
+        ```yaml config.yml
+        storage:
+          postgresql:
+            host: localhost
+            port: '5432'
+            dbname: kitdatabase
+            username: username
+            password: pa55w0rd
+            use-ssl: false
+            maximum-pool-size: 10
+        ```
+      </Tab>
+
+      <Tab title="Redis">
+        ```yaml config.yml
+        storage:
+          redis:
+            host: localhost
+            port: 6379
+            password: pa55w0rd
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step title="Check the new database is reachable">
+    Confirm it is running and reachable through any <Tooltip tip="Software that blocks network connections unless the port is opened.">firewall</Tooltip>.
+  </Step>
+
+  <Step title="Run the migration">
+    ```bash
+    /perplayerkit migrate sqlite mysql
+    ```
+
+    Progress prints to chat and console every 100 entries.
+  </Step>
+
+  <Step title="Wait for the success message">
+    Watch for **"Migration completed successfully!"**.
+
+    <Warning>
+      Do not restart or change `storage.type` before that message appears.
+    </Warning>
+  </Step>
+
+  <Step title="Switch storage.type">
+    ```yaml config.yml
+    storage:
+      type: mysql
+    ```
+  </Step>
+
+  <Step title="Restart the server">
+    Fully. A reload does not reconnect the plugin.
+  </Step>
+</Steps>
+
+## Check it worked
+
+* [ ] No storage errors at startup
+* [ ] A test account's kits load
+* [ ] Saving a kit survives a relog
+* [ ] The kit room and public kits are intact
+* [ ] Every server on this database has the same `kits.max-slots`
+
+## Going back
+
+The migration **copies**; the old database is untouched. To roll back, set `storage.type` to the old type and restart.
+
+## Problems
+
+| Symptom | Fix |
+| ------- | --- |
+| Connection error during the migration | Check host, port, username, and password in `config.yml`. Confirm the database is running. For a remote database, open the port: `3306` MySQL, `5432` PostgreSQL, `6379` Redis. Set `use-ssl: false` to rule out <Tooltip tip="The encryption used to protect a connection as it crosses a network.">TLS</Tooltip>. |
+| Data is missing afterwards | Check the console for errors during the copy. Confirm the success message appeared **before** you changed `storage.type`, and that you did a full restart, not a reload. |
+| The migration stopped part way | Run it again. Entries that already made it are overwritten and the missing ones filled in. |
+| It refuses to run | The source and the destination cannot be the same type. |

@@ -1,91 +1,56 @@
 ---
-title: "PerPlayerKit: Custom PvP Kits for Your Minecraft Server"
-sidebarTitle: "Introduction"
-description: "PerPlayerKit is a PaperMC plugin that gives every player their own personal PvP kits, a GUI kit editor, public kit presets, and tools for server admins."
+title: "PerPlayerKit"
+sidebarTitle: "What is PerPlayerKit?"
+description: "PerPlayerKit gives every player on your Minecraft server their own PvP kits. It is the kit system behind many PvP and practice servers."
 icon: "house"
+related:
+  - Install PerPlayerKit: /installation
+  - Download PerPlayerKit: /downloads
+  - Set up your kit room: /kit-room
+  - Kits and enderchest kits: /features/kits
 ---
 
-PerPlayerKit solves one of the most common frustrations on PvP servers: the one-size-fits-all kit. Rather than forcing every player into a preset loadout, PerPlayerKit gives each player their own kit builder. You configure a Virtual Kit Room stocked with the items you approve, and players freely choose from that pool to assemble their saved kits. Every kit is stored per-player, sharable with friends, and fully inspectable by staff — giving you both flexibility and control.
+A kit plugin for Paper and Spigot. Every player builds their own kits, from the items you approve.
 
 <Frame>
-  <img src="/images/MainMenu.png" alt="The PerPlayerKit main menu" />
+  <img src="/images/MainMenu.png" alt="The PerPlayerKit main menu, showing nine kit slots" width="340" />
 </Frame>
 
-## Key Features
+One command fills the kit room and nine public kits with a ready-made setup, so a new server is playable immediately.
 
-<Columns cols={2}>
-  <Card title="9 Kits per Player (up to 99)" icon="backpack" href="/configuration/kit-slots">
-    Every player can save, name, and swap between nine distinct PvP loadouts by default — raise `max-kits` to give them up to 99.
-  </Card>
+## How it works
 
-  <Card title="GUI Kit Editor" icon="table-layout" href="/guides/kit-room-setup">
-    A polished inventory GUI lets players browse the Virtual Kit Room, build their loadout visually, and save it — no commands required.
-  </Card>
+<Steps>
+  <Step title="Stock the kit room">
+    Add the items players are allowed to use.
+  </Step>
 
-  <Card title="Enderchest Kit Slots" icon="box" href="/commands/player-commands">
-    Players get the same number of enderchest kits, loaded straight into their enderchest when selected, keeping utility items always within reach.
-  </Card>
+  <Step title="Players build kits">
+    A player runs `/kit`, arranges an inventory, and saves it as a kit.
+  </Step>
 
-  <Card title="Public Kit Presets" icon="globe" href="/guides/public-kits">
-    Admins can publish server-wide public kits that any player can load with `/publickit`, perfect for featured or seasonal loadouts.
-  </Card>
+  <Step title="Players load kits">
+    `/k1` loads kit 1, `/k2` loads kit 2. No menu.
+  </Step>
+</Steps>
 
-  <Card title="Kit Sharing & Transfers" icon="share-nodes" href="/commands/sharing">
-    Players share a kit with a click-to-accept request, hand out share codes, or move every kit they own to a new account with `/transferkits`.
-  </Card>
+## What you get
 
-  <Card title="Rekit Automation" icon="rotate" href="/configuration/rekit-on-kill">
-    Restore a player's kit automatically on respawn, or hand the killer a specific public kit per world — or per WorldGuard region — on every kill.
-  </Card>
+| Feature | Does |
+| ------- | ---- |
+| [Kits](/features/kits) | Nine kits and nine enderchest kits per player, up to 99. |
+| [Public kits](/features/public-kits) | Server-wide preset kits, loaded with `/publickit`. |
+| [Kit sharing](/features/sharing) | Send a kit to a player, give out a share code, or move every kit to a new account. |
+| [Automatic rekit](/features/rekit) | A kit back on respawn, or a kit for the killer after every kill. |
+| [Regear](/features/regear) | Restock pearls, crystals, and potions mid-fight from the loaded kit. |
+| [Anti-exploit](/features/anti-exploit) | Blocks illegal enchantments and <Tooltip tip="Hidden data attached to an item, such as its enchantments or custom name.">NBT</Tooltip> data. Kits can be limited to kit room items only. |
 
-  <Card title="Staff Inspect Tools" icon="magnifying-glass" href="/commands/admin-commands">
-    Moderators use `/inspectkit` and `/inspectec` to view any player's kits and enderchest contents for anti-cheat and moderation purposes.
-  </Card>
+## Get started
 
-  <Card title="Flexible Storage Backends" icon="database" href="/configuration/database">
-    Choose from SQLite, MySQL, MariaDB, PostgreSQL, or Redis to match your infrastructure — with a migration tool to move data between backends.
-  </Card>
+Requires Paper or Spigot **1.19 or newer** and **Java 17 or newer**.
 
-  <Card title="14 Built-in Languages" icon="language" href="/configuration/languages">
-    Every player-facing string lives in a lang file. Ship one of the bundled translations or write your own.
-  </Card>
+<Card title="Install PerPlayerKit" icon="download" href="/installation" horizontal>
+  About five minutes.
+</Card>
 
-  <Card title="Admin Data Tooling" icon="wrench" href="/guides/kit-data">
-    Export a whole setup to a `.ppk` file, import it on another server, or bulk-purge a banned item from every stored kit.
-  </Card>
-</Columns>
-
-## Anti-Exploit Protection
-
-PerPlayerKit includes a built-in anti-exploit layer that prevents players from injecting unauthorized items into their kits. NBT data and enchantments are validated against vanilla Minecraft limits, and you can optionally restrict kits to items that exist in your Virtual Kit Room. Tune all of it in `config.yml` under the [`anti-exploit`](/configuration/anti-exploit) section.
-
-## Requirements
-
-Before installing PerPlayerKit, confirm your environment meets these minimum requirements:
-
-| Requirement       | Minimum Version |
-| ----------------- | --------------- |
-| Server software   | Paper or Spigot |
-| Minecraft version | 1.19 or newer   |
-| Java              | 17 or newer     |
-
-Grab the jar from [Modrinth, SpigotMC, Hangar, or GitHub](/downloads) — or take a dev build straight from [Jenkins](https://jenkins.noah.dev/job/PerPlayerKit/).
-
-### Optional Integrations
-
-Both are soft dependencies — PerPlayerKit runs fine without either.
-
-| Plugin                                                                              | What it adds                                                                                      |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/)           | Placeholders in plugin messages.                                                                  |
-| [WorldGuard](https://enginehub.org/worldguard)                                      | Region-specific kits for [rekit-on-kill](/configuration/rekit-on-kill).                           |
-
-<Note>
-  PerPlayerKit is free and open-source software released under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. You are free to use, modify, and distribute it under the terms of that license. Read the full license text in the repository before deploying on a commercial server.
-</Note>
-
-## Community & Support
-
-If you run into issues, want to share feedback, or are looking for configuration help from other server owners, join the official Discord community.
-
-[**Join the PerPlayerKit Discord →**](https://discord.gg/5djuBSKWuV)
+Support: [Discord](https://discord.gg/5djuBSKWuV). License: [AGPL-3.0](https://github.com/rossnoah/PerPlayerKit/blob/main/LICENSE).

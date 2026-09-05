@@ -1,0 +1,102 @@
+---
+title: "Upgrading to 1.8"
+sidebarTitle: "Upgrading"
+description: "Keep existing kit data and settings while upgrading to config version 3."
+icon: "arrow-up"
+---
+
+Version 1.8 reorganizes `config.yml` and fixes differences between commands, menus, and starter setup.
+
+## Upgrade
+
+1. Stop the server and back up the plugin folder and database.
+2. Replace the plugin jar.
+3. Start the server. Existing v1 and v2 configs are backed up and converted to v3.
+4. Check the console for migration or storage errors.
+
+The old file is kept beside `config.yml` as `config.yml.backup-<id>.yml`. Custom language files are backed up when migration changes them.
+
+A migration error stops the plugin and retains the original config. Fix the reported problem and restart.
+
+## What moves
+
+| Old setting | New location |
+| --- | --- |
+| `max-kits` | `kits.max-slots` |
+| Database connection blocks | Inside `storage` |
+| `backup.enabled` | `storage.backup.enabled` |
+| Kit load feature flags | `kits.load` and `enderchests.load` |
+| Automatic rekit flags | `rekit.respawn` and `rekit.kill` |
+| Action message switches | `broadcasts.enabled` and `broadcasts.actions` |
+| `disabled-command-worlds` | `locations.global`, using `mode: deny` |
+| Kill world whitelist and blacklist | One rule under `locations.rekit-kill` |
+| Timers | Names now include `seconds` or `ticks` |
+
+Values are transferred automatically. Empty message lists and prefixes stay empty. Disabled broadcasts stay disabled, and an old boolean rekit-on-kill setting keeps its value.
+
+Legacy `%player%` and `%kitname%` placeholders become `{player}` and `{kitname}`. The old disabled-world message keeps its color formatting. V2 language files are retained unchanged.
+
+The console lists backups, moved setting groups, the retained storage backend, and behavior changes to review.
+
+## Check world and region rules
+
+The old disabled-world list becomes a global deny rule. A nonempty kill whitelist becomes an allow rule and still takes precedence over the old blacklist. Otherwise, the blacklist becomes a deny rule. Two empty lists become `mode: deny` with `entries: []`, allowing every world.
+
+Earlier 1.8 development configs are converted too, with a backup. If both old and new rules are present, migration stops and asks you to choose which to keep.
+
+World names now ignore capitalization. Check entries that previously depended on exact capitalization.
+
+Location rules also cover sharing, menu interactions, and regear items. Automatic respawn and kill rekit both support world and region filters and public kit mappings.
+
+When a relevant WorldGuard lookup fails, affected actions stop. Region mappings no longer silently fall back to a world-wide kit. See [Worlds and regions](/settings/locations).
+
+## Check the storage message
+
+Older versions selected SQLite for an unrecognized or differently capitalized storage type. For example, `MySQL` selected SQLite, while `mysql` selected MySQL.
+
+The upgrade preserves the backend the old version used. It reports a retained SQLite fallback instead of silently connecting to another database. Use [storage migration](/data/storage-migration) before choosing a different backend.
+
+## Check permissions
+
+Commands and menus enforce the same action permissions. `perplayerkit.admin` now grants kit room editing and staff inspection. Admins still need `perplayerkit.use` for player features.
+
+Notification access stays as before: operators and players explicitly granted `perplayerkit.kitnotify`. The player bundle does not add notifications.
+
+To enable action notifications for ordinary players:
+
+```bash
+/lp group default permission set perplayerkit.kitnotify true
+```
+
+## Add the starter kits to an existing setup
+
+Existing public kit definitions are preserved. To add missing bundled definitions and fill unconfigured starter content:
+
+```bash
+/perplayerkit autosetup add-kits
+```
+
+Existing saved pages and public kits are skipped. Custom definitions with matching IDs win.
+
+## Behavior changes
+
+- Public kits work as the remembered kit for respawn and regear.
+- Kit room filtering preserves stored definitions. Use `/purgeitem` for permanent removal.
+- Saving one kit room page leaves other unsaved pages available to autosetup.
+- Clearing a personal editor and closing it deletes that saved kit. `/deleteec <slot>` deletes an enderchest kit.
+- Regear items honor permissions, location rules, and elytra restrictions when used.
+- Share codes and direct requests apply the current item filter when accepted.
+- Pending respawn restoration is cancelled on disconnect or a newer respawn.
+
+## Roll back
+
+Keep the same Minecraft version while upgrading or rolling back the plugin.
+
+1. Stop the server.
+2. Restore `config.yml` from the backup named in the migration log.
+3. Restore any language files the migration backed up.
+4. Replace the jar with the previous plugin jar, then start the server.
+
+The kit storage format is unchanged. A plugin rollback can retain newer saves. Restore the database backup only when you also want to undo item changes; that discards saves made after the backup.
+
+See the [config reference](/settings/config-reference) for the new layout.
