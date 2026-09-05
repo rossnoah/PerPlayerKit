@@ -34,6 +34,8 @@ public class ConfigManager {
         try {
             if (!Files.exists(file)) plugin.saveDefaultConfig();
             YamlConfiguration config = ConfigFiles.read(file);
+            dev.noah.perplayerkit.util.LocationRules.parse(config);
+            dev.noah.perplayerkit.util.RekitKitResolver.validate(config);
             try (InputStream in = plugin.getResource("config.yml")) {
                 if (in == null) throw new java.io.IOException("Bundled config.yml is missing");
                 YamlConfiguration defaults = new YamlConfiguration();

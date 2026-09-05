@@ -2,7 +2,7 @@ package dev.noah.perplayerkit.gui;
 
 import dev.noah.perplayerkit.ItemFilter;
 import dev.noah.perplayerkit.KitManager;
-import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.LocationAccess;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.SoundManager;
 import org.bukkit.Bukkit;
@@ -36,7 +36,6 @@ class EditorSaverTest {
     private MockedStatic<Lang> language;
     private MockedStatic<GUI> gui;
     private MockedStatic<SoundManager> sounds;
-    private MockedStatic<DisabledCommand> worlds;
 
     @BeforeEach void setup() {
         player = mock(Player.class);
@@ -57,14 +56,14 @@ class EditorSaverTest {
         language.when(Lang::get).thenReturn(messages);
         gui = mockStatic(GUI.class);
         sounds = mockStatic(SoundManager.class);
-        worlds = mockStatic(DisabledCommand.class);
         Plugin plugin = mock(Plugin.class);
         when(plugin.getConfig()).thenReturn(new YamlConfiguration());
         new ItemFilter(plugin);
+        new LocationAccess(plugin);
     }
 
     @AfterEach void close() {
-        worlds.close(); sounds.close(); gui.close(); language.close(); kitManager.close(); bukkit.close();
+        sounds.close(); gui.close(); language.close(); kitManager.close(); bukkit.close();
     }
 
     private GUI.EditorContext context(GUI.EditorType type) {

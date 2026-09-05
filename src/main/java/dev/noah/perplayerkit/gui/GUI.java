@@ -47,10 +47,17 @@ import static dev.noah.perplayerkit.gui.ItemUtil.createGlassPane;
 import static dev.noah.perplayerkit.gui.GuiLayoutUtils.*;
 import static dev.noah.perplayerkit.util.PlayerUtil.getPlayerName;
 import dev.noah.perplayerkit.commands.core.ActionGuards;
-import dev.noah.perplayerkit.ItemFilter;
 
 public class GUI {
     private static final int PUBLIC_PAGE_SIZE = 27;
+    private record MenuAccess(String permission, LocationFeature feature) {}
+    private static final Map<Menu, MenuAccess> menuAccess = new java.util.WeakHashMap<>();
+
+    public static boolean canUseMenu(Player player, Menu menu) {
+        MenuAccess access = menuAccess.get(menu);
+        return access == null || ActionGuards.allowed(player, access.permission(), access.feature());
+    }
+
     private final Plugin plugin;
     private final boolean filterItemsOnImport;
     private static final Set<UUID> kitDeletionFlag = new HashSet<>();
@@ -90,8 +97,9 @@ public class GUI {
     // redraw: any pending editor save is flushed first (a redraw reuses the
     // open inventory, so InventoryCloseEvent never fires for the editor), and
     // the stale title left behind by the reuse is updated in place.
-    private void openMenu(Player p, GuiMenuFactory.TitledMenu titledMenu) {
+    private void openMenu(Player p, GuiMenuFactory.TitledMenu titledMenu, String permission, LocationFeature feature) {
         flushOpenEditor(p);
+        menuAccess.put(titledMenu.menu(), new MenuAccess(permission, feature));
         titledMenu.menu().open(p);
         GuiCompat.updateTitle(p, titledMenu.title());
     }
@@ -157,7 +165,7 @@ public class GUI {
         addImport(menu.getSlot(IMPORT_SLOT));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, "perplayerkit.kit", LocationFeature.KITS);
         setEditorContext(p, new EditorContext(EditorType.KIT, slot, null, null, null));
     }
 
@@ -184,7 +192,7 @@ public class GUI {
         addImport(menu.getSlot(IMPORT_SLOT));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
 
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, "perplayerkit.admin", null);
         setEditorContext(p, new EditorContext(EditorType.PUBLIC_KIT, 0, kitId, null, null));
     }
 
@@ -210,7 +218,7 @@ public class GUI {
         addClear(menu.getSlot(CLEAR_SLOT), EC_CONTENT_START, EC_CONTENT_END);
         addImportEC(menu.getSlot(IMPORT_SLOT));
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, "perplayerkit.enderchest", LocationFeature.ENDERCHESTS);
         setEditorContext(p, new EditorContext(EditorType.ENDERCHEST, slot, null, null, null));
     }
 
@@ -245,7 +253,7 @@ public class GUI {
         }
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, p.hasPermission("perplayerkit.admin") ? "perplayerkit.admin" : "perplayerkit.staff", null);
         setEditorContext(p, new EditorContext(EditorType.INSPECT_KIT, slot, null, target, playerName));
         SoundManager.playOpenGui(p);
     }
@@ -281,7 +289,7 @@ public class GUI {
         }
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, p.hasPermission("perplayerkit.admin") ? "perplayerkit.admin" : "perplayerkit.staff", null);
         setEditorContext(p, new EditorContext(EditorType.INSPECT_ENDERCHEST, slot, null, target, playerName));
         SoundManager.playOpenGui(p);
     }
@@ -365,7 +373,7 @@ public class GUI {
         }
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, "perplayerkit.menu", LocationFeature.MENU);
     }
 
     public void OpenKitRoom(Player p) {
@@ -373,7 +381,7 @@ public class GUI {
     }
 
     public void OpenKitRoom(Player p, int page) {
-        if (!(ActionGuards.allowed(p, "perplayerkit.menu"))) return;
+        if (!ActionGuards.allowed(p, "perplayerkit.menu", LocationFeature.KIT_ROOM)) return;
         GuiMenuFactory.TitledMenu titledMenu = GuiMenuFactory.createKitRoomMenu();
         Menu menu = titledMenu.menu();
         allowModificationRange(menu, 0, FOOTER_START);
@@ -408,7 +416,7 @@ public class GUI {
         menu.getSlot(page + 47).setItem(ItemUtil.addEnchantLook(menu.getSlot(page + 47).getItem(p)));
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, "perplayerkit.menu", LocationFeature.KIT_ROOM);
     }
 
     private Material kitRoomIcon(int page) {
@@ -454,7 +462,7 @@ public class GUI {
         addPublicKitMenu(menu.getSlot(BACK_SLOT));
         addLoadPublicKit(menu.getSlot(LOAD_PUBLIC_KIT_SLOT), id);
 
-        openMenu(p, titledMenu);
+        openMenu(p, titledMenu, "perplayerkit.publickit", LocationFeature.PUBLIC_KITS);
     }
 
     public void OpenPublicKitMenu(Player player) { OpenPublicKitMenu(player, 0); }
@@ -510,7 +518,7 @@ public class GUI {
         }
         addMainButton(menu.getSlot(BACK_SLOT));
         menu.getSlot(BACK_SLOT).setItem(createItem(Material.OAK_DOOR, 1, lang("gui.back-button")));
-        openMenu(player, titledMenu);
+        openMenu(player, titledMenu, "perplayerkit.publickit", LocationFeature.PUBLIC_KITS);
     }
 
     public void addClear(Slot slot) {

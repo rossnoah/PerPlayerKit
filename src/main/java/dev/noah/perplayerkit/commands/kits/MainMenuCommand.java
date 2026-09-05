@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.commands.kits;
 
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.gui.GUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +38,7 @@ public class MainMenuCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(commandSender);
+        Player player = CommandGuards.requirePlayerAtLocation(commandSender, LocationFeature.MENU);
         if (player == null) {
             return true;
         }

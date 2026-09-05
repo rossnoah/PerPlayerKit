@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.commands.kits;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
 import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
@@ -38,7 +39,7 @@ public class DeleteKitCommand implements CommandExecutor {
     public DeleteKitCommand(boolean enderchest) { this.enderchest = enderchest; }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        Player player = CommandGuards.requirePlayerAtLocation(sender, enderchest ? LocationFeature.ENDERCHESTS : LocationFeature.KITS);
         if (player == null) {
             return true;
         }

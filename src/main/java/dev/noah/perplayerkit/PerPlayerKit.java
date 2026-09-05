@@ -95,6 +95,7 @@ public final class PerPlayerKit extends JavaPlugin {
         }
         reloadConfig();
 
+        new dev.noah.perplayerkit.util.LocationAccess(this);
         KitSlots.init(this);
 
         new Lang(this);

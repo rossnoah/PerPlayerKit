@@ -18,7 +18,8 @@
  */
 package dev.noah.perplayerkit.commands.shortcuts;
 
-import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.LocationAccess;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
@@ -46,7 +47,7 @@ public abstract class AbstractShortSlotCommand implements CommandExecutor {
             return true;
         }
 
-        if (DisabledCommand.isBlockedInWorld(player)) {
+        if (!LocationAccess.get().require(player, shortPrefix.equals("ec") ? LocationFeature.ENDERCHESTS : LocationFeature.KITS)) {
             return true;
         }
 

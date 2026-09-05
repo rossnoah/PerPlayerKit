@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.commands.features;
 
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.PlayerUtil;
 import org.bukkit.command.Command;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class HealCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        Player player = CommandGuards.requirePlayerAtLocation(sender, LocationFeature.HEAL);
         if (player == null) {
             return true;
         }

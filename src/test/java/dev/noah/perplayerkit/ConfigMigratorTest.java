@@ -322,4 +322,55 @@ class ConfigMigratorTest {
         assertEquals(original, Files.readString(config));
         assertEquals(language, Files.readString(dir.resolve("lang/en.yml")));
     }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(ints = {1, 2, 3})
+    void locationMigrationPreservesWhitelistPrecedenceAndIsIdempotent(int version, @TempDir Path dir) throws Exception {
+        YamlConfiguration old = new YamlConfiguration();
+        old.set("config-version", version);
+        old.set(version == 3 ? "restrictions.disabled-worlds" : "disabled-command-worlds", List.of("lobby"));
+        String path = version == 3 ? "rekit.kill" : "feature.rekit-on-kill";
+        old.set(path + ".world-whitelist", List.of("arena"));
+        old.set(path + ".world-blacklist", List.of("arena", "lobby"));
+        old.set(path + ".kits.arena", "sword");
+        ConfigFiles.write(old, dir.resolve("config.yml"));
+        String before = Files.readString(dir.resolve("config.yml"));
+        assertTrue(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
+        YamlConfiguration result = ConfigFiles.read(dir.resolve("config.yml"));
+        assertEquals("deny", result.getString("locations.global.mode"));
+        assertEquals(List.of("lobby"), result.getStringList("locations.global.entries"));
+        assertEquals("allow", result.getString("locations.rekit-kill.mode"));
+        assertEquals(List.of("arena"), result.getStringList("locations.rekit-kill.entries"));
+        assertEquals("sword", result.getString("rekit.kill.kits.arena"));
+        assertFalse(result.contains("rekit.kill.world-whitelist"));
+        assertFalse(result.contains("restrictions"));
+        try (var files = Files.list(dir)) {
+            Path backup = files.filter(file -> file.getFileName().toString().startsWith("config.yml.backup-")).findFirst().orElseThrow();
+            assertEquals(before, Files.readString(backup));
+        }
+        String migrated = Files.readString(dir.resolve("config.yml"));
+        assertTrue(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
+        assertEquals(migrated, Files.readString(dir.resolve("config.yml")));
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(booleans = {true, false})
+    void emptyLegacyWhitelistUsesBlacklistOrAllowsEverywhere(boolean blacklist, @TempDir Path dir) throws Exception {
+        YamlConfiguration old = new YamlConfiguration();
+        old.set("config-version", 3);
+        old.set("rekit.kill.world-whitelist", List.of());
+        old.set("rekit.kill.world-blacklist", blacklist ? List.of("lobby") : List.of());
+        ConfigFiles.write(old, dir.resolve("config.yml"));
+        assertTrue(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
+        YamlConfiguration result = ConfigFiles.read(dir.resolve("config.yml"));
+        assertEquals("deny", result.getString("locations.rekit-kill.mode"));
+        assertEquals(blacklist ? List.of("lobby") : List.of(), result.getStringList("locations.rekit-kill.entries"));
+    }
+
+    @Test void conflictingNewAndLegacyLocationRulesKeepTheOriginalFile(@TempDir Path dir) throws Exception {
+        String original = "config-version: 3\nrestrictions:\n  disabled-worlds: [lobby]\nlocations:\n  global:\n    mode: allow\n    entries: [arena]\n";
+        Files.writeString(dir.resolve("config.yml"), original);
+        assertFalse(new ConfigMigrator(pluginFor(dir.toFile())).migrate());
+        assertEquals(original, Files.readString(dir.resolve("config.yml")));
+    }
 }

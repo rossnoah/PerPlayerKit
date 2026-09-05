@@ -50,7 +50,7 @@ public class ConfigMigrator {
                 throw new IOException("config-version must be an integer; retain the version supplied by the old plugin");
             int version = original.getInt("config-version", 1);
             if (version < 1 || version > CURRENT_VERSION) throw new IOException("Unsupported config-version " + version);
-            if (version == CURRENT_VERSION) return true;
+            if (version == CURRENT_VERSION && !ConfigSchema.hasLegacyLocations(original)) return true;
 
             // Build and validate the complete migration before changing any source file.
             YamlConfiguration old = new YamlConfiguration();
@@ -76,7 +76,13 @@ public class ConfigMigrator {
                 old.set("scheduled-broadcast.messages", null);
                 for (String action : ACTIONS) old.set("messages." + action + ".message", null);
             }
-            YamlConfiguration updated = ConfigSchema.upgrade(old, bundled("config.yml"));
+            YamlConfiguration updated;
+            if (version == CURRENT_VERSION) {
+                ConfigSchema.upgradeLocations(old);
+                updated = old;
+            } else updated = ConfigSchema.upgrade(old, bundled("config.yml"));
+            dev.noah.perplayerkit.util.LocationRules.parse(updated);
+            dev.noah.perplayerkit.util.RekitKitResolver.validate(updated);
             changes.put(configFile, updated);
             for (Path file : changes.keySet()) {
                 if (Files.exists(file)) backups.put(file, ConfigFiles.backup(file));
@@ -158,18 +164,22 @@ public class ConfigMigrator {
 
     private void logSummary(int version, YamlConfiguration old, YamlConfiguration updated,
                             int messages, Map<Path, Path> backups) {
-        plugin.getLogger().info("Config upgraded from v" + version + " to v3. Saved kit data is unchanged.");
+        plugin.getLogger().info(version == CURRENT_VERSION
+                ? "Development config v3 location rules updated. Saved kit data is unchanged."
+                : "Config upgraded from v" + version + " to v3. Saved kit data is unchanged.");
         backups.forEach((file, backup) -> plugin.getLogger().info("Backup for " + file.getFileName() + ": " + backup));
         long moved = ConfigSchema.RENAMED.keySet().stream().filter(old::contains).count();
         plugin.getLogger().info("Moved " + moved + " settings into storage, kits, rekit and broadcasts; preserved " + messages + " legacy messages.");
         String previousStorage = old.getString("storage.type");
-        String storage = updated.getString("storage.type");
+        String storage = updated.getString("storage.type", "sqlite");
         if (previousStorage != null && storage.equals("sqlite") && !"sqlite".equals(previousStorage))
             plugin.getLogger().warning("The old storage.type did not select a supported backend. Retaining the SQLite database previously used. Use the storage migration command before selecting another backend.");
         else plugin.getLogger().info("Storage remains " + storage + ".");
-        plugin.getLogger().info("Action broadcasts " + (updated.getBoolean("broadcasts.enabled") ? "remain enabled" : "remain disabled")
+        plugin.getLogger().info("Action broadcasts " + (updated.getBoolean("broadcasts.enabled", true) ? "remain enabled" : "remain disabled")
                 + "; notification permissions and custom public kits are preserved.");
-        plugin.getLogger().info("Review: menus now enforce action permissions; disabled worlds also block regear items, healing and automatic rekit.");
+        plugin.getLogger().info("World lists now use locations.<feature>.mode and entries. A legacy nonempty kill whitelist still takes precedence.");
+        plugin.getLogger().info("Review: world names now match without case sensitivity. Region-dependent actions stop when WorldGuard is unavailable.");
+        plugin.getLogger().info("Review: menus enforce action permissions; location rules also cover sharing, regear items, healing and automatic rekit.");
         plugin.getLogger().info("Review: public kits now work with rekit/regear; Clear Kit deletes an empty saved slot. Upgrade notes: https://perplayerkit.com/upgrading");
         plugin.getLogger().info("Rollback: stop the server, restore these config/language backups and the previous jar. Keep the database backup for recovery; restore it only to undo item changes, since doing so discards later saves.");
     }

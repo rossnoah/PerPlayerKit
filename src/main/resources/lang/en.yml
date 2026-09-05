@@ -35,6 +35,8 @@ broadcast-messages:
   generic: "<gray><aqua>{player}</aqua> performed an action.</gray>"
 
 error:
+  disabled-at-location: "<red>This action is disabled at your location."
+  regions-unavailable: "<red>This action is unavailable because region rules could not be checked. Tell a server admin."
   autosetup-config-save: "<red>Could not save starter kit definitions: {error}"
   no-permission: "<red>You do not have permission to do that."
   kitroom-not-ready: "<red>The kit room is empty. Ask an admin to finish setup before loading kits."
@@ -143,6 +145,9 @@ success:
   autosetup-applied: "<green>Autosetup complete! Filled {pages} kit room page(s) and {kits} public kit(s)."
 
 info:
+  location-result: "<gray>{feature} in {world}: <white>{result}<gray> ({rule}: {reason}). Location rules only; permissions and other feature settings still apply."
+  location-regions: "<gray>WorldGuard regions, highest priority first: <white>{regions}"
+  location-kit: "<gray>Configured kit choice: <white>{kit}<gray>. Used when the action is allowed and the kit is available."
   autosetup-definitions-added: "<green>Added {count} starter public kit definitions."
   custom-version-available: "<gray>You can save a custom version of this kit by importing into the kit editor"
   assign-publickit-instruction: "<red>To assign a kit to this publickit use /savepublickit \\<id>"
@@ -182,6 +187,8 @@ info:
   autosetup-next-steps: "<gray>Open <white>/kit</white> to browse the kit room, or <white>/publickit</white> to see the server kits."
 
 command:
+  perplayerkit-usage-location: "<gray>/perplayerkit location [feature] <dark_gray>Check world and region rules here."
+  perplayerkit-location-usage: "<red>Use /perplayerkit location [feature]. Tab completes feature names."
   deleteec-usage: "<red>Usage: /deleteec [slot]"
   perplayerkit-about: "<green>PerPlayerKit is a plugin that allows players to have their own kits."
   deletekit-usage: "<red>Usage: /deletekit \\<slot>"

@@ -26,6 +26,9 @@ class AbstractShareSlotCommandTest {
     @BeforeAll
     static void setupLang() {
         Lang.installForTesting();
+        org.bukkit.plugin.Plugin plugin = mock(org.bukkit.plugin.Plugin.class);
+        when(plugin.getConfig()).thenReturn(new org.bukkit.configuration.file.YamlConfiguration());
+        new dev.noah.perplayerkit.util.LocationAccess(plugin);
     }
 
     @AfterAll

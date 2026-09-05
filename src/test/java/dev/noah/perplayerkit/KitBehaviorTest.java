@@ -83,6 +83,7 @@ class KitBehaviorTest {
         when(storage.getKitDataByID(anyString())).thenAnswer(i -> database.getOrDefault(i.getArgument(0), "error"));
         PerPlayerKit.storageManager = storage;
         new ItemFilter(plugin);
+        new LocationAccess(plugin);
         kits = new KitManager(plugin);
     }
 
@@ -232,8 +233,7 @@ class KitBehaviorTest {
         });
         try (MockedStatic<dev.noah.perplayerkit.gui.GuiMenuFactory> factory = mockStatic(dev.noah.perplayerkit.gui.GuiMenuFactory.class);
              MockedStatic<dev.noah.perplayerkit.gui.ItemUtil> items = mockStatic(dev.noah.perplayerkit.gui.ItemUtil.class);
-             MockedStatic<?> compat = mockStatic(Class.forName("dev.noah.perplayerkit.gui.GuiCompat"));
-             MockedStatic<DisabledCommand> disabled = mockStatic(DisabledCommand.class)) {
+             MockedStatic<?> compat = mockStatic(Class.forName("dev.noah.perplayerkit.gui.GuiCompat"))) {
             factory.when(dev.noah.perplayerkit.gui.GuiMenuFactory::createPublicKitRoomMenu)
                     .thenReturn(new dev.noah.perplayerkit.gui.GuiMenuFactory.TitledMenu(menu, "Public kits"));
             new GUI(plugin).OpenPublicKitMenu(player);
@@ -384,6 +384,7 @@ class KitBehaviorTest {
         assertFalse(kits.savePublicKit(null, "custom", kit(Material.STONE)));
         assertFalse(kits.hasPublicKit("custom"));
     }
+
     @Test void shareCodeFiltersAtDeliveryAndRetainsTheStoredSnapshot() {
         config.set("anti-exploit.only-allow-kitroom-items", true);
         ItemFilter filter = new ItemFilter(plugin);
@@ -401,6 +402,7 @@ class KitBehaviorTest {
         applied.getValue()[1].setType(Material.GRAVEL);
         assertEquals(Material.STONE, original[1].getType());
     }
+
     @Test void shareCodeDoesNotEmptyAnInventoryWhileKitRoomWhitelistIsUnavailable() {
         config.set("anti-exploit.only-allow-kitroom-items", true);
         new ItemFilter(plugin);
@@ -410,6 +412,39 @@ class KitBehaviorTest {
         verify(player.getInventory(), never()).setContents(any());
         assertNotNull(KitShareManager.kitShareMap.get("ABC123"));
     }
+
+    @Test void openKitRoomChecksTeleportsBeforeClicksAndDrags() throws Exception {
+        when(player.hasPermission(anyString())).thenReturn(true);
+        World world = mock(World.class);
+        when(world.getName()).thenReturn("lobby"); when(player.getWorld()).thenReturn(world);
+        config.set("locations.kit-room.mode", "allow");
+        config.set("locations.kit-room.entries", List.of("lobby"));
+        new LocationAccess(plugin);
+        new KitRoomDataManager(plugin);
+        org.ipvp.canvas.Menu menu = mock(org.ipvp.canvas.Menu.class);
+        when(menu.getSlot(anyInt())).thenReturn(mock(Slot.class));
+        try (MockedStatic<dev.noah.perplayerkit.gui.GuiMenuFactory> factory = mockStatic(dev.noah.perplayerkit.gui.GuiMenuFactory.class);
+             MockedStatic<dev.noah.perplayerkit.gui.ItemUtil> items = mockStatic(dev.noah.perplayerkit.gui.ItemUtil.class);
+             MockedStatic<?> compat = mockStatic(Class.forName("dev.noah.perplayerkit.gui.GuiCompat"))) {
+            factory.when(dev.noah.perplayerkit.gui.GuiMenuFactory::createKitRoomMenu)
+                    .thenReturn(new dev.noah.perplayerkit.gui.GuiMenuFactory.TitledMenu(menu, "Kit room"));
+            new GUI(plugin).OpenKitRoom(player);
+            assertTrue(GUI.canUseMenu(player, menu));
+            when(world.getName()).thenReturn("pvp");
+            assertFalse(GUI.canUseMenu(player, menu));
+            Inventory top = mock(Inventory.class);
+            org.ipvp.canvas.type.MenuHolder holder = mock(org.ipvp.canvas.type.MenuHolder.class);
+            when(holder.getMenu()).thenReturn(menu); when(top.getHolder()).thenReturn(holder);
+            var click = mock(org.bukkit.event.inventory.InventoryClickEvent.class);
+            when(click.getInventory()).thenReturn(top); when(click.getWhoClicked()).thenReturn(player);
+            var drag = mock(org.bukkit.event.inventory.InventoryDragEvent.class);
+            when(drag.getInventory()).thenReturn(top); when(drag.getWhoClicked()).thenReturn(player);
+            var listener = new dev.noah.perplayerkit.listeners.KitMenuCloseListener();
+            listener.onClick(click); listener.onDrag(drag);
+            verify(click).setCancelled(true); verify(drag).setCancelled(true);
+        }
+    }
+
     @Test void directShareIsFilteredOnAcceptanceAndUnavailableFilterKeepsRequestPending() {
         ItemStack[] original = kit(Material.DIRT); original[1] = new ItemStack(Material.STONE);
         kits.savekit(uuid, 1, original, true);

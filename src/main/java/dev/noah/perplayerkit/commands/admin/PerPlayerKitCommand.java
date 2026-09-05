@@ -22,6 +22,11 @@ import dev.noah.perplayerkit.starter.StarterExporter;
 import dev.noah.perplayerkit.starter.StarterSetup;
 import dev.noah.perplayerkit.storage.StorageMigrator;
 import dev.noah.perplayerkit.util.Lang;
+import dev.noah.perplayerkit.util.LocationAccess;
+import dev.noah.perplayerkit.util.LocationFeature;
+import dev.noah.perplayerkit.util.RekitKitResolver;
+import dev.noah.perplayerkit.commands.core.CommandGuards;
+import org.bukkit.entity.Player;
 import dev.noah.perplayerkit.util.importutil.KitsXImporter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -55,6 +60,8 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
         }
 
         switch (args[0].toLowerCase()) {
+            case "location":
+                return handleLocation(sender, args);
             case "about":
                 Lang.get().send(sender, "command.perplayerkit-about");
                 return true;
@@ -79,8 +86,51 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
         Lang.get().send(sender, "command.perplayerkit-usage-header");
         Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-autosetup");
         Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-about");
+        Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-location");
         Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-import");
         Lang.get().sendNoPrefix(sender, "command.perplayerkit-usage-migrate");
+    }
+
+    private boolean handleLocation(CommandSender sender, String[] args) {
+        Player player = CommandGuards.requirePlayer(sender);
+        if (player == null) return true;
+        if (args.length > 2) {
+            Lang.get().send(sender, "command.perplayerkit-location-usage");
+            return true;
+        }
+        LocationFeature feature;
+        try { feature = args.length == 2 ? LocationFeature.fromKey(args[1].toLowerCase(java.util.Locale.ROOT)) : LocationFeature.GLOBAL; }
+        catch (IllegalArgumentException e) {
+            Lang.get().send(sender, "command.perplayerkit-location-usage");
+            return true;
+        }
+        LocationAccess access = LocationAccess.get();
+        LocationAccess.Decision decision = access.check(player, feature);
+        Lang.get().send(sender, "info.location-result", "world", player.getWorld().getName(),
+                "feature", feature.key(), "result", decision.allowed() ? "ALLOW" : "DENY",
+                "rule", decision.rule(), "reason", decision.reason());
+        List<String> regions = List.of();
+        boolean regionsAvailable = true;
+        try {
+            regions = access.regions(player);
+            Lang.get().send(sender, "info.location-regions", "regions", regions.isEmpty() ? "None" : String.join(", ", regions));
+        } catch (LocationAccess.RegionUnavailableException e) {
+            Lang.get().send(sender, "info.location-regions", "regions", e.getMessage());
+            regionsAvailable = false;
+        }
+        String path = switch (feature) {
+            case REKIT_RESPAWN -> "rekit.respawn.kits";
+            case REKIT_KILL -> "rekit.kill.kits";
+            default -> null;
+        };
+        if (path != null) {
+            var mappings = plugin.getConfig().getConfigurationSection(path);
+            String kit = !regionsAvailable && RekitKitResolver.hasRegionEntries(mappings, player.getWorld().getName())
+                    ? "Unavailable until WorldGuard regions can be checked"
+                    : RekitKitResolver.resolveKit(mappings, player.getWorld().getName(), regions);
+            Lang.get().send(sender, "info.location-kit", "kit", kit == null ? "Last loaded kit" : kit);
+        }
+        return true;
     }
 
     private boolean handleImport(CommandSender sender, String[] args) {
@@ -266,7 +316,11 @@ public class PerPlayerKitCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
-            return List.of("about", "autosetup", "import", "migrate");
+            return List.of("about", "autosetup", "import", "migrate", "location");
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("location")) {
+            return Arrays.stream(LocationFeature.values()).map(LocationFeature::key).toList();
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("import")) {

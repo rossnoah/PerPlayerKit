@@ -66,7 +66,38 @@ public final class ConfigSchema {
         };
     }
 
+    public static boolean hasLegacyLocations(FileConfiguration config) {
+        return config.contains("restrictions.disabled-worlds") || config.contains("rekit.kill.world-whitelist")
+                || config.contains("rekit.kill.world-blacklist");
+    }
+
+    /** Also upgrades configs written by earlier v3 development builds. */
+    public static void upgradeLocations(FileConfiguration config) {
+        if (config.contains("restrictions.disabled-worlds")) {
+            setLocationRule(config, "global", "deny", config.getStringList("restrictions.disabled-worlds"));
+            config.set("restrictions.disabled-worlds", null);
+            if (config.getConfigurationSection("restrictions").getKeys(false).isEmpty()) config.set("restrictions", null);
+        }
+        if (config.contains("rekit.kill.world-whitelist") || config.contains("rekit.kill.world-blacklist")) {
+            var allow = config.getStringList("rekit.kill.world-whitelist");
+            var deny = config.getStringList("rekit.kill.world-blacklist");
+            setLocationRule(config, "rekit-kill", allow.isEmpty() ? "deny" : "allow", allow.isEmpty() ? deny : allow);
+            config.set("rekit.kill.world-whitelist", null);
+            config.set("rekit.kill.world-blacklist", null);
+        }
+    }
+
+    private static void setLocationRule(FileConfiguration config, String feature, String mode, java.util.List<String> entries) {
+        String path = "locations." + feature;
+        if (config.contains(path)) throw new IllegalArgumentException("Both legacy world settings and " + path
+                + " are configured. Remove one before restarting; neither rule has been overwritten.");
+        config.set(path + ".mode", mode);
+        config.set(path + ".entries", entries);
+    }
+
     public static YamlConfiguration upgrade(FileConfiguration old, YamlConfiguration template) {
+        // Location defaults are merged after legacy rules have been converted.
+        template.set("locations", null);
         // These collections belong to the owner. Never repopulate removed public kits.
         if (old.contains("publickits")) template.set("publickits", old.get("publickits"));
         for (String key : old.getKeys(true)) {
@@ -87,6 +118,7 @@ public final class ConfigSchema {
         // The old selector was case-sensitive and selected SQLite for anything else.
         // Preserve the backend actually used, rather than connecting to an empty new database.
         template.set("storage.type", legacyStorageType(old.getString("storage.type"), old.getInt("config-version", 1)));
+        upgradeLocations(template);
         template.set("config-version", 3);
         return template;
     }

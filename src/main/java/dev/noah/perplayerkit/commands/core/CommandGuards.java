@@ -18,7 +18,8 @@
  */
 package dev.noah.perplayerkit.commands.core;
 
-import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.LocationAccess;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,25 +46,9 @@ public final class CommandGuards {
         return null;
     }
 
-    public static @Nullable Player requirePlayerInEnabledWorld(CommandSender sender) {
+    public static @Nullable Player requirePlayerAtLocation(CommandSender sender, LocationFeature feature) {
         Player player = requirePlayer(sender);
-        if (player == null) {
-            return null;
-        }
-        if (DisabledCommand.isBlockedInWorld(player) || !ActionGuards.dataReady(player)) {
-            return null;
-        }
-        return player;
-    }
-
-    public static @Nullable Player requirePlayerInEnabledWorld(CommandSender sender, String onlyPlayersMessage) {
-        Player player = requirePlayer(sender, onlyPlayersMessage);
-        if (player == null) {
-            return null;
-        }
-        if (DisabledCommand.isBlockedInWorld(player) || !ActionGuards.dataReady(player)) {
-            return null;
-        }
+        if (player == null || !LocationAccess.get().require(player, feature) || !ActionGuards.dataReady(player)) return null;
         return player;
     }
 }

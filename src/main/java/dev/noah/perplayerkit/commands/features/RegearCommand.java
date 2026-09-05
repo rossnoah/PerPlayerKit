@@ -2,6 +2,7 @@ package dev.noah.perplayerkit.commands.features;
 
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.commands.core.ActionGuards;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import dev.noah.perplayerkit.gui.ItemUtil;
@@ -72,7 +73,7 @@ public class RegearCommand implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        Player player = CommandGuards.requirePlayerAtLocation(sender, LocationFeature.REGEAR);
         if (player == null) {
             return true;
         }

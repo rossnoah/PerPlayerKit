@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.commands.share;
 
 import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class CopyKitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        Player player = CommandGuards.requirePlayerAtLocation(sender, LocationFeature.SHARING);
         if (player == null) {
             return true;
         }

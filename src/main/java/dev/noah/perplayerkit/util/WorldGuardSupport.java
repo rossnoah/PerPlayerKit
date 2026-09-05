@@ -39,13 +39,16 @@ public final class WorldGuardSupport {
     }
 
     /**
-     * Ids of the WorldGuard regions at the player's location, ordered highest
+     * Ids of the WorldGuard regions at the player's location, including parents, ordered highest
      * region priority first (ties broken alphabetically for determinism).
      */
     public static List<String> getRegionIdsByPriority(Player player) {
         RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
         List<ProtectedRegion> regions = new ArrayList<>();
-        query.getApplicableRegions(BukkitAdapter.adapt(player.getLocation())).forEach(regions::add);
+        // The default query includes inherited parent regions, preserving existing rekit mappings.
+        var applicable = query.getApplicableRegions(BukkitAdapter.adapt(player.getLocation()));
+        if (applicable.isVirtual()) throw new IllegalStateException("Region data is unavailable or protection is disabled");
+        applicable.forEach(regions::add);
         regions.sort(Comparator.comparingInt(ProtectedRegion::getPriority).reversed()
                 .thenComparing(ProtectedRegion::getId));
         List<String> ids = new ArrayList<>(regions.size());

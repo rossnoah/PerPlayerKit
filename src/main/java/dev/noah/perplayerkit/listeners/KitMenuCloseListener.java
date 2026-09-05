@@ -23,10 +23,30 @@ import dev.noah.perplayerkit.gui.GUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.ipvp.canvas.type.MenuHolder;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 public class KitMenuCloseListener implements Listener {
+
+    // Canvas handles clicks at HIGH and ignores cancelled events. Check every interaction,
+    // including shift-click, number-key swaps, drags, and taking items from the kit room.
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onClick(InventoryClickEvent event) {
+        if (event.getInventory().getHolder() instanceof MenuHolder holder
+                && event.getWhoClicked() instanceof Player player && !GUI.canUseMenu(player, holder.getMenu()))
+            event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onDrag(InventoryDragEvent event) {
+        if (event.getInventory().getHolder() instanceof MenuHolder holder
+                && event.getWhoClicked() instanceof Player player && !GUI.canUseMenu(player, holder.getMenu()))
+            event.setCancelled(true);
+    }
 
     @EventHandler
     public void onEditorClose(InventoryCloseEvent e) {

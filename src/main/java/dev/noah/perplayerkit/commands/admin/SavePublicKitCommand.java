@@ -38,7 +38,7 @@ import java.util.List;
 public class SavePublicKitCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        Player player = CommandGuards.requirePlayer(sender);
         if (player == null) {
             return true;
         }

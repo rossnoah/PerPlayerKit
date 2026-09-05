@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.commands.share;
 
 import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.util.CooldownManager;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.PlayerUtil;
@@ -42,7 +43,7 @@ public class TransferKitsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender);
+        Player player = CommandGuards.requirePlayerAtLocation(sender, LocationFeature.SHARING);
         if (player == null) {
             return true;
         }

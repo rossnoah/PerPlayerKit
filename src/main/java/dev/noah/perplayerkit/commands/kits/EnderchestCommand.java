@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.commands.kits;
 
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.StyleManager;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 public class EnderchestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayerInEnabledWorld(sender);
+        Player player = CommandGuards.requirePlayerAtLocation(sender, LocationFeature.ENDERCHESTS);
         if (player == null) {
             return true;
         }

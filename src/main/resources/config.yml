@@ -28,9 +28,16 @@ storage:
     password: "pa55w0rd"
 
 # Shared by commands, menus, regear items, and automatic rekit. Admin data tools remain available.
-restrictions:
-  disabled-worlds:
-    - "example_world"
+locations:
+  global:
+    mode: deny # deny = everywhere except entries; allow = only entries.
+    entries: [] # World names or "world:region" (WorldGuard). No wildcards.
+  # Optional extra rules use the same mode/entries format. Global rules always apply.
+  # Features: menu, kits, enderchests, public-kits, kit-room, sharing,
+  # regear, heal, repair, rekit-respawn, rekit-kill.
+  # regear:
+  #   mode: allow
+  #   entries: ["pvp:arena"]
 
 kits:
   max-slots: 9 # 1-99. Applies to personal kits and enderchest kits.
@@ -53,11 +60,10 @@ rekit:
     enabled: true
     delay-ticks: 0 # 20 ticks = 1 second.
     restore-enderchest: false # Also restore the player's last loaded enderchest slot.
+    kits: {} # Optional world or "world:region" -> public kit ID.
   kill:
     enabled: false
     restore-enderchest: false
-    world-whitelist: [] # When nonempty, takes precedence over the blacklist.
-    world-blacklist: []
     kits: {} # Optional world or "world:WorldGuard-region" -> public kit ID.
 
 # Five pages. /perplayerkit autosetup fills pages that have never been saved.

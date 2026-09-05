@@ -1,7 +1,8 @@
 package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.commands.core.CommandGuards;
-import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.LocationAccess;
+import dev.noah.perplayerkit.util.LocationFeature;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.Test;
@@ -35,24 +36,28 @@ class CommandGuardsTest {
     }
 
     @Test
-    void requirePlayerInEnabledWorldReturnsNullWhenBlocked() {
+    void requirePlayerAtLocationReturnsNullWhenBlocked() {
         Player player = mock(Player.class);
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(true);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(player, LocationFeature.KITS)).thenReturn(false);
 
-            Player result = CommandGuards.requirePlayerInEnabledWorld(player);
+            Player result = CommandGuards.requirePlayerAtLocation(player, LocationFeature.KITS);
 
             assertNull(result);
         }
     }
 
     @Test
-    void requirePlayerInEnabledWorldReturnsPlayerWhenAllowed() {
+    void requirePlayerAtLocationReturnsPlayerWhenAllowed() {
         Player player = mock(Player.class);
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(player, LocationFeature.KITS)).thenReturn(true);
 
-            Player result = CommandGuards.requirePlayerInEnabledWorld(player);
+            Player result = CommandGuards.requirePlayerAtLocation(player, LocationFeature.KITS);
 
             assertSame(player, result);
         }

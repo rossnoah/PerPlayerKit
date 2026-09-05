@@ -20,6 +20,7 @@ package dev.noah.perplayerkit.commands.share;
 
 import dev.noah.perplayerkit.KitShareManager;
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,7 +42,7 @@ public abstract class AbstractShareResponseCommand implements CommandExecutor, T
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // Accepting can apply items to the player's inventory, so it honors the disabled-world guard.
-        Player player = accept ? CommandGuards.requirePlayerInEnabledWorld(sender) : CommandGuards.requirePlayer(sender);
+        Player player = accept ? CommandGuards.requirePlayerAtLocation(sender, LocationFeature.SHARING) : CommandGuards.requirePlayer(sender);
         if (player == null) {
             return true;
         }

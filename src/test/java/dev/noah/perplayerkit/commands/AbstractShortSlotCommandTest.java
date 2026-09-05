@@ -1,7 +1,8 @@
 package dev.noah.perplayerkit.commands;
 
 import dev.noah.perplayerkit.commands.shortcuts.AbstractShortSlotCommand;
-import dev.noah.perplayerkit.util.DisabledCommand;
+import dev.noah.perplayerkit.util.LocationAccess;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.util.KitSlots;
 import dev.noah.perplayerkit.util.Lang;
 import org.bukkit.command.CommandSender;
@@ -41,8 +42,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(true);
 
             command.onCommand(player, null, "k4", new String[0]);
         }
@@ -55,8 +58,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(true);
 
             command.onCommand(player, null, "KIT9", new String[0]);
         }
@@ -69,8 +74,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(true);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(false);
 
             command.onCommand(player, null, "k3", new String[0]);
         }
@@ -83,8 +90,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(true);
 
             command.onCommand(player, null, "k0", new String[0]);
         }
@@ -99,8 +108,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(true);
 
             command.onCommand(player, null, "k12", new String[0]);
         }
@@ -114,8 +125,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(true);
 
             command.onCommand(player, null, "perplayerkit:k10", new String[0]);
         }
@@ -128,8 +141,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(true);
 
             command.onCommand(player, null, "k10", new String[0]);
         }
@@ -144,8 +159,10 @@ class AbstractShortSlotCommandTest {
         TestShortSlotCommand command = new TestShortSlotCommand();
         Player player = mock(Player.class);
 
-        try (MockedStatic<DisabledCommand> disabledCommand = mockStatic(DisabledCommand.class)) {
-            disabledCommand.when(() -> DisabledCommand.isBlockedInWorld(player)).thenReturn(false);
+        try (MockedStatic<LocationAccess> disabledCommand = mockStatic(LocationAccess.class)) {
+            LocationAccess access = mock(LocationAccess.class);
+            disabledCommand.when(LocationAccess::get).thenReturn(access);
+            org.mockito.Mockito.when(access.require(org.mockito.ArgumentMatchers.eq(player), org.mockito.ArgumentMatchers.any())).thenReturn(true);
 
             command.onCommand(player, null, "k012", new String[0]);
             command.onCommand(player, null, "k05", new String[0]);

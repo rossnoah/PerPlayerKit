@@ -19,6 +19,7 @@
 package dev.noah.perplayerkit.commands.share;
 
 import dev.noah.perplayerkit.commands.core.CommandGuards;
+import dev.noah.perplayerkit.util.LocationFeature;
 import dev.noah.perplayerkit.commands.core.SlotArgumentParser;
 import dev.noah.perplayerkit.util.CooldownManager;
 import dev.noah.perplayerkit.util.KitSlots;
@@ -55,7 +56,7 @@ public abstract class AbstractShareSlotCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = CommandGuards.requirePlayer(sender);
+        Player player = CommandGuards.requirePlayerAtLocation(sender, LocationFeature.SHARING);
         if (player == null) {
             return true;
         }
