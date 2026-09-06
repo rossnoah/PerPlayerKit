@@ -47,15 +47,23 @@ jobs:
       - name: Download fixture server
         run: |
           python - <<'PY'
-          import json, pathlib, urllib.request
+          import json, pathlib, shutil, urllib.request
+          headers = {'User-Agent': 'PerPlayerKit-integration-test (https://github.com/rossnoah/PerPlayerKit)'}
           cache = pathlib.Path('tools/integration-test/.cache')
           cache.mkdir(exist_ok=True)
           jar = cache / 'paper-1.21.8.jar'
           if not jar.exists():
-              request = urllib.request.Request('https://fill.papermc.io/v3/projects/paper/versions/1.21.8/builds/latest', headers={'User-Agent': 'PerPlayerKit-upgrade-test'})
-              with urllib.request.urlopen(request) as response:
+              request = urllib.request.Request('https://fill.papermc.io/v3/projects/paper/versions/1.21.8/builds/latest', headers=headers)
+              with urllib.request.urlopen(request, timeout=30) as response:
                   build = json.load(response)
-              urllib.request.urlretrieve(build['downloads']['server:default']['url'], jar)
+              download = urllib.request.Request(build['downloads']['server:default']['url'], headers=headers)
+              temporary = jar.with_suffix('.jar.tmp')
+              try:
+                  with urllib.request.urlopen(download, timeout=60) as response, temporary.open('wb') as output:
+                      shutil.copyfileobj(response, output)
+                  temporary.replace(jar)
+              finally:
+                  temporary.unlink(missing_ok=True)
           (cache / 'paperclip/1.21.8').mkdir(parents=True, exist_ok=True)
           PY
       - name: Upgrade, restart, save, and roll back

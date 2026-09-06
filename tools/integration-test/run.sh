@@ -97,12 +97,13 @@ fetch_paper() {
   local version="$1" out="$CACHE_DIR/paper-$version.jar"
   [[ -f "$out" ]] && { echo "$out"; return 0; }
 
+  local agent="PerPlayerKit-integration-test (https://github.com/rossnoah/PerPlayerKit)"
   local url
-  url="$(curl -fsS "https://fill.papermc.io/v3/projects/paper/versions/$version/builds/latest" 2>/dev/null \
+  url="$(curl -fsS -A "$agent" "https://fill.papermc.io/v3/projects/paper/versions/$version/builds/latest" 2>/dev/null \
         | python3 -c 'import json,sys; print(json.load(sys.stdin)["downloads"]["server:default"]["url"])' 2>/dev/null)" || return 1
   [[ -z "$url" ]] && return 1
 
-  curl -fsS -o "$out.tmp" "$url" && mv "$out.tmp" "$out" && echo "$out"
+  curl -fsS -A "$agent" -o "$out.tmp" "$url" && mv "$out.tmp" "$out" && echo "$out"
 }
 
 # Spigot is not redistributable, so it has to be compiled here. Slow the first
