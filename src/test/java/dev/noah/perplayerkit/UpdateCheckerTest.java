@@ -2,6 +2,7 @@ package dev.noah.perplayerkit;
 
 import dev.noah.perplayerkit.util.Lang;
 import okhttp3.*;
+import okhttp3.MediaType;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
