@@ -85,6 +85,7 @@ public final class FeatureProbe extends JavaPlugin implements Listener {
         Player player = event.getPlayer(); player.setOp(true);
         getServer().getScheduler().runTaskLater(this, () -> {
             try {
+                directPageChecks(player);
                 KitRoomDataManager room = KitRoomDataManager.get(); check(room.getPageCount() == 8, "Wrong configured page count");
                 for (int page = 0; page < 8; page++) {
                     ItemStack[] items = new ItemStack[45]; items[0] = new ItemStack(Material.STONE, page + 1); room.setKitRoom(page, items);
@@ -123,6 +124,37 @@ public final class FeatureProbe extends JavaPlugin implements Listener {
                 player.sendMessage("PPK_FEATURE_CLIENT_PASS"); getLogger().info("PPK_FEATURE_PASS");
             } catch (Throwable error) { fail(error); }
         }, 20);
+    }
+    private void directPageChecks(Player player) {
+        GUI gui = new GUI(ppk);
+        for (int count : new int[]{6, 7}) {
+            ppk.getConfig().set("kitroom.pages", count);
+            KitRoomDataManager room = new KitRoomDataManager(ppk);
+            for (int page = 0; page < count; page++) {
+                ItemStack[] items = new ItemStack[45]; items[0] = new ItemStack(Material.STONE, page + 1);
+                room.setKitRoom(page, items);
+            }
+            gui.OpenKitRoom(player, 0);
+            for (int page = 0; page < count; page++) {
+                click(player, 46 + page, ClickType.LEFT);
+                Inventory top = player.getOpenInventory().getTopInventory();
+                check(top.getItem(0).getAmount() == page + 1, "Direct button opened wrong page with " + count + " pages");
+                check(top.getItem(46 + page).getItemMeta().hasEnchants(), "Wrong direct button highlighted");
+                for (int slot = 46; slot <= 52; slot++) {
+                    check(top.getItem(slot).getType() != Material.ARROW, "Unnecessary arrow with " + count + " pages");
+                }
+                click(player, 45, ClickType.LEFT);
+                check(player.getOpenInventory().getTopInventory().getItem(0).getAmount() == page + 1, "Refill switched pages");
+            }
+            player.getOpenInventory().getTopInventory().setItem(0, new ItemStack(Material.DIRT));
+            click(player, 53, ClickType.SHIFT_RIGHT);
+            check(room.getKitRoomPage(count - 1)[0].getType() == Material.DIRT, "Direct page save used wrong page");
+            click(player, 46, ClickType.LEFT);
+            check(player.getOpenInventory().getTopInventory().getItem(0).getAmount() == 1, "First direct button did not return to page 1");
+            player.closeInventory();
+        }
+        ppk.getConfig().set("kitroom.pages", 8);
+        new KitRoomDataManager(ppk);
     }
     private InventoryClickEvent click(Player player, int slot, ClickType click) {
         InventoryClickEvent event = new InventoryClickEvent(player.getOpenInventory(), InventoryType.SlotType.CONTAINER, slot, click,

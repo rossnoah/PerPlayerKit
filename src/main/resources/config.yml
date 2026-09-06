@@ -73,7 +73,7 @@ rekit:
 
 # Autosetup fills unsaved pages 1-5. Extra pages start empty.
 kitroom:
-  pages: 5 # 1-99. Five page buttons are shown at a time; arrows show the next group.
+  pages: 5 # 1-99. Up to 7 fit directly; 8+ use groups of five with arrows.
   items: # Optional names/icons by page number. Extra pages default to a chest icon.
     1:
       name: "Crystal"

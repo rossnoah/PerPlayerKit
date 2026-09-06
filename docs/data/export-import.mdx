@@ -30,7 +30,7 @@ Written to `plugins/PerPlayerKit/<file>.ppk`; the plugin adds the extension. An 
 
 | Option | Includes |
 | ------ | -------- |
-| `kitroom` | The five kit room pages, **as last saved to the database**. Run `/kitroom save` first if you edited the kit room. The export reads the database, not the editor. |
+| `kitroom` | All saved kit room pages, including hidden pages, **as last saved to the database**. Run `/kitroom save` first if you edited the kit room. The export reads the database, not the editor. |
 | `publickits` | Every public kit **and its config entry**: display name and menu icon. On import, the receiving server adds missing `publickits` entries to its own `config.yml` and updates existing ones. A kit in config that was never saved with `/savepublickit` carries over as a config entry with no contents. |
 | `playerkits` | Every player kit and enderchest kit in the database. |
 | `all` | Everything above, in one file. |

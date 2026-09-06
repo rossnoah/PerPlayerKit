@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.ipvp.canvas.slot.Slot;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.api.io.TempDir;
@@ -585,11 +586,13 @@ class KitBehaviorTest {
         assertFalse(ItemFilter.whitelist.contains("DIRT"));
     }
 
-    @Test void kitRoomArrowsNavigateTheTwoFormerSpacerSlots() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"1,47,7", "5,47,7", "6,46,7", "7,46,7", "8,47,5", "11,47,5", "99,47,5"})
+    void kitRoomNavigationKeepsEveryPageReachable(int count, int firstButton, int groupSize) throws Exception {
         when(player.hasPermission(anyString())).thenReturn(true);
-        config.set("kitroom.pages", 11);
+        config.set("kitroom.pages", count);
         KitRoomDataManager room = new KitRoomDataManager(plugin);
-        for (int index : new int[]{0,5,10}) {
+        for (int index = 0; index < count; index++) {
             ItemStack[] contents = new ItemStack[45]; contents[0] = new ItemStack(Material.STONE, index + 1);
             room.setKitRoom(index, contents);
         }
@@ -603,23 +606,56 @@ class KitBehaviorTest {
                 Slot slot = mock(Slot.class);
                 doAnswer(call -> { handlers.put(key, call.getArgument(0)); return null; }).when(slot).setClickHandler(any());
                 doAnswer(call -> { shown.put(key, call.getArgument(0)); return null; }).when(slot).setItem(org.mockito.ArgumentMatchers.nullable(ItemStack.class));
+                when(slot.getItem(player)).thenAnswer(call -> shown.get(key));
                 return slot;
             });
         });
         try (var factory = mockStatic(dev.noah.perplayerkit.gui.GuiMenuFactory.class);
              var items = mockStatic(dev.noah.perplayerkit.gui.ItemUtil.class);
              var compat = mockStatic(Class.forName("dev.noah.perplayerkit.gui.GuiCompat"))) {
+            items.when(() -> dev.noah.perplayerkit.gui.ItemUtil.createItem(any(Material.class), anyString()))
+                    .thenAnswer(call -> new ItemStack(call.getArgument(0, Material.class)));
+            items.when(() -> dev.noah.perplayerkit.gui.ItemUtil.addHideFlags(any(ItemStack.class)))
+                    .thenAnswer(call -> call.getArgument(0));
+            items.when(() -> dev.noah.perplayerkit.gui.ItemUtil.addEnchantLook(any(ItemStack.class)))
+                    .thenReturn(new ItemStack(Material.GOLD_BLOCK));
+            factory.when(dev.noah.perplayerkit.gui.GuiMenuFactory::createKitRoomMenu)
+                    .thenAnswer(call -> { handlers.clear(); return new dev.noah.perplayerkit.gui.GuiMenuFactory.TitledMenu(menu, "Kit room"); });
             factory.when(() -> dev.noah.perplayerkit.gui.GuiMenuFactory.createKitRoomMenu(anyInt(), anyInt()))
                     .thenAnswer(call -> { handlers.clear(); return new dev.noah.perplayerkit.gui.GuiMenuFactory.TitledMenu(menu, "Kit room"); });
             new GUI(plugin).OpenKitRoom(player, 0);
-            assertEquals(1, shown.get(0).getAmount()); assertFalse(handlers.containsKey(46));
-            handlers.get(52).click(player, null);
-            assertEquals(6, shown.get(0).getAmount()); assertNotNull(handlers.get(46));
-            handlers.get(52).click(player, null);
-            assertEquals(11, shown.get(0).getAmount()); assertFalse(handlers.containsKey(52));
-            handlers.get(46).click(player, null);
-            // Previous from the last group opens page 10, whose unconfigured contents are empty.
-            assertNull(shown.get(0));
+            for (int page = 0; page < count; page++) {
+                int button = firstButton + page % groupSize;
+                if (page > 0 && page % groupSize == 0) handlers.get(52).click(player, null);
+                handlers.get(button).click(player, null);
+                assertEquals(page + 1, shown.get(0).getAmount(), "Page button opened the wrong contents");
+                assertEquals(Material.GOLD_BLOCK, shown.get(button).getType(), "Wrong selected page button");
+                handlers.get(45).click(player, null);
+                assertEquals(page + 1, shown.get(0).getAmount(), "Refill switched pages");
+                assertNotNull(handlers.get(53), "Save button was replaced");
+            }
+            if (count <= 7) {
+                assertEquals(count + 2, handlers.size(), "Unexpected navigation buttons");
+                handlers.get(firstButton).click(player, null);
+                assertEquals(1, shown.get(0).getAmount(), "Cannot return directly to the first page");
+                handlers.get(firstButton + count - 1).click(player, null);
+            } else {
+                assertFalse(handlers.containsKey(52), "Last group still has a next arrow");
+                handlers.get(46).click(player, null);
+                assertEquals((count - 1) / groupSize * groupSize, shown.get(0).getAmount(), "Previous arrow opened the wrong page");
+                new GUI(plugin).OpenKitRoom(player, count - 1);
+            }
+            Inventory top = mock(Inventory.class);
+            InventoryView view = mock(InventoryView.class);
+            when(player.getOpenInventory()).thenReturn(view);
+            when(view.getTopInventory()).thenReturn(top);
+            when(top.getItem(0)).thenReturn(new ItemStack(Material.DIRT));
+            var click = mock(org.ipvp.canvas.ClickInformation.class);
+            when(click.getClickType()).thenReturn(org.bukkit.event.inventory.ClickType.SHIFT_RIGHT);
+            handlers.get(53).click(player, click);
+            settle();
+            assertEquals(Material.DIRT, room.getKitRoomPage(count - 1)[0].getType(), "Saved the wrong page");
+            assertTrue(database.containsKey("kitroom" + (count - 1)), "Page save did not reach storage");
         }
     }
 

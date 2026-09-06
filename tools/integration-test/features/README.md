@@ -7,6 +7,6 @@ python3 tools/integration-test/features/run.py \
   --server-jar /path/to/server.jar --version 1.21.8 --java /path/to/java
 ```
 
-The probe checks real enchantments, stored book enchantments, unbreakable items, shulkers, bundles, base potions, and custom potion effects. It checks that filtering copies leaves source metadata intact. A connected protocol client then opens the kit room, navigates the new arrow buttons, saves page 8, and verifies permission revocation blocks raw editor access.
+The probe checks real enchantments, stored book enchantments, unbreakable items, shulkers, bundles, base potions, and custom potion effects. It checks that filtering copies leaves source metadata intact. A connected protocol client checks direct buttons, selection highlighting, refill, and saving with six and seven kit room pages. It then checks arrow navigation with eight pages, saves page 8, and verifies permission revocation blocks raw editor access.
 
 Use `--paper-cache` for an existing vanilla jar cache and `--port` to override the localhost port (27200). Logs, client messages, and input hashes are retained in the temporary server under `target/`.

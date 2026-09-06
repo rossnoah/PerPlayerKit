@@ -383,7 +383,10 @@ public class GUI {
         KitRoomDataManager room = KitRoomDataManager.get();
         int count = room.getPageCount();
         int current = Math.max(0, Math.min(page, count - 1));
-        int first = current / KitRoomDataManager.BUTTONS_PER_GROUP * KitRoomDataManager.BUTTONS_PER_GROUP;
+        boolean grouped = count > 7;
+        int buttonsPerGroup = grouped ? KitRoomDataManager.BUTTONS_PER_GROUP : 7;
+        int first = current / buttonsPerGroup * buttonsPerGroup;
+        int firstButtonSlot = !grouped && count > 5 ? 46 : 47;
         GuiMenuFactory.TitledMenu titledMenu = count > KitRoomDataManager.BUTTONS_PER_GROUP
                 ? GuiMenuFactory.createKitRoomMenu(current + 1, count) : GuiMenuFactory.createKitRoomMenu();
         Menu menu = titledMenu.menu();
@@ -404,22 +407,22 @@ public class GUI {
                     lang("gui.edit-menu-lore"), lang("gui.kit-room-page-name", "page", String.valueOf(current + 1))));
             addKitRoomSaveButton(menu.getSlot(53), current);
         }
-        for (int index = first; index < Math.min(count, first + KitRoomDataManager.BUTTONS_PER_GROUP); index++) {
-            Slot button = menu.getSlot(47 + index - first);
+        for (int index = first; index < Math.min(count, first + buttonsPerGroup); index++) {
+            Slot button = menu.getSlot(firstButtonSlot + index - first);
             String name = plugin.getConfig().getString("kitroom.items." + (index + 1) + ".name",
                     lang("gui.kit-room-page-name", "page", String.valueOf(index + 1)));
             button.setItem(addHideFlags(createItem(kitRoomIcon(index + 1), "<reset>" + name)));
             addKitRoom(button, index);
         }
-        Slot selected = menu.getSlot(47 + current - first);
+        Slot selected = menu.getSlot(firstButtonSlot + current - first);
         selected.setItem(ItemUtil.addEnchantLook(selected.getItem(p)));
         if (first > 0) {
             menu.getSlot(46).setItem(createItem(Material.ARROW, 1, lang("gui.previous-page-button")));
             addKitRoom(menu.getSlot(46), first - 1);
         }
-        if (first + KitRoomDataManager.BUTTONS_PER_GROUP < count) {
+        if (first + buttonsPerGroup < count) {
             menu.getSlot(52).setItem(createItem(Material.ARROW, 1, lang("gui.next-page-button")));
-            addKitRoom(menu.getSlot(52), first + KitRoomDataManager.BUTTONS_PER_GROUP);
+            addKitRoom(menu.getSlot(52), first + buttonsPerGroup);
         }
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         openMenu(p, titledMenu, editing ? "perplayerkit.editkitroom" : "perplayerkit.menu", LocationFeature.KIT_ROOM);
