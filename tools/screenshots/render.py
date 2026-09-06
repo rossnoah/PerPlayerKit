@@ -57,6 +57,9 @@ class Font:
         self._w[ch] = (bbox[2] // px + 1) if bbox else 4
         return self._w[ch]
 
+    def width(self, text):
+        return sum(self.advance(ch) for ch in text)
+
     def draw(self, canvas, text, x, y, scale, rgb):
         """Draw text at `scale` output pixels per font pixel."""
         size = 8 * scale
@@ -75,6 +78,7 @@ def render(cap, out_path):
     W, H = int(panel.width * up), int(panel.height * up)
     img = panel.resize((W, H), Image.NEAREST)
 
+    f = Font()
     missing = set()
     for s in cap["slots"]:
         if s["i"] >= rows * 9:
@@ -86,8 +90,14 @@ def render(cap, out_path):
         x = (SLOT0[0] + 1 + (s["i"] % 9) * PITCH) * SCALE
         y = (SLOT0[1] + 1 + (s["i"] // 9) * PITCH) * SCALE
         img.paste(ic, (x, y), ic)
+        if s.get("count", 1) > 1:
+            # Vanilla draws the stack size bottom-right of the icon, with a shadow.
+            txt = str(s["count"])
+            tx = x + (17 - f.width(txt)) * SCALE
+            ty = y + 9 * SCALE
+            f.draw(img, txt, tx + SCALE, ty + SCALE, SCALE, (63, 63, 63))
+            f.draw(img, txt, tx, ty, SCALE, (255, 255, 255))
 
-    f = Font()
     f.draw(img, cap.get("title") or "", TITLE_AT[0] * SCALE, TITLE_AT[1] * SCALE,
            SCALE, TITLE_RGB)
 

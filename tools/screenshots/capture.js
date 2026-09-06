@@ -14,10 +14,34 @@ const SAVE_BARRIER = 53               // kit room save
 const EDITABLE = 45                   // slots 0..44 hold items
 const CHEST = 54                      // window slots 0..53 = chest, 54.. = player inv
 
+const IMPORT_SLOT = 51                // kit editor: copy inventory into the editor
+
 const KITS = JSON.parse(fs.readFileSync(__dirname + '/kits.json', 'utf8'))
 const PAGES = KITS.kitRoomPages
-const PUBLIC_KITS = Object.fromEntries(
-  Object.entries(KITS.publicKits).map(([id, k]) => [id, k.items]))
+const PUBLIC_KITS = KITS.publicKits   // id -> { items } or { layout }
+
+// Bukkit inventory index (what the kit editor and kits.json use) -> mineflayer
+// inventory slot. 0-8 hotbar, 9-35 main, 36-39 boots..helmet, 40 offhand.
+const ARMOR_NAMES = { boots: 36, leggings: 37, chestplate: 38, helmet: 39, offhand: 40 }
+function botSlot(bukkit) {
+  if (bukkit <= 8) return 36 + bukkit
+  if (bukkit <= 35) return bukkit
+  if (bukkit <= 39) return 8 - (bukkit - 36)   // 36 boots -> 8 ... 39 helmet -> 5
+  return 45                                    // offhand
+}
+// Expand { "0": "x", "9-10": "y x16", "helmet": "z" } into [[bukkitIndex, id, count]].
+function expandLayout(layout) {
+  const out = []
+  for (const [key, val] of Object.entries(layout)) {
+    const m = /^(\S+?)(?:\s+x(\d+))?$/.exec(val.trim())
+    const id = m[1], count = m[2] ? Number(m[2]) : 1
+    let lo, hi
+    if (key in ARMOR_NAMES) lo = hi = ARMOR_NAMES[key]
+    else { const r = key.split('-').map(Number); lo = r[0]; hi = r[1] ?? r[0] }
+    for (let i = lo; i <= hi; i++) out.push([i, id, count])
+  }
+  return out
+}
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 const log = (...a) => console.log('[capture]', ...a)
@@ -70,13 +94,41 @@ async function giveItems(ids) {
     await sleep(25)
   }
 }
+// Put a layout into the bot's inventory at the exact slots it names, armor
+// and off-hand included, so a save or import keeps the arrangement.
+async function giveLayout(layout) {
+  // The creative API cannot write slot 45 (off-hand), so stage that item in a
+  // main slot first and equip it from there, before the main slots fill up.
+  const entries = expandLayout(layout)
+  const off = entries.find(e => e[0] === 40)
+  if (off) {
+    const d = mcData.itemsByName[off[1]]
+    if (d) {
+      await bot.creative.setInventorySlot(9, new Item(d.id, off[2])); await sleep(100)
+      await bot.equip(bot.inventory.slots[9], 'off-hand'); await sleep(150)
+    }
+  }
+  for (const [idx, id, count] of entries) {
+    if (idx === 40) continue
+    const d = mcData.itemsByName[id]
+    if (!d) { log('unknown item', id); continue }
+    await bot.creative.setInventorySlot(botSlot(idx), new Item(d.id, count))
+    await sleep(25)
+  }
+}
+async function give(kit) { return kit.layout ? giveLayout(kit.layout) : giveItems(kit.items) }
 async function clearInv() {
-  for (let i = 9; i < 45; i++) { await bot.creative.setInventorySlot(i, null); await sleep(8) }
+  for (let i = 5; i < 45; i++) { await bot.creative.setInventorySlot(i, null); await sleep(8) }
+  if (bot.inventory.slots[45]) {                 // off-hand: move it into the now-empty inventory, then clear it
+    try { await bot.unequip('off-hand') } catch (e) { log('unequip failed', e.message) }
+    await sleep(100)
+    for (let i = 9; i < 45; i++) if (bot.inventory.slots[i]) { await bot.creative.setInventorySlot(i, null); await sleep(8) }
+  }
 }
 
 async function seedPublicKits() {
-  for (const [id, items] of Object.entries(PUBLIC_KITS)) {
-    await clearInv(); await giveItems(items); await sleep(200)
+  for (const [id, kit] of Object.entries(PUBLIC_KITS)) {
+    await clearInv(); await give(kit); await sleep(200)
     bot.chat(`/savepublickit ${id}`); await sleep(500)
     log('saved public kit', id)
   }
@@ -104,13 +156,17 @@ async function seedKitRoom() {
 async function seedPlayerKits() {
   const loadouts = KITS.playerKits.map(id => PUBLIC_KITS[id])
   for (let s = 0; s < loadouts.length; s++) {
-    await clearInv(); await giveItems(loadouts[s]); await sleep(250)
+    await clearInv(); await give(loadouts[s]); await sleep(250)
     bot.chat('/kit'); await waitWindow()
     await bot.clickWindow(KIT_SLOT(s), 0, 0); await sleep(700)      // open kit editor
-    const n = loadouts[s].length
-    for (let k = 0; k < n; k++) {
-      await bot.clickWindow(CHEST + k, 0, 0); await sleep(60)
-      await bot.clickWindow(k, 0, 0); await sleep(60)
+    if (loadouts[s].layout) {
+      await bot.clickWindow(IMPORT_SLOT, 0, 0); await sleep(400)    // import keeps slot positions
+    } else {
+      const n = loadouts[s].items.length
+      for (let k = 0; k < n; k++) {
+        await bot.clickWindow(CHEST + k, 0, 0); await sleep(60)
+        await bot.clickWindow(k, 0, 0); await sleep(60)
+      }
     }
     await closeWin()                                                 // close saves the kit
     log('saved player kit', s + 1)

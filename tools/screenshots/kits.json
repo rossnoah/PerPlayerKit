@@ -2,7 +2,16 @@
   "_comment": "Demo content for documentation screenshots. capture.js fills these in game; patch_config.py declares the public kits in config.yml. Keep both driven from this one file so they cannot drift apart.",
   "publicKits": {
     "crystal": { "name": "<light_purple>Crystal", "icon": "END_CRYSTAL",
-      "items": ["netherite_helmet","netherite_chestplate","netherite_leggings","netherite_boots","end_crystal","obsidian","totem_of_undying","glowstone","ender_pearl","golden_apple"] },
+      "_layout": "Mirrors the bundled starter kit in src/main/resources/defaults/publickits.yml, minus enchantments. Keys are player inventory slots (0-8 hotbar, 9-35 main), ranges, or armor/offhand names; values are 'item' or 'item xN'.",
+      "layout": {
+        "helmet": "netherite_helmet", "chestplate": "netherite_chestplate", "leggings": "netherite_leggings", "boots": "netherite_boots",
+        "offhand": "totem_of_undying",
+        "0": "netherite_sword", "1": "ender_pearl x16", "2": "golden_apple x64", "3": "obsidian x64", "4": "end_crystal x64",
+        "5": "crossbow", "6": "respawn_anchor x64", "7": "glowstone x64", "8": "totem_of_undying",
+        "9-10": "ender_pearl x16", "11-12": "experience_bottle x64", "13-16": "totem_of_undying", "17": "tipped_arrow x64",
+        "18-19": "ender_pearl x16", "20": "end_crystal x64", "21": "glowstone x64", "22-25": "totem_of_undying", "26": "netherite_pickaxe",
+        "27-28": "ender_pearl x16", "29": "obsidian x64", "30": "respawn_anchor x64", "31-33": "totem_of_undying", "34": "netherite_axe", "35": "shield"
+      } },
     "sword":   { "name": "<aqua>Sword", "icon": "NETHERITE_SWORD",
       "items": ["netherite_sword","shield","netherite_helmet","netherite_chestplate","netherite_leggings","netherite_boots","golden_apple","cooked_beef"] },
     "axe":     { "name": "<red>Axe", "icon": "NETHERITE_AXE",

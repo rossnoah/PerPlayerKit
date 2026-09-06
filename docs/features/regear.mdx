@@ -92,11 +92,12 @@ Regear uses the last personal or public inventory kit loaded since joining. It d
   </Tab>
 </Tabs>
 
-## Make regear a rank perk
+## Turn regear off for a group
+
+`perplayerkit.use` includes regear. Remove `perplayerkit.regear` from a group to keep regear for the others.
 
 ```bash
 /lp group default permission set perplayerkit.regear false
-/lp group donor   permission set perplayerkit.regear true
 ```
 
 ## World and region rules
