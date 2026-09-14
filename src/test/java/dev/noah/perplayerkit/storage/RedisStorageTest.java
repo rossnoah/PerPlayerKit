@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit.storage;
 
+import dev.noah.perplayerkit.storage.exceptions.KitStorageException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,12 +47,12 @@ class RedisStorageTest {
         RedisStorage storage = new RedisStorage(plugin);
 
         assertDoesNotThrow(() -> storage.keepAlive());
-        assertThrows(IllegalStateException.class, () -> storage.saveKitDataByID("kit-1", "payload-1"));
-        assertThrows(IllegalStateException.class, () -> storage.deleteKitByID("kit-1"));
+        assertThrows(KitStorageException.class, () -> storage.saveKitDataByID("kit-1", "payload-1"));
+        assertThrows(KitStorageException.class, () -> storage.deleteKitByID("kit-1"));
 
-        assertThrows(IllegalStateException.class, () -> storage.getKitDataByID("kit-1"));
-        assertThrows(IllegalStateException.class, () -> storage.doesKitExistByID("kit-1"));
-        assertThrows(IllegalStateException.class, storage::getAllKitIDs);
+        assertThrows(KitStorageException.class, () -> storage.getKitDataByID("kit-1"));
+        assertThrows(KitStorageException.class, () -> storage.doesKitExistByID("kit-1"));
+        assertThrows(KitStorageException.class, storage::getAllKitIDs);
     }
 
     @Test

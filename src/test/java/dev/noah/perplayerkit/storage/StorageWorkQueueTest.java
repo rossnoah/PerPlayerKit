@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Timeout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,10 +53,11 @@ class StorageWorkQueueTest {
     @Test void failedWorkIsReportedWithoutBlockingLaterOperations() {
         Logger logger = mock(Logger.class);
         try (StorageWorkQueue queue = new StorageWorkQueue(logger)) {
-            CompletableFuture<Void> failure = queue.run(() -> { throw new IllegalStateException("fixture failure"); });
+            IllegalStateException failed = new IllegalStateException("fixture failure");
+            CompletableFuture<Void> failure = queue.run(() -> { throw failed; });
             assertThrows(CompletionException.class, failure::join);
             assertEquals("next read", queue.supply(() -> "next read").join());
-            verify(logger).severe(contains("fixture failure"));
+            verify(logger).log(eq(Level.SEVERE), contains("fixture failure"), same(failed));
         }
     }
 

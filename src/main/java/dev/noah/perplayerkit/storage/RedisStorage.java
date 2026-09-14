@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.storage;
 
+import dev.noah.perplayerkit.storage.exceptions.KitStorageException;
 import org.bukkit.plugin.Plugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -25,6 +26,9 @@ import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+
+import static dev.noah.perplayerkit.storage.exceptions.KitStorageException.Operation.*;
 
 public class RedisStorage implements StorageManager {
 
@@ -92,7 +96,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             jedis.set(kitID, data);
         } catch (Exception e) {
-            throw new IllegalStateException("Could not save kit " + kitID, e);
+            throw new KitStorageException(SAVE, kitID, e);
         }
     }
 
@@ -102,7 +106,7 @@ public class RedisStorage implements StorageManager {
             String data = jedis.get(kitID);
             return data == null ? "Error" : data;
         } catch (Exception e) {
-            throw new IllegalStateException("Could not read kit " + kitID, e);
+            throw new KitStorageException(READ, kitID, e);
         }
     }
 
@@ -111,7 +115,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             return jedis.exists(kitID);
         } catch (Exception e) {
-            throw new IllegalStateException("Could not check kit " + kitID, e);
+            throw new KitStorageException(EXISTS, kitID, e);
         }
     }
 
@@ -120,7 +124,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             jedis.del(kitID);
         } catch (Exception e) {
-            throw new IllegalStateException("Could not delete kit " + kitID, e);
+            throw new KitStorageException(DELETE, kitID, e);
         }
     }
 
@@ -137,7 +141,7 @@ public class RedisStorage implements StorageManager {
         try (Jedis jedis = getConnection()) {
             kitIDs.addAll(jedis.keys("*"));
         } catch (Exception e) {
-            throw new IllegalStateException("Could not list kits", e);
+            throw new KitStorageException(LIST_IDS, null, e);
         }
         return kitIDs;
     }
@@ -146,10 +150,6 @@ public class RedisStorage implements StorageManager {
         if (plugin == null || plugin.getLogger() == null) {
             return;
         }
-        plugin.getLogger().severe("Redis " + operation + " failed: " + exception.getMessage());
-        plugin.getLogger().severe(exception.toString());
-        for (StackTraceElement element : exception.getStackTrace()) {
-            plugin.getLogger().severe("\tat " + element);
-        }
+        plugin.getLogger().log(Level.SEVERE, "Redis " + operation + " failed: " + exception.getMessage(), exception);
     }
 }

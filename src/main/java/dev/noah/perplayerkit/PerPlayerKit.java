@@ -68,6 +68,7 @@ import org.ipvp.canvas.MenuFunctionListener;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public final class PerPlayerKit extends JavaPlugin {
 
@@ -129,7 +130,7 @@ public final class PerPlayerKit extends JavaPlugin {
         try {
             storageManager.init();
         } catch (StorageOperationException e) {
-            this.getLogger().warning("Failed to initialize the database. Disabling plugin.");
+            getLogger().log(Level.SEVERE, "Failed to initialize the database. Disabling plugin.", e);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -165,7 +166,7 @@ public final class PerPlayerKit extends JavaPlugin {
         try {
             loadDatabaseData();
         } catch (RuntimeException error) {
-            getLogger().log(java.util.logging.Level.SEVERE, "Could not load saved kit data. Disabling PerPlayerKit.", error);
+            getLogger().log(Level.SEVERE, "Could not load saved kit data. Disabling PerPlayerKit.", error);
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -360,7 +361,7 @@ public final class PerPlayerKit extends JavaPlugin {
             try {
                 storageManager.close();
             } catch (StorageConnectionException ex) {
-                this.getLogger().warning("Failed to close the database connection: " + e.getMessage());
+                this.getLogger().warning("Failed to close the database connection: " + ex.getMessage());
             }
         }
     }

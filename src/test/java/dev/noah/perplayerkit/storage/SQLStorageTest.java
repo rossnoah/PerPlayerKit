@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit.storage;
 
+import dev.noah.perplayerkit.storage.exceptions.KitStorageException;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import dev.noah.perplayerkit.storage.sql.SQLDatabase;
@@ -13,6 +14,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -49,6 +52,25 @@ class SQLStorageTest {
         storage.deleteKitByID("kit-2");
         assertFalse(storage.doesKitExistByID("kit-2"));
         assertEquals("Error", storage.getKitDataByID("kit-2"));
+
+        storage.close();
+    }
+
+    @Test
+    void kitFailuresNameTheOperationAndKit() throws Exception {
+        InMemorySQLiteDatabase db = new InMemorySQLiteDatabase();
+        SQLStorage storage = new SQLStorage(db);
+        storage.connect();
+
+        KitStorageException error = assertThrows(KitStorageException.class,
+                () -> storage.saveKitDataByID("kit-1", "payload-1"));
+
+        assertEquals(KitStorageException.Operation.SAVE, error.operation());
+        assertEquals("kit-1", error.kitID());
+        assertEquals("Kit save failed for kit-1", error.getMessage());
+        assertInstanceOf(SQLException.class, error.getCause());
+
+        assertNull(assertThrows(KitStorageException.class, storage::getAllKitIDs).kitID());
 
         storage.close();
     }
@@ -98,11 +120,11 @@ class SQLStorageTest {
     @Test
     void failedStorageOperationsAreNotReportedAsMissingKitsOrSuccessfulWrites() {
         SQLStorage storage = new SQLStorage(new ThrowingGetConnectionDatabase());
-        assertThrows(IllegalStateException.class, () -> storage.saveKitDataByID("kit", "data"));
-        assertThrows(IllegalStateException.class, () -> storage.getKitDataByID("kit"));
-        assertThrows(IllegalStateException.class, () -> storage.doesKitExistByID("kit"));
-        assertThrows(IllegalStateException.class, () -> storage.deleteKitByID("kit"));
-        assertThrows(IllegalStateException.class, storage::getAllKitIDs);
+        assertThrows(KitStorageException.class, () -> storage.saveKitDataByID("kit", "data"));
+        assertThrows(KitStorageException.class, () -> storage.getKitDataByID("kit"));
+        assertThrows(KitStorageException.class, () -> storage.doesKitExistByID("kit"));
+        assertThrows(KitStorageException.class, () -> storage.deleteKitByID("kit"));
+        assertThrows(KitStorageException.class, storage::getAllKitIDs);
     }
 
     private static class InMemorySQLiteDatabase implements SQLDatabase {

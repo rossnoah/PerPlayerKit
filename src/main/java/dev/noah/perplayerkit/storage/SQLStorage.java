@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.storage;
 
+import dev.noah.perplayerkit.storage.exceptions.KitStorageException;
 import dev.noah.perplayerkit.storage.exceptions.StorageConnectionException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import dev.noah.perplayerkit.storage.sql.SQLDatabase;
@@ -29,6 +30,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+
+import static dev.noah.perplayerkit.storage.exceptions.KitStorageException.Operation.*;
 
 public class SQLStorage implements StorageManager, BackupCapable {
 
@@ -109,7 +112,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
             ps.setString(2, data);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("Kit storage operation failed", e);
+            throw new KitStorageException(SAVE, kitID, e);
         }
     }
 
@@ -125,7 +128,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Kit storage operation failed", e);
+            throw new KitStorageException(READ, kitID, e);
         }
         return "Error";
     }
@@ -140,7 +143,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
                 return rs.next();
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Kit storage operation failed", e);
+            throw new KitStorageException(EXISTS, kitID, e);
         }
     }
 
@@ -152,7 +155,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
             ps.setString(1, kitID);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("Kit storage operation failed", e);
+            throw new KitStorageException(DELETE, kitID, e);
         }
     }
 
@@ -166,7 +169,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
                 kitIDs.add(rs.getString("KITID"));
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Kit storage operation failed", e);
+            throw new KitStorageException(LIST_IDS, null, e);
         }
         return kitIDs;
     }

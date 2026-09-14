@@ -1,5 +1,6 @@
 package dev.noah.perplayerkit.storage;
 
+import dev.noah.perplayerkit.storage.exceptions.KitStorageException;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -84,7 +86,7 @@ class YAMLStorageTest {
         String original = java.nio.file.Files.readString(file);
         Path backup = tempDir.resolve("before.yml"); java.nio.file.Files.move(file, backup);
         java.nio.file.Files.createDirectory(file); java.nio.file.Files.writeString(file.resolve("blocker"), "keep");
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class, () -> storage.saveKitDataByID("kit-1", "new-data"));
+        assertThrows(KitStorageException.class, () -> storage.saveKitDataByID("kit-1", "new-data"));
         org.junit.jupiter.api.Assertions.assertEquals(original, java.nio.file.Files.readString(backup));
         try (var files = java.nio.file.Files.list(tempDir)) {
             org.junit.jupiter.api.Assertions.assertFalse(files.anyMatch(path -> path.getFileName().toString().startsWith(".ppk-storage-")));

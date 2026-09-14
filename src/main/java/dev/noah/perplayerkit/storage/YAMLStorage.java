@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.storage;
 
+import dev.noah.perplayerkit.storage.exceptions.KitStorageException;
 import dev.noah.perplayerkit.storage.exceptions.StorageOperationException;
 import org.bukkit.plugin.Plugin;
 import org.yaml.snakeyaml.DumperOptions;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static dev.noah.perplayerkit.storage.exceptions.KitStorageException.Operation.*;
 
 public class YAMLStorage implements StorageManager {
 
@@ -107,7 +110,7 @@ public class YAMLStorage implements StorageManager {
         try {
             saveToFile();
         } catch (IOException e) {
-            throw new IllegalStateException("Could not save YAML kit storage", e);
+            throw new KitStorageException(SAVE, kitID, e);
         }
     }
 
@@ -127,7 +130,7 @@ public class YAMLStorage implements StorageManager {
         try {
             saveToFile();
         } catch (IOException e) {
-            throw new IllegalStateException("Could not save YAML kit storage", e);
+            throw new KitStorageException(DELETE, kitID, e);
         }
     }
 

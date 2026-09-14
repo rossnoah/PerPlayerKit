@@ -2,6 +2,7 @@ package dev.noah.perplayerkit.storage;
 
 import java.util.concurrent.*;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Orders kit writes, deletes and subsequent join reads; drains before storage closes. */
@@ -21,7 +22,9 @@ public final class StorageWorkQueue implements AutoCloseable {
 
     public <T> CompletableFuture<T> supply(Supplier<T> work) {
         return CompletableFuture.supplyAsync(work, executor).whenComplete((value, error) -> {
-            if (error != null) logger.severe("Storage operation failed: " + error.getMessage());
+            if (error == null) return;
+            Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+            logger.log(Level.SEVERE, "Storage operation failed: " + cause.getMessage(), cause);
         });
     }
 
