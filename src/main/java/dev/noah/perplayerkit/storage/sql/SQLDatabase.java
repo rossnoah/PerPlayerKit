@@ -41,6 +41,14 @@ public interface SQLDatabase {
     }
 
     /**
+     * Bring a kits table created by an older version up to the current schema.
+     * Called after {@link #getCreateTableStatement()} on every startup, so it must
+     * be a no-op when the table is already current.
+     */
+    default void upgradeSchema(Connection conn) throws SQLException {
+    }
+
+    /**
      * SQL used to insert-or-update a kit row. Defaults to MySQL/SQLite {@code REPLACE INTO};
      * backends with a different dialect (e.g. PostgreSQL) override this.
      */

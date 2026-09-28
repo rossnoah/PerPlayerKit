@@ -45,6 +45,7 @@ public class SQLStorage implements StorageManager, BackupCapable {
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(db.getCreateTableStatement())) {
             ps.executeUpdate();
+            db.upgradeSchema(conn);
         }
     }
 
