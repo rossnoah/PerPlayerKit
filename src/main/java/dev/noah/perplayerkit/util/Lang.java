@@ -20,7 +20,6 @@ package dev.noah.perplayerkit.util;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -47,7 +46,6 @@ public class Lang {
     private static Lang instance;
 
     private final Plugin plugin;
-    private final MiniMessage mm = MiniMessage.miniMessage();
     private final BukkitAudiences audience;
     private final YamlConfiguration lang;
     private final YamlConfiguration fallback;
@@ -203,19 +201,19 @@ public class Lang {
     }
 
     public Component component(String key) {
-        return mm.deserialize(raw(key));
+        return TextUtil.parse(raw(key));
     }
 
     public Component component(String key, Map<String, String> placeholders) {
-        return mm.deserialize(raw(key, placeholders));
+        return TextUtil.parse(raw(key, placeholders));
     }
 
     public Component component(String key, String... pairs) {
-        return mm.deserialize(raw(key, pairs));
+        return TextUtil.parse(raw(key, pairs));
     }
 
     public Component prefix() {
-        return mm.deserialize(raw("prefix"));
+        return TextUtil.parse(raw("prefix"));
     }
 
     public void send(CommandSender sender, String key) {
@@ -263,11 +261,11 @@ public class Lang {
     }
 
     public String legacy(String key) {
-        return LegacyComponentSerializer.legacySection().serialize(component(key));
+        return TextUtil.LEGACY.serialize(component(key));
     }
 
     public String legacy(String key, String... pairs) {
-        return LegacyComponentSerializer.legacySection().serialize(component(key, pairs));
+        return TextUtil.LEGACY.serialize(component(key, pairs));
     }
 
     /**

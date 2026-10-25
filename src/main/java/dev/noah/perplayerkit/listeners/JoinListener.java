@@ -23,8 +23,8 @@ import dev.noah.perplayerkit.UpdateChecker;
 import dev.noah.perplayerkit.starter.StarterSetup;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.Lang;
+import dev.noah.perplayerkit.util.TextUtil;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -72,7 +72,7 @@ public class JoinListener implements Listener {
         // Check if MOTD is enabled and send MOTD messages
         if (plugin.getConfig().getBoolean("motd.enabled")) {
             List<Component> motdMessages = new ArrayList<>();
-            Lang.get().rawList("motd.message").forEach(message -> motdMessages.add(MiniMessage.miniMessage().deserialize(message)));
+            Lang.get().rawList("motd.message").forEach(message -> motdMessages.add(TextUtil.parse(message)));
 
             // Delay for sending the MOTD
             Bukkit.getScheduler().runTaskLater(plugin, () -> { if (player.isOnline()) motdMessages.forEach(message -> BroadcastManager.get().sendComponentMessage(player,message)); }, plugin.getConfig().getLong("motd.delay-seconds") * 20L);

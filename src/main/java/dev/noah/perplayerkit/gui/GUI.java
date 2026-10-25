@@ -24,7 +24,6 @@ import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.KitRoomDataManager;
 import dev.noah.perplayerkit.PublicKit;
 import dev.noah.perplayerkit.util.*;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -497,13 +496,13 @@ public class GUI {
             PublicKit kit = publicKitList.get(i);
             if (KitManager.get().hasPublicKit(kit.id)) {
                 if (player.hasPermission("perplayerkit.admin")) {
-                    menu.getSlot(i + 9).setItem(createItem(kit.icon, 1, ChatColor.RESET + kit.name, lang("gui.lore-admin-shift-edit")));
+                    menu.getSlot(i + 9).setItem(createItem(kit.icon, 1, "<reset>" + kit.name, lang("gui.lore-admin-shift-edit")));
                 } else {
-                    menu.getSlot(i + 9).setItem(createItem(kit.icon, 1, ChatColor.RESET + kit.name));
+                    menu.getSlot(i + 9).setItem(createItem(kit.icon, 1, "<reset>" + kit.name));
                 }
                 addPublicKitButton(menu.getSlot(i + 9), kit.id);
             } else {
-                String unassignedName = ChatColor.RESET + kit.name + " " + lang("gui.unassigned-tag");
+                String unassignedName = "<reset>" + kit.name + " " + lang("gui.unassigned-tag");
                 if (player.hasPermission("perplayerkit.admin")) {
                     menu.getSlot(i + 9).setItem(createItem(kit.icon, 1, unassignedName,
                             lang("gui.lore-unassigned-info"), lang("gui.lore-admin-shift-edit")));

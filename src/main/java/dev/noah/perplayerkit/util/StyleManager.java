@@ -9,9 +9,6 @@ package dev.noah.perplayerkit.util;
 
 import org.bukkit.Material;
 import org.bukkit.plugin.Plugin;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class StyleManager {
     private static StyleManager instance;
@@ -45,17 +42,15 @@ public class StyleManager {
 
     private String miniMessageToLegacy(String miniMessage) {
         try {
-            Component component = MiniMessage.miniMessage().deserialize(miniMessage + "test");
-            return LegacyComponentSerializer.legacySection().serialize(component).replace("test", "");
+            return TextUtil.formattingPrefix(miniMessage);
         } catch (Exception e) {
-            return "<blue>";
+            return "§9";
         }
     }
 
     public static String convertMiniMessage(String miniMessage) {
         try {
-            Component component = MiniMessage.miniMessage().deserialize(miniMessage + "test");
-            return LegacyComponentSerializer.legacySection().serialize(component).replace("test", "");
+            return TextUtil.toLegacy(miniMessage);
         } catch (Exception e) {
             return miniMessage;
         }

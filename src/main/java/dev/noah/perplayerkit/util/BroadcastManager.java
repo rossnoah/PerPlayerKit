@@ -64,7 +64,7 @@ public class BroadcastManager {
 
         String formattedMessage = strikeThroughLine + "\n\n" + " ".repeat(3) + FIGURE_SPACE.repeat(Math.max(padding, 0)) + message + "\n\n" + strikeThroughLine;
 
-        return MiniMessage.miniMessage().deserialize(formattedMessage);
+        return TextUtil.parse(formattedMessage);
     }
 
     private boolean isKitLoadingMessage(MessageKey key) {
@@ -81,7 +81,7 @@ public class BroadcastManager {
         }
 
         Component prefix = Lang.get().prefix();
-        Component body = MiniMessage.miniMessage().deserialize(message);
+        Component body = TextUtil.parse(message);
         for (Player broadcastPlayer : world.getPlayers()) {
             if (broadcastPlayer.getLocation().distance(player.getLocation()) < broadcastDistance) {
                 if (broadcastPlayer.hasPermission(permission)) {

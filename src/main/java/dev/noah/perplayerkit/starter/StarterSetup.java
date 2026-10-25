@@ -23,7 +23,7 @@ import dev.noah.perplayerkit.KitRoomDataManager;
 import dev.noah.perplayerkit.PublicKit;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import dev.noah.perplayerkit.util.Lang;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import dev.noah.perplayerkit.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -238,7 +238,7 @@ public final class StarterSetup {
         }
 
         for (String line : Lang.get().rawList(key)) {
-            BroadcastManager.get().sendComponentMessage(player, MiniMessage.miniMessage().deserialize(line));
+            BroadcastManager.get().sendComponentMessage(player, TextUtil.parse(line));
         }
     }
 }

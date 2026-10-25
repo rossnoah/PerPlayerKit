@@ -20,8 +20,6 @@ package dev.noah.perplayerkit.gui;
 
 import dev.noah.perplayerkit.util.Lang;
 import dev.noah.perplayerkit.util.StyleManager;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.type.ChestMenu;
@@ -36,12 +34,12 @@ public final class GuiMenuFactory {
 
     private static String title(String key) {
         return StyleManager.get().getPrimaryColor()
-                + LegacyComponentSerializer.legacySection().serialize(MiniMessage.miniMessage().deserialize(Lang.get().raw(key)));
+                + StyleManager.convertMiniMessage(Lang.get().raw(key));
     }
 
     private static String title(String key, String... pairs) {
         return StyleManager.get().getPrimaryColor()
-                + LegacyComponentSerializer.legacySection().serialize(MiniMessage.miniMessage().deserialize(Lang.get().raw(key, pairs)));
+                + StyleManager.convertMiniMessage(Lang.get().raw(key, pairs));
     }
 
     private static TitledMenu chestMenu(String title) {
