@@ -215,5 +215,95 @@
   },
   "seo": {
     "indexing": "all"
-  }
+  },
+  "redirects": [
+    {
+      "source": "/quickstart",
+      "destination": "/installation"
+    },
+    {
+      "source": "/guides/public-kits",
+      "destination": "/features/public-kits"
+    },
+    {
+      "source": "/guides/storage-migration",
+      "destination": "/data/storage-migration"
+    },
+    {
+      "source": "/configuration/regear",
+      "destination": "/features/regear"
+    },
+    {
+      "source": "/configuration/feature-flags",
+      "destination": "/settings/config-features"
+    },
+    {
+      "source": "/configuration/database",
+      "destination": "/settings/storage"
+    },
+    {
+      "source": "/api/overview",
+      "destination": "/api"
+    },
+    {
+      "source": "/api/usage",
+      "destination": "/api/example"
+    },
+    {
+      "source": "/guides/troubleshooting",
+      "destination": "/help/troubleshooting"
+    },
+    {
+      "source": "/configuration/rekit-on-kill",
+      "destination": "/features/rekit-kill"
+    },
+    {
+      "source": "/configuration/languages",
+      "destination": "/settings/languages"
+    },
+    {
+      "source": "/configuration/kit-slots",
+      "destination": "/features/kit-slots"
+    },
+    {
+      "source": "/configuration/interface",
+      "destination": "/settings/config-interface"
+    },
+    {
+      "source": "/commands/player-commands",
+      "destination": "/commands/players"
+    },
+    {
+      "source": "/guides/kit-room-setup",
+      "destination": "/kit-room"
+    },
+    {
+      "source": "/configuration/messages",
+      "destination": "/settings/messages"
+    },
+    {
+      "source": "/configuration/backups",
+      "destination": "/data/backups"
+    },
+    {
+      "source": "/commands/admin-commands",
+      "destination": "/commands/admin"
+    },
+    {
+      "source": "/commands/sharing",
+      "destination": "/features/sharing"
+    },
+    {
+      "source": "/configuration/anti-exploit",
+      "destination": "/features/anti-exploit"
+    },
+    {
+      "source": "/guides/kit-data",
+      "destination": "/data/export-import"
+    },
+    {
+      "source": "/guides/purge-items",
+      "destination": "/data/purge-items"
+    }
+  ]
 }
